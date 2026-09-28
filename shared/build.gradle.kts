@@ -23,14 +23,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-configurations.configureEach {
-    resolutionStrategy {
-        // org.tiqian is served from the Central snapshot repository (see libs.versions.toml); keep the cache short
-        // so a newly published snapshot becomes visible within minutes.
-        cacheChangingModulesFor(10, "minutes")
-    }
-}
-
 kotlin {
     android {
         namespace = "com.github.zly2006.zhihu.shared"
@@ -38,7 +30,6 @@ kotlin {
             enable = true
         }
     }
-    applyDefaultHierarchyTemplate()
 
     sourceSets {
         commonMain.dependencies {
@@ -55,6 +46,7 @@ kotlin {
             api(projects.core.updater)
             api(projects.core.data)
             api(projects.core.ui)
+            api(projects.core.markdown)
             implementation(projects.feature.editor)
             api(projects.core.database)
             implementation(libs.compose.foundation)
@@ -73,9 +65,6 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.material.kolor)
             implementation(libs.ksoup)
-            implementation(projects.latexRenderer)
-            implementation(projects.markdownParser)
-            implementation(projects.markdownRenderer)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.io.core)
             implementation(libs.koin.compose)
@@ -87,17 +76,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.ktor.client.mock)
         }
-        // The Tiqian renderer only publishes Android and JVM artifacts.
-        val tiqianMarkdownMain =
-            create("tiqianMarkdownMain") {
-                dependsOn(commonMain.get())
-                dependencies {
-                    implementation(libs.tiqian.markdown.compose)
-                    implementation(libs.tiqian.math.font.stix)
-                }
-            }
         androidMain {
-            dependsOn(tiqianMarkdownMain)
             dependencies {
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.androidx.browser)
@@ -115,7 +94,6 @@ kotlin {
             }
         }
         jvmMain {
-            dependsOn(tiqianMarkdownMain)
             // Desktop export reuses the Android WebView/export assets; they ship on the JVM classpath.
             resources.srcDir("src/androidMain/assets")
             dependencies {

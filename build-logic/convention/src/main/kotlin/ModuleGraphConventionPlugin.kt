@@ -36,6 +36,7 @@ class ModuleGraphConventionPlugin : Plugin<Project> {
                     ":core:updater -X> :(?!core:(common|model|network|account|settings|platform)$).*",
                     ":core:data -X> :(?!core:(common|model|navigation|network|account|database|settings|nlp)$).*",
                     ":core:ui -X> :(?!core:(common|model|navigation|network|account|database|settings|designsystem|platform|nlp|data)$).*",
+                    ":core:markdown -X> :(?!(core:(common|model|navigation|network|account|database|settings|designsystem|platform|nlp|data|ui)|(markdown|latex|codehighlight)-.*)$).*",
                 )
             }
         }
