@@ -26,7 +26,6 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
-import androidx.lifecycle.ViewModelProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.zly2006.zhihu.data.MobileNotificationContent
 import com.github.zly2006.zhihu.data.MobileNotificationTimelineItem
@@ -39,6 +38,7 @@ import com.github.zly2006.zhihu.navigation.resolveContent
 import com.github.zly2006.zhihu.test.MainActivityComposeRule
 import com.github.zly2006.zhihu.test.RecordingNavigator
 import com.github.zly2006.zhihu.test.resetAppPreferences
+import com.github.zly2006.zhihu.test.seedViewModel
 import com.github.zly2006.zhihu.test.setScreenContent
 import com.github.zly2006.zhihu.ui.NotificationScreen
 import com.github.zly2006.zhihu.viewmodel.MobileNotificationCategory
@@ -48,6 +48,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.mp.KoinPlatform
 
 @RunWith(AndroidJUnit4::class)
 class NotificationScreenInstrumentedTest {
@@ -264,12 +265,12 @@ class NotificationScreenInstrumentedTest {
             "Notification screen did not finish its initial refresh",
             timeoutMillis = 5_000,
         ) {
-            ViewModelProvider(activity)[NotificationViewModel::class.java].let { viewModel ->
+            seedViewModel { NotificationViewModel(KoinPlatform.getKoin().get()) }.let { viewModel ->
                 !viewModel.isLoading && viewModel.isEnd
             }
         }
         activity.runOnUiThread {
-            val viewModel = ViewModelProvider(activity)[NotificationViewModel::class.java]
+            val viewModel = seedViewModel { NotificationViewModel(KoinPlatform.getKoin().get()) }
             viewModel.allData.clear()
             viewModel.allData += notifications
             if (unreadCounts.isNotEmpty()) {

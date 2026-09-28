@@ -22,13 +22,13 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.lifecycle.ViewModelProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.test.MainActivityComposeRule
 import com.github.zly2006.zhihu.test.RecordingNavigator
 import com.github.zly2006.zhihu.test.resetAppPreferences
+import com.github.zly2006.zhihu.test.seedViewModel
 import com.github.zly2006.zhihu.test.setScreenContent
 import com.github.zly2006.zhihu.ui.OnlineHistoryScreen
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
@@ -57,7 +57,7 @@ class OnlineHistoryScreenInstrumentedTest {
     val composeRule: MainActivityComposeRule = createAndroidComposeRule()
 
     private val onlineHistoryViewModel: OnlineHistoryViewModel
-        get() = ViewModelProvider(composeRule.activity)[OnlineHistoryViewModel::class.java]
+        get() = composeRule.seedViewModel { OnlineHistoryViewModel(KoinPlatform.getKoin().get(), KoinPlatform.getKoin().get()) }
 
     @Before
     fun setUp() {
