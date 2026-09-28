@@ -157,7 +157,9 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
                         ArticleType.Answer -> "answer"
                         ArticleType.Article -> "article"
                     }
+
                     is Question -> current.questionId.toString() to "question"
+
                     else -> return
                 }
                 coroutineScope.launch {
@@ -182,10 +184,12 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
                     }
                 }
             }
+
             MainTabs -> {
                 mainTabNavigationTarget = Home
                 navigateToMainTabs()
             }
+
             else -> {
                 prepareNativePendingContentOpen(
                     target = route,
@@ -224,28 +228,48 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
             onCurrentMainTabDestinationChange = { currentMainTabDestination = it },
             articleEnterTransition = {
                 when (sharedArticleAnswerSwitchState.answerTransitionDirection) {
-                    ArticleAnswerTransitionDirection.VERTICAL_NEXT ->
+                    ArticleAnswerTransitionDirection.VERTICAL_NEXT -> {
                         slideInVertically(tween(300)) { it } + fadeIn(tween(300))
-                    ArticleAnswerTransitionDirection.VERTICAL_PREVIOUS ->
+                    }
+
+                    ArticleAnswerTransitionDirection.VERTICAL_PREVIOUS -> {
                         slideInVertically(tween(300)) { -it } + fadeIn(tween(300))
-                    ArticleAnswerTransitionDirection.HORIZONTAL_NEXT ->
+                    }
+
+                    ArticleAnswerTransitionDirection.HORIZONTAL_NEXT -> {
                         slideInHorizontally(tween(300)) { it } + fadeIn(tween(300))
-                    ArticleAnswerTransitionDirection.HORIZONTAL_PREVIOUS ->
+                    }
+
+                    ArticleAnswerTransitionDirection.HORIZONTAL_PREVIOUS -> {
                         slideInHorizontally(tween(300)) { -it } + fadeIn(tween(300))
-                    else -> slideInHorizontally(tween(300)) { it }
+                    }
+
+                    else -> {
+                        slideInHorizontally(tween(300)) { it }
+                    }
                 }
             },
             articleExitTransition = {
                 when (sharedArticleAnswerSwitchState.answerTransitionDirection) {
-                    ArticleAnswerTransitionDirection.VERTICAL_NEXT ->
+                    ArticleAnswerTransitionDirection.VERTICAL_NEXT -> {
                         slideOutVertically(tween(300)) { -it } + fadeOut(tween(300))
-                    ArticleAnswerTransitionDirection.VERTICAL_PREVIOUS ->
+                    }
+
+                    ArticleAnswerTransitionDirection.VERTICAL_PREVIOUS -> {
                         slideOutVertically(tween(300)) { it } + fadeOut(tween(300))
-                    ArticleAnswerTransitionDirection.HORIZONTAL_NEXT ->
+                    }
+
+                    ArticleAnswerTransitionDirection.HORIZONTAL_NEXT -> {
                         slideOutHorizontally(tween(300)) { -it } + fadeOut(tween(300))
-                    ArticleAnswerTransitionDirection.HORIZONTAL_PREVIOUS ->
+                    }
+
+                    ArticleAnswerTransitionDirection.HORIZONTAL_PREVIOUS -> {
                         slideOutHorizontally(tween(300)) { it } + fadeOut(tween(300))
-                    else -> ExitTransition.None
+                    }
+
+                    else -> {
+                        ExitTransition.None
+                    }
                 }
             },
             articleContent = { article: Article, navEntry ->
@@ -268,9 +292,13 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
             }
             when (destination) {
                 Home -> MacosWindowNavigationItem(Home.name, "首页", "house", "内容", Home == currentMainTabDestination, action)
+
                 Follow -> MacosWindowNavigationItem(Follow.name, "关注", "person.2", "内容", Follow == currentMainTabDestination, action)
+
                 HotList -> MacosWindowNavigationItem(HotList.name, "热榜", "flame", "内容", HotList == currentMainTabDestination, action)
+
                 Daily -> MacosWindowNavigationItem(Daily.name, "日报", "newspaper", "内容", Daily == currentMainTabDestination, action)
+
                 OnlineHistory -> MacosWindowNavigationItem(
                     OnlineHistory.name,
                     "历史",
@@ -279,6 +307,7 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
                     OnlineHistory == currentMainTabDestination,
                     action,
                 )
+
                 MyCollections -> MacosWindowNavigationItem(
                     MyCollections.name,
                     "收藏",
@@ -287,6 +316,7 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
                     MyCollections == currentMainTabDestination,
                     action,
                 )
+
                 Account -> MacosWindowNavigationItem(
                     Account.name,
                     "账号",
@@ -295,6 +325,7 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
                     Account == currentMainTabDestination,
                     action,
                 )
+
                 else -> null
             }
         }

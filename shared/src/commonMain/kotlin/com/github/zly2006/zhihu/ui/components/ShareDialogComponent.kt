@@ -285,21 +285,28 @@ fun getShareText(content: NavDestination, title: String = "", authorName: String
             ArticleType.Answer -> {
                 "https://www.zhihu.com/answer/${content.id}\n【$title - $authorName 的回答】"
             }
+
             ArticleType.Article -> {
                 "https://zhuanlan.zhihu.com/p/${content.id}\n【$title - $authorName 的文章】"
             }
         }
     }
+
     is Question -> {
         "https://www.zhihu.com/question/${content.questionId}\n【${content.title}】"
     }
+
     is Pin -> {
         "https://www.zhihu.com/pin/${content.id}"
     }
+
     is Topic -> {
         "https://www.zhihu.com/topic/${content.id}\n【${content.name.ifBlank { title.ifBlank { "知乎话题" } }}】"
     }
-    else -> null
+
+    else -> {
+        null
+    }
 }
 
 fun getShareTitle(content: NavDestination): String = when (content) {
@@ -307,7 +314,10 @@ fun getShareTitle(content: NavDestination): String = when (content) {
         ArticleType.Answer -> " - ${content.authorName} 的回答"
         ArticleType.Article -> " - ${content.authorName} 的文章"
     }
+
     is Question -> content.title
+
     is Topic -> content.name.ifBlank { "知乎话题" }
+
     else -> "分享内容"
 }

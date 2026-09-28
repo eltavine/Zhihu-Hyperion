@@ -444,15 +444,26 @@ class ZhihuFormulaCorpusTest {
                         profile.rulelessFractions++
                     }
                 }
-                is LatexNode.Binomial -> profile.binomials++
+
+                is LatexNode.Binomial -> {
+                    profile.binomials++
+                }
+
                 is LatexNode.Root -> {
                     profile.roots++
                     if (node.index != null) {
                         profile.indexedRoots++
                     }
                 }
-                is LatexNode.Superscript -> profile.superscripts++
-                is LatexNode.Subscript -> profile.subscripts++
+
+                is LatexNode.Superscript -> {
+                    profile.superscripts++
+                }
+
+                is LatexNode.Subscript -> {
+                    profile.subscripts++
+                }
+
                 is LatexNode.BigOperator -> {
                     profile.operators++
                     if (node.superscript != null) {
@@ -462,6 +473,7 @@ class ZhihuFormulaCorpusTest {
                         profile.subscripts++
                     }
                 }
+
                 is LatexNode.Prescript -> {
                     if (node.preSuperscript != null) {
                         profile.superscripts++
@@ -470,6 +482,7 @@ class ZhihuFormulaCorpusTest {
                         profile.subscripts++
                     }
                 }
+
                 is LatexNode.Stack -> {
                     if (!node.base.isSemanticOperator()) {
                         profile.operators++
@@ -481,9 +494,12 @@ class ZhihuFormulaCorpusTest {
                         profile.subscripts++
                     }
                 }
-                is LatexNode.Delimited ->
+
+                is LatexNode.Delimited -> {
                     profile.delimiters +=
                         "${node.left.comparableDelimiter()}|${node.right.comparableDelimiter()}"
+                }
+
                 is LatexNode.Matrix -> {
                     profile.tables += node.rows.tableShape()
                     profile.rowGapPatterns += node.rowGaps.comparablePattern()
@@ -496,10 +512,12 @@ class ZhihuFormulaCorpusTest {
                         LatexNode.Matrix.MatrixType.DOUBLE_VBAR -> profile.delimiters += "‖|‖"
                     }
                 }
+
                 is LatexNode.Array -> {
                     profile.tables += node.rows.tableShape()
                     profile.rowGapPatterns += node.rowGaps.comparablePattern()
                 }
+
                 is LatexNode.Cases -> {
                     val cases =
                         node.cases.dropLastWhile { (expression, condition) ->
@@ -509,33 +527,43 @@ class ZhihuFormulaCorpusTest {
                     profile.tables += "cases:${cases.size}"
                     profile.rowGapPatterns += node.rowGaps.comparablePattern()
                 }
+
                 is LatexNode.Aligned -> {
                     profile.tables += node.rows.tableShape()
                     profile.rowGapPatterns += node.rowGaps.comparablePattern()
                 }
+
                 is LatexNode.Split -> {
                     profile.tables += node.rows.tableShape()
                     profile.rowGapPatterns += node.rowGaps.comparablePattern()
                 }
+
                 is LatexNode.Eqnarray -> {
                     profile.tables += node.rows.tableShape()
                     profile.rowGapPatterns += node.rowGaps.comparablePattern()
                 }
-                is LatexNode.Substack ->
+
+                is LatexNode.Substack -> {
                     profile.tables += node.rows.tableShape()
+                }
+
                 is LatexNode.Tabular -> {
                     profile.tables += node.rows.tableShape()
                     profile.rowGapPatterns += node.rowGaps.comparablePattern()
                 }
+
                 is LatexNode.Multline -> {
                     profile.tables += "table:${node.lines.size}x1"
                     profile.rowGapPatterns += node.rowGaps.comparablePattern()
                 }
-                is LatexNode.TextMode ->
+
+                is LatexNode.TextMode -> {
                     node.text
                         .comparableText()
                         .takeIf(String::isNotEmpty)
                         ?.let(profile.textSegments::add)
+                }
+
                 is LatexNode.Style -> {
                     val range = node.sourceRange
                     if (
@@ -551,7 +579,8 @@ class ZhihuFormulaCorpusTest {
                             ?.let(profile.textSegments::add)
                     }
                 }
-                is LatexNode.Accent ->
+
+                is LatexNode.Accent -> {
                     if (
                         node.accentType == LatexNode.Accent.AccentType.CANCEL ||
                         node.accentType == LatexNode.Accent.AccentType.BCANCEL ||
@@ -561,17 +590,33 @@ class ZhihuFormulaCorpusTest {
                     } else {
                         profile.accents++
                     }
-                is LatexNode.ExtensibleArrow -> profile.extensibleArrows++
+                }
+
+                is LatexNode.ExtensibleArrow -> {
+                    profile.extensibleArrows++
+                }
+
                 is LatexNode.Operator,
                 is LatexNode.OperatorName,
                 is LatexNode.ModOperator,
-                -> profile.operators++
-                is LatexNode.Color -> profile.colors++
+                -> {
+                    profile.operators++
+                }
+
+                is LatexNode.Color -> {
+                    profile.colors++
+                }
+
                 is LatexNode.Boxed,
                 is LatexNode.Enclose,
                 is LatexNode.ColorBox,
-                -> profile.boxes++
-                else -> Unit
+                -> {
+                    profile.boxes++
+                }
+
+                else -> {
+                    Unit
+                }
             }
             pending.addAll(node.children())
         }
@@ -590,9 +635,13 @@ class ZhihuFormulaCorpusTest {
             is LatexNode.OperatorName,
             is LatexNode.ModOperator,
             -> true
+
             is LatexNode.Group -> children.singleSemanticNode()?.isSemanticOperator() == true
+
             is LatexNode.Style -> content.singleSemanticNode()?.isSemanticOperator() == true
+
             is LatexNode.MathStyle -> content.singleSemanticNode()?.isSemanticOperator() == true
+
             else -> false
         }
 
@@ -612,7 +661,9 @@ class ZhihuFormulaCorpusTest {
             is LatexNode.HLine,
             is LatexNode.CLine,
             -> true
+
             is LatexNode.Group -> children.any { node -> node.containsRule() }
+
             else -> false
         }
 
@@ -622,7 +673,9 @@ class ZhihuFormulaCorpusTest {
             is LatexNode.CLine,
             is LatexNode.Space,
             -> true
+
             is LatexNode.Group -> children.all { node -> node.containsOnlyRuleOrSpace() }
+
             else -> false
         }
 

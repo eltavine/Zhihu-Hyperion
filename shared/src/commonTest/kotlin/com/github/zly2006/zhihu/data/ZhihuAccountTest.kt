@@ -91,16 +91,19 @@ class ZhihuAccountTest {
                         status = HttpStatusCode.Unauthorized,
                         headers = headersOf(HttpHeaders.ContentType, "application/json"),
                     )
+
                     2 -> respond(
                         content = """{"refresh_token":"refresh-token"}""",
                         status = HttpStatusCode.OK,
                         headers = headersOf(HttpHeaders.ContentType, "application/json"),
                     )
+
                     3 -> respond(
                         content = """{"access_token":"access-token"}""",
                         status = HttpStatusCode.OK,
                         headers = headersOf(HttpHeaders.ContentType, "application/json"),
                     )
+
                     else -> respond(
                         content = """{"ok":true}""",
                         status = HttpStatusCode.OK,
@@ -147,16 +150,19 @@ class ZhihuAccountTest {
                         status = HttpStatusCode.Unauthorized,
                         headers = headersOf(HttpHeaders.ContentType, "application/json"),
                     )
+
                     2 -> respond(
                         content = """{"refresh_token":"refresh-token"}""",
                         status = HttpStatusCode.OK,
                         headers = headersOf(HttpHeaders.ContentType, "application/json"),
                     )
+
                     3 -> respond(
                         content = """{"access_token":"access-token"}""",
                         status = HttpStatusCode.OK,
                         headers = headersOf(HttpHeaders.ContentType, "application/json"),
                     )
+
                     else -> respond(
                         content = """{"follower_count":42}""",
                         status = HttpStatusCode.OK,

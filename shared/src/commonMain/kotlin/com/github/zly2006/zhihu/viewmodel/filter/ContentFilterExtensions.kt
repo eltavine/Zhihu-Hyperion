@@ -114,11 +114,17 @@ class FeedContentFilterPipeline(
             val kept = ArrayList<FilterableContent>(filteredContents.size)
             filteredContents.forEach { content ->
                 when {
-                    content.authorId in blockedUserIds ->
+                    content.authorId in blockedUserIds -> {
                         blocked.add(content to "屏蔽作者：${content.authorName ?: content.authorId}")
-                    content.questionAuthorId in blockedQuestionAuthorIds ->
+                    }
+
+                    content.questionAuthorId in blockedQuestionAuthorIds -> {
                         blocked.add(content to "屏蔽提问者：${content.questionAuthorName ?: content.questionAuthorId}")
-                    else -> kept.add(content)
+                    }
+
+                    else -> {
+                        kept.add(content)
+                    }
                 }
             }
             filteredContents = kept
@@ -213,8 +219,14 @@ private fun containsBlockedKeyword(
                     }
                     pattern.containsMatchIn(text)
                 }
-                blockedKeyword.caseSensitive -> text.contains(blockedKeyword.keyword)
-                else -> text.contains(blockedKeyword.keyword, ignoreCase = true)
+
+                blockedKeyword.caseSensitive -> {
+                    text.contains(blockedKeyword.keyword)
+                }
+
+                else -> {
+                    text.contains(blockedKeyword.keyword, ignoreCase = true)
+                }
             }
         }.getOrDefault(false)
     }
@@ -469,6 +481,7 @@ fun getFeedAdBlockReason(
             getLinkBasedAdReason(raw.content, settings)
         }
     }
+
     is DataHolder.Article -> {
         if (settings.blockPaidContent && raw.paidInfo != null) {
             "知乎盐选付费内容"
@@ -476,8 +489,14 @@ fun getFeedAdBlockReason(
             getLinkBasedAdReason(raw.content, settings)
         }
     }
-    is DataHolder.Pin -> getLinkBasedAdReason(raw.contentHtml, settings)
-    else -> null
+
+    is DataHolder.Pin -> {
+        getLinkBasedAdReason(raw.contentHtml, settings)
+    }
+
+    else -> {
+        null
+    }
 }
 
 private fun getLinkBasedAdReason(

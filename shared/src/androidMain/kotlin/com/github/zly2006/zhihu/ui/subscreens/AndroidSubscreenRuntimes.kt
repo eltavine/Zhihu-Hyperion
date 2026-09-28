@@ -227,8 +227,11 @@ actual val isApkUpdateInstallSupported: Boolean = true
 
 private fun UpdateState.toSystemUpdateState(): SystemUpdateState = when (this) {
     UpdateState.NoUpdate -> SystemUpdateState.NoUpdate
+
     UpdateState.Checking -> SystemUpdateState.Checking
+
     UpdateState.Latest -> SystemUpdateState.Latest
+
     is UpdateState.UpdateAvailable -> SystemUpdateState.UpdateAvailable(
         version = version.toString(),
         isNightly = isNightly,
@@ -236,8 +239,11 @@ private fun UpdateState.toSystemUpdateState(): SystemUpdateState = when (this) {
         downloadUrl = downloadUrl,
         cnDownloadUrl = cnDownloadUrl,
     )
+
     UpdateState.Downloading -> SystemUpdateState.Downloading
+
     is UpdateState.Downloaded -> SystemUpdateState.Downloaded
+
     is UpdateState.Error -> SystemUpdateState.Error(message)
 }
 

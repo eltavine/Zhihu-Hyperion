@@ -366,15 +366,20 @@ private fun guessArticleExportImageMimeTypeFromBytes(imageBytes: ByteArray): Str
 
     return when {
         matches(0xff, 0xd8, 0xff) -> "image/jpeg"
+
         matches(0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a) -> "image/png"
+
         matches(0x47, 0x49, 0x46, 0x38) -> "image/gif"
+
         matches(0x42, 0x4d) -> "image/bmp"
+
         imageBytes.size >= 12 &&
             matches(0x52, 0x49, 0x46, 0x46) &&
             imageBytes[8].toInt().toChar() == 'W' &&
             imageBytes[9].toInt().toChar() == 'E' &&
             imageBytes[10].toInt().toChar() == 'B' &&
             imageBytes[11].toInt().toChar() == 'P' -> "image/webp"
+
         else -> null
     }
 }
@@ -487,6 +492,7 @@ fun buildArticleExportFileName(
             typeKey = "answer",
             articleId = content.id,
         )
+
         is DataHolder.Article -> ExportFileMeta(
             title = content.title,
             authorName = content.author.name,
@@ -494,6 +500,7 @@ fun buildArticleExportFileName(
             typeKey = "article",
             articleId = content.id,
         )
+
         else -> throw IllegalArgumentException("Unsupported export content type: ${content::class.simpleName}")
     }
     val safeTitle = sanitizeArticleExportFileNamePart(title).ifBlank { "无标题" }

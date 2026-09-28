@@ -136,20 +136,26 @@ class LocalContentInitializer(
             // 如果该类型的任务或结果不足，则创建新任务
             if (pendingCount < minTasksPerReason && completedCount < 10) {
                 val additionalTasks = when (reason) {
-                    CrawlingReason.Following -> (0 until (minTasksPerReason - pendingCount)).map { index ->
-                        CrawlingTask(
-                            url = zhihuFollowingRecommendUrl(offset = index * 10),
-                            reason = CrawlingReason.Following,
-                            priority = 8,
-                        )
+                    CrawlingReason.Following -> {
+                        (0 until (minTasksPerReason - pendingCount)).map { index ->
+                            CrawlingTask(
+                                url = zhihuFollowingRecommendUrl(offset = index * 10),
+                                reason = CrawlingReason.Following,
+                                priority = 8,
+                            )
+                        }
                     }
-                    CrawlingReason.Trending -> (0 until (minTasksPerReason - pendingCount)).map { index ->
-                        CrawlingTask(
-                            url = zhihuTopstoryRecommendUrl(limit = 20, offset = index * 20),
-                            reason = CrawlingReason.Trending,
-                            priority = 7,
-                        )
+
+                    CrawlingReason.Trending -> {
+                        (0 until (minTasksPerReason - pendingCount)).map { index ->
+                            CrawlingTask(
+                                url = zhihuTopstoryRecommendUrl(limit = 20, offset = index * 20),
+                                reason = CrawlingReason.Trending,
+                                priority = 7,
+                            )
+                        }
                     }
+
                     CrawlingReason.UpvotedQuestion -> {
                         val count = minTasksPerReason - pendingCount
                         val upvotedQuestionTasks = mutableListOf<CrawlingTask>()
@@ -176,19 +182,25 @@ class LocalContentInitializer(
                         }
                         upvotedQuestionTasks
                     }
-                    CrawlingReason.FollowingUpvote -> (0 until (minTasksPerReason - pendingCount)).map { index ->
-                        CrawlingTask(
-                            url = zhihuFollowingUpvoteRecommendUrl(limit = 20, offset = index * 20),
-                            reason = CrawlingReason.FollowingUpvote,
-                            priority = 5,
-                        )
+
+                    CrawlingReason.FollowingUpvote -> {
+                        (0 until (minTasksPerReason - pendingCount)).map { index ->
+                            CrawlingTask(
+                                url = zhihuFollowingUpvoteRecommendUrl(limit = 20, offset = index * 20),
+                                reason = CrawlingReason.FollowingUpvote,
+                                priority = 5,
+                            )
+                        }
                     }
-                    CrawlingReason.CollaborativeFiltering -> (0 until (minTasksPerReason - pendingCount)).map { index ->
-                        CrawlingTask(
-                            url = zhihuTopstoryRecommendUrl(limit = 15, offset = index * 15),
-                            reason = CrawlingReason.CollaborativeFiltering,
-                            priority = 4,
-                        )
+
+                    CrawlingReason.CollaborativeFiltering -> {
+                        (0 until (minTasksPerReason - pendingCount)).map { index ->
+                            CrawlingTask(
+                                url = zhihuTopstoryRecommendUrl(limit = 15, offset = index * 15),
+                                reason = CrawlingReason.CollaborativeFiltering,
+                                priority = 4,
+                            )
+                        }
                     }
                 }
                 tasks.addAll(additionalTasks)

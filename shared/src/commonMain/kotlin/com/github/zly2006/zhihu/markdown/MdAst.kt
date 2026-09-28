@@ -222,8 +222,11 @@ private fun Element.isBlockBoundary(
     "table",
     "div",
     -> true
+
     "img" -> equationNode(this) is MathBlock
+
     "a" -> attr("class").contains("video-box")
+
     else -> false
 }
 
@@ -231,11 +234,13 @@ private fun convertElementToBlock(
     element: Element,
     noNativeBlock: Boolean,
 ): List<MarkdownNode> = when (element.tagName().lowercase()) {
-    "h1", "h2", "h3", "h4", "h5", "h6" -> listOf(
-        Heading(level = element.tagName()[1].digitToInt()).apply {
-            appendChildren(extractInlineChildren(element))
-        },
-    )
+    "h1", "h2", "h3", "h4", "h5", "h6" -> {
+        listOf(
+            Heading(level = element.tagName()[1].digitToInt()).apply {
+                appendChildren(extractInlineChildren(element))
+            },
+        )
+    }
 
     "p" -> {
         fun Element.textWithOnlyWhitespace(): Boolean =
@@ -264,25 +269,41 @@ private fun convertElementToBlock(
         }
     }
 
-    "blockquote" -> listOf(
-        BlockQuote().apply {
-            element.childNodes().convertNodesToBlocks(noNativeBlock).forEach(::appendChild)
-        },
-    )
+    "blockquote" -> {
+        listOf(
+            BlockQuote().apply {
+                element.childNodes().convertNodesToBlocks(noNativeBlock).forEach(::appendChild)
+            },
+        )
+    }
 
-    "pre" -> listOf(createCodeBlock(element))
+    "pre" -> {
+        listOf(createCodeBlock(element))
+    }
 
-    "ul" -> listOf(createListBlock(element, ordered = false, noNativeBlock = noNativeBlock))
+    "ul" -> {
+        listOf(createListBlock(element, ordered = false, noNativeBlock = noNativeBlock))
+    }
 
-    "ol" -> listOf(createListBlock(element, ordered = true, noNativeBlock = noNativeBlock))
+    "ol" -> {
+        listOf(createListBlock(element, ordered = true, noNativeBlock = noNativeBlock))
+    }
 
-    "hr" -> listOf(ThematicBreak())
+    "hr" -> {
+        listOf(ThematicBreak())
+    }
 
-    "img" -> listOfNotNull(createBlockImage(element))
+    "img" -> {
+        listOfNotNull(createBlockImage(element))
+    }
 
-    "figure" -> listOfNotNull(createFigureBlock(element))
+    "figure" -> {
+        listOfNotNull(createFigureBlock(element))
+    }
 
-    "table" -> listOf(createTableBlock(element))
+    "table" -> {
+        listOf(createTableBlock(element))
+    }
 
     "div" -> {
         element.childNodes().convertNodesToBlocks(noNativeBlock)
@@ -300,7 +321,9 @@ private fun convertElementToBlock(
         }
     }
 
-    else -> emptyList()
+    else -> {
+        emptyList()
+    }
 }
 
 private fun createCodeBlock(element: Element): FencedCodeBlock {
@@ -518,22 +541,30 @@ private fun extractInlineChildren(
 
 private fun HtmlNode.hasInlineContent(): Boolean = when (this) {
     is TextNode -> text().isNotBlank()
+
     is Element -> when (tagName().lowercase()) {
         "br" -> false
         "img" -> extractEquationTex(this) != null || extractImageUrl(this::attr) != null
         else -> childNodes().any { it.hasInlineContent() } || text().isNotBlank()
     }
+
     else -> false
 }
 
 private fun HtmlNode.supportsSegmentHighlightFormat(): Boolean = when (this) {
-    is TextNode -> true
+    is TextNode -> {
+        true
+    }
+
     is Element -> {
         val supportedTag = tagName().lowercase() in SEGMENT_HIGHLIGHT_FORMAT_TAGS ||
             (tagName().equals("span", ignoreCase = true) && hasClass("highlight-wrap"))
         supportedTag && childNodes().all(HtmlNode::supportsSegmentHighlightFormat)
     }
-    else -> false
+
+    else -> {
+        false
+    }
 }
 
 private fun extractEquationTex(imgElement: Element): String? = extractImageUrl(imgElement::attr)
@@ -581,12 +612,18 @@ internal fun String.zhihuEquationSemantics(): ZhihuEquationSemantics {
         var cursor = start
         while (cursor < length) {
             when {
-                this[cursor].isWhitespace() -> cursor++
+                this[cursor].isWhitespace() -> {
+                    cursor++
+                }
+
                 this[cursor] == '%' -> {
                     cursor++
                     while (cursor < length && this[cursor] != '\n' && this[cursor] != '\r') cursor++
                 }
-                else -> return cursor
+
+                else -> {
+                    return cursor
+                }
             }
         }
         return cursor
@@ -606,15 +643,20 @@ internal fun String.zhihuEquationSemantics(): ZhihuEquationSemantics {
 
     while (index < length) {
         when (this[index]) {
-            '%' -> index = skipIgnorable(index)
+            '%' -> {
+                index = skipIgnorable(index)
+            }
+
             '{' -> {
                 groupDepth++
                 index++
             }
+
             '}' -> {
                 if (groupDepth > 0) groupDepth--
                 index++
             }
+
             '\\' -> {
                 if (index + 1 < length && this[index + 1] == '\\') {
                     val afterSeparator = index + 2
@@ -657,7 +699,10 @@ internal fun String.zhihuEquationSemantics(): ZhihuEquationSemantics {
                 }
                 index = commandEnd
             }
-            else -> index++
+
+            else -> {
+                index++
+            }
         }
     }
     return ZhihuEquationSemantics(isDisplay, hasEquationTag)
@@ -683,128 +728,148 @@ private fun extractInlineNode(
         }
     }
 
-    is Element -> when (node.tagName().lowercase()) {
-        "strong", "b" -> listOf(
-            StrongEmphasis().apply { appendChildren(extractInlineChildren(node, segmentHighlightsEnabled)) },
-        )
-
-        "em", "i" -> listOf(
-            Emphasis().apply { appendChildren(extractInlineChildren(node, segmentHighlightsEnabled)) },
-        )
-
-        "del", "s", "strike" -> listOf(
-            Strikethrough().apply { appendChildren(extractInlineChildren(node, segmentHighlightsEnabled)) },
-        )
-
-        "mark" -> listOf(Highlight().apply { appendChildren(extractInlineChildren(node, segmentHighlightsEnabled)) })
-
-        "span" -> {
-            if (segmentHighlightsEnabled && node.hasClass("highlight-wrap")) {
+    is Element -> {
+        when (node.tagName().lowercase()) {
+            "strong", "b" -> {
                 listOf(
-                    SegmentHighlight(
-                        text = node.text(),
-                        attributes = SEGMENT_HIGHLIGHT_ATTRIBUTES
-                            .associateWith(node::attr)
-                            .filterValues(String::isNotEmpty),
-                    ).apply {
-                        appendChildren(extractInlineChildren(node, segmentHighlightsEnabled))
-                    },
+                    StrongEmphasis().apply { appendChildren(extractInlineChildren(node, segmentHighlightsEnabled)) },
                 )
-            } else {
-                extractInlineChildren(node, segmentHighlightsEnabled)
             }
-        }
 
-        "sub" -> listOf(Subscript().apply { appendChildren(extractInlineChildren(node, segmentHighlightsEnabled)) })
+            "em", "i" -> {
+                listOf(
+                    Emphasis().apply { appendChildren(extractInlineChildren(node, segmentHighlightsEnabled)) },
+                )
+            }
 
-        "sup" -> {
-            if (node.attr("data-draft-type") == "reference") {
-                val index = node.attr("data-numero").toInt()
-                parsingDocument!!.footnoteDefinitions[node.attr("data-numero")] = FootnoteDefinition(index.toString(), index).apply {
-                    appendChild(
-                        Paragraph().apply {
-                            appendChild(Text(node.attr("data-text")))
-                            val url = node.attr("data-url")
-                            if (url.isNotBlank()) {
-                                appendChild(
-                                    Link(destination = url).apply {
-                                        appendChild(Text(url))
-                                    },
-                                )
-                            }
+            "del", "s", "strike" -> {
+                listOf(
+                    Strikethrough().apply { appendChildren(extractInlineChildren(node, segmentHighlightsEnabled)) },
+                )
+            }
+
+            "mark" -> {
+                listOf(Highlight().apply { appendChildren(extractInlineChildren(node, segmentHighlightsEnabled)) })
+            }
+
+            "span" -> {
+                if (segmentHighlightsEnabled && node.hasClass("highlight-wrap")) {
+                    listOf(
+                        SegmentHighlight(
+                            text = node.text(),
+                            attributes = SEGMENT_HIGHLIGHT_ATTRIBUTES
+                                .associateWith(node::attr)
+                                .filterValues(String::isNotEmpty),
+                        ).apply {
+                            appendChildren(extractInlineChildren(node, segmentHighlightsEnabled))
                         },
                     )
+                } else {
+                    extractInlineChildren(node, segmentHighlightsEnabled)
                 }
-                listOf(FootnoteReference(index.toString(), index))
-            } else {
-                listOf(Superscript().apply { appendChildren(extractInlineChildren(node, segmentHighlightsEnabled)) })
             }
-        }
 
-        "kbd" -> listOf(KeyboardInput(node.text()))
+            "sub" -> {
+                listOf(Subscript().apply { appendChildren(extractInlineChildren(node, segmentHighlightsEnabled)) })
+            }
 
-        "code" -> listOf(InlineCode(node.text()))
-
-        "a" -> {
-            val href = node.attr("href")
-            listOf(
-                Link(destination = normalizeLinkDestination(href)).apply {
-                    appendChildren(
-                        extractInlineChildren(node, segmentHighlightsEnabled).ifEmpty {
-                            listOf(
-                                Text(node.text()),
-                            )
-                        },
-                    )
-                },
-            )
-        }
-
-        "br" -> listOf(HardLineBreak())
-
-        "img" -> {
-            val equation = node.extractEquationNode()
-            if (equation != null) {
-                listOf(equation)
-            } else {
-                extractImageUrl(node::attr)
-                    ?.let { url ->
-                        listOf(
-                            Image(
-                                destination = url,
-                                title = node.attr("title").ifBlank { null },
-                                imageWidth = node.attr("width").toIntOrNull(),
-                                imageHeight = node.attr("height").toIntOrNull(),
-                            ).apply {
-                                node.attr("alt").takeIf { it.isNotBlank() }?.let {
+            "sup" -> {
+                if (node.attr("data-draft-type") == "reference") {
+                    val index = node.attr("data-numero").toInt()
+                    parsingDocument!!.footnoteDefinitions[node.attr("data-numero")] = FootnoteDefinition(index.toString(), index).apply {
+                        appendChild(
+                            Paragraph().apply {
+                                appendChild(Text(node.attr("data-text")))
+                                val url = node.attr("data-url")
+                                if (url.isNotBlank()) {
                                     appendChild(
-                                        Text(it),
+                                        Link(destination = url).apply {
+                                            appendChild(Text(url))
+                                        },
                                     )
                                 }
                             },
                         )
-                    }.orEmpty()
+                    }
+                    listOf(FootnoteReference(index.toString(), index))
+                } else {
+                    listOf(Superscript().apply { appendChildren(extractInlineChildren(node, segmentHighlightsEnabled)) })
+                }
             }
-        }
 
-        else -> {
-            val children = extractInlineChildren(node, segmentHighlightsEnabled)
-            if (children.isNotEmpty()) {
-                children
-            } else {
-                node
-                    .text()
-                    .takeIf { it.isNotBlank() }
-                    ?.let {
-                        listOf(
-                            Text(it),
+            "kbd" -> {
+                listOf(KeyboardInput(node.text()))
+            }
+
+            "code" -> {
+                listOf(InlineCode(node.text()))
+            }
+
+            "a" -> {
+                val href = node.attr("href")
+                listOf(
+                    Link(destination = normalizeLinkDestination(href)).apply {
+                        appendChildren(
+                            extractInlineChildren(node, segmentHighlightsEnabled).ifEmpty {
+                                listOf(
+                                    Text(node.text()),
+                                )
+                            },
                         )
-                    }.orEmpty()
+                    },
+                )
+            }
+
+            "br" -> {
+                listOf(HardLineBreak())
+            }
+
+            "img" -> {
+                val equation = node.extractEquationNode()
+                if (equation != null) {
+                    listOf(equation)
+                } else {
+                    extractImageUrl(node::attr)
+                        ?.let { url ->
+                            listOf(
+                                Image(
+                                    destination = url,
+                                    title = node.attr("title").ifBlank { null },
+                                    imageWidth = node.attr("width").toIntOrNull(),
+                                    imageHeight = node.attr("height").toIntOrNull(),
+                                ).apply {
+                                    node.attr("alt").takeIf { it.isNotBlank() }?.let {
+                                        appendChild(
+                                            Text(it),
+                                        )
+                                    }
+                                },
+                            )
+                        }.orEmpty()
+                }
+            }
+
+            else -> {
+                val children = extractInlineChildren(node, segmentHighlightsEnabled)
+                if (children.isNotEmpty()) {
+                    children
+                } else {
+                    node
+                        .text()
+                        .takeIf { it.isNotBlank() }
+                        ?.let {
+                            listOf(
+                                Text(it),
+                            )
+                        }.orEmpty()
+                }
             }
         }
     }
 
-    else -> emptyList()
+    else -> {
+        emptyList()
+    }
 }
 
 private fun normalizeLinkDestination(href: String): String =
@@ -941,7 +1006,9 @@ private fun MarkdownNode.appendMarkdownBlock(
             out.append("\n")
         }
 
-        is ThematicBreak -> out.append("---\n\n")
+        is ThematicBreak -> {
+            out.append("---\n\n")
+        }
 
         is MathBlock -> {
             val tex = literal.trim()
@@ -995,18 +1062,54 @@ private fun ListItem.appendMarkdownListItem(out: StringBuilder) {
 
 private fun MarkdownNode.appendMarkdownInline(out: StringBuilder) {
     when (this) {
-        is Text -> out.append(literal)
-        is StrongEmphasis -> out.append("**").also { children.forEach { it.appendMarkdownInline(out) } }.append("**")
-        is Emphasis -> out.append("*").also { children.forEach { it.appendMarkdownInline(out) } }.append("*")
-        is Strikethrough -> out.append("~~").also { children.forEach { it.appendMarkdownInline(out) } }.append("~~")
-        is Highlight -> children.forEach { it.appendMarkdownInline(out) }
-        is Subscript -> out.append("<sub>").also { children.forEach { it.appendMarkdownInline(out) } }.append("</sub>")
-        is Superscript -> out.append("<sup>").also { children.forEach { it.appendMarkdownInline(out) } }.append("</sup>")
-        is InlineCode -> out.append("`").append(literal).append("`")
-        is KeyboardInput -> out.append("<kbd>").append(literal).append("</kbd>")
-        is HardLineBreak -> out.append("\n")
-        is InlineMath -> out.append("$").append(literal.trim()).append("$")
-        is FootnoteReference -> out.append("[^").append(index).append("]")
+        is Text -> {
+            out.append(literal)
+        }
+
+        is StrongEmphasis -> {
+            out.append("**").also { children.forEach { it.appendMarkdownInline(out) } }.append("**")
+        }
+
+        is Emphasis -> {
+            out.append("*").also { children.forEach { it.appendMarkdownInline(out) } }.append("*")
+        }
+
+        is Strikethrough -> {
+            out.append("~~").also { children.forEach { it.appendMarkdownInline(out) } }.append("~~")
+        }
+
+        is Highlight -> {
+            children.forEach { it.appendMarkdownInline(out) }
+        }
+
+        is Subscript -> {
+            out.append("<sub>").also { children.forEach { it.appendMarkdownInline(out) } }.append("</sub>")
+        }
+
+        is Superscript -> {
+            out.append("<sup>").also { children.forEach { it.appendMarkdownInline(out) } }.append("</sup>")
+        }
+
+        is InlineCode -> {
+            out.append("`").append(literal).append("`")
+        }
+
+        is KeyboardInput -> {
+            out.append("<kbd>").append(literal).append("</kbd>")
+        }
+
+        is HardLineBreak -> {
+            out.append("\n")
+        }
+
+        is InlineMath -> {
+            out.append("$").append(literal.trim()).append("$")
+        }
+
+        is FootnoteReference -> {
+            out.append("[^").append(index).append("]")
+        }
+
         is Link -> {
             val text = buildString { children.forEach { it.appendMarkdownInline(this) } }.ifBlank { destination }
             out
@@ -1027,7 +1130,9 @@ private fun MarkdownNode.appendMarkdownInline(out: StringBuilder) {
                 .append(")")
         }
 
-        else -> if (this is ContainerNode) children.forEach { it.appendMarkdownInline(out) }
+        else -> {
+            if (this is ContainerNode) children.forEach { it.appendMarkdownInline(out) }
+        }
     }
 }
 

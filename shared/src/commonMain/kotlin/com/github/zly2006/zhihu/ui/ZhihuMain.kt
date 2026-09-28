@@ -986,31 +986,37 @@ private fun MainTabsPager(
                 showTopActions = showHomeTopActions,
                 isActive = pagerState.currentPage == pageIndex,
             )
+
             MainTabPage.FollowPage -> FollowScreen(
                 scrollToTopTrigger = scrollToTopTrigger,
                 innerPadding = innerPadding,
                 parentPagerState = pagerState,
                 isActive = pagerState.currentPage == pageIndex,
             )
+
             MainTabPage.HotListPage -> HotListScreen(
                 innerPadding = innerPadding,
                 scrollToTopTrigger = scrollToTopTrigger,
                 isActive = pagerState.currentPage == pageIndex,
             )
+
             MainTabPage.DailyPage -> DailyScreen(
                 scrollToTopTrigger = scrollToTopTrigger,
                 isActive = pagerState.currentPage == pageIndex,
             )
+
             MainTabPage.OnlineHistoryPage -> OnlineHistoryScreen(
                 scrollToTopTrigger = scrollToTopTrigger,
                 isActive = pagerState.currentPage == pageIndex,
             )
+
             MainTabPage.MyCollectionsPage -> MyCollectionsTopLevelPage(
                 scrollToTopTrigger = scrollToTopTrigger,
                 innerPadding = innerPadding,
                 collectionDirectBrowseEnabled = collectionDirectBrowseEnabled,
                 isActive = pagerState.currentPage == pageIndex,
             )
+
             MainTabPage.AccountPage -> AccountSettingScreen(
                 innerPadding = innerPadding,
                 isActive = pagerState.currentPage == pageIndex,
@@ -1077,6 +1083,7 @@ private fun NavDestination.isAccountDetailDestination(): Boolean = when (this) {
     Account.DeveloperSettings,
     Account.DeveloperSettings.ColorScheme,
     -> true
+
     else -> false
 }
 

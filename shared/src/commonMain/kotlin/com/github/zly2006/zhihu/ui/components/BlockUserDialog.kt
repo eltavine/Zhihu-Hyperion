@@ -77,12 +77,19 @@ fun FeedAuthorBlockConfirmDialogContent(
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = when {
-                            isQuestionAuthorStatsLoading -> "正在加载问题与回答数据…"
-                            questionAuthorStats != null ->
+                            isQuestionAuthorStatsLoading -> {
+                                "正在加载问题与回答数据…"
+                            }
+
+                            questionAuthorStats != null -> {
                                 "问题 ${questionAuthorStats.questionCount} · " +
                                     "回答 ${questionAuthorStats.answerCount} · " +
                                     "问题/回答比 ${questionAnswerRatioText(questionAuthorStats)}"
-                            else -> "问题与回答数据暂时不可用"
+                            }
+
+                            else -> {
+                                "问题与回答数据暂时不可用"
+                            }
                         },
                         modifier = Modifier.testTag("feed_question_author_activity_stats"),
                         style = MaterialTheme.typography.bodyMedium,

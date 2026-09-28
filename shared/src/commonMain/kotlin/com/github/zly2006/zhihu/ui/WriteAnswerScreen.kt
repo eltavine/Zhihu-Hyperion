@@ -434,6 +434,7 @@ fun WriteAnswerScreen(
                             editorActionsVisible = false
                             accumulatedEditorScroll = 0f
                         }
+
                         accumulatedEditorScroll >= actionVisibilityThreshold -> {
                             editorActionsVisible = true
                             accumulatedEditorScroll = 0f

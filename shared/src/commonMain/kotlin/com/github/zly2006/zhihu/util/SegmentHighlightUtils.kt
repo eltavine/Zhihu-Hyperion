@@ -265,7 +265,10 @@ fun parseSegmentTextParagraph(element: Element): SegmentTextParagraph? {
 }
 
 private fun parseSegmentNode(node: Node): SegmentTextPart? = when (node) {
-    is TextNode -> node.text().takeIf { it.isNotEmpty() }?.let(::SegmentTextPart)
+    is TextNode -> {
+        node.text().takeIf { it.isNotEmpty() }?.let(::SegmentTextPart)
+    }
+
     is Element -> {
         if (!node.hasClass("highlight-wrap")) {
             return null
@@ -297,5 +300,7 @@ private fun parseSegmentNode(node: Node): SegmentTextPart? = when (node) {
         )
     }
 
-    else -> null
+    else -> {
+        null
+    }
 }

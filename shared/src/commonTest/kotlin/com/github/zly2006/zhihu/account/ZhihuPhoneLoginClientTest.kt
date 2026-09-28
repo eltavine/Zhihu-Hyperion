@@ -126,7 +126,9 @@ class ZhihuPhoneLoginClientTest {
                         respondJson("""{"success":true}""")
                     }
 
-                    else -> error("Unexpected request #$requestIndex")
+                    else -> {
+                        error("Unexpected request #$requestIndex")
+                    }
                 }
             },
             cookies,
@@ -148,7 +150,9 @@ class ZhihuPhoneLoginClientTest {
             MockEngine { request ->
                 requestIndex++
                 when (requestIndex) {
-                    1 -> respondJson(INITIALIZATION_RESPONSE)
+                    1 -> {
+                        respondJson(INITIALIZATION_RESPONSE)
+                    }
 
                     2 -> {
                         assertEquals(HttpMethod.Get, request.method)
@@ -169,7 +173,9 @@ class ZhihuPhoneLoginClientTest {
                         respondJson("""{"success":true}""")
                     }
 
-                    else -> error("Unexpected request #$requestIndex")
+                    else -> {
+                        error("Unexpected request #$requestIndex")
+                    }
                 }
             },
             cookies,
@@ -190,27 +196,35 @@ class ZhihuPhoneLoginClientTest {
             MockEngine { request ->
                 requestIndex++
                 when (requestIndex) {
-                    1 -> respond(
-                        content = "web-device-id",
-                        headers = headersOf(HttpHeaders.SetCookie, "d_c0=device-cookie; Path=/; Domain=zhihu.com"),
-                    )
+                    1 -> {
+                        respond(
+                            content = "web-device-id",
+                            headers = headersOf(HttpHeaders.SetCookie, "d_c0=device-cookie; Path=/; Domain=zhihu.com"),
+                        )
+                    }
 
-                    2 -> respondJson(
-                        """
-                        {
-                          "udid": "device-id",
-                          "guest": {
-                            "access_token": "guest-access",
-                            "token_type": "bearer",
-                            "cookie": {"q_c0": "guest-cookie"}
-                          }
-                        }
-                        """.trimIndent(),
-                    )
+                    2 -> {
+                        respondJson(
+                            """
+                            {
+                              "udid": "device-id",
+                              "guest": {
+                                "access_token": "guest-access",
+                                "token_type": "bearer",
+                                "cookie": {"q_c0": "guest-cookie"}
+                              }
+                            }
+                            """.trimIndent(),
+                        )
+                    }
 
-                    3 -> respondJson("""{"show_captcha":false}""")
+                    3 -> {
+                        respondJson("""{"show_captcha":false}""")
+                    }
 
-                    4 -> respondJson("""{"success":true}""")
+                    4 -> {
+                        respondJson("""{"success":true}""")
+                    }
 
                     5 -> {
                         assertEquals(HttpMethod.Post, request.method)
@@ -245,7 +259,9 @@ class ZhihuPhoneLoginClientTest {
                         )
                     }
 
-                    else -> error("Unexpected request #$requestIndex")
+                    else -> {
+                        error("Unexpected request #$requestIndex")
+                    }
                 }
             },
             cookies,
@@ -296,7 +312,9 @@ class ZhihuPhoneLoginClientTest {
                 requestIndex++
                 when (requestIndex) {
                     1 -> respondJson(INITIALIZATION_RESPONSE)
+
                     2 -> respondJson("""{"show_captcha":false}""")
+
                     3 -> respondJson(
                         body =
                             """
@@ -332,12 +350,20 @@ class ZhihuPhoneLoginClientTest {
             MockEngine { request ->
                 requestIndex++
                 when (requestIndex) {
-                    1 -> respondJson(INITIALIZATION_RESPONSE)
-                    2 -> respondJson("""{"show_captcha":false}""")
-                    3 -> respondJson(
-                        body = """{"error":{"code":120005,"message":"需要重新检查验证码"}}""",
-                        status = HttpStatusCode.BadRequest,
-                    )
+                    1 -> {
+                        respondJson(INITIALIZATION_RESPONSE)
+                    }
+
+                    2 -> {
+                        respondJson("""{"show_captcha":false}""")
+                    }
+
+                    3 -> {
+                        respondJson(
+                            body = """{"error":{"code":120005,"message":"需要重新检查验证码"}}""",
+                            status = HttpStatusCode.BadRequest,
+                        )
+                    }
 
                     4 -> {
                         assertEquals(HttpMethod.Get, request.method)
@@ -350,7 +376,9 @@ class ZhihuPhoneLoginClientTest {
                         respondJson("""{"success":true}""")
                     }
 
-                    else -> error("Unexpected request #$requestIndex")
+                    else -> {
+                        error("Unexpected request #$requestIndex")
+                    }
                 }
             },
             cookies,

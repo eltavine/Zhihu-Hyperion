@@ -475,12 +475,19 @@ class ArticleViewModel(
                                 answer.summary
                             }
                         }
+
                         "error" -> {
                             val message = decodeZhidaStreamErrorMessage(payload.data) ?: "总结失败"
                             throw IllegalStateException(message)
                         }
-                        "end" -> streamEnded = true
-                        else -> Unit
+
+                        "end" -> {
+                            streamEnded = true
+                        }
+
+                        else -> {
+                            Unit
+                        }
                     }
                 }
 
@@ -498,15 +505,23 @@ class ArticleViewModel(
                         line.startsWith("event:") -> {
                             frameEvent = line.substringAfter("event:").trim()
                         }
+
                         line.startsWith("data:") -> {
                             frameDataLines += line.substringAfter("data:")
                         }
+
                         line.isBlank() -> {
                             flushFrame()
                             frameEvent = null
                         }
-                        line.startsWith(":") -> Unit
-                        else -> Unit
+
+                        line.startsWith(":") -> {
+                            Unit
+                        }
+
+                        else -> {
+                            Unit
+                        }
                     }
                 }
 
@@ -566,9 +581,12 @@ class ArticleViewModel(
                                 val indexB = collectionOrder.indexOf(b.id)
                                 when {
                                     indexA == -1 && indexB == -1 -> 0
+
                                     // 把新的放前面
                                     indexA == -1 -> -1
+
                                     indexB == -1 -> 1
+
                                     else -> indexA.compareTo(indexB)
                                 }
                             },

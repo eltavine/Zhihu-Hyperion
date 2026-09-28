@@ -132,6 +132,7 @@ fun SentenceSimilarityTestScreen() {
                                 strokeWidth = 2.dp,
                             )
                         }
+
                         is ModelState.Downloading -> {
                             Column(horizontalAlignment = Alignment.End) {
                                 Text(
@@ -145,6 +146,7 @@ fun SentenceSimilarityTestScreen() {
                                 )
                             }
                         }
+
                         is ModelState.Error -> {
                             Text(
                                 text = "加载失败",
@@ -153,6 +155,7 @@ fun SentenceSimilarityTestScreen() {
                                 color = MaterialTheme.colorScheme.error,
                             )
                         }
+
                         ModelState.Ready -> {
                             Text(
                                 text = "MiniLM",
@@ -160,6 +163,7 @@ fun SentenceSimilarityTestScreen() {
                                 modifier = Modifier.padding(end = 16.dp),
                             )
                         }
+
                         ModelState.Uninitialized -> {
                             Text(
                                 text = "未加载",

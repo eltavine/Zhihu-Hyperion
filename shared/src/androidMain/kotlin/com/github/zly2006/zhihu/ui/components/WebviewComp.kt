@@ -511,7 +511,10 @@ private class UserFilesPathHandler(
                 val fontName = settings.getString("webviewCustomFontName", "")
                 if (fontName.endsWith(".otf", ignoreCase = true)) "font/otf" else "font/ttf"
             }
-            else -> "application/octet-stream"
+
+            else -> {
+                "application/octet-stream"
+            }
         }
         return WebResourceResponse(
             mimeType,

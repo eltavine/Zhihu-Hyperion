@@ -109,16 +109,25 @@ class OnlineHomeNotificationRepository(
 
     private fun OnlineHomeNotificationAccept.isValid(): Boolean = text.isNotBlank() &&
         when (key) {
-            HOME_NOTIFICATION_ACTION_OPEN_URL ->
+            HOME_NOTIFICATION_ACTION_OPEN_URL -> {
                 (value as? JsonPrimitive)?.contentOrNull?.startsWith("https://") == true
-            HOME_NOTIFICATION_ACTION_OPEN_WEBVIEW ->
+            }
+
+            HOME_NOTIFICATION_ACTION_OPEN_WEBVIEW -> {
                 (value as? JsonPrimitive)?.contentOrNull?.startsWith("https://") == true
+            }
+
             HOME_NOTIFICATION_ACTION_OPEN_PIN,
             HOME_NOTIFICATION_ACTION_OPEN_ANSWER,
             HOME_NOTIFICATION_ACTION_OPEN_ARTICLE,
-            ->
+            -> {
                 (value as? JsonPrimitive)?.contentOrNull?.toLongOrNull() != null
-            HOME_NOTIFICATION_ACTION_OPEN_UPDATE_SETTINGS -> value == null
+            }
+
+            HOME_NOTIFICATION_ACTION_OPEN_UPDATE_SETTINGS -> {
+                value == null
+            }
+
             HOME_NOTIFICATION_ACTION_SET_SETTING -> {
                 val setting = value as? JsonObject
                 val name = setting?.get("setting_name")?.jsonPrimitive?.contentOrNull
@@ -129,6 +138,9 @@ class OnlineHomeNotificationRepository(
                     else -> false
                 }
             }
-            else -> false
+
+            else -> {
+                false
+            }
         }
 }

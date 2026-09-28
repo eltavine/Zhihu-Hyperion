@@ -105,13 +105,18 @@ object ContentDetailCache {
             }
             Pair(type, navDestination.id.toString())
         }
+
         is Question -> {
             Pair("question", navDestination.questionId.toString())
         }
+
         is Pin -> {
             Pair("pin", navDestination.id.toString())
         }
-        else -> null
+
+        else -> {
+            null
+        }
     }
 }
 
@@ -122,7 +127,9 @@ fun zhihuContentDetailUrl(destination: NavDestination): String? = when (destinat
     }
 
     is Question -> "https://www.zhihu.com/api/v4/questions/${destination.questionId}"
+
     is Pin -> "https://www.zhihu.com/api/v4/pins/${destination.id}"
+
     else -> null
 }
 
@@ -133,7 +140,9 @@ fun zhihuContentDetailInclude(destination: NavDestination): String = when (desti
     }
 
     is Question -> "read_count,visit_count,answer_count,voteup_count,comment_count,follower_count,detail,excerpt,author,relationship.is_following,topics"
+
     is Pin -> "topics"
+
     else -> ""
 }
 

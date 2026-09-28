@@ -12,6 +12,8 @@ compose-material-icons = "1.7.3"
 androidx-compose-bom = "2026.09.00"
 aboutlibraries = "15.2.0"
 ktlint-gradle = "14.2.0"
+# The Gradle plugin defaults to an older engine; pin the linter itself so formatting is reproducible.
+ktlint = "1.8.0"
 foojay-resolver = "1.0.0"
 module-graph-assertion = "2.9.1"
 android-compileSdk = "37"

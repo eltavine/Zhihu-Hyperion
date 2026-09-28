@@ -175,15 +175,18 @@ internal fun rememberPageTurnRuntimeState(): PageTurnRuntimeState {
     DisposableEffect(settings, state) {
         val subscription = settings.observeKeyChanges { key ->
             when (key) {
-                PREF_PAGE_TURN_PERCENT ->
+                PREF_PAGE_TURN_PERCENT -> {
                     state.pageTurnPercent = settings
                         .getInt(PREF_PAGE_TURN_PERCENT, DEFAULT_PAGE_TURN_PERCENT)
                         .coerceIn(50, 100)
-                PREF_SHOW_PAGE_TURN_GUIDE ->
+                }
+
+                PREF_SHOW_PAGE_TURN_GUIDE -> {
                     state.showGuide =
                         settings.getBoolean(PREF_SHOW_PAGE_TURN_GUIDE, DEFAULT_SHOW_PAGE_TURN_GUIDE).also { showGuide ->
                             if (!showGuide) state.lastPageTurnDirection = 0
                         }
+                }
             }
         }
         onDispose(subscription::close)
@@ -473,8 +476,14 @@ fun rememberPageTurnTarget(
         state.pageTurnScrollInProgress = true
         try {
             when (command) {
-                PageTurnCommand.JumpToTop -> scrollState.scrollTo(0)
-                PageTurnCommand.JumpToBottom -> scrollState.scrollTo(currentMaxScrollValue)
+                PageTurnCommand.JumpToTop -> {
+                    scrollState.scrollTo(0)
+                }
+
+                PageTurnCommand.JumpToBottom -> {
+                    scrollState.scrollTo(currentMaxScrollValue)
+                }
+
                 PageTurnCommand.PageUp,
                 PageTurnCommand.PageDown,
                 -> {
@@ -483,8 +492,14 @@ fun rememberPageTurnTarget(
                         currentMaxScrollValue != Int.MAX_VALUE &&
                         scrollState.value >= currentMaxScrollValue
                     when {
-                        reachedStart && currentOnPageUpAtStart != null -> currentOnPageUpAtStart?.invoke()
-                        reachedEnd && currentOnPageDownAtEnd != null -> currentOnPageDownAtEnd?.invoke()
+                        reachedStart && currentOnPageUpAtStart != null -> {
+                            currentOnPageUpAtStart?.invoke()
+                        }
+
+                        reachedEnd && currentOnPageDownAtEnd != null -> {
+                            currentOnPageDownAtEnd?.invoke()
+                        }
+
                         target.viewportHeight > 0f -> {
                             val scrolled = target.nestedScrollDispatcher.dispatchPageTurnScroll(
                                 scrollState,
@@ -520,11 +535,15 @@ fun rememberPageTurnTarget(
         state.pageTurnScrollInProgress = true
         try {
             when (command) {
-                PageTurnCommand.JumpToTop -> listState.scrollToItem(0)
+                PageTurnCommand.JumpToTop -> {
+                    listState.scrollToItem(0)
+                }
+
                 PageTurnCommand.JumpToBottom -> {
                     val lastIndex = listState.layoutInfo.totalItemsCount - 1
                     if (lastIndex >= 0) listState.scrollToItem(lastIndex)
                 }
+
                 PageTurnCommand.PageUp,
                 PageTurnCommand.PageDown,
                 -> {
@@ -547,7 +566,9 @@ fun rememberPageTurnTarget(
 private val PageTurnCommand.scrollDirection: Int
     get() = when (this) {
         PageTurnCommand.PageUp -> -1
+
         PageTurnCommand.PageDown -> 1
+
         PageTurnCommand.JumpToTop,
         PageTurnCommand.JumpToBottom,
         -> 0

@@ -277,21 +277,33 @@ class MainActivity : ComponentActivity() {
     private var pageTurnLongPressConsumed = false
 
     private fun pageTurnCommand(keyCode: Int): PageTurnCommand? = when (keyCode) {
-        KeyEvent.KEYCODE_PAGE_DOWN -> PageTurnCommand.PageDown
-        KeyEvent.KEYCODE_PAGE_UP -> PageTurnCommand.PageUp
-        KeyEvent.KEYCODE_VOLUME_DOWN ->
+        KeyEvent.KEYCODE_PAGE_DOWN -> {
+            PageTurnCommand.PageDown
+        }
+
+        KeyEvent.KEYCODE_PAGE_UP -> {
+            PageTurnCommand.PageUp
+        }
+
+        KeyEvent.KEYCODE_VOLUME_DOWN -> {
             if (androidSettingsStore(this).getBoolean(PREF_VOLUME_KEY_PAGE_TURN, false)) {
                 PageTurnCommand.PageDown
             } else {
                 null
             }
-        KeyEvent.KEYCODE_VOLUME_UP ->
+        }
+
+        KeyEvent.KEYCODE_VOLUME_UP -> {
             if (androidSettingsStore(this).getBoolean(PREF_VOLUME_KEY_PAGE_TURN, false)) {
                 PageTurnCommand.PageUp
             } else {
                 null
             }
-        else -> null
+        }
+
+        else -> {
+            null
+        }
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
@@ -311,19 +323,27 @@ class MainActivity : ComponentActivity() {
                             },
                         )
                     }
+
                     event.repeatCount == 0 -> {
                         pageTurnLongPressConsumed = false
                         true
                     }
-                    else -> true
+
+                    else -> {
+                        true
+                    }
                 }
             }
+
             KeyEvent.ACTION_UP -> {
                 val consumed = pageTurnLongPressConsumed || pageTurnDispatcher.dispatch(command)
                 pageTurnLongPressConsumed = false
                 consumed
             }
-            else -> super.dispatchKeyEvent(event)
+
+            else -> {
+                super.dispatchKeyEvent(event)
+            }
         }
     }
 
@@ -436,10 +456,14 @@ class MainActivity : ComponentActivity() {
                         ArticleType.Article -> "article"
                     }
                 }
+
                 is Question -> {
                     current.questionId.toString() to "question"
                 }
-                else -> error("Unsupported content type for video: $current")
+
+                else -> {
+                    error("Unsupported content type for video: $current")
+                }
             }
             CoroutineScope(Dispatchers.Main).launch {
                 val videoUrl = getHighestQualityVideoUrl(this@MainActivity, httpClient, route.id.toString(), contentId, contentType)

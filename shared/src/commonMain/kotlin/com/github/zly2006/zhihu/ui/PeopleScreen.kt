@@ -681,14 +681,17 @@ fun PeopleScreen(
             sourceId = requireNotNull(readingQueueSourceId),
             items = viewModel.answersFeedModel.allData.map(DataHolder.Answer::toPeopleAnswerDisplayItem),
         )
+
         1 -> RegisterReadingQueueSource(
             sourceId = requireNotNull(readingQueueSourceId),
             items = viewModel.articlesFeedModel.allData.map(DataHolder.Article::toPeopleArticleDisplayItem),
         )
+
         2 -> RegisterReadingQueueSource(
             sourceId = requireNotNull(readingQueueSourceId),
             items = viewModel.activitiesFeedModel.displayItems,
         )
+
         5 -> RegisterReadingQueueSource(
             sourceId = requireNotNull(readingQueueSourceId),
             items = viewModel.pinsFeedModel.allData.mapNotNull(DataHolder.Pin::toPeoplePinDisplayItem),
@@ -1421,13 +1424,19 @@ private fun FollowedTopicListItem(topic: FollowedTopic) {
 }
 
 private fun DataHolder.Column.webUrl(): String = when {
-    url.contains("/api/v4/columns/") ->
+    url.contains("/api/v4/columns/") -> {
         url
             .replace("http://", "https://")
             .replace("/api/v4/columns/", "/column/")
+    }
 
-    url.startsWith("http") && !url.contains("/api/") -> url.replace("http://", "https://")
-    else -> "https://www.zhihu.com/column/$id"
+    url.startsWith("http") && !url.contains("/api/") -> {
+        url.replace("http://", "https://")
+    }
+
+    else -> {
+        "https://www.zhihu.com/column/$id"
+    }
 }
 
 @Composable

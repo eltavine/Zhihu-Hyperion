@@ -346,10 +346,12 @@ fun PinScreen(
                                 modifier = Modifier.size(22.dp),
                                 strokeWidth = 2.dp,
                             )
+
                             isCurrentReadingItem && readingPlayerState.isActivelyPlaying -> Icon(
                                 Icons.Default.Pause,
                                 contentDescription = "暂停朗读",
                             )
+
                             else -> Icon(
                                 Icons.AutoMirrored.Filled.VolumeUp,
                                 contentDescription = if (isCurrentReadingItem) "继续朗读" else "开始连续朗读",

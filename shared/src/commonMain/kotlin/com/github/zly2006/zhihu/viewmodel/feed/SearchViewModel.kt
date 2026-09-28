@@ -154,12 +154,16 @@ open class SearchViewModel(
             val content = entry["object"] as? JsonObject ?: return@mapNotNull null
             try {
                 when (searchTab) {
-                    SearchTab.General -> error("General 搜索已在保序分支解码")
+                    SearchTab.General -> {
+                        error("General 搜索已在保序分支解码")
+                    }
+
                     SearchTab.People -> {
                         val person = ZhihuJson.decodeJson<DataHolder.People>(content)
                         if (existingIds.add(person.id)) entities += SearchEntity.Person(person)
                         null
                     }
+
                     SearchTab.Topic -> {
                         val topic = ZhihuJson.decodeJson<TopicSearchObject>(content)
                         if (topic.type != "topic") return@mapNotNull null
@@ -212,6 +216,7 @@ open class SearchViewModel(
         pendingGeneralEntities.forEach { pending ->
             val entity = when (pending) {
                 is PendingGeneralEntity.Person -> SearchEntity.Person(pending.person)
+
                 is PendingGeneralEntity.Content -> createDisplayItem(environment, pending.feed)
                     .stableKey
                     .let(loadedContent::get)

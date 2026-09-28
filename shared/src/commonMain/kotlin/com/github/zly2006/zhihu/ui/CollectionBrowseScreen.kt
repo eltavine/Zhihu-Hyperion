@@ -187,8 +187,14 @@ fun CollectionBrowseScreen(
                     }
                 }
             }
-            TopLevelReselectAction.ScrollToTop -> listState.animateScrollToItem(0)
-            null -> Unit
+
+            TopLevelReselectAction.ScrollToTop -> {
+                listState.animateScrollToItem(0)
+            }
+
+            null -> {
+                Unit
+            }
         }
         cachedScrollToTopTrigger = scrollToTopTrigger
     }
@@ -309,6 +315,7 @@ fun CollectionBrowseScreen(
                     Text("还没有收藏夹", modifier = Modifier.testTag(COLLECTION_BROWSE_EMPTY_COLLECTIONS_TAG))
                 }
             }
+
             contentViewModel == null -> {
                 Box(
                     modifier = Modifier
@@ -319,6 +326,7 @@ fun CollectionBrowseScreen(
                     CircularProgressIndicator(modifier = Modifier.testTag(COLLECTION_BROWSE_LOADING_COLLECTIONS_TAG))
                 }
             }
+
             else -> {
                 PullToRefreshBox(
                     isRefreshing = collectionsViewModel.isLoading || contentViewModel.isLoading,

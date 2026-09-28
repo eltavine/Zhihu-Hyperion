@@ -349,13 +349,23 @@ fun ArticleScreen(
 
     fun performAnswerDoubleTapAction(action: AnswerDoubleTapAction) {
         when (action) {
-            AnswerDoubleTapAction.None -> Unit
-            AnswerDoubleTapAction.Ask -> showDoubleTapActionDialog = true
-            AnswerDoubleTapAction.VoteUp -> upVoteFromDoubleTap()
+            AnswerDoubleTapAction.None -> {
+                Unit
+            }
+
+            AnswerDoubleTapAction.Ask -> {
+                showDoubleTapActionDialog = true
+            }
+
+            AnswerDoubleTapAction.VoteUp -> {
+                upVoteFromDoubleTap()
+            }
+
             AnswerDoubleTapAction.OpenComments -> {
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                 showComments = true
             }
+
             AnswerDoubleTapAction.ToggleImmersive -> {
                 isImmersiveMode = !isImmersiveMode
             }

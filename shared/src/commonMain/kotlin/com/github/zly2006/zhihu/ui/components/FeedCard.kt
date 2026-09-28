@@ -523,7 +523,10 @@ private fun PinFeedImages(
     modifier: Modifier = Modifier,
 ) {
     when (images.size) {
-        0 -> return
+        0 -> {
+            return
+        }
+
         1 -> {
             val image = images.single()
             AsyncImage(
@@ -537,6 +540,7 @@ private fun PinFeedImages(
                 contentScale = ContentScale.Crop,
             )
         }
+
         in 2..4 -> {
             Row(
                 modifier = modifier
@@ -563,6 +567,7 @@ private fun PinFeedImages(
                 }
             }
         }
+
         else -> {
             val visibleImages = images.take(9)
             Column(

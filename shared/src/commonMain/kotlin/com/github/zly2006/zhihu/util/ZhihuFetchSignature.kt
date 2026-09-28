@@ -116,14 +116,17 @@ object ZhihuFetchSignature {
                         f = (b and c) or (b.inv() and d)
                         g = i
                     }
+
                     in 16..31 -> {
                         f = (d and b) or (d.inv() and c)
                         g = (5 * i + 1) % 16
                     }
+
                     in 32..47 -> {
                         f = b xor c xor d
                         g = (3 * i + 5) % 16
                     }
+
                     else -> {
                         f = c xor (b or d.inv())
                         g = (7 * i) % 16

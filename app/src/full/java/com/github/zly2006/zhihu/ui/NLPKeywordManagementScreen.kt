@@ -274,6 +274,7 @@ fun NLPKeywordManagementScreen(
                     },
                     isModelBusy = isExtracting,
                 )
+
                 1 -> BlockedRecordsTab(
                     records = blockedRecords,
                     onDeleteRecord = { record ->

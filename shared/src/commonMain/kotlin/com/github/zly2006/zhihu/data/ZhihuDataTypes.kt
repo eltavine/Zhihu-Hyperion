@@ -241,11 +241,13 @@ object ZhihuJson {
                 )
             }
         }
+
         is JsonArray -> buildJsonArray {
             for (item in json) {
                 add(snakeCaseToCamelCase(item))
             }
         }
+
         else -> json
     }
 

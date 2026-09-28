@@ -89,8 +89,14 @@ private fun parseZhimgImageMeta(title: String): ZhimgImageMeta? {
         val value = part.substringAfter('=', "").trim()
         if (value.isEmpty()) continue
         when (key) {
-            "w" -> rawWidth = value.toIntOrNull()
-            "h" -> rawHeight = value.toIntOrNull()
+            "w" -> {
+                rawWidth = value.toIntOrNull()
+            }
+
+            "h" -> {
+                rawHeight = value.toIntOrNull()
+            }
+
             "wm" -> {
                 watermark =
                     when (value) {
@@ -99,7 +105,10 @@ private fun parseZhimgImageMeta(title: String): ZhimgImageMeta? {
                         else -> value
                     }
             }
-            "wmsrc" -> watermarkSrc = value
+
+            "wmsrc" -> {
+                watermarkSrc = value
+            }
         }
     }
 
@@ -140,7 +149,9 @@ private class ZhihuHtmlWriter(
                 out.append("</p>")
             }
 
-            is Heading -> renderHeading(node)
+            is Heading -> {
+                renderHeading(node)
+            }
 
             is BlockQuote -> {
                 out.append("<blockquote>")
@@ -183,7 +194,9 @@ private class ZhihuHtmlWriter(
                 out.append(if (node.ordered) "</ol>" else "</ul>")
             }
 
-            is ThematicBreak -> out.append("<hr>")
+            is ThematicBreak -> {
+                out.append("<hr>")
+            }
 
             is MathBlock -> {
                 // 行间数学公式渲染器
@@ -226,11 +239,17 @@ private class ZhihuHtmlWriter(
                 out.append(">")
             }
 
-            is Table -> renderTable(node)
+            is Table -> {
+                renderTable(node)
+            }
 
-            is ContainerNode -> renderChildrenAsBlocks(node)
+            is ContainerNode -> {
+                renderChildrenAsBlocks(node)
+            }
 
-            else -> Unit
+            else -> {
+                Unit
+            }
         }
     }
 
@@ -317,16 +336,45 @@ private class ZhihuHtmlWriter(
 
     private fun renderInline(node: MarkdownNode) {
         when (node) {
-            is Text -> out.append(escapeHtmlText(node.literal))
-            is StrongEmphasis -> wrapTag("b") { renderChildrenAsInlines(node) }
-            is Emphasis -> wrapTag("i") { renderChildrenAsInlines(node) }
-            is Strikethrough -> wrapTag("del") { renderChildrenAsInlines(node) }
-            is Highlight -> wrapTag("mark") { renderChildrenAsInlines(node) }
-            is Subscript -> wrapTag("sub") { renderChildrenAsInlines(node) }
-            is Superscript -> wrapTag("sup") { renderChildrenAsInlines(node) }
-            is InlineCode -> wrapTag("code") { out.append(escapeHtmlText(node.literal)) }
-            is KeyboardInput -> wrapTag("kbd") { out.append(escapeHtmlText(node.literal)) }
-            is HardLineBreak -> out.append("<br>")
+            is Text -> {
+                out.append(escapeHtmlText(node.literal))
+            }
+
+            is StrongEmphasis -> {
+                wrapTag("b") { renderChildrenAsInlines(node) }
+            }
+
+            is Emphasis -> {
+                wrapTag("i") { renderChildrenAsInlines(node) }
+            }
+
+            is Strikethrough -> {
+                wrapTag("del") { renderChildrenAsInlines(node) }
+            }
+
+            is Highlight -> {
+                wrapTag("mark") { renderChildrenAsInlines(node) }
+            }
+
+            is Subscript -> {
+                wrapTag("sub") { renderChildrenAsInlines(node) }
+            }
+
+            is Superscript -> {
+                wrapTag("sup") { renderChildrenAsInlines(node) }
+            }
+
+            is InlineCode -> {
+                wrapTag("code") { out.append(escapeHtmlText(node.literal)) }
+            }
+
+            is KeyboardInput -> {
+                wrapTag("kbd") { out.append(escapeHtmlText(node.literal)) }
+            }
+
+            is HardLineBreak -> {
+                out.append("<br>")
+            }
 
             is Link -> {
                 val href = escapeHtmlAttribute(node.destination)
@@ -376,8 +424,13 @@ private class ZhihuHtmlWriter(
                     .append("\" />")
             }
 
-            is ContainerNode -> renderChildrenAsInlines(node)
-            else -> Unit
+            is ContainerNode -> {
+                renderChildrenAsInlines(node)
+            }
+
+            else -> {
+                Unit
+            }
         }
     }
 

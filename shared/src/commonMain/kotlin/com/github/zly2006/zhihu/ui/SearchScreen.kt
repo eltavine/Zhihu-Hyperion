@@ -503,7 +503,7 @@ fun SearchScreen(
                         }
                     }
                 } else if (
-                    showSearchHistory.value && searchHistoryItems.isNotEmpty() || showHotSearch.value && hotSearchItems.isNotEmpty()
+                    (showSearchHistory.value && searchHistoryItems.isNotEmpty()) || (showHotSearch.value && hotSearchItems.isNotEmpty())
                 ) {
                     val shouldShowHistory = showSearchHistory.value && searchHistoryItems.isNotEmpty()
                     val shouldShowHotSearch = showHotSearch.value && hotSearchItems.isNotEmpty()
@@ -735,6 +735,7 @@ fun SearchScreen(
                                     ) { Text(if (result.isFollowing) "已关注" else "关注") }
                                 }
                             }
+
                             is SearchEntity.Person -> {
                                 val person = result.person
                                 val plainName = person.name.replace("<em>", "").replace("</em>", "")
@@ -742,7 +743,10 @@ fun SearchScreen(
                                     navigator.onNavigate(Person(person.id, person.urlToken.orEmpty(), plainName))
                                 }
                             }
-                            is SearchEntity.Content -> Unit
+
+                            is SearchEntity.Content -> {
+                                Unit
+                            }
                         }
                     }
                     item {
@@ -755,7 +759,10 @@ fun SearchScreen(
                                     Text("加载失败：${viewModel.errorMessage}，点击重试")
                                 }
                             }
-                            !viewModel.isEnd -> ProgressIndicatorFooter(resultListState)
+
+                            !viewModel.isEnd -> {
+                                ProgressIndicatorFooter(resultListState)
+                            }
                         }
                     }
                 }
@@ -815,6 +822,7 @@ fun SearchScreen(
                                     )
                                 },
                             )
+
                             is SearchEntity.Person -> PersonSearchResultRow(result.person) {
                                 val person = result.person
                                 navigator.onNavigate(
@@ -825,6 +833,7 @@ fun SearchScreen(
                                     ),
                                 )
                             }
+
                             is SearchEntity.Topic -> Unit
                         }
                     }

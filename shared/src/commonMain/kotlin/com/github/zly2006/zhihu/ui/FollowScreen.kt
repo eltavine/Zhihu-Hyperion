@@ -289,6 +289,7 @@ fun FollowingUsersRow() {
                 )
             }
         }
+
         viewModel.users.isNotEmpty() -> {
             LazyRow(
                 modifier = Modifier.testTag(FOLLOWING_USERS_ROW_TAG),
@@ -369,8 +370,14 @@ fun FollowRecommendScreen(
         )
         if (isActive) {
             when (action) {
-                TopLevelReselectAction.Refresh -> viewModel.refresh(environment)
-                TopLevelReselectAction.ScrollToTop -> listState.animateScrollToItem(0)
+                TopLevelReselectAction.Refresh -> {
+                    viewModel.refresh(environment)
+                }
+
+                TopLevelReselectAction.ScrollToTop -> {
+                    listState.animateScrollToItem(0)
+                }
+
                 null -> {}
             }
         }
@@ -523,8 +530,14 @@ fun FollowDynamicScreen(
         )
         if (isActive) {
             when (action) {
-                TopLevelReselectAction.Refresh -> viewModel.refresh(environment)
-                TopLevelReselectAction.ScrollToTop -> listState.animateScrollToItem(0)
+                TopLevelReselectAction.Refresh -> {
+                    viewModel.refresh(environment)
+                }
+
+                TopLevelReselectAction.ScrollToTop -> {
+                    listState.animateScrollToItem(0)
+                }
+
                 null -> {}
             }
         }

@@ -72,13 +72,16 @@ internal suspend fun fetchPinLinkCardPreview(
                     title = compactTitle(detail.title),
                     preview = compactPreview(detail.excerpt.ifBlank { detail.content }),
                 )
+
                 is DataHolder.Answer -> PinLinkCardPreview(
                     title = compactTitle(detail.question.title),
                     preview = compactPreview(detail.excerpt.ifBlank { detail.content }),
                 )
+
                 else -> null
             }
         }
+
         is Question -> {
             (env.getOrFetchContentDetail(destination) as? DataHolder.Question)?.let { detail ->
                 PinLinkCardPreview(
@@ -87,6 +90,7 @@ internal suspend fun fetchPinLinkCardPreview(
                 )
             }
         }
+
         is Pin -> {
             (env.getOrFetchContentDetail(destination) as? DataHolder.Pin)?.let { detail ->
                 PinLinkCardPreview(
@@ -95,7 +99,10 @@ internal suspend fun fetchPinLinkCardPreview(
                 )
             }
         }
-        else -> null
+
+        else -> {
+            null
+        }
     }
 }
 
@@ -233,6 +240,7 @@ fun articleActionText(
         ArticleType.Answer -> {
             "https://www.zhihu.com/question/$questionId/answer/${article.id}\n【$title - $authorName 的回答】"
         }
+
         ArticleType.Article -> {
             "https://zhuanlan.zhihu.com/p/${article.id}\n【$title - $authorName 的文章】"
         }

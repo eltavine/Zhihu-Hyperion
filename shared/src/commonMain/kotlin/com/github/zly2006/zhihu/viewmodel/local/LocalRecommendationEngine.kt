@@ -333,7 +333,10 @@ internal fun isVoteupFeed(feed: Feed): Boolean {
                 feed.brief.contains("点赞") ||
                 feed.attachedInfo.contains("VOTEUP")
         }
-        else -> false
+
+        else -> {
+            false
+        }
     }
 }
 

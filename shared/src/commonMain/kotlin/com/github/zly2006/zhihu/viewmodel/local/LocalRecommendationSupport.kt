@@ -97,18 +97,22 @@ fun Feed.Target.toLocalContentIdentity(): LocalContentIdentity = when (this) {
         LOCAL_CONTENT_TYPE_ANSWER,
         id.toString(),
     )
+
     is Feed.ArticleTarget -> LocalContentIdentity(
         LOCAL_CONTENT_TYPE_ARTICLE,
         id.toString(),
     )
+
     is Feed.QuestionTarget -> LocalContentIdentity(
         LOCAL_CONTENT_TYPE_QUESTION,
         id.toString(),
     )
+
     is Feed.PinTarget -> LocalContentIdentity(
         LOCAL_CONTENT_TYPE_PIN,
         id.toString(),
     )
+
     is Feed.VideoTarget -> LocalContentIdentity("video", id.toString())
 }
 

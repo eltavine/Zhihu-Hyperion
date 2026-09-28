@@ -185,6 +185,7 @@ data class ReadingQueueItem(
             authorName = author,
             readingQueueSourceId = sourceId,
         )
+
         ReadingContentType.Article -> Article(
             title = title,
             type = ArticleType.Article,
@@ -192,11 +193,13 @@ data class ReadingQueueItem(
             authorName = author,
             readingQueueSourceId = sourceId,
         )
+
         ReadingContentType.Pin -> Pin(
             id = id,
             authorName = author,
             readingQueueSourceId = sourceId,
         )
+
         ReadingContentType.Question -> Question(
             questionId = id,
             title = title,
@@ -366,41 +369,58 @@ fun buildReadingSpeechText(
         .filter { it in normalized.enabledFields }
         .mapNotNull { field ->
             when (field) {
-                ReadingTemplateField.ContentType -> when (content.contentType) {
-                    ReadingContentType.Answer -> "这是一条回答。"
-                    ReadingContentType.Article -> "这是一篇专栏文章。"
-                    ReadingContentType.Pin -> "这是一条想法。"
-                    ReadingContentType.Question -> "这是一个问题。"
+                ReadingTemplateField.ContentType -> {
+                    when (content.contentType) {
+                        ReadingContentType.Answer -> "这是一条回答。"
+                        ReadingContentType.Article -> "这是一篇专栏文章。"
+                        ReadingContentType.Pin -> "这是一条想法。"
+                        ReadingContentType.Question -> "这是一个问题。"
+                    }
                 }
-                ReadingTemplateField.Title ->
+
+                ReadingTemplateField.Title -> {
                     content.title
                         .cleanReadingMetadata()
                         .takeIf(String::isNotBlank)
                         ?.let { "标题：$it。" }
-                ReadingTemplateField.Author ->
+                }
+
+                ReadingTemplateField.Author -> {
                     content.author
                         .cleanReadingMetadata()
                         .takeIf(String::isNotBlank)
                         ?.let { "作者：$it。" }
-                ReadingTemplateField.Body -> content.body.takeIf(String::isNotBlank)
-                ReadingTemplateField.PublishedAt ->
+                }
+
+                ReadingTemplateField.Body -> {
+                    content.body.takeIf(String::isNotBlank)
+                }
+
+                ReadingTemplateField.PublishedAt -> {
                     when (normalized.publishedTimeMode) {
-                        ReadingPublishedTimeMode.Absolute ->
+                        ReadingPublishedTimeMode.Absolute -> {
                             content.publishedAt
                                 .takeIf { it > 0 }
                                 ?.let { "发布时间：${formatReadingDateTime(it)}。" }
-                        ReadingPublishedTimeMode.Relative ->
+                        }
+
+                        ReadingPublishedTimeMode.Relative -> {
                             content.updatedAt
                                 .takeIf { it > 0 }
                                 ?.let {
                                     "最后编辑于${formatReadingRelativeTime(it, nowEpochSeconds, normalized.relativeTimePrecision)}。"
                                 }
+                        }
                     }
-                ReadingTemplateField.VoteUpCount ->
+                }
+
+                ReadingTemplateField.VoteUpCount -> {
                     content.voteUpCount
                         .takeIf { it >= 0 }
                         ?.let { "点赞数：$it。" }
-                ReadingTemplateField.Comments ->
+                }
+
+                ReadingTemplateField.Comments -> {
                     content.comments
                         .takeIf(List<ReadingComment>::isNotEmpty)
                         ?.mapIndexed { index, comment ->
@@ -416,6 +436,7 @@ fun buildReadingSpeechText(
                                 append(comment.body)
                             }
                         }?.joinToString("\n")
+                }
             }
         }.joinToString("\n")
         .trim()
@@ -433,17 +454,39 @@ fun buildReadingTemplatePreview(preferences: ReadingPreferences): String {
         .filter { it in normalized.enabledFields }
         .mapNotNull { field ->
             when (field) {
-                ReadingTemplateField.ContentType -> "{内容类型}"
-                ReadingTemplateField.Title -> "标题：{标题}。"
-                ReadingTemplateField.Author -> "作者：{作者}。"
-                ReadingTemplateField.Body -> "{正文}"
-                ReadingTemplateField.PublishedAt -> when (normalized.publishedTimeMode) {
-                    ReadingPublishedTimeMode.Absolute -> "发布时间：{绝对时间}。"
-                    ReadingPublishedTimeMode.Relative ->
-                        "最后编辑于{距最后编辑时间，精确到${normalized.relativeTimePrecision.displayName}}。"
+                ReadingTemplateField.ContentType -> {
+                    "{内容类型}"
                 }
-                ReadingTemplateField.VoteUpCount -> "点赞数：{点赞数}。"
-                ReadingTemplateField.Comments ->
+
+                ReadingTemplateField.Title -> {
+                    "标题：{标题}。"
+                }
+
+                ReadingTemplateField.Author -> {
+                    "作者：{作者}。"
+                }
+
+                ReadingTemplateField.Body -> {
+                    "{正文}"
+                }
+
+                ReadingTemplateField.PublishedAt -> {
+                    when (normalized.publishedTimeMode) {
+                        ReadingPublishedTimeMode.Absolute -> {
+                            "发布时间：{绝对时间}。"
+                        }
+
+                        ReadingPublishedTimeMode.Relative -> {
+                            "最后编辑于{距最后编辑时间，精确到${normalized.relativeTimePrecision.displayName}}。"
+                        }
+                    }
+                }
+
+                ReadingTemplateField.VoteUpCount -> {
+                    "点赞数：{点赞数}。"
+                }
+
+                ReadingTemplateField.Comments -> {
                     normalized.commentCount
                         .takeIf { it > 0 }
                         ?.let { count ->
@@ -457,6 +500,7 @@ fun buildReadingTemplatePreview(preferences: ReadingPreferences): String {
                                 append("{评论正文}")
                             }
                         }
+                }
             }
         }.joinToString("\n")
         .trim()
@@ -493,14 +537,20 @@ fun ReadingQueueItem.hasReadableFields(preferences: ReadingPreferences): Boolean
     return normalized.enabledFields.any { field ->
         when (field) {
             ReadingTemplateField.ContentType -> true
+
             ReadingTemplateField.Title -> title.cleanReadingMetadata().isNotBlank()
+
             ReadingTemplateField.Author -> author.cleanReadingMetadata().isNotBlank()
+
             ReadingTemplateField.Body -> !bodyHtml.isNullOrBlank()
+
             ReadingTemplateField.PublishedAt -> when (normalized.publishedTimeMode) {
                 ReadingPublishedTimeMode.Absolute -> publishedAt > 0
                 ReadingPublishedTimeMode.Relative -> updatedAt > 0
             }
+
             ReadingTemplateField.VoteUpCount -> voteUpCount >= 0
+
             ReadingTemplateField.Comments -> normalized.shouldLoadComments
         }
     }
@@ -718,16 +768,19 @@ fun FeedDisplayItem.toReadingQueueItem(): ReadingQueueItem? {
                 title = title.cleanReadingMetadata().ifBlank { destination.title.cleanReadingMetadata() },
                 author = authorName.cleanReadingMetadata().ifBlank { destination.authorName.cleanReadingMetadata() },
             )
+
             is Pin -> ReadingQueueItem(
                 contentType = ReadingContentType.Pin,
                 id = destination.id,
                 author = authorName.cleanReadingMetadata().ifBlank { destination.authorName.cleanReadingMetadata() },
             )
+
             is Question -> ReadingQueueItem(
                 contentType = ReadingContentType.Question,
                 id = destination.questionId,
                 title = title.cleanReadingMetadata().ifBlank { destination.title.cleanReadingMetadata() },
             )
+
             else -> null
         }
 }
@@ -745,6 +798,7 @@ private fun Feed.Target.toReadingQueueItem(): ReadingQueueItem? = when (this) {
         voteUpCount = voteupCount,
         commentCount = commentCount,
     )
+
     is Feed.ArticleTarget -> ReadingQueueItem(
         contentType = ReadingContentType.Article,
         id = id,
@@ -756,6 +810,7 @@ private fun Feed.Target.toReadingQueueItem(): ReadingQueueItem? = when (this) {
         voteUpCount = voteupCount,
         commentCount = commentCount,
     )
+
     is Feed.PinTarget -> ReadingQueueItem(
         contentType = ReadingContentType.Pin,
         id = id,
@@ -766,6 +821,7 @@ private fun Feed.Target.toReadingQueueItem(): ReadingQueueItem? = when (this) {
         voteUpCount = likeCount,
         commentCount = commentCount,
     )
+
     is Feed.QuestionTarget -> ReadingQueueItem(
         contentType = ReadingContentType.Question,
         id = id,
@@ -775,6 +831,7 @@ private fun Feed.Target.toReadingQueueItem(): ReadingQueueItem? = when (this) {
         updatedAt = updatedTime,
         commentCount = commentCount,
     )
+
     else -> null
 }
 
@@ -791,6 +848,7 @@ fun DataHolder.Content.toReadingQueueItem(destination: NavDestination): ReadingQ
         voteUpCount = voteupCount,
         commentCount = commentCount,
     )
+
     is DataHolder.Article -> ReadingQueueItem(
         contentType = ReadingContentType.Article,
         id = id,
@@ -802,6 +860,7 @@ fun DataHolder.Content.toReadingQueueItem(destination: NavDestination): ReadingQ
         voteUpCount = voteupCount,
         commentCount = commentCount,
     )
+
     is DataHolder.Pin -> ReadingQueueItem(
         contentType = ReadingContentType.Pin,
         id = id.toLongOrNull() ?: (destination as? Pin)?.id ?: return null,
@@ -816,6 +875,7 @@ fun DataHolder.Content.toReadingQueueItem(destination: NavDestination): ReadingQ
         voteUpCount = likeCount,
         commentCount = commentCount,
     )
+
     is DataHolder.Question -> ReadingQueueItem(
         contentType = ReadingContentType.Question,
         id = id,
@@ -827,6 +887,7 @@ fun DataHolder.Content.toReadingQueueItem(destination: NavDestination): ReadingQ
         voteUpCount = voteupCount,
         commentCount = commentCount,
     )
+
     else -> null
 }
 

@@ -189,8 +189,14 @@ fun DailyScreen(
         )
         if (isActive) {
             when (action) {
-                TopLevelReselectAction.Refresh -> doRefresh()
-                TopLevelReselectAction.ScrollToTop -> listState.animateScrollToItem(0)
+                TopLevelReselectAction.Refresh -> {
+                    doRefresh()
+                }
+
+                TopLevelReselectAction.ScrollToTop -> {
+                    listState.animateScrollToItem(0)
+                }
+
                 null -> {}
             }
         }

@@ -153,7 +153,9 @@ fun DesktopZhihuMain() {
                         ArticleType.Answer -> "answer"
                         ArticleType.Article -> "article"
                     }
+
                     is Question -> current.questionId.toString() to "question"
+
                     else -> return
                 }
                 coroutineScope.launch {
@@ -178,10 +180,12 @@ fun DesktopZhihuMain() {
                     }
                 }
             }
+
             MainTabs -> {
                 mainTabNavigationTarget = Home
                 navigateToMainTabs()
             }
+
             else -> {
                 prepareDesktopPendingContentOpen(
                     target = route,
@@ -215,28 +219,48 @@ fun DesktopZhihuMain() {
         isDarkTheme = ThemeManager.isDarkTheme(),
         articleEnterTransition = {
             when (sharedArticleAnswerSwitchState.answerTransitionDirection) {
-                ArticleAnswerTransitionDirection.VERTICAL_NEXT ->
+                ArticleAnswerTransitionDirection.VERTICAL_NEXT -> {
                     slideInVertically(tween(300)) { it } + fadeIn(tween(300))
-                ArticleAnswerTransitionDirection.VERTICAL_PREVIOUS ->
+                }
+
+                ArticleAnswerTransitionDirection.VERTICAL_PREVIOUS -> {
                     slideInVertically(tween(300)) { -it } + fadeIn(tween(300))
-                ArticleAnswerTransitionDirection.HORIZONTAL_NEXT ->
+                }
+
+                ArticleAnswerTransitionDirection.HORIZONTAL_NEXT -> {
                     slideInHorizontally(tween(300)) { it } + fadeIn(tween(300))
-                ArticleAnswerTransitionDirection.HORIZONTAL_PREVIOUS ->
+                }
+
+                ArticleAnswerTransitionDirection.HORIZONTAL_PREVIOUS -> {
                     slideInHorizontally(tween(300)) { -it } + fadeIn(tween(300))
-                else -> slideInHorizontally(tween(300)) { it }
+                }
+
+                else -> {
+                    slideInHorizontally(tween(300)) { it }
+                }
             }
         },
         articleExitTransition = {
             when (sharedArticleAnswerSwitchState.answerTransitionDirection) {
-                ArticleAnswerTransitionDirection.VERTICAL_NEXT ->
+                ArticleAnswerTransitionDirection.VERTICAL_NEXT -> {
                     slideOutVertically(tween(300)) { -it } + fadeOut(tween(300))
-                ArticleAnswerTransitionDirection.VERTICAL_PREVIOUS ->
+                }
+
+                ArticleAnswerTransitionDirection.VERTICAL_PREVIOUS -> {
                     slideOutVertically(tween(300)) { it } + fadeOut(tween(300))
-                ArticleAnswerTransitionDirection.HORIZONTAL_NEXT ->
+                }
+
+                ArticleAnswerTransitionDirection.HORIZONTAL_NEXT -> {
                     slideOutHorizontally(tween(300)) { -it } + fadeOut(tween(300))
-                ArticleAnswerTransitionDirection.HORIZONTAL_PREVIOUS ->
+                }
+
+                ArticleAnswerTransitionDirection.HORIZONTAL_PREVIOUS -> {
                     slideOutHorizontally(tween(300)) { it } + fadeOut(tween(300))
-                else -> ExitTransition.None
+                }
+
+                else -> {
+                    ExitTransition.None
+                }
             }
         },
         articleContent = { article: Article, navEntry ->

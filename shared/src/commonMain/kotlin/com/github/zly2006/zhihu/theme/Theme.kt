@@ -54,7 +54,10 @@ fun ZhihuTheme(
     val platformDynamicColorScheme = platformDynamicColorScheme(darkTheme)
 
     val baseColorScheme = when {
-        useDynamicColor && platformDynamicColorScheme != null -> platformDynamicColorScheme
+        useDynamicColor && platformDynamicColorScheme != null -> {
+            platformDynamicColorScheme
+        }
+
         !useDynamicColor -> {
             dynamicColorScheme(
                 seedColor = ThemeManager.getCustomColor(),
@@ -62,8 +65,14 @@ fun ZhihuTheme(
                 isAmoled = false,
             )
         }
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+
+        darkTheme -> {
+            DarkColorScheme
+        }
+
+        else -> {
+            LightColorScheme
+        }
     }
 
     val colorScheme = baseColorScheme.copy(

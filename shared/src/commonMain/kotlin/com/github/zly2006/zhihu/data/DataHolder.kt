@@ -857,16 +857,26 @@ object DataHolder {
                 val jsonEncoder = encoder as? JsonEncoder
                     ?: throw SerializationException("Pin content can only be encoded to JSON")
                 val (type, element) = when (value) {
-                    is ContentText ->
+                    is ContentText -> {
                         "text" to jsonEncoder.json.encodeToJsonElement(ContentText.serializer(), value).jsonObject
-                    is ContentLinkCard ->
+                    }
+
+                    is ContentLinkCard -> {
                         "link_card" to
                             jsonEncoder.json.encodeToJsonElement(ContentLinkCard.serializer(), value).jsonObject
-                    is ContentImage ->
+                    }
+
+                    is ContentImage -> {
                         "image" to jsonEncoder.json.encodeToJsonElement(ContentImage.serializer(), value).jsonObject
-                    is ContentPoll ->
+                    }
+
+                    is ContentPoll -> {
                         "poll" to jsonEncoder.json.encodeToJsonElement(ContentPoll.serializer(), value).jsonObject
-                    is ContentUnknown -> null to value.value
+                    }
+
+                    is ContentUnknown -> {
+                        null to value.value
+                    }
                 }
                 jsonEncoder.encodeJsonElement(
                     if (type == null) {

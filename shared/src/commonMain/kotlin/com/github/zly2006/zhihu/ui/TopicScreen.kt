@@ -382,8 +382,14 @@ fun topicFeedUrl(
             TopicDiscussionSort.Timeline -> "https://www.zhihu.com/api/v5.1/topics/$topicId/feeds/timeline_activity/v2?limit=20&offset=0"
         }
     }
-    TopicFeedTab.Ideas -> "https://www.zhihu.com/api/v5.1/topics/$topicId/feeds/${ideasSort.endpoint}?offset=0&limit=10"
-    TopicFeedTab.Unanswered -> "https://www.zhihu.com/api/v5.1/topics/$topicId/feeds/top_question/v2?limit=20&offset=0"
+
+    TopicFeedTab.Ideas -> {
+        "https://www.zhihu.com/api/v5.1/topics/$topicId/feeds/${ideasSort.endpoint}?offset=0&limit=10"
+    }
+
+    TopicFeedTab.Unanswered -> {
+        "https://www.zhihu.com/api/v5.1/topics/$topicId/feeds/top_question/v2?limit=20&offset=0"
+    }
 }
 
 fun decodeTopicPinFeeds(json: kotlinx.serialization.json.JsonObject): List<FeedDisplayItem> =
@@ -603,9 +609,11 @@ private fun TopicHeader(
                             "${detail.questionsCount} 问题",
                         ).joinToString(" · "),
                     )
+
                     detailErrorMessage != null -> TextButton(onClick = onRetryDetail) {
                         Text("话题信息加载失败：$detailErrorMessage，点击重试", color = MaterialTheme.colorScheme.error)
                     }
+
                     else -> Text("正在加载话题信息…")
                 }
             }

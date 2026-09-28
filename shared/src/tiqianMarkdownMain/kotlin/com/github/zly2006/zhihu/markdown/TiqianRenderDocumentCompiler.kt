@@ -127,97 +127,123 @@ internal class TiqianRenderDocumentCompiler(
     ): MarkdownBlock? {
         val metadata = node.metadata(path, source, sourceLocator)
         return when (node) {
-            is Paragraph -> MarkdownParagraph(
-                text = compileText(node, metadata.sourceSpan, sourceLocator, issues),
-                metadata = metadata,
-            )
+            is Paragraph -> {
+                MarkdownParagraph(
+                    text = compileText(node, metadata.sourceSpan, sourceLocator, issues),
+                    metadata = metadata,
+                )
+            }
 
-            is Heading -> MarkdownHeading(
-                level = node.level.coerceIn(1, 6),
-                id = node.id,
-                text = compileText(node, metadata.sourceSpan, sourceLocator, issues),
-                metadata = metadata,
-            )
+            is Heading -> {
+                MarkdownHeading(
+                    level = node.level.coerceIn(1, 6),
+                    id = node.id,
+                    text = compileText(node, metadata.sourceSpan, sourceLocator, issues),
+                    metadata = metadata,
+                )
+            }
 
-            is SetextHeading -> MarkdownHeading(
-                level = node.level.coerceIn(1, 6),
-                id = node.id,
-                text = compileText(node, metadata.sourceSpan, sourceLocator, issues),
-                metadata = metadata,
-            )
+            is SetextHeading -> {
+                MarkdownHeading(
+                    level = node.level.coerceIn(1, 6),
+                    id = node.id,
+                    text = compileText(node, metadata.sourceSpan, sourceLocator, issues),
+                    metadata = metadata,
+                )
+            }
 
-            is BlockQuote -> MarkdownBlockQuote(
-                blocks = compileBlockChildren(node, path, source, sourceLocator, issues),
-                metadata = metadata,
-            )
+            is BlockQuote -> {
+                MarkdownBlockQuote(
+                    blocks = compileBlockChildren(node, path, source, sourceLocator, issues),
+                    metadata = metadata,
+                )
+            }
 
-            is ListBlock -> MarkdownList(
-                ordered = node.ordered,
-                startNumber = node.startNumber,
-                tight = node.tight,
-                items = node.children.mapIndexedNotNull { index, child ->
-                    val item = child as? ListItem ?: return@mapIndexedNotNull null
-                    MarkdownListItem(
-                        blocks = compileBlockChildren(item, path + index, source, sourceLocator, issues),
-                        task = if (!item.taskListItem) {
-                            null
-                        } else if (item.checked) {
-                            MarkdownTaskState.Checked
-                        } else {
-                            MarkdownTaskState.Unchecked
-                        },
-                        metadata = item.metadata(path + index, source, sourceLocator),
-                    )
-                },
-                metadata = metadata,
-            )
+            is ListBlock -> {
+                MarkdownList(
+                    ordered = node.ordered,
+                    startNumber = node.startNumber,
+                    tight = node.tight,
+                    items = node.children.mapIndexedNotNull { index, child ->
+                        val item = child as? ListItem ?: return@mapIndexedNotNull null
+                        MarkdownListItem(
+                            blocks = compileBlockChildren(item, path + index, source, sourceLocator, issues),
+                            task = if (!item.taskListItem) {
+                                null
+                            } else if (item.checked) {
+                                MarkdownTaskState.Checked
+                            } else {
+                                MarkdownTaskState.Unchecked
+                            },
+                            metadata = item.metadata(path + index, source, sourceLocator),
+                        )
+                    },
+                    metadata = metadata,
+                )
+            }
 
-            is FencedCodeBlock -> MarkdownCodeBlock(
-                code = node.literal,
-                language = node.language.ifBlank { null },
-                info = node.info.ifBlank { null },
-                metadata = metadata,
-            )
+            is FencedCodeBlock -> {
+                MarkdownCodeBlock(
+                    code = node.literal,
+                    language = node.language.ifBlank { null },
+                    info = node.info.ifBlank { null },
+                    metadata = metadata,
+                )
+            }
 
-            is IndentedCodeBlock -> MarkdownCodeBlock(
-                code = node.literal,
-                language = null,
-                info = null,
-                metadata = metadata,
-            )
+            is IndentedCodeBlock -> {
+                MarkdownCodeBlock(
+                    code = node.literal,
+                    language = null,
+                    info = null,
+                    metadata = metadata,
+                )
+            }
 
-            is ThematicBreak -> MarkdownThematicBreak(metadata)
+            is ThematicBreak -> {
+                MarkdownThematicBreak(metadata)
+            }
 
-            is Figure -> MarkdownImageBlock(
-                destination = node.imageUrl,
-                description = node.caption,
-                title = node.caption.ifBlank { null },
-                widthPixels = node.imageWidth,
-                heightPixels = node.imageHeight,
-                metadata = metadata,
-                attributes = node.attributes,
-                caption = node.caption.takeIf(String::isNotBlank)?.let(::MarkdownText),
-            )
+            is Figure -> {
+                MarkdownImageBlock(
+                    destination = node.imageUrl,
+                    description = node.caption,
+                    title = node.caption.ifBlank { null },
+                    widthPixels = node.imageWidth,
+                    heightPixels = node.imageHeight,
+                    metadata = metadata,
+                    attributes = node.attributes,
+                    caption = node.caption.takeIf(String::isNotBlank)?.let(::MarkdownText),
+                )
+            }
 
-            is MathBlock -> MarkdownMathBlock(
-                expression = node.literal,
-                metadata = metadata,
-            )
+            is MathBlock -> {
+                MarkdownMathBlock(
+                    expression = node.literal,
+                    metadata = metadata,
+                )
+            }
 
-            is HtmlBlock -> MarkdownHtmlBlock(
-                html = node.literal,
-                htmlType = node.htmlType,
-                metadata = metadata,
-            )
+            is HtmlBlock -> {
+                MarkdownHtmlBlock(
+                    html = node.literal,
+                    htmlType = node.htmlType,
+                    metadata = metadata,
+                )
+            }
 
-            is Table -> compileTable(node, path, source, sourceLocator, issues, metadata)
+            is Table -> {
+                compileTable(node, path, source, sourceLocator, issues, metadata)
+            }
 
-            is FootnoteDefinition -> MarkdownFootnoteDefinition(
-                label = node.label,
-                index = node.index,
-                blocks = compileBlockChildren(node, path, source, sourceLocator, issues),
-                metadata = metadata,
-            )
+            is FootnoteDefinition -> {
+                MarkdownFootnoteDefinition(
+                    label = node.label,
+                    index = node.index,
+                    blocks = compileBlockChildren(node, path, source, sourceLocator, issues),
+                    metadata = metadata,
+                )
+            }
 
             // Definitions and front matter affect the document but do not produce visible blocks.
             is LinkReferenceDefinition,
@@ -225,7 +251,9 @@ internal class TiqianRenderDocumentCompiler(
             is BibliographyDefinition,
             is BlankLine,
             is FrontMatter,
-            -> null
+            -> {
+                null
+            }
 
             else -> {
                 customBlockAdapter?.adapt(node, metadata)?.let { return it }
@@ -318,19 +346,33 @@ private class MarkdownTextBuilder(
     fun append(node: Node) {
         when (node) {
             is Text -> value.append(node.literal)
+
             is SoftLineBreak -> value.append(' ')
+
             is HardLineBreak -> value.append('\n')
+
             is HtmlEntity -> value.append(node.resolved.ifEmpty { node.literal })
+
             is EscapedChar -> value.append(node.literal)
+
             is Emoji -> value.append(node.unicode ?: node.literal)
+
             is InlineCode -> marked(node, MarkdownTextMark.InlineCode) { value.append(node.literal) }
+
             is Emphasis -> markedChildren(node, MarkdownTextMark.Emphasis)
+
             is StrongEmphasis -> markedChildren(node, MarkdownTextMark.Strong)
+
             is Strikethrough -> markedChildren(node, MarkdownTextMark.Strikethrough)
+
             is Highlight -> markedChildren(node, MarkdownTextMark.Highlight)
+
             is Superscript -> markedChildren(node, MarkdownTextMark.Superscript)
+
             is Subscript -> markedChildren(node, MarkdownTextMark.Subscript)
+
             is InsertedText -> markedChildren(node, MarkdownTextMark.Inserted)
+
             is SegmentHighlight -> marked(
                 node,
                 MarkdownTextMark.Custom(
@@ -344,17 +386,25 @@ private class MarkdownTextBuilder(
                     node.children.forEach(::append)
                 }
             }
+
             is Link -> markedChildren(node, MarkdownTextMark.Link(node.destination, node.title))
+
             is Autolink -> marked(node, MarkdownTextMark.Link(node.destination)) { value.append(node.literal) }
+
             is WikiLink -> marked(node, MarkdownTextMark.Link(node.target)) { value.append(node.literal) }
+
             is Abbreviation -> marked(node, MarkdownTextMark.Abbreviation(node.fullText)) {
                 value.append(node.literal)
             }
+
             is FootnoteReference -> marked(node, MarkdownTextMark.Footnote(node.label, node.index)) {
                 value.append("[${node.index}]")
             }
+
             is RubyText -> marked(node, MarkdownTextMark.Ruby(node.annotation)) { value.append(node.base) }
+
             is KeyboardInput -> marked(node, MarkdownTextMark.KeyboardInput) { value.append(node.literal) }
+
             is Image -> marked(
                 node,
                 MarkdownTextMark.InlineImage(
@@ -369,13 +419,21 @@ private class MarkdownTextBuilder(
                 node.children.forEach(::append)
                 if (node.children.isEmpty()) value.append(node.title ?: node.destination)
             }
+
             is InlineMath -> marked(node, MarkdownTextMark.InlineMath(node.literal)) { value.append(node.literal) }
+
             is InlineHtml -> unsupported(node) { value.append(node.literal) }
+
             is StyledText -> unsupported(node) { node.children.forEach(::append) }
+
             is Spoiler -> unsupported(node) { node.children.forEach(::append) }
+
             is CitationReference -> unsupported(node) { value.append("[@${node.key}]") }
+
             is DirectiveInline -> unsupported(node) { value.append(node.literal) }
+
             is ContainerNode -> unsupported(node) { node.children.forEach(::append) }
+
             is LeafNode -> unsupported(node) { value.append(node.literal) }
         }
     }

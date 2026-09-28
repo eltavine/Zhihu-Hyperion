@@ -1249,7 +1249,9 @@ fun AppearanceSettingsScreen(
                                                         ?: persistBottomBarSelection(candidateOrderKeys)
                                                 }
 
-                                                else -> persistBottomBarSelection(candidateOrderKeys)
+                                                else -> {
+                                                    persistBottomBarSelection(candidateOrderKeys)
+                                                }
                                             }
                                         },
                                     verticalAlignment = Alignment.CenterVertically,

@@ -47,7 +47,6 @@ class ChildCommentViewModel(
 
     override val initialUrl: String = when (content) {
         is CommentHolder -> "https://www.zhihu.com/api/v4/comment_v5/comment/${content.commentId}/child_comment"
-
         else -> ""
     }
 

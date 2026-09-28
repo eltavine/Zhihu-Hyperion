@@ -58,9 +58,18 @@ object ContentOpenEventSupport {
             }
             TrackedContentIdentity(type = type, id = destination.id.toString())
         }
-        is Question -> TrackedContentIdentity(type = ContentType.QUESTION, id = destination.questionId.toString())
-        is Pin -> TrackedContentIdentity(type = ContentType.PIN, id = destination.id.toString())
-        else -> null
+
+        is Question -> {
+            TrackedContentIdentity(type = ContentType.QUESTION, id = destination.questionId.toString())
+        }
+
+        is Pin -> {
+            TrackedContentIdentity(type = ContentType.PIN, id = destination.id.toString())
+        }
+
+        else -> {
+            null
+        }
     }
 
     fun inferOpenFrom(
@@ -71,10 +80,15 @@ object ContentOpenEventSupport {
             source.type == ArticleType.Answer &&
             target is Article &&
             target.type == ArticleType.Answer -> ContentOpenFrom.ANSWER_SWITCH
+
         source is Question -> ContentOpenFrom.QUESTION_FEED
+
         source is CollectionContent -> ContentOpenFrom.COLLECTION
+
         source is History -> ContentOpenFrom.HISTORY
+
         source is Notification -> ContentOpenFrom.NOTIFICATION
+
         else -> ContentOpenFrom.UNKNOWN
     }
 

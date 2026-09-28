@@ -52,6 +52,7 @@ class HistoryViewModel : BaseFeedViewModel() {
                         navDestinationJson = dest.toFeedDisplayItemNavDestinationJson(),
                     )
                 }
+
                 is Question -> {
                     FeedDisplayItem(
                         title = dest.title,
@@ -61,6 +62,7 @@ class HistoryViewModel : BaseFeedViewModel() {
                         summary = "",
                     )
                 }
+
                 is Person -> {
                     FeedDisplayItem(
                         title = dest.name,
@@ -70,6 +72,7 @@ class HistoryViewModel : BaseFeedViewModel() {
                         summary = "",
                     )
                 }
+
                 is Pin -> {
                     FeedDisplayItem(
                         title = "想法",
@@ -81,7 +84,9 @@ class HistoryViewModel : BaseFeedViewModel() {
                     )
                 }
 
-                else -> null
+                else -> {
+                    null
+                }
             }
 
             displayItem?.let {

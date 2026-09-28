@@ -287,8 +287,14 @@ fun SystemAndUpdateSettingsScreen(
                                 onClick = {
                                     coroutineScope.launch {
                                         when (val state = updateState) {
-                                            is SystemUpdateState.UpdateAvailable -> downloadUpdate.download(state.downloadUrl)
-                                            is SystemUpdateState.Downloaded -> installDownloadedUpdate.install()
+                                            is SystemUpdateState.UpdateAvailable -> {
+                                                downloadUpdate.download(state.downloadUrl)
+                                            }
+
+                                            is SystemUpdateState.Downloaded -> {
+                                                installDownloadedUpdate.install()
+                                            }
+
                                             else -> {}
                                         }
                                     }
@@ -298,12 +304,15 @@ fun SystemAndUpdateSettingsScreen(
                                 Text(
                                     when (updateState) {
                                         is SystemUpdateState.UpdateAvailable -> "下载更新"
+
                                         is SystemUpdateState.Downloading -> "下载中..."
+
                                         is SystemUpdateState.Downloaded -> if (isApkUpdateInstallSupported) {
                                             "安装更新"
                                         } else {
                                             "暂不支持安装 APK 更新"
                                         }
+
                                         else -> "下载更新"
                                     },
                                     Modifier.padding(0.dp, 4.dp),
@@ -425,9 +434,11 @@ fun SystemAndUpdateSettingsScreen(
                                         scrollState.animateScrollTo(0)
                                     }
                                 }
+
                                 SystemUpdateState.Latest -> {
                                     resetSystemUpdateState()
                                 }
+
                                 else -> { /* NOOP */ }
                             }
                         }

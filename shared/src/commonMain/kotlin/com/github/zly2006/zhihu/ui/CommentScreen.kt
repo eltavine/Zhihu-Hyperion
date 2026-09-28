@@ -1610,7 +1610,10 @@ fun AnnotatedString.Builder.dfsSimple(
     when (node) {
         is Element -> {
             when (node.tagName()) {
-                "br" -> append("\n")
+                "br" -> {
+                    append("\n")
+                }
+
                 "a" -> {
                     val href = node.attr("href")
                     val linkText = node.text()
@@ -1628,14 +1631,21 @@ fun AnnotatedString.Builder.dfsSimple(
                     }
                 }
 
-                else -> node.childNodes().forEach {
-                    dfsSimple(it, onNavigate, openExternalUrl, componentUsed)
+                else -> {
+                    node.childNodes().forEach {
+                        dfsSimple(it, onNavigate, openExternalUrl, componentUsed)
+                    }
                 }
             }
         }
 
-        is TextNode -> processTextWithEmoji(node.text(), componentUsed)
-        else -> append(node.outerHtml())
+        is TextNode -> {
+            processTextWithEmoji(node.text(), componentUsed)
+        }
+
+        else -> {
+            append(node.outerHtml())
+        }
     }
 }
 

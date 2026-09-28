@@ -204,11 +204,11 @@ sealed interface Feed {
             get() = created
     }
 
-    @Serializable
-    @SerialName("pin")
     /**
      * 知乎想法
      */
+    @Serializable
+    @SerialName("pin")
     data class PinTarget(
         val id: Long,
         override val url: String,

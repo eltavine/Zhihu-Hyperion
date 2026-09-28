@@ -222,7 +222,9 @@ class NotificationScreenInstrumentedTest {
                     assertEquals(fixture.contentId, destination.questionId)
                 }
 
-                else -> throw AssertionError("无法解析真实评论跳转结构：${fixture.url}")
+                else -> {
+                    throw AssertionError("无法解析真实评论跳转结构：${fixture.url}")
+                }
             }
         }
     }

@@ -204,7 +204,9 @@ fun ReadingPlayerBar(
                                 modifier = Modifier.size(22.dp),
                                 strokeWidth = 2.dp,
                             )
+
                             ReadingPlaybackStatus.Playing -> Icon(Icons.Default.Pause, contentDescription = null)
+
                             else -> Icon(Icons.Default.PlayArrow, contentDescription = null)
                         }
                     }

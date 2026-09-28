@@ -178,6 +178,7 @@ private fun TextFieldValue.toggleHeading(
                 replaceWith = "",
             )
         }
+
         text.startsWith(otherPrefix, startIndex = lineStart) -> {
             replaceAt(
                 replaceStart = lineStart,
@@ -185,6 +186,7 @@ private fun TextFieldValue.toggleHeading(
                 replaceWith = targetPrefix,
             )
         }
+
         else -> {
             replaceAt(
                 replaceStart = lineStart,

@@ -131,6 +131,7 @@ fun FeedAuthorBlockConfirmDialog(
                                 avatarUrl = author.avatarUrl,
                             ),
                         )
+
                         FeedAuthorBlockType.QUESTION_AUTHOR -> database.blockedQuestionAuthorDao().insertUser(
                             BlockedQuestionAuthor(
                                 userId = author.id,
@@ -139,6 +140,7 @@ fun FeedAuthorBlockConfirmDialog(
                                 avatarUrl = author.avatarUrl,
                             ),
                         )
+
                         null -> return@launch
                     }
                     onConfirm()

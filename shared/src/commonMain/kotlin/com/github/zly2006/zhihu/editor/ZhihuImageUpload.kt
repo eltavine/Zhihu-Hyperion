@@ -476,6 +476,7 @@ private fun decodeWebpSize(bytes: ByteArray): Pair<Int, Int>? {
                     return width to height
                 }
             }
+
             "VP8L" -> {
                 if (chunkSize >= 5 && bytes[dataOffset] == 0x2f.toByte()) {
                     val bits = readUInt32LittleEndian(bytes, dataOffset + 1)
@@ -484,6 +485,7 @@ private fun decodeWebpSize(bytes: ByteArray): Pair<Int, Int>? {
                     return width to height
                 }
             }
+
             "VP8 " -> {
                 if (chunkSize >= 10 &&
                     bytes[dataOffset + 3] == 0x9d.toByte() &&
@@ -696,9 +698,13 @@ private fun guessExtension(mimeType: String, fileName: String?): String? {
         ?.lowercase()
     return when (extFromName) {
         "png" -> "png"
+
         "jpg", "jpeg" -> "jpg"
+
         "gif" -> "gif"
+
         "webp" -> "webp"
+
         null -> when {
             mimeType.equals("image/png", ignoreCase = true) -> "png"
             mimeType.equals("image/jpeg", ignoreCase = true) -> "jpg"

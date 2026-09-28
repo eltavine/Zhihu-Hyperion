@@ -146,42 +146,44 @@ fun NotificationTimelineScreen(
                         )
                     }
 
-                    invitations -> InvitationAnswerItem(
-                        notification = notification,
-                        onQuestionClick = {
-                            notification.target?.id?.toLongOrNull()?.let { questionId ->
-                                navigator.onNavigate(
-                                    Question(
-                                        questionId = questionId,
-                                        title = notification.target.title.ifBlank {
-                                            notification.targetSource?.text.orEmpty()
-                                        },
-                                    ),
-                                )
-                            } ?: userMessages.showMessage("无法打开这个问题")
-                        },
-                        onAnswerClick = {
-                            val target = notification.target
-                            val destination = target
-                                ?.myAnswerUrl
-                                ?.takeIf { it.isNotBlank() }
-                                ?.let(::resolveContent)
-                            if (destination != null) {
-                                navigator.onNavigate(destination)
-                            } else {
-                                target?.id?.toLongOrNull()?.let { questionId ->
+                    invitations -> {
+                        InvitationAnswerItem(
+                            notification = notification,
+                            onQuestionClick = {
+                                notification.target?.id?.toLongOrNull()?.let { questionId ->
                                     navigator.onNavigate(
-                                        WriteAnswer(
+                                        Question(
                                             questionId = questionId,
-                                            questionTitle = target.title.ifBlank {
+                                            title = notification.target.title.ifBlank {
                                                 notification.targetSource?.text.orEmpty()
                                             },
                                         ),
                                     )
-                                } ?: userMessages.showMessage("无法回答这个问题")
-                            }
-                        },
-                    )
+                                } ?: userMessages.showMessage("无法打开这个问题")
+                            },
+                            onAnswerClick = {
+                                val target = notification.target
+                                val destination = target
+                                    ?.myAnswerUrl
+                                    ?.takeIf { it.isNotBlank() }
+                                    ?.let(::resolveContent)
+                                if (destination != null) {
+                                    navigator.onNavigate(destination)
+                                } else {
+                                    target?.id?.toLongOrNull()?.let { questionId ->
+                                        navigator.onNavigate(
+                                            WriteAnswer(
+                                                questionId = questionId,
+                                                questionTitle = target.title.ifBlank {
+                                                    notification.targetSource?.text.orEmpty()
+                                                },
+                                            ),
+                                        )
+                                    } ?: userMessages.showMessage("无法回答这个问题")
+                                }
+                            },
+                        )
+                    }
 
                     viewModel.shouldShowNotification(settingsStore, notification) -> {
                         NotificationItemView(

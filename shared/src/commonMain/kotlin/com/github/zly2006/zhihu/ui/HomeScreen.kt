@@ -319,8 +319,14 @@ fun HomeScreen(
                 isAtTop = listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0,
             )
         ) {
-            TopLevelReselectAction.Refresh -> viewModel.refresh(paginationEnvironment)
-            TopLevelReselectAction.ScrollToTop -> listState.animateScrollToItem(0)
+            TopLevelReselectAction.Refresh -> {
+                viewModel.refresh(paginationEnvironment)
+            }
+
+            TopLevelReselectAction.ScrollToTop -> {
+                listState.animateScrollToItem(0)
+            }
+
             null -> {}
         }
         cachedScrollToTopTrigger = scrollToTopTrigger
@@ -760,30 +766,36 @@ fun HomeScreen(
                                                         ?.contentOrNull
                                                         ?.let(openExternalUrl::invoke)
                                                 }
+
                                                 HOME_NOTIFICATION_ACTION_OPEN_WEBVIEW -> {
                                                     accept.value
                                                         ?.jsonPrimitive
                                                         ?.contentOrNull
                                                         ?.let(openWebViewUrl::invoke)
                                                 }
+
                                                 HOME_NOTIFICATION_ACTION_OPEN_UPDATE_SETTINGS -> {
                                                     navigator.onNavigate(Account.SystemAndUpdateSettings())
                                                 }
+
                                                 HOME_NOTIFICATION_ACTION_OPEN_PIN -> {
                                                     accept.value?.jsonPrimitive?.contentOrNull?.toLongOrNull()?.let {
                                                         navigator.onNavigate(Pin(it))
                                                     }
                                                 }
+
                                                 HOME_NOTIFICATION_ACTION_OPEN_ANSWER -> {
                                                     accept.value?.jsonPrimitive?.contentOrNull?.toLongOrNull()?.let {
                                                         navigator.onNavigate(Article(type = ArticleType.Answer, id = it))
                                                     }
                                                 }
+
                                                 HOME_NOTIFICATION_ACTION_OPEN_ARTICLE -> {
                                                     accept.value?.jsonPrimitive?.contentOrNull?.toLongOrNull()?.let {
                                                         navigator.onNavigate(Article(type = ArticleType.Article, id = it))
                                                     }
                                                 }
+
                                                 HOME_NOTIFICATION_ACTION_SET_SETTING -> {
                                                     val setting = accept.value?.jsonObject
                                                     val name = setting?.get("setting_name")?.jsonPrimitive?.contentOrNull
@@ -791,15 +803,20 @@ fun HomeScreen(
                                                         "boolean" -> setting["value"]?.jsonPrimitive?.booleanOrNull?.let {
                                                             settings.putBoolean(name!!, it)
                                                         }
+
                                                         "string" -> setting["value"]?.jsonPrimitive?.contentOrNull?.let {
                                                             settings.putString(name!!, it)
                                                         }
+
                                                         "int" -> setting["value"]?.jsonPrimitive?.intOrNull?.let {
                                                             settings.putInt(name!!, it)
                                                         }
                                                     }
                                                 }
-                                                else -> userMessages.showShortMessage("当前版本不支持此通知操作")
+
+                                                else -> {
+                                                    userMessages.showShortMessage("当前版本不支持此通知操作")
+                                                }
                                             }
                                         },
                                         dismiss = { Text(notification.dismiss) },

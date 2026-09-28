@@ -87,7 +87,9 @@ fun formatCompactCount(count: Int): String = when {
         }
     }
 
-    else -> count.toString()
+    else -> {
+        count.toString()
+    }
 }
 
 fun formatDailyDate(dateString: String): String {
@@ -106,10 +108,22 @@ fun formatRelativeTime(
     val diff = nowEpochSeconds - epochSeconds
 
     return when {
-        diff < 60 -> "刚刚"
-        diff < 3_600 -> "${diff / 60}分钟前"
-        diff < 86_400 -> "${diff / 3_600}小时前"
-        diff < 604_800 -> "${diff / 86_400}天前"
+        diff < 60 -> {
+            "刚刚"
+        }
+
+        diff < 3_600 -> {
+            "${diff / 60}分钟前"
+        }
+
+        diff < 86_400 -> {
+            "${diff / 3_600}小时前"
+        }
+
+        diff < 604_800 -> {
+            "${diff / 86_400}天前"
+        }
+
         else -> {
             val dateTime = Instant
                 .fromEpochSeconds(epochSeconds)

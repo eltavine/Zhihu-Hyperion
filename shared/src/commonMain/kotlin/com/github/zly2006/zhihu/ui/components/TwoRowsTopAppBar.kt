@@ -631,8 +631,11 @@ private class TopAppBarMeasurePolicy(
 
             val titleY =
                 when (titleVerticalArrangement) {
-                    Arrangement.Center -> (contentHeight - titlePlaceable.height) / 2
-                    Arrangement.Bottom ->
+                    Arrangement.Center -> {
+                        (contentHeight - titlePlaceable.height) / 2
+                    }
+
+                    Arrangement.Bottom -> {
                         if (titleBottomPadding == 0) {
                             contentHeight - titlePlaceable.height
                         } else {
@@ -650,7 +653,11 @@ private class TopAppBarMeasurePolicy(
                                 titlePlaceable.height -
                                 max(0, adjustedBottomPadding)
                         }
-                    else -> 0
+                    }
+
+                    else -> {
+                        0
+                    }
                 }
 
             titlePlaceable.placeRelative(titleX, titleY)

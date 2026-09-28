@@ -1,3 +1,5 @@
+import com.github.zly2006.zhihu.buildlogic.libs
+import com.github.zly2006.zhihu.buildlogic.version
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -8,6 +10,7 @@ class KtlintConventionPlugin : Plugin<Project> {
         with(target) {
             pluginManager.apply("org.jlleitschuh.gradle.ktlint")
             extensions.configure<KtlintExtension> {
+                version.set(libs.version("ktlint"))
                 android.set(true)
                 outputToConsole.set(true)
                 enableExperimentalRules.set(true)

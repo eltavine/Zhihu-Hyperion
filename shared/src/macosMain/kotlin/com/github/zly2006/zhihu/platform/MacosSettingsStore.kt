@@ -181,10 +181,22 @@ private class MacosPropertiesFile(
             }
             index += 1
             when (val escaped = value[index]) {
-                't' -> append('\t')
-                'n' -> append('\n')
-                'r' -> append('\r')
-                'f' -> append('\u000C')
+                't' -> {
+                    append('\t')
+                }
+
+                'n' -> {
+                    append('\n')
+                }
+
+                'r' -> {
+                    append('\r')
+                }
+
+                'f' -> {
+                    append('\u000C')
+                }
+
                 'u' -> {
                     val endIndex = (index + 5).coerceAtMost(value.length)
                     val codePoint = value.substring(index + 1, endIndex).toIntOrNull(16)
@@ -195,7 +207,10 @@ private class MacosPropertiesFile(
                         append(escaped)
                     }
                 }
-                else -> append(escaped)
+
+                else -> {
+                    append(escaped)
+                }
             }
             index += 1
         }
@@ -204,18 +219,42 @@ private class MacosPropertiesFile(
     private fun escape(value: String): String = buildString {
         value.forEachIndexed { index, character ->
             when {
-                character == ' ' && index == 0 -> append("\\ ")
-                character == '\\' -> append("\\\\")
-                character == '\t' -> append("\\t")
-                character == '\n' -> append("\\n")
-                character == '\r' -> append("\\r")
-                character == '\u000C' -> append("\\f")
+                character == ' ' && index == 0 -> {
+                    append("\\ ")
+                }
+
+                character == '\\' -> {
+                    append("\\\\")
+                }
+
+                character == '\t' -> {
+                    append("\\t")
+                }
+
+                character == '\n' -> {
+                    append("\\n")
+                }
+
+                character == '\r' -> {
+                    append("\\r")
+                }
+
+                character == '\u000C' -> {
+                    append("\\f")
+                }
+
                 character == '=' || character == ':' || character == '#' || character == '!' -> {
                     append('\\')
                     append(character)
                 }
-                character.code !in 0x20..0x7E -> append("\\u${character.code.toString(16).uppercase().padStart(4, '0')}")
-                else -> append(character)
+
+                character.code !in 0x20..0x7E -> {
+                    append("\\u${character.code.toString(16).uppercase().padStart(4, '0')}")
+                }
+
+                else -> {
+                    append(character)
+                }
             }
         }
     }

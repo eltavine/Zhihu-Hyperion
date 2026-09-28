@@ -377,11 +377,13 @@ fun BlocklistSettingsScreen(
                         }
                     },
                 )
+
                 nlpTab -> if (nlpSupported) {
                     nlpContent(navigator.onNavigateBack)
                 } else {
                     error("$platformName 暂不支持 NLP 智能屏蔽设置")
                 }
+
                 blockedUsersTab -> BlockedPeopleList(
                     users = blockedUsers,
                     category = "users",
@@ -423,6 +425,7 @@ fun BlocklistSettingsScreen(
                         )
                     },
                 )
+
                 blockedQuestionAuthorsTab -> BlockedPeopleList(
                     users = blockedQuestionAuthors,
                     category = "questionAuthors",
@@ -464,6 +467,7 @@ fun BlocklistSettingsScreen(
                         )
                     },
                 )
+
                 blockedTopicsTab -> BlockedTopicsList(
                     topics = blockedTopics,
                     onDeleteTopic = { topic ->

@@ -38,6 +38,7 @@ fun parseEmphasizedHtmlText(
                     emphasisStart = length
                     cursor += 4
                 }
+
                 html.startsWith("</em>", cursor) -> {
                     emphasisStart?.let { start ->
                         if (start < length) {
@@ -47,15 +48,28 @@ fun parseEmphasizedHtmlText(
                     emphasisStart = null
                     cursor += 5
                 }
+
                 html[cursor] == '&' -> {
                     val entityEnd = html.indexOf(';', cursor + 1)
                     val entity = entityEnd.takeIf { it != -1 }?.let { html.substring(cursor + 1, it) }
                     val decoded =
                         when (entity) {
-                            "lt" -> "<"
-                            "gt" -> ">"
-                            "quot" -> "\""
-                            "amp" -> "&"
+                            "lt" -> {
+                                "<"
+                            }
+
+                            "gt" -> {
+                                ">"
+                            }
+
+                            "quot" -> {
+                                "\""
+                            }
+
+                            "amp" -> {
+                                "&"
+                            }
+
                             else -> {
                                 val radix =
                                     when {
@@ -70,8 +84,14 @@ fun parseEmphasizedHtmlText(
                                             ?.toIntOrNull(it)
                                     }
                                 when {
-                                    codePoint == null || codePoint !in 0..0x10FFFF || codePoint in 0xD800..0xDFFF -> null
-                                    codePoint <= 0xFFFF -> codePoint.toChar().toString()
+                                    codePoint == null || codePoint !in 0..0x10FFFF || codePoint in 0xD800..0xDFFF -> {
+                                        null
+                                    }
+
+                                    codePoint <= 0xFFFF -> {
+                                        codePoint.toChar().toString()
+                                    }
+
                                     else -> {
                                         val offset = codePoint - 0x10000
                                         charArrayOf(
@@ -85,6 +105,7 @@ fun parseEmphasizedHtmlText(
                     append(decoded ?: "&")
                     cursor = if (decoded == null) cursor + 1 else entityEnd + 1
                 }
+
                 else -> {
                     append(html[cursor])
                     cursor++

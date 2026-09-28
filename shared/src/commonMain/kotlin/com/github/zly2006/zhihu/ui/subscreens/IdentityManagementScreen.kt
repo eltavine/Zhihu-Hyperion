@@ -343,11 +343,13 @@ fun IdentityManagementScreen() {
                             endAction = {
                                 when {
                                     isSwitching -> CircularProgressIndicator(Modifier.size(20.dp))
+
                                     isCurrent -> Text(
                                         "当前登录",
                                         color = MaterialTheme.colorScheme.primary,
                                         style = MaterialTheme.typography.labelLarge,
                                     )
+
                                     else -> Icon(Icons.Default.SwitchAccount, contentDescription = "切换")
                                 }
                             },

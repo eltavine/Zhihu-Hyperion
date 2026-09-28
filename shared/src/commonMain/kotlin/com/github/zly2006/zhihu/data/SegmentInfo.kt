@@ -40,7 +40,9 @@ object BooleanCompatSerializer : KSerializer<Boolean> {
                 ?: primitive.content.equals("true", ignoreCase = true)
         }
 
-        else -> decoder.decodeBoolean()
+        else -> {
+            decoder.decodeBoolean()
+        }
     }
 
     override fun serialize(

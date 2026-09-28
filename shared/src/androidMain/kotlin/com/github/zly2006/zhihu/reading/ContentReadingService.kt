@@ -126,16 +126,40 @@ class ContentReadingService : Service() {
                     stopSelfResult(startId)
                 }
             }
-            ACTION_TOGGLE -> togglePlayback()
-            ACTION_PLAY -> resumePlayback()
-            ACTION_PAUSE -> pausePlayback(abandonAudioFocus = true)
-            ACTION_PREVIOUS -> playPrevious()
-            ACTION_NEXT -> playNext()
-            ACTION_PLAY_AT -> playAt(intent.getIntExtra(EXTRA_INDEX, -1))
-            ACTION_SET_PLAYBACK_SPEED -> setPlaybackSpeed(
-                intent.getFloatExtra(EXTRA_PLAYBACK_SPEED, DEFAULT_READING_PLAYBACK_SPEED),
-            )
-            ACTION_STOP -> stopSession()
+
+            ACTION_TOGGLE -> {
+                togglePlayback()
+            }
+
+            ACTION_PLAY -> {
+                resumePlayback()
+            }
+
+            ACTION_PAUSE -> {
+                pausePlayback(abandonAudioFocus = true)
+            }
+
+            ACTION_PREVIOUS -> {
+                playPrevious()
+            }
+
+            ACTION_NEXT -> {
+                playNext()
+            }
+
+            ACTION_PLAY_AT -> {
+                playAt(intent.getIntExtra(EXTRA_INDEX, -1))
+            }
+
+            ACTION_SET_PLAYBACK_SPEED -> {
+                setPlaybackSpeed(
+                    intent.getFloatExtra(EXTRA_PLAYBACK_SPEED, DEFAULT_READING_PLAYBACK_SPEED),
+                )
+            }
+
+            ACTION_STOP -> {
+                stopSession()
+            }
         }
         if (intent?.action != ACTION_START && queue.isEmpty()) {
             stopSelfResult(startId)
@@ -207,9 +231,11 @@ class ContentReadingService : Service() {
             ReadingPlaybackStatus.Loading,
             ReadingPlaybackStatus.Initializing,
             -> pausePlayback(abandonAudioFocus = true)
+
             ReadingPlaybackStatus.Paused,
             ReadingPlaybackStatus.Error,
             -> resumePlayback()
+
             else -> Unit
         }
     }
@@ -608,7 +634,11 @@ class ContentReadingService : Service() {
                         playbackStatus = ReadingPlaybackStatus.Idle
                         publishState()
                     }
-                    playWhenReady -> continuePlaybackAfterTextToSpeechReady()
+
+                    playWhenReady -> {
+                        continuePlaybackAfterTextToSpeechReady()
+                    }
+
                     else -> {
                         playbackStatus = ReadingPlaybackStatus.Paused
                         publishState()
@@ -702,12 +732,17 @@ class ContentReadingService : Service() {
                 if (!isCurrentUtterance(initializationGeneration, utteranceId)) return@launch
                 activeUtteranceId = null
                 when (errorCode) {
-                    TextToSpeech.ERROR_INVALID_REQUEST ->
+                    TextToSpeech.ERROR_INVALID_REQUEST -> {
                         skipFailedItem(IllegalStateException("TTS 无法合成当前内容（$errorCode）"))
+                    }
 
-                    TextToSpeech.ERROR_SYNTHESIS -> recoverSynthesisFailure(errorCode)
+                    TextToSpeech.ERROR_SYNTHESIS -> {
+                        recoverSynthesisFailure(errorCode)
+                    }
 
-                    else -> recoverTextToSpeech(errorCode)
+                    else -> {
+                        recoverTextToSpeech(errorCode)
+                    }
                 }
             }
         }
@@ -832,10 +867,12 @@ class ContentReadingService : Service() {
                                 resumePlayback()
                             }
                         }
+
                         AudioManager.AUDIOFOCUS_LOSS -> {
                             resumeOnFocusGain = false
                             pausePlayback(abandonAudioFocus = false)
                         }
+
                         AudioManager.AUDIOFOCUS_LOSS_TRANSIENT,
                         AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK,
                         -> {
@@ -915,11 +952,15 @@ class ContentReadingService : Service() {
             (if (state.canPlayNext) PlaybackStateCompat.ACTION_SKIP_TO_NEXT else 0L)
         val playbackState = when (state.status) {
             ReadingPlaybackStatus.Playing -> PlaybackStateCompat.STATE_PLAYING
+
             ReadingPlaybackStatus.Loading,
             ReadingPlaybackStatus.Initializing,
             -> PlaybackStateCompat.STATE_BUFFERING
+
             ReadingPlaybackStatus.Paused -> PlaybackStateCompat.STATE_PAUSED
+
             ReadingPlaybackStatus.Error -> PlaybackStateCompat.STATE_ERROR
+
             ReadingPlaybackStatus.Idle -> PlaybackStateCompat.STATE_STOPPED
         }
         mediaSession.setPlaybackState(
@@ -1017,8 +1058,11 @@ class ContentReadingService : Service() {
         val url = when (item.contentType) {
             ReadingContentType.Answer -> item.questionId?.let { "https://www.zhihu.com/question/$it/answer/${item.id}" }
                 ?: "https://www.zhihu.com/answer/${item.id}"
+
             ReadingContentType.Article -> "https://zhuanlan.zhihu.com/p/${item.id}"
+
             ReadingContentType.Pin -> "https://www.zhihu.com/pin/${item.id}"
+
             ReadingContentType.Question -> "https://www.zhihu.com/question/${item.id}"
         }
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {

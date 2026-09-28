@@ -81,7 +81,9 @@ class RootCommentViewModel(
                     "https://www.zhihu.com/api/v4/comment_v5/${normalizedContentType}s/$contentId/segment/comment"
                 }
 
-                else -> ""
+                else -> {
+                    ""
+                }
             }
 
         val NavDestination.rootCommentUrl: String
@@ -105,7 +107,9 @@ class RootCommentViewModel(
                     "https://www.zhihu.com/api/v4/comment_v5/${normalizedContentType}s/$contentId/segment/root_comment?segment_id=$segmentId&limit=20&offset="
                 }
 
-                else -> ""
+                else -> {
+                    ""
+                }
             }
 
         private val SegmentCommentHolder.normalizedContentType: String

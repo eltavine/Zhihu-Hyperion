@@ -89,6 +89,7 @@ fun Feed.toDisplayItem(
     )
 
     is GroupFeed -> error("GroupFeed should be flattened before creating display items")
+
     is QuestionFeedCard -> FeedDisplayItem(
         title = target.title,
         summary = target.excerpt,
@@ -133,15 +134,17 @@ private fun Feed.toTargetDisplayItem(
         is Feed.AnswerTarget,
         is Feed.ArticleTarget,
         is Feed.QuestionTarget,
-        -> FeedDisplayItem(
-            title = target.title,
-            summary = target.excerpt,
-            details = listOfNotNull(target.detailsText, actionText).joinToString(" · "),
-            avatarSrc = target.author?.avatarUrl,
-            authorName = target.author?.name,
-            authorBadgeV2 = target.author?.badgeV2,
-            feed = this,
-        )
+        -> {
+            FeedDisplayItem(
+                title = target.title,
+                summary = target.excerpt,
+                details = listOfNotNull(target.detailsText, actionText).joinToString(" · "),
+                avatarSrc = target.author?.avatarUrl,
+                authorName = target.author?.name,
+                authorBadgeV2 = target.author?.badgeV2,
+                feed = this,
+            )
+        }
 
         is Feed.PinTarget -> {
             val textContent = target.content
@@ -168,11 +171,13 @@ private fun Feed.toTargetDisplayItem(
             )
         }
 
-        else -> FeedDisplayItem(
-            title = target?.description() ?: "广告",
-            summary = "Not Implemented",
-            details = target?.detailsText ?: "广告",
-            feed = this,
-        )
+        else -> {
+            FeedDisplayItem(
+                title = target?.description() ?: "广告",
+                summary = "Not Implemented",
+                details = target?.detailsText ?: "广告",
+                feed = this,
+            )
+        }
     }
 }
