@@ -18,6 +18,7 @@
 package com.github.zly2006.zhihu.account
 
 import com.github.zly2006.zhihu.util.AtomicTextFile
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import io.ktor.client.engine.HttpClientEngine
 import kotlinx.io.files.Path
 import org.koin.dsl.module
@@ -31,4 +32,5 @@ fun accountModule(accountFile: Path) = module {
     single<HttpClientEngine> { accountHttpClientEngineFactory.create() } onClose { it?.close() }
     single { ZhihuAccountRepository(AtomicTextFile(accountFile)) }
     single { ZhihuAccountStore(get(), get()) } onClose { it?.close() }
+    single<ZhihuApiEnvironment> { ZhihuAccountApiEnvironment(get()) }
 }

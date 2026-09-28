@@ -26,9 +26,6 @@ import com.github.zly2006.zhihu.platform.copyNativePlainText
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
-import com.github.zly2006.zhihu.viewmodel.local.LocalContentDatabase
-import com.github.zly2006.zhihu.viewmodel.local.LocalRecommendationEngine
-import com.github.zly2006.zhihu.viewmodel.local.buildLocalRecommendationEngine
 import io.ktor.client.HttpClient
 import kotlinx.serialization.json.JsonElement
 import org.koin.mp.KoinPlatform
@@ -45,14 +42,6 @@ internal class NativePaginationEnvironment(
     private val accountStore = KoinPlatform.getKoin().get<ZhihuAccountStore>()
     private val settingsStore: SettingsStore = KoinPlatform.getKoin().get()
     private val contentFilterDatabase: ContentFilterDatabase = KoinPlatform.getKoin().get()
-    private val localRecommendationEngine by lazy {
-        KoinPlatform.getKoin().getOrNull<LocalContentDatabase>()?.contentDao()?.let { dao ->
-            buildLocalRecommendationEngine(
-                dao = dao,
-                environment = this,
-            )
-        }
-    }
 
     override fun httpClient(): HttpClient = accountStore.client.httpClient()
 
@@ -65,8 +54,6 @@ internal class NativePaginationEnvironment(
     override fun xsrfToken(): String = accountStore.session.cookies["_xsrf"].orEmpty()
 
     override fun setPlainTextClipboard(label: String, text: String) = copyNativePlainText(text)
-
-    override fun localRecommendationEngine(): LocalRecommendationEngine? = localRecommendationEngine
 
     override suspend fun exportCollectionItemsToHtmlZip(
         collectionTitle: String,

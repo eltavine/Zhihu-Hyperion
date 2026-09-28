@@ -25,6 +25,9 @@ import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.local.LocalContentAffinity
 import com.github.zly2006.zhihu.viewmodel.local.LocalReasonPreference
 import io.ktor.client.HttpClient
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
@@ -359,6 +362,25 @@ class LocalRecommendationSupportTest {
 
         assertEquals(1, initializeCount)
         assertEquals(1, startCount)
+        database.close()
+    }
+
+    @Test
+    fun closingTheEngineCancelsItsScheduling() = runTest {
+        val database = testLocalContentDatabase()
+        val dao = database.contentDao()
+        var scheduling: Job? = null
+        val engine = LocalRecommendationEngine(
+            dao = dao,
+            crawlingExecutor = CrawlingExecutor(dao, NoopLocalRecommendationEnvironment),
+            initializeContent = {},
+            startScheduling = { scope -> scheduling = scope.launch { awaitCancellation() } },
+        )
+
+        engine.initialize()
+        engine.close()
+
+        assertTrue(checkNotNull(scheduling).isCancelled)
         database.close()
     }
 

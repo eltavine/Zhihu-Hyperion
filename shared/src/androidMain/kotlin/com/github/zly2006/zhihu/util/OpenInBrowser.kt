@@ -22,10 +22,10 @@ import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.AccountData
 import com.github.zly2006.zhihu.data.Collection
 import com.github.zly2006.zhihu.data.ZhihuJson
-import com.github.zly2006.zhihu.data.asApiEnvironment
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.NavDestination
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.postSigned
 import io.ktor.client.call.body
 import io.ktor.client.request.put
@@ -41,7 +41,7 @@ import org.koin.mp.KoinPlatform
 object OpenInBrowser {
     suspend fun openUrlInBrowser(context: Context, destination: NavDestination): Boolean {
         val urlToken = AccountData.data.self?.urlToken ?: return false
-        val environment = context.asApiEnvironment()
+        val environment = KoinPlatform.getKoin().get<ZhihuApiEnvironment>()
         val jojo = environment.fetchJson("https://www.zhihu.com/api/v4/people/$urlToken/collections?limit=50", "")!!
         val collection = ZhihuJson
             .decodeJson<List<Collection>>(jojo["data"]!!)

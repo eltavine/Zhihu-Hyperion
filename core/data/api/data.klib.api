@@ -582,9 +582,10 @@ final class com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats { // com.g
     final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats.toString|toString(){}[0]
 }
 
-final class com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine { // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine|null[0]
-    constructor <init>(com.github.zly2006.zhihu.viewmodel.local/LocalContentDao, com.github.zly2006.zhihu.viewmodel.local/CrawlingExecutor, kotlin.coroutines/SuspendFunction0<kotlin/Unit> = ..., kotlin/Function0<kotlin/Unit> = ...) // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine.<init>|<init>(com.github.zly2006.zhihu.viewmodel.local.LocalContentDao;com.github.zly2006.zhihu.viewmodel.local.CrawlingExecutor;kotlin.coroutines.SuspendFunction0<kotlin.Unit>;kotlin.Function0<kotlin.Unit>){}[0]
+final class com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine : kotlin/AutoCloseable { // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine|null[0]
+    constructor <init>(com.github.zly2006.zhihu.viewmodel.local/LocalContentDao, com.github.zly2006.zhihu.viewmodel.local/CrawlingExecutor, kotlin.coroutines/SuspendFunction0<kotlin/Unit> = ..., kotlin/Function1<kotlinx.coroutines/CoroutineScope, kotlin/Unit> = ...) // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine.<init>|<init>(com.github.zly2006.zhihu.viewmodel.local.LocalContentDao;com.github.zly2006.zhihu.viewmodel.local.CrawlingExecutor;kotlin.coroutines.SuspendFunction0<kotlin.Unit>;kotlin.Function1<kotlinx.coroutines.CoroutineScope,kotlin.Unit>){}[0]
 
+    final fun close() // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine.close|close(){}[0]
     final suspend fun generateRecommendations(kotlin/Int = ...): kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry> // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine.generateRecommendations|generateRecommendations(kotlin.Int){}[0]
     final suspend fun initialize() // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine.initialize|initialize(){}[0]
     final suspend fun recordContentOpened(kotlin/String, com.github.zly2006.zhihu.viewmodel.local/CrawlingReason) // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine.recordContentOpened|recordContentOpened(kotlin.String;com.github.zly2006.zhihu.viewmodel.local.CrawlingReason){}[0]
@@ -648,7 +649,7 @@ final class com.github.zly2006.zhihu.viewmodel.local/RankedLocalResult { // com.
 final class com.github.zly2006.zhihu.viewmodel.local/TaskScheduler { // com.github.zly2006.zhihu.viewmodel.local/TaskScheduler|null[0]
     constructor <init>(com.github.zly2006.zhihu.viewmodel.local/LocalContentDao, com.github.zly2006.zhihu.viewmodel.local/CrawlingExecutor) // com.github.zly2006.zhihu.viewmodel.local/TaskScheduler.<init>|<init>(com.github.zly2006.zhihu.viewmodel.local.LocalContentDao;com.github.zly2006.zhihu.viewmodel.local.CrawlingExecutor){}[0]
 
-    final fun startScheduling() // com.github.zly2006.zhihu.viewmodel.local/TaskScheduler.startScheduling|startScheduling(){}[0]
+    final fun startScheduling(kotlinx.coroutines/CoroutineScope) // com.github.zly2006.zhihu.viewmodel.local/TaskScheduler.startScheduling|startScheduling(kotlinx.coroutines.CoroutineScope){}[0]
 }
 
 final class com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer { // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer|null[0]

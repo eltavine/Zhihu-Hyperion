@@ -184,6 +184,7 @@ import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.koin.compose.koinInject
+import org.koin.mp.KoinPlatform
 import kotlin.time.Clock
 
 const val ARTICLE_USE_WEBVIEW_PREFERENCE_KEY = "webviewRenderLegacy"
@@ -294,7 +295,7 @@ fun HomeScreen(
     val viewModel: BaseFeedViewModel = when (currentRecommendationMode) {
         RecommendationMode.WEB -> viewModel { HomeFeedViewModel(settings, homeFeedFilter) }
         RecommendationMode.ANDROID -> viewModel { AndroidHomeFeedViewModel(settings, homeFeedFilter) }
-        RecommendationMode.LOCAL -> viewModel { LocalHomeFeedViewModel(settings) }
+        RecommendationMode.LOCAL -> viewModel { LocalHomeFeedViewModel(settings, KoinPlatform.getKoin().inject()) }
         RecommendationMode.MIXED -> viewModel { MixedHomeFeedViewModel(settings, homeFeedFilter) }
     }
     val localHomeViewModel = viewModel as? LocalHomeFeedViewModel

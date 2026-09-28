@@ -27,6 +27,16 @@ sealed interface com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult { // co
     }
 }
 
+final class com.github.zly2006.zhihu.account/ZhihuAccountApiEnvironment : com.github.zly2006.zhihu.viewmodel/ZhihuApiEnvironment { // com.github.zly2006.zhihu.account/ZhihuAccountApiEnvironment|null[0]
+    constructor <init>(com.github.zly2006.zhihu.account/ZhihuAccountStore) // com.github.zly2006.zhihu.account/ZhihuAccountApiEnvironment.<init>|<init>(com.github.zly2006.zhihu.account.ZhihuAccountStore){}[0]
+
+    final fun authenticatedCookies(): kotlin.collections/Map<kotlin/String, kotlin/String> // com.github.zly2006.zhihu.account/ZhihuAccountApiEnvironment.authenticatedCookies|authenticatedCookies(){}[0]
+    final fun httpClient(): io.ktor.client/HttpClient // com.github.zly2006.zhihu.account/ZhihuAccountApiEnvironment.httpClient|httpClient(){}[0]
+    final fun xsrfToken(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuAccountApiEnvironment.xsrfToken|xsrfToken(){}[0]
+    final suspend fun <#A1: kotlin/Any?> withAuthenticatedClient(kotlin.coroutines/SuspendFunction2<io.ktor.client/HttpClient, kotlin.collections/Map<kotlin/String, kotlin/String>, #A1>): #A1 // com.github.zly2006.zhihu.account/ZhihuAccountApiEnvironment.withAuthenticatedClient|withAuthenticatedClient(kotlin.coroutines.SuspendFunction2<io.ktor.client.HttpClient,kotlin.collections.Map<kotlin.String,kotlin.String>,0:0>){0§<kotlin.Any?>}[0]
+    final suspend fun handleFetchFailure(kotlin/String?, kotlin/Exception) // com.github.zly2006.zhihu.account/ZhihuAccountApiEnvironment.handleFetchFailure|handleFetchFailure(kotlin.String?;kotlin.Exception){}[0]
+}
+
 final class com.github.zly2006.zhihu.account/ZhihuAccountClient : kotlin/AutoCloseable { // com.github.zly2006.zhihu.account/ZhihuAccountClient|null[0]
     final fun close() // com.github.zly2006.zhihu.account/ZhihuAccountClient.close|close(){}[0]
     final fun httpClient(): io.ktor.client/HttpClient // com.github.zly2006.zhihu.account/ZhihuAccountClient.httpClient|httpClient(){}[0]

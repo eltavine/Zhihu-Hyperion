@@ -22,7 +22,6 @@ import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
 import com.github.zly2006.zhihu.platform.SettingsStore
-import com.github.zly2006.zhihu.viewmodel.LocalRecommendationEnvironment
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
@@ -31,11 +30,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/** [recommendationEngine] 在首次加载时才解析，数据库初始化失败会走下方的兜底内容与错误提示。 */
 class LocalHomeFeedViewModel(
     settings: SettingsStore,
+    private val recommendationEngine: Lazy<LocalRecommendationEngine>,
 ) : BaseFeedViewModel(settings),
     HomeFeedInteractionViewModel {
-    private lateinit var recommendationEngine: LocalRecommendationEngine
     private val recommendationResults = mutableMapOf<String, CrawlingResult>()
 
     override val initialUrl: String
@@ -49,7 +49,7 @@ class LocalHomeFeedViewModel(
 
     override suspend fun fetchFeeds(environment: PaginationEnvironment) {
         try {
-            val engine = ensureEngine(environment)
+            val engine = recommendationEngine.value.also { it.initialize() }
             val recommendations = engine.generateRecommendations(20)
             recommendationResults.clear()
 
@@ -84,21 +84,12 @@ class LocalHomeFeedViewModel(
 
     fun onLocalItemOpened(item: FeedDisplayItem) {
         val result = recommendationResults[item.stableKey] ?: return
-        if (!::recommendationEngine.isInitialized) {
+        if (!recommendationEngine.isInitialized()) {
             return
         }
         viewModelScope.launch(Dispatchers.Default) {
-            recommendationEngine.recordContentOpened(result.contentId, result.reason)
+            recommendationEngine.value.recordContentOpened(result.contentId, result.reason)
         }
-    }
-
-    private suspend fun ensureEngine(environment: LocalRecommendationEnvironment): LocalRecommendationEngine {
-        if (!::recommendationEngine.isInitialized) {
-            recommendationEngine = environment.localRecommendationEngine()
-                ?: error("LocalRecommendationEngine is required for local home feed")
-        }
-        recommendationEngine.initialize()
-        return recommendationEngine
     }
 
     private suspend fun generateFallbackContent() {

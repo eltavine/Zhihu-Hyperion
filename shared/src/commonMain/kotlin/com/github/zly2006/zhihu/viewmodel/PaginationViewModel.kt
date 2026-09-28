@@ -44,7 +44,6 @@ import com.github.zly2006.zhihu.ui.ArticleAnswerTransitionDirection
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.signZhihuFetchRequest
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel.CachedAnswerContent
-import com.github.zly2006.zhihu.viewmodel.local.LocalRecommendationEngine
 import io.ktor.client.HttpClient
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.request.HttpRequestBuilder
@@ -343,8 +342,6 @@ interface AigcVoteEnvironment {
 }
 
 interface LocalRecommendationEnvironment : ZhihuApiEnvironment {
-    fun localRecommendationEngine(): LocalRecommendationEngine? = null
-
     suspend fun handleLocalRecommendationFailure(error: Exception) {
         handleFetchFailure("LocalHomeFeedViewModel", error)
     }

@@ -42,7 +42,6 @@ import com.github.zly2006.zhihu.data.AigcVoteVoter
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.ZhihuCookieStorage
 import com.github.zly2006.zhihu.data.ZhihuJson.json
-import com.github.zly2006.zhihu.data.asApiEnvironment
 import com.github.zly2006.zhihu.data.navDestination
 import com.github.zly2006.zhihu.navigation.requestLoginNavigation
 import com.github.zly2006.zhihu.notification.NotificationSettingsStore
@@ -56,9 +55,6 @@ import com.github.zly2006.zhihu.util.clipboardManager
 import com.github.zly2006.zhihu.util.exportCollectionItemsToZip
 import com.github.zly2006.zhihu.util.saveBitmapToGallery
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
-import com.github.zly2006.zhihu.viewmodel.local.LocalContentDatabase
-import com.github.zly2006.zhihu.viewmodel.local.LocalRecommendationEngine
-import com.github.zly2006.zhihu.viewmodel.local.buildLocalRecommendationEngine
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngine
@@ -101,10 +97,6 @@ open class SharedAndroidPaginationEnvironment(
 ) : AndroidContextPaginationEnvironment,
     CollectionContentEnvironment {
     private val contentFilterDatabase: ContentFilterDatabase = KoinPlatform.getKoin().get()
-    private val localRecommendationEngine by lazy {
-        val dao = KoinPlatform.getKoin().get<LocalContentDatabase>().contentDao()
-        buildLocalRecommendationEngine(dao, context.asApiEnvironment())
-    }
     private val settingsStore by lazy { androidSettingsStore(context) }
     private val userMessageSink by lazy { androidUserMessageSink(context) }
     private val aigcVoteHttpClient by lazy {
@@ -217,8 +209,6 @@ open class SharedAndroidPaginationEnvironment(
         Log.e("AndroidHomeFeedViewModel", "Failed to fetch feeds", error)
         userMessageSink.showShortMessage("安卓端推荐加载失败: ${error.message}")
     }
-
-    override fun localRecommendationEngine(): LocalRecommendationEngine = localRecommendationEngine
 
     override suspend fun handleLocalRecommendationFailure(error: Exception) {
         Log.e("LocalHomeFeedViewModel", "Error fetching local feeds", error)

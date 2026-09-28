@@ -33,9 +33,6 @@ import com.github.zly2006.zhihu.util.buildArticleExportFileName
 import com.github.zly2006.zhihu.util.buildCollectionExportZipFileName
 import com.github.zly2006.zhihu.util.sanitizeArticleExportFileNamePart
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
-import com.github.zly2006.zhihu.viewmodel.local.LocalContentDatabase
-import com.github.zly2006.zhihu.viewmodel.local.LocalRecommendationEngine
-import com.github.zly2006.zhihu.viewmodel.local.buildLocalRecommendationEngine
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -61,9 +58,6 @@ class DesktopPaginationEnvironment(
     private val store = KoinPlatform.getKoin().get<ZhihuAccountStore>()
     private val settingsStore: SettingsStore = KoinPlatform.getKoin().get()
     private val contentFilterDb: ContentFilterDatabase = KoinPlatform.getKoin().get()
-    private val localRecommendationEngine by lazy {
-        buildLocalRecommendationEngine(KoinPlatform.getKoin().get<LocalContentDatabase>().contentDao(), this)
-    }
 
     override fun httpClient(): HttpClient = store.client.httpClient()
 
@@ -88,8 +82,6 @@ class DesktopPaginationEnvironment(
     ) {
         copyDesktopPlainText(text)
     }
-
-    override fun localRecommendationEngine(): LocalRecommendationEngine = localRecommendationEngine
 
     override fun hasImageExportPermission(): Boolean = true
 

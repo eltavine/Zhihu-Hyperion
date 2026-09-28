@@ -18,7 +18,6 @@
 package com.github.zly2006.zhihu.viewmodel.local
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -36,9 +35,9 @@ class TaskScheduler(
     /**
      * 启动任务调度
      */
-    fun startScheduling() {
+    fun startScheduling(scope: CoroutineScope) {
         schedulerJob?.cancel()
-        schedulerJob = CoroutineScope(Dispatchers.Default).launch {
+        schedulerJob = scope.launch {
             while (isActive) {
                 try {
                     executePendingTasks()

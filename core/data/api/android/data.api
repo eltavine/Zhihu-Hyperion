@@ -57,10 +57,6 @@ public final class com/github/zly2006/zhihu/data/AccountData$ZhPlusJsonSerializa
 	public final fun getOriginalJson ()Lkotlinx/serialization/json/JsonElement;
 }
 
-public final class com/github/zly2006/zhihu/data/AndroidDataSupportKt {
-	public static final fun asApiEnvironment (Landroid/content/Context;)Lcom/github/zly2006/zhihu/viewmodel/ZhihuApiEnvironment;
-}
-
 public final class com/github/zly2006/zhihu/data/ContentDetailCache {
 	public static final field INSTANCE Lcom/github/zly2006/zhihu/data/ContentDetailCache;
 	public final fun getOrFetch (Lcom/github/zly2006/zhihu/navigation/NavDestination;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -647,9 +643,10 @@ public final class com/github/zly2006/zhihu/viewmodel/local/LocalReasonStats {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/github/zly2006/zhihu/viewmodel/local/LocalRecommendationEngine {
-	public fun <init> (Lcom/github/zly2006/zhihu/viewmodel/local/LocalContentDao;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingExecutor;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;)V
-	public synthetic fun <init> (Lcom/github/zly2006/zhihu/viewmodel/local/LocalContentDao;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingExecutor;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+public final class com/github/zly2006/zhihu/viewmodel/local/LocalRecommendationEngine : java/lang/AutoCloseable {
+	public fun <init> (Lcom/github/zly2006/zhihu/viewmodel/local/LocalContentDao;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingExecutor;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Lcom/github/zly2006/zhihu/viewmodel/local/LocalContentDao;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingExecutor;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun close ()V
 	public final fun generateRecommendations (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun generateRecommendations$default (Lcom/github/zly2006/zhihu/viewmodel/local/LocalRecommendationEngine;ILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun initialize (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -721,7 +718,7 @@ public final class com/github/zly2006/zhihu/viewmodel/local/RankedLocalResult {
 
 public final class com/github/zly2006/zhihu/viewmodel/local/TaskScheduler {
 	public fun <init> (Lcom/github/zly2006/zhihu/viewmodel/local/LocalContentDao;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingExecutor;)V
-	public final fun startScheduling ()V
+	public final fun startScheduling (Lkotlinx/coroutines/CoroutineScope;)V
 }
 
 public final class com/github/zly2006/zhihu/viewmodel/local/UserBehaviorAnalyzer {

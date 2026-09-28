@@ -29,17 +29,22 @@ import com.github.zly2006.zhihu.viewmodel.local.buildLocalRecommendationReason
 import com.github.zly2006.zhihu.viewmodel.local.parseLocalContentIdentity
 import com.github.zly2006.zhihu.viewmodel.local.scoreFeedTarget
 import com.github.zly2006.zhihu.viewmodel.local.toLocalContentIdentity
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlin.time.Clock
 
+/** 进程内只保留一个实例：后台爬取调度运行在引擎持有的作用域里，[close] 时一并取消。 */
 class LocalRecommendationEngine(
     private val dao: LocalContentDao,
     private val crawlingExecutor: CrawlingExecutor,
     private val initializeContent: suspend () -> Unit = LocalContentInitializer(dao)::initializeIfNeeded,
-    private val startScheduling: () -> Unit = TaskScheduler(dao, crawlingExecutor)::startScheduling,
-) {
+    private val startScheduling: (CoroutineScope) -> Unit = TaskScheduler(dao, crawlingExecutor)::startScheduling,
+) : AutoCloseable {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private val feedGenerator = FeedGenerator(dao)
     private val userBehaviorAnalyzer = UserBehaviorAnalyzer(dao)
 
@@ -56,10 +61,12 @@ class LocalRecommendationEngine(
                 return@withContext
             }
             initializeContent()
-            startScheduling()
+            startScheduling(scope)
             initialized = true
         }
     }
+
+    override fun close() = scope.cancel()
 
     suspend fun generateRecommendations(limit: Int = 20): List<LocalRecommendationEntry> = withContext(Dispatchers.Default) {
         initialize()

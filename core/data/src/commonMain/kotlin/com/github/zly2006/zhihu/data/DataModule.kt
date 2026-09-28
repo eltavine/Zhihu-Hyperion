@@ -21,12 +21,19 @@ import com.github.zly2006.zhihu.filter.ContentOpenTracker
 import com.github.zly2006.zhihu.filter.RemoteHistorySync
 import com.github.zly2006.zhihu.util.AtomicTextFile
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
+import com.github.zly2006.zhihu.viewmodel.local.LocalContentDatabase
+import com.github.zly2006.zhihu.viewmodel.local.buildLocalRecommendationEngine
 import kotlinx.io.files.Path
 import org.koin.dsl.module
+import org.koin.dsl.onClose
 
-/** :core:data 的进程级单例；[historyFile] 由各平台组合根给出，沿用既有 history.json 位置。 */
+/**
+ * :core:data 的进程级单例；[historyFile] 由各平台组合根给出，沿用既有 history.json 位置。
+ * 本地推荐引擎依赖平台绑定的 LocalContentDatabase，没有该数据库的平台在请求引擎时直接失败。
+ */
 fun dataModule(historyFile: Path) = module {
     single { HistoryStorage(AtomicTextFile(historyFile)) }
     single { ContentOpenTracker(get()) }
     single { RemoteHistorySync(get(), get<ContentFilterDatabase>().contentOpenEventDao()) }
+    single { buildLocalRecommendationEngine(get<LocalContentDatabase>().contentDao(), get()) } onClose { it?.close() }
 }

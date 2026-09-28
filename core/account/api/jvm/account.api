@@ -24,6 +24,19 @@ public final class com/github/zly2006/zhihu/account/QrLoginProtocolKt {
 	public static final fun syncCookiesFromScanInfo (Ljava/util/Map;Lcom/github/zly2006/zhihu/account/ZhihuQrScanInfo;)V
 }
 
+public final class com/github/zly2006/zhihu/account/ZhihuAccountApiEnvironment : com/github/zly2006/zhihu/viewmodel/ZhihuApiEnvironment {
+	public fun <init> (Lcom/github/zly2006/zhihu/account/ZhihuAccountStore;)V
+	public fun authenticatedCookies ()Ljava/util/Map;
+	public fun fetchJson (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun handleFetchFailure (Ljava/lang/String;Ljava/lang/Exception;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun httpClient ()Lio/ktor/client/HttpClient;
+	public fun logDecodeFailure (Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Exception;)V
+	public fun refreshToken (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun signedGetText (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun withAuthenticatedClient (Lkotlin/jvm/functions/Function3;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun xsrfToken ()Ljava/lang/String;
+}
+
 public final class com/github/zly2006/zhihu/account/ZhihuAccountClient : java/lang/AutoCloseable {
 	public fun close ()V
 	public final fun httpClient ()Lio/ktor/client/HttpClient;
