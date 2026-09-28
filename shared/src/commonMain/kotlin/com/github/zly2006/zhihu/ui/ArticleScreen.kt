@@ -118,6 +118,7 @@ import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isAnswerSwipeSupported
 import com.github.zly2006.zhihu.platform.isArticleHtmlExportSupported
 import com.github.zly2006.zhihu.platform.isArticleImageExportSupported
+import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.AnswerDoubleTapAction
 import com.github.zly2006.zhihu.ui.article.AigcFlagSheet
@@ -207,6 +208,7 @@ fun ArticleScreen(
     val history = koinInject<HistoryStorage>()
     val contentOpens = koinInject<ContentOpenTracker>()
     val aigcVote = koinInject<AigcVoteService>()
+    val clipboard = rememberPlainTextClipboard()
     val isTitleAutoHide by rememberObservedSetting(settings, "titleAutoHide") { getBoolean("titleAutoHide", false) }
     val autoHideArticleBottomBar by rememberObservedSetting(settings, "autoHideArticleBottomBar") {
         getBoolean("autoHideArticleBottomBar", false)
@@ -1405,7 +1407,7 @@ fun ArticleScreen(
             viewModel.exportToImage(environment, includeAppAttribution, onComplete)
         },
         onExportMarkdown = {
-            viewModel.exportToClipboard(environment)
+            viewModel.exportToClipboard(clipboard)
         },
         onExportImageWithComments = { commentCount, includeAppAttribution, onComplete ->
             viewModel.exportToImageWithComments(environment, commentCount, includeAppAttribution, onComplete)

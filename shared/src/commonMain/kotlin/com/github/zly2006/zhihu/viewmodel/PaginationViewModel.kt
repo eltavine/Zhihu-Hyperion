@@ -333,13 +333,6 @@ interface LocalRecommendationEnvironment : ZhihuApiEnvironment {
     suspend fun showLocalRecommendationDatabaseError() = Unit
 }
 
-interface ClipboardEnvironment {
-    fun setPlainTextClipboard(
-        label: String,
-        text: String,
-    ) = Unit
-}
-
 interface ArticleExportEnvironment {
     fun hasImageExportPermission(): Boolean = false
 
@@ -383,7 +376,6 @@ interface PaginationEnvironment :
     ZhihuApiEnvironment,
     MobileHomeFeedEnvironment,
     LocalRecommendationEnvironment,
-    ClipboardEnvironment,
     ArticleExportContentEnvironment
 
 data class FeedDisplaySettings(

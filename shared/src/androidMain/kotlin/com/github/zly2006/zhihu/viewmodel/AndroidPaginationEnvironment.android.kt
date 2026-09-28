@@ -273,13 +273,6 @@ open class SharedAndroidPaginationEnvironment(
     }
 
     // Export methods
-    override fun setPlainTextClipboard(
-        label: String,
-        text: String,
-    ) {
-        context.clipboardManager.setPrimaryClip(ClipData.newPlainText(label, text))
-    }
-
     override fun buildArticleExportHtml(
         content: DataHolder.Content,
         includeAppAttribution: Boolean,

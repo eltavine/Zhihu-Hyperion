@@ -22,7 +22,6 @@ import androidx.compose.runtime.remember
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.navDestination
-import com.github.zly2006.zhihu.desktop.copyDesktopPlainText
 import com.github.zly2006.zhihu.desktop.desktopZhihuDataFile
 import com.github.zly2006.zhihu.desktop.desktopZhihuDownloadsDir
 import com.github.zly2006.zhihu.navigation.Article
@@ -71,13 +70,6 @@ class DesktopPaginationEnvironment :
         error: Exception,
     ) {
         Log.e(tag ?: "PaginationViewModel", "Failed to fetch feeds", error)
-    }
-
-    override fun setPlainTextClipboard(
-        label: String,
-        text: String,
-    ) {
-        copyDesktopPlainText(text)
     }
 
     override fun hasImageExportPermission(): Boolean = true

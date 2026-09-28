@@ -131,6 +131,7 @@ import com.github.zly2006.zhihu.platform.UserMessageDuration
 import com.github.zly2006.zhihu.platform.rememberAppPrivateDirectory
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
 import com.github.zly2006.zhihu.platform.rememberIsLiteVariant
+import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.platform.rememberWebViewUrlOpener
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
@@ -244,6 +245,7 @@ fun HomeScreen(
     val remoteHistory = koinInject<RemoteHistorySync>()
     val homeFeedFilter = koinInject<HomeFeedFilter>()
     val mobileClient = koinInject<MobileClientProvider>()
+    val clipboard = rememberPlainTextClipboard()
     val appPrivateDirectory = rememberAppPrivateDirectory()
     val notificationSettings = koinInject<NotificationSettingsStore>()
     val userMessages = rememberUserMessageSink()
@@ -961,7 +963,7 @@ fun HomeScreen(
                         DraggableRefreshButton(
                             onClick = {
                                 val data = Json.encodeToString(viewModel.debugData)
-                                paginationEnvironment.setPlainTextClipboard("data", data)
+                                clipboard("data", data)
                                 userMessages.showShortMessage("已复制调试数据")
                             },
                             preferenceName = "copyAll",

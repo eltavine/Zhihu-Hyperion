@@ -21,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.platform.SettingsStore
-import com.github.zly2006.zhihu.platform.copyNativePlainText
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
@@ -49,8 +48,6 @@ internal class NativePaginationEnvironment :
     ): T = accountStore.client.withAuthenticatedClient(block)
 
     override fun xsrfToken(): String = accountStore.session.cookies["_xsrf"].orEmpty()
-
-    override fun setPlainTextClipboard(label: String, text: String) = copyNativePlainText(text)
 
     override suspend fun exportCollectionItemsToHtmlZip(
         collectionTitle: String,

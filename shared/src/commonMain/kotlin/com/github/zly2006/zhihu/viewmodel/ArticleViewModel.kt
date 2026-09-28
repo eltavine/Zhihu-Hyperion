@@ -52,6 +52,7 @@ import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.CollectionAnswerNavigator
 import com.github.zly2006.zhihu.navigation.PaginationInfoNavigator
 import com.github.zly2006.zhihu.navigation.QuestionAnswerNavigator
+import com.github.zly2006.zhihu.platform.PlainTextClipboard
 import com.github.zly2006.zhihu.platform.UserMessageSink
 import com.github.zly2006.zhihu.platform.isAigcVoteSupported
 import com.github.zly2006.zhihu.util.ArticleExportComment
@@ -1136,11 +1137,11 @@ class ArticleViewModel(
     }
 
     // 导出到剪贴板
-    fun exportToClipboard(environment: ClipboardEnvironment) {
+    fun exportToClipboard(clipboard: PlainTextClipboard) {
         val markdown = convertToMarkdown()
 
         // 将Markdown文本复制到剪贴板
-        environment.setPlainTextClipboard("Zhihu Article", markdown)
+        clipboard("Zhihu Article", markdown)
 
         userMessages.showShortMessage("文章已复制到剪贴板")
     }
