@@ -20,7 +20,6 @@ package com.github.zly2006.zhihu.ui.subscreens
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
-import com.github.zly2006.zhihu.account.defaultNativeAccountStore
 import com.github.zly2006.zhihu.platform.nativeAppVersionName
 import com.github.zly2006.zhihu.platform.nativeBundledResourcePath
 import com.github.zly2006.zhihu.platform.nativeIsDesktop
@@ -41,6 +40,7 @@ import kotlinx.cinterop.reinterpret
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import org.koin.compose.koinInject
 import platform.Foundation.NSFileManager
 
 private const val PREF_SKIPPED_VERSION = "skippedVersion"
@@ -53,7 +53,7 @@ actual fun rememberSystemUpdateState(): StateFlow<SystemUpdateState> = nativeSys
 @Composable
 actual fun rememberSystemUpdateChecker(): SystemUpdateChecker {
     val settings = rememberSettingsStore()
-    val accountStore = defaultNativeAccountStore
+    val accountStore = koinInject<ZhihuAccountStore>()
     return remember(settings, accountStore) {
         object : SystemUpdateChecker {
             override suspend fun check() {

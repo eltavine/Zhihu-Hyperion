@@ -19,7 +19,7 @@ package com.github.zly2006.zhihu.ui.subscreens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import com.github.zly2006.zhihu.desktop.defaultDesktopAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.desktop.openDesktopExternalUrl
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.platform.rememberSettingsStore
@@ -31,6 +31,7 @@ import com.mikepenz.aboutlibraries.Libs
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import org.koin.compose.koinInject
 import java.io.File
 import java.util.Properties
 
@@ -42,7 +43,7 @@ actual fun rememberSystemUpdateState(): StateFlow<SystemUpdateState> = desktopSy
 @Composable
 actual fun rememberSystemUpdateChecker(): SystemUpdateChecker {
     val settings = rememberSettingsStore()
-    val accountStore = defaultDesktopAccountStore
+    val accountStore = koinInject<ZhihuAccountStore>()
     return remember(settings, accountStore) {
         object : SystemUpdateChecker {
             override suspend fun check() {

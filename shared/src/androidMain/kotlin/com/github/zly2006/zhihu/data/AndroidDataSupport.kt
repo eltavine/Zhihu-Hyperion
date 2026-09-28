@@ -19,16 +19,15 @@ package com.github.zly2006.zhihu.data
 
 import android.content.Context
 import android.util.Log
-import com.github.zly2006.zhihu.account.androidZhihuAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import io.ktor.client.HttpClient
+import org.koin.mp.KoinPlatform
 
 fun Context.asApiEnvironment(): ZhihuApiEnvironment {
-    val appContext = applicationContext
-    AccountData.loadData(appContext)
-
+    val accountStore = KoinPlatform.getKoin().get<ZhihuAccountStore>()
     return object : ZhihuApiEnvironment {
-        override fun httpClient(): HttpClient = androidZhihuAccountStore(appContext).client.httpClient()
+        override fun httpClient(): HttpClient = accountStore.client.httpClient()
 
         override fun authenticatedCookies(): Map<String, String> = AccountData.data.cookies
 

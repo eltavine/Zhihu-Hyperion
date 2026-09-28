@@ -36,8 +36,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.fetchHighestQualityZhihuVideoUrl
-import com.github.zly2006.zhihu.desktop.defaultDesktopAccountStore
 import com.github.zly2006.zhihu.desktop.openDesktopExternalUrl
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.Article
@@ -78,6 +78,7 @@ import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.compose.koinInject
 
 /**
  * Desktop 平台的 Zhihu++ 主界面入口。
@@ -89,7 +90,7 @@ import kotlinx.coroutines.withContext
 fun DesktopZhihuMain() {
     /** 主返回栈控制器，承载 MainTabs 主壳和单栏页面。 */
     val navController = rememberNavController()
-    val accountStore = defaultDesktopAccountStore
+    val accountStore = koinInject<ZhihuAccountStore>()
     val accounts by accountStore.accountsState.collectAsState()
     val accountSession = accounts.session
     val httpClient = remember(accountStore, accountSession) { accountStore.client.httpClient() }

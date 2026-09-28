@@ -27,7 +27,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
-import com.github.zly2006.zhihu.account.defaultNativeAccountStore
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.cinterop.addressOf
@@ -36,6 +35,7 @@ import kotlinx.cinterop.usePinned
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import platform.AppKit.NSApplication
 import platform.AppKit.NSBackingStoreBuffered
 import platform.AppKit.NSColor
@@ -64,7 +64,7 @@ private const val VIEWER_SCREEN_FRACTION = 0.8
 @Composable
 actual fun rememberImageGalleryOpener(): ImageGalleryOpener {
     val scope = rememberCoroutineScope()
-    val accountStore = defaultNativeAccountStore
+    val accountStore = koinInject<ZhihuAccountStore>()
     val userMessages = rememberUserMessageSink()
     val controller = remember(scope, accountStore, userMessages) {
         MacosMarkdownImageViewerController(scope, accountStore, userMessages)

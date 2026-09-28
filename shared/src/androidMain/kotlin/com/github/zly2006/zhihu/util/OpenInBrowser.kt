@@ -18,7 +18,7 @@
 package com.github.zly2006.zhihu.util
 
 import android.content.Context
-import com.github.zly2006.zhihu.account.androidZhihuAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.AccountData
 import com.github.zly2006.zhihu.data.Collection
 import com.github.zly2006.zhihu.data.ZhihuJson
@@ -36,6 +36,7 @@ import io.ktor.http.isSuccess
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import org.koin.mp.KoinPlatform
 
 object OpenInBrowser {
     suspend fun openUrlInBrowser(context: Context, destination: NavDestination): Boolean {
@@ -65,7 +66,9 @@ object OpenInBrowser {
             }
             val url = "https://api.zhihu.com/collections/contents/$contentType/${destination.id}"
             val body = "add_collections=${collection.id}"
-            return androidZhihuAccountStore(context)
+            return KoinPlatform
+                .getKoin()
+                .get<ZhihuAccountStore>()
                 .client
                 .httpClient()
                 .put(url) {

@@ -20,7 +20,7 @@ package com.github.zly2006.zhihu.viewmodel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.github.zly2006.zhihu.account.NativeHistoryStorage
-import com.github.zly2006.zhihu.account.defaultNativeAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.target
@@ -57,6 +57,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import org.koin.mp.KoinPlatform
 import io.ktor.http.ContentType as KtorContentType
 
 private var nativePendingContentOpenIdentity: TrackedContentIdentity? = null
@@ -96,7 +97,7 @@ internal class NativePaginationEnvironment(
 ) : PaginationEnvironment,
     CollectionContentEnvironment,
     NotificationEnvironment {
-    private val accountStore = defaultNativeAccountStore
+    private val accountStore = KoinPlatform.getKoin().get<ZhihuAccountStore>()
     private val settingsStore = nativeSettingsStore("settings.properties")
     private val historyStorage = NativeHistoryStorage()
     private val contentFilterDatabase = getContentFilterDatabase()

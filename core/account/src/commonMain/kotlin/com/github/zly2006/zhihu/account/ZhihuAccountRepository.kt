@@ -18,6 +18,11 @@
 package com.github.zly2006.zhihu.account
 
 import com.github.zly2006.zhihu.data.ZhihuJson
+import kotlinx.io.buffered
+import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
+import kotlinx.io.readString
+import kotlinx.io.writeString
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -72,6 +77,26 @@ interface ZhihuAccountSessionStore {
     fun writeText(text: String)
 
     fun delete()
+}
+
+/** 账户列表的文件存储；先写同目录临时文件再原子替换，写入中途崩溃不会留下截断的凭据文件。 */
+class FileZhihuAccountSessionStore(
+    private val file: Path,
+) : ZhihuAccountSessionStore {
+    override fun readText(): String? = if (SystemFileSystem.exists(file)) {
+        SystemFileSystem.source(file).buffered().use { it.readString() }
+    } else {
+        null
+    }
+
+    override fun writeText(text: String) {
+        file.parent?.let { SystemFileSystem.createDirectories(it) }
+        val temporaryFile = Path("$file.tmp")
+        SystemFileSystem.sink(temporaryFile).buffered().use { it.writeString(text) }
+        SystemFileSystem.atomicMove(temporaryFile, file)
+    }
+
+    override fun delete() = SystemFileSystem.delete(file, mustExist = false)
 }
 
 class ZhihuAccountRepository(

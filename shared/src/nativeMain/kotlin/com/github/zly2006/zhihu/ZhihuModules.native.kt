@@ -15,10 +15,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.zly2006.zhihu.account
+package com.github.zly2006.zhihu
 
-import androidx.compose.runtime.Composable
-import com.github.zly2006.zhihu.desktop.defaultDesktopAccountStore
+import com.github.zly2006.zhihu.account.accountModule
+import com.github.zly2006.zhihu.platform.nativeAccountFilePath
+import kotlinx.io.files.Path
+import org.koin.core.module.Module
 
-@Composable
-actual fun rememberZhihuAccountStore(): ZhihuAccountStore = defaultDesktopAccountStore
+/** 原生进程的全部 Koin 绑定；账户路径在启动时解析，调用前必须先配置好调试数据目录等进程环境。 */
+fun nativeZhihuModules(): List<Module> = listOf(
+    accountModule(Path(nativeAccountFilePath())),
+)

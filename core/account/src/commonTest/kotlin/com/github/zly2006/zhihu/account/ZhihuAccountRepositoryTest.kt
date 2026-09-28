@@ -18,8 +18,12 @@
 package com.github.zly2006.zhihu.account
 
 import com.github.zly2006.zhihu.data.ZhihuJson
+import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
+import kotlinx.io.files.SystemTemporaryDirectory
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -129,6 +133,29 @@ class ZhihuAccountRepositoryTest {
         assertEquals("bob", restored.activeAccountId)
         assertEquals(listOf("alice", "bob"), restored.accounts.map { it.id })
         assertEquals(bob, restored.session)
+    }
+
+    @Test
+    fun fileStoreCreatesParentAndReplacesContentWithoutLeavingTemporaryFile() {
+        val directory = Path(SystemTemporaryDirectory, "zhihu-account-store-${Random.nextLong().toULong()}")
+        val file = Path(directory, "account.json")
+        val store = FileZhihuAccountSessionStore(file)
+        try {
+            assertNull(store.readText())
+
+            store.writeText("""{"accounts":[]}""")
+            store.writeText("""{"activeAccountId":"alice","accounts":[]}""")
+
+            assertEquals("""{"activeAccountId":"alice","accounts":[]}""", store.readText())
+            assertFalse(SystemFileSystem.exists(Path("$file.tmp")))
+
+            store.delete()
+            store.delete()
+            assertNull(store.readText())
+        } finally {
+            SystemFileSystem.delete(file, mustExist = false)
+            SystemFileSystem.delete(directory, mustExist = false)
+        }
     }
 }
 

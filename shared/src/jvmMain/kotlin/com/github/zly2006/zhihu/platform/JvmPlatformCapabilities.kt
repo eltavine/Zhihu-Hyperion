@@ -23,14 +23,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.desktop.DesktopPropertiesFile
 import com.github.zly2006.zhihu.desktop.copyDesktopPlainText
-import com.github.zly2006.zhihu.desktop.defaultDesktopAccountStore
 import com.github.zly2006.zhihu.desktop.desktopZhihuDataDir
 import com.github.zly2006.zhihu.desktop.openDesktopExternalUrl
 import com.github.zly2006.zhihu.desktop.saveImageToDownloads
 import kotlinx.coroutines.launch
 import kotlinx.io.files.Path
+import org.koin.compose.koinInject
 
 @Composable
 actual fun rememberSettingsStore(): SettingsStore = remember { desktopSettingsStore() }
@@ -152,7 +153,7 @@ actual fun rememberImageGalleryOpener(): ImageGalleryOpener = remember {
 actual fun rememberImageSaver(): ImageSaver {
     val scope = rememberCoroutineScope()
     val userMessages = rememberUserMessageSink()
-    val store = defaultDesktopAccountStore
+    val store = koinInject<ZhihuAccountStore>()
     return remember(scope, userMessages, store) {
         object : ImageSaver {
             override fun invoke(url: String) {

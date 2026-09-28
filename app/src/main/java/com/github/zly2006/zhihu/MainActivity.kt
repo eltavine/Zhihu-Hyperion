@@ -45,6 +45,7 @@ import coil3.disk.DiskCache
 import coil3.disk.directory
 import coil3.memory.MemoryCache
 import coil3.request.crossfade
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.AccountData
 import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
@@ -97,15 +98,14 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import java.util.concurrent.TimeUnit
 
 class MainActivity : ComponentActivity() {
     lateinit var history: HistoryStorage
+    private val accountStore: ZhihuAccountStore by inject()
     val httpClient
-        get() = com.github.zly2006.zhihu.account
-            .androidZhihuAccountStore(this)
-            .client
-            .httpClient()
+        get() = accountStore.client.httpClient()
 
     /** 主返回栈控制器，承载 MainTabs 主壳和单栏页面。 */
     lateinit var navController: NavHostController
@@ -146,7 +146,6 @@ class MainActivity : ComponentActivity() {
         clearShareImageCache(this)
         continuousUsageReminderManager = ContinuousUsageReminderManager(this)
         history = HistoryStorage(this)
-        AccountData.loadData(this)
         AndroidThemeSettings.initialize(this)
         androidKeywordSemanticMatcher = NlpServiceKeywordSemanticMatcher
         androidKeywordWeightExtractor = KeywordWeightExtractor { text, topN ->

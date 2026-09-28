@@ -35,8 +35,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import com.github.zly2006.zhihu.account.accountHttpClientEngineForTesting
-import com.github.zly2006.zhihu.account.androidZhihuAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.AIGC_MARKING_ENABLED_PREFERENCE_KEY
 import com.github.zly2006.zhihu.data.AccountData
 import com.github.zly2006.zhihu.data.AigcVoteVoter
@@ -82,6 +81,7 @@ import com.github.zly2006.zhihu.viewmodel.local.buildLocalRecommendationEngine
 import com.github.zly2006.zhihu.viewmodel.local.getLocalContentDatabase
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.api.createClientPlugin
 import io.ktor.client.plugins.cache.HttpCache
@@ -99,6 +99,7 @@ import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
+import org.koin.mp.KoinPlatform
 import java.io.File
 import java.util.UUID
 import com.github.zly2006.zhihu.navigation.Article as ArticleDestination
@@ -151,10 +152,14 @@ open class SharedAndroidPaginationEnvironment(
                 }
             }
         }
-        return androidZhihuAccountStore(context).client.httpClient()
+        return KoinPlatform
+            .getKoin()
+            .get<ZhihuAccountStore>()
+            .client
+            .httpClient()
     }
 
-    override fun mobileHomeFeedHttpClient(): HttpClient {
+    override suspend fun <T> withMobileHomeFeedHttpClient(block: suspend (HttpClient) -> T): T {
         val loginForRecommendation = settingsStore.getBoolean("loginForRecommendation", true)
         val configure: HttpClientConfig<*>.() -> Unit = {
             install(ContentNegotiation) {
@@ -167,12 +172,12 @@ open class SharedAndroidPaginationEnvironment(
             if (loginForRecommendation) {
                 install(HttpCookies) {
                     storage = ZhihuCookieStorage(AccountData.data.cookies) {
-                        AccountData.saveData(context, AccountData.data)
+                        AccountData.saveData(AccountData.data)
                     }
                 }
             }
         }
-        return accountHttpClientEngineForTesting?.let { HttpClient(it, configure) } ?: HttpClient(configure)
+        return HttpClient(KoinPlatform.getKoin().get<HttpClientEngine>(), configure).use { block(it) }
     }
 
     override fun isAigcVoteEnabled(): Boolean =
@@ -522,7 +527,7 @@ open class SharedAndroidPaginationEnvironment(
                             .setTitle("登录已过期")
                             .setMessage("请重新登录以继续使用完整功能。")
                             .setPositiveButton("重新登录") { _, _ ->
-                                androidZhihuAccountStore(context).clear()
+                                KoinPlatform.getKoin().get<ZhihuAccountStore>().clear()
                                 requestLoginNavigation()
                             }.setNegativeButton("取消", null)
                             .show()

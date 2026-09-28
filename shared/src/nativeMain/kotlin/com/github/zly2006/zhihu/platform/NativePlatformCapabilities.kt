@@ -25,7 +25,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
-import com.github.zly2006.zhihu.account.defaultNativeAccountStore
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.cinterop.BetaInteropApi
@@ -34,6 +33,7 @@ import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
 import kotlinx.coroutines.launch
 import kotlinx.io.files.Path
+import org.koin.compose.koinInject
 import platform.Foundation.NSData
 import platform.Foundation.NSFileManager
 import platform.Foundation.dataWithBytes
@@ -52,7 +52,7 @@ actual fun rememberImagePreviewOpener(): ImagePreviewOpener = rememberExternalUr
 actual fun rememberImageSaver(): ImageSaver {
     val scope = rememberCoroutineScope()
     val userMessages = rememberUserMessageSink()
-    val accountStore = defaultNativeAccountStore
+    val accountStore = koinInject<ZhihuAccountStore>()
     return remember(scope, userMessages, accountStore) {
         object : ImageSaver {
             override fun invoke(url: String) {

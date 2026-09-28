@@ -29,6 +29,7 @@ androidx-graphics-path = "1.1.0"
 androidx-lifecycle = "2.11.0"
 androidx-media = "1.8.0"
 androidx-navigationevent = "1.1.2"
+androidx-startup = "1.2.0"
 androidx-room = "2.8.5"
 androidx-sqlite = "2.7.1"
 androidx-test-espresso = "3.7.0"
@@ -107,6 +108,7 @@ androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-lived
 androidx-media = { module = "androidx.media:media", version.ref = "androidx-media" }
 androidx-navigationevent = { module = "androidx.navigationevent:navigationevent", version.ref = "androidx-navigationevent" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
+androidx-startup-runtime = { module = "androidx.startup:startup-runtime", version.ref = "androidx-startup" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "androidx-sqlite" }
 androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-test-espresso" }
@@ -146,12 +148,11 @@ coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.r
 telephoto-zoomable-image-coil3 = { module = "me.saket.telephoto:zoomable-image-coil3", version.ref = "telephoto" }
 
 # ---- Dependency injection ----
-koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
-koin-android = { module = "io.insert-koin:koin-android" }
-koin-compose = { module = "io.insert-koin:koin-compose" }
-koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
-koin-core = { module = "io.insert-koin:koin-core" }
-koin-test = { module = "io.insert-koin:koin-test" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 
 # ---- Crypto ----
 kotlincrypto-hash-md = { module = "org.kotlincrypto.hash:md", version.ref = "kotlincrypto-hash" }

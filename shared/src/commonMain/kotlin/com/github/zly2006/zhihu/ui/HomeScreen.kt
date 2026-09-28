@@ -336,10 +336,9 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         try {
             unreadCount = paginationEnvironment
-                .mobileHomeFeedHttpClient()
-                .get("$MOBILE_NOTIFICATION_MESSAGE_URL?limit=20")
-                .json<MobileNotificationMessageOverview>()
-                .totalUnreadCount
+                .withMobileHomeFeedHttpClient { client ->
+                    client.get("$MOBILE_NOTIFICATION_MESSAGE_URL?limit=20").json<MobileNotificationMessageOverview>()
+                }.totalUnreadCount
         } catch (_: Exception) {
             // 忽略错误
         }

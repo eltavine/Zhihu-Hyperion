@@ -159,6 +159,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.android)
+    implementation(libs.koin.android)
+    implementation(libs.androidx.startup.runtime)
     implementation(libs.coil.compose)
     implementation(libs.zxing.android.embedded)
     implementation(libs.androidx.core.ktx)
@@ -188,4 +190,5 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.ktor.client.mock)
+    androidTestImplementation(projects.markdownRenderer)
 }

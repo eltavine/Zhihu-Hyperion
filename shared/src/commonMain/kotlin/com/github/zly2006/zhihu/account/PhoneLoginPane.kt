@@ -56,19 +56,24 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.HttpClientEngine
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @Composable
 expect fun rememberLoginHttpClient(cookies: MutableMap<String, String>): HttpClient
 
 expect fun decodePhoneLoginCaptchaImage(content: String): ImageBitmap?
 
+internal expect val phoneLoginDeviceInfo: ZhihuPhoneLoginDeviceInfo
+
 @Composable
 fun PhoneLoginPane(onLoginSuccess: (String) -> Unit) {
-    val accountStore = rememberZhihuAccountStore()
-    val loginClient = remember { ZhihuPhoneLoginClient() }
+    val accountStore = koinInject<ZhihuAccountStore>()
+    val engine = koinInject<HttpClientEngine>()
+    val loginClient = remember(engine) { ZhihuPhoneLoginClient(phoneLoginDeviceInfo, engine) }
     DisposableEffect(loginClient) {
         onDispose(loginClient::close)
     }

@@ -27,13 +27,13 @@ import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.platform.asComposeFontFamily
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.toCookieHeaderString
-import com.github.zly2006.zhihu.desktop.defaultDesktopAccountStore
 import com.github.zly2006.zhihu.desktop.desktopZhihuDataFile
 import com.hrm.latex.renderer.font.MathFont
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.koin.compose.koinInject
 import java.io.File
 
 private const val FONT_VERSION = "1"
@@ -44,7 +44,7 @@ private val LM_MATH_URLS = listOf(
 
 @Composable
 actual fun rememberMarkdownMathFont(): MathFont? {
-    val store = defaultDesktopAccountStore
+    val store = koinInject<ZhihuAccountStore>()
     var mathFont by remember { mutableStateOf<MathFont?>(null) }
 
     LaunchedEffect(store) {
@@ -58,7 +58,7 @@ actual fun rememberMarkdownMathFont(): MathFont? {
 
 @Composable
 actual fun rememberMarkdownImageRequestHeaders(): MarkdownImageRequestHeaders {
-    val store = defaultDesktopAccountStore
+    val store = koinInject<ZhihuAccountStore>()
     val session = remember(store) { store.session }
     return MarkdownImageRequestHeaders(
         cookieHeader = session.cookies.toCookieHeaderString(),

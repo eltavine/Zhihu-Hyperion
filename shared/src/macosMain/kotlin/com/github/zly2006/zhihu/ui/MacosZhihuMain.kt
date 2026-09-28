@@ -37,7 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.github.zly2006.zhihu.account.defaultNativeAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.fetchHighestQualityZhihuVideoUrl
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.Article
@@ -80,6 +80,7 @@ import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.compose.koinInject
 
 /**
  * macOS Kotlin/Native 主界面入口。
@@ -90,7 +91,7 @@ import kotlinx.coroutines.withContext
 fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
     /** 主返回栈控制器，承载 MainTabs 主壳和单栏页面。 */
     val navController = rememberNavController()
-    val accountStore = defaultNativeAccountStore
+    val accountStore = koinInject<ZhihuAccountStore>()
     val accounts by accountStore.accountsState.collectAsState()
     val accountSession = accounts.session
     val httpClient = remember(accountStore, accountSession) { accountStore.client.httpClient() }

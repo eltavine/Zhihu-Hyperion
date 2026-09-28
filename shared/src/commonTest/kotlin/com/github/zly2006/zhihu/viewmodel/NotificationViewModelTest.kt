@@ -46,7 +46,7 @@ class NotificationViewModelTest {
         val environment = object : MobileHomeFeedEnvironment {
             override fun httpClient() = client
 
-            override fun mobileHomeFeedHttpClient() = client
+            override suspend fun <T> withMobileHomeFeedHttpClient(block: suspend (HttpClient) -> T): T = block(client)
 
             override fun authenticatedCookies() = emptyMap<String, String>()
 
@@ -107,7 +107,7 @@ class NotificationViewModelTest {
         val environment = object : MobileHomeFeedEnvironment {
             override fun httpClient() = client
 
-            override fun mobileHomeFeedHttpClient() = client
+            override suspend fun <T> withMobileHomeFeedHttpClient(block: suspend (HttpClient) -> T): T = block(client)
 
             override fun authenticatedCookies() = emptyMap<String, String>()
 
@@ -149,7 +149,7 @@ class NotificationViewModelTest {
         val environment = object : MobileHomeFeedEnvironment {
             override fun httpClient() = client
 
-            override fun mobileHomeFeedHttpClient() = client
+            override suspend fun <T> withMobileHomeFeedHttpClient(block: suspend (HttpClient) -> T): T = block(client)
 
             override fun authenticatedCookies() = emptyMap<String, String>()
 

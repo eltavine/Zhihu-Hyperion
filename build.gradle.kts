@@ -14,3 +14,15 @@ plugins {
     alias(libs.plugins.ktlint) apply false
     alias(libs.plugins.module.graph.assertion) apply false
 }
+
+// Single test entry point for CI: new :core or :feature modules are covered without editing workflows.
+tasks.register("jvmUnitTests") {
+    group = "verification"
+    description = "Runs the JVM tests of :shared and every :core/:feature module, plus the app's unit tests."
+    dependsOn(
+        subprojects
+            .filter { it.path == ":shared" || it.path.startsWith(":core:") || it.path.startsWith(":feature:") }
+            .map { "${it.path}:jvmTest" },
+    )
+    dependsOn(":app:testLiteDebugUnitTest")
+}

@@ -34,7 +34,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.core.content.edit
 import androidx.core.net.toUri
-import com.github.zly2006.zhihu.account.androidZhihuAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.ui.PREFERENCE_NAME
 import com.github.zly2006.zhihu.ui.components.OpenImageDialog
 import com.github.zly2006.zhihu.util.clipboardManager
@@ -44,6 +44,7 @@ import com.github.zly2006.zhihu.util.shareImage
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.io.files.Path
+import org.koin.compose.koinInject
 
 private const val WEBVIEW_ACTIVITY_CLASS = "com.github.zly2006.zhihu.WebviewActivity"
 
@@ -140,12 +141,13 @@ actual fun rememberImageGalleryOpener(): ImageGalleryOpener {
 @Composable
 actual fun rememberImageSaver(): ImageSaver {
     val context = LocalContext.current
+    val accountStore = koinInject<ZhihuAccountStore>()
     val scope = rememberCoroutineScope()
     return remember(context, scope) {
         object : ImageSaver {
             override fun invoke(url: String) {
                 scope.launch {
-                    saveImageToGallery(context, androidZhihuAccountStore(context).client.httpClient(), url)
+                    saveImageToGallery(context, accountStore.client.httpClient(), url)
                 }
             }
         }
@@ -155,12 +157,13 @@ actual fun rememberImageSaver(): ImageSaver {
 @Composable
 actual fun rememberImageSharer(): ImageSharer {
     val context = LocalContext.current
+    val accountStore = koinInject<ZhihuAccountStore>()
     val scope = rememberCoroutineScope()
     return remember(context, scope) {
         object : ImageSharer {
             override fun invoke(url: String) {
                 scope.launch {
-                    shareImage(context, androidZhihuAccountStore(context).client.httpClient(), url)
+                    shareImage(context, accountStore.client.httpClient(), url)
                 }
             }
         }

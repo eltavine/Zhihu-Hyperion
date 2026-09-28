@@ -26,6 +26,7 @@ class ModuleGraphConventionPlugin : Plugin<Project> {
                     ":core:common -X> :.*",
                     ":core:model -X> :(?!core:common$).*",
                     ":core:(navigation|network) -X> :(?!core:(common|model)$).*",
+                    ":core:account -X> :(?!core:(common|model|network)$).*",
                     ":core:database -X> :(?!core:common$).*",
                 )
             }

@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.toComposeImageBitmap
 import com.github.zly2006.zhihu.platform.platformName
 import io.ktor.client.HttpClient
 import org.jetbrains.skia.Image
+import org.koin.compose.koinInject
 import kotlin.io.encoding.Base64
 
 actual val supportedLoginMethods: List<LoginMethod> = listOf(
@@ -35,7 +36,7 @@ actual val isLoginRiskControlSupported: Boolean = false
 
 @Composable
 actual fun rememberLoginHttpClient(cookies: MutableMap<String, String>): HttpClient {
-    val store = defaultNativeAccountStore
+    val store = koinInject<ZhihuAccountStore>()
     val httpClient = remember(store) { store.client.temporaryHttpClient(cookies) }
     DisposableEffect(httpClient) {
         onDispose(httpClient::close)
@@ -68,7 +69,7 @@ actual fun decodePhoneLoginCaptchaImage(content: String) = runCatching {
 
 @Composable
 actual fun QrLoginPane(onLoginSuccess: (String) -> Unit) {
-    val store = defaultNativeAccountStore
+    val store = koinInject<ZhihuAccountStore>()
     SharedQrLoginPane(
         onLoginSuccess = { cookies ->
             if (store.login(cookies.toMutableMap())) {

@@ -61,8 +61,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.github.zly2006.zhihu.account.rememberZhihuAccountStore
-import com.github.zly2006.zhihu.data.ZHIHU_ME_URL
+import com.github.zly2006.zhihu.account.ZHIHU_ME_URL
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.SentenceSimilarityTest
@@ -79,6 +79,7 @@ import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 const val DEVELOPER_SETTINGS_BACK_BUTTON_TAG = "developerSettings/backButton"
 const val DEVELOPER_SETTINGS_MODE_TAG = "developerSettings/modeToggle"
@@ -96,7 +97,7 @@ const val DEVELOPER_SETTINGS_COLOR_SCHEME_TAG = "developerSettings/colorScheme"
 fun DeveloperSettingsScreen() {
     val navigator = LocalNavigator.current
     val environment = rememberPaginationEnvironment(allowGuestAccess = false)
-    val accountStore = rememberZhihuAccountStore()
+    val accountStore = koinInject<ZhihuAccountStore>()
     val runtimeInfo = rememberDeveloperInfo()
     val copyPlainText = rememberPlainTextClipboard()
     val userMessages = rememberUserMessageSink()

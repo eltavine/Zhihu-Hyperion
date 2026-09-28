@@ -62,7 +62,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.webkit.WebResourceErrorCompat
 import androidx.webkit.WebViewAssetLoader
 import androidx.webkit.WebViewClientCompat
-import com.github.zly2006.zhihu.account.androidZhihuAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.AccountData
 import com.github.zly2006.zhihu.data.fetchHighestQualityZhihuVideoUrl
 import com.github.zly2006.zhihu.navigation.NavDestination
@@ -87,6 +87,7 @@ import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import org.koin.mp.KoinPlatform
 
 private const val MAIN_ACTIVITY_CLASS = "com.github.zly2006.zhihu.MainActivity"
 private const val WEBVIEW_ACTIVITY_CLASS = "com.github.zly2006.zhihu.WebviewActivity"
@@ -185,13 +186,29 @@ class CustomWebView : WebView {
                     }
                     menu.add("保存图片").setOnMenuItemClickListener {
                         GlobalScope.launch(Dispatchers.Main) {
-                            saveImageToGallery(context, androidZhihuAccountStore(context).client.httpClient(), url)
+                            saveImageToGallery(
+                                context,
+                                KoinPlatform
+                                    .getKoin()
+                                    .get<ZhihuAccountStore>()
+                                    .client
+                                    .httpClient(),
+                                url,
+                            )
                         }
                         true
                     }
                     menu.add("分享图片").setOnMenuItemClickListener {
                         GlobalScope.launch(Dispatchers.Main) {
-                            shareImage(context, androidZhihuAccountStore(context).client.httpClient(), url)
+                            shareImage(
+                                context,
+                                KoinPlatform
+                                    .getKoin()
+                                    .get<ZhihuAccountStore>()
+                                    .client
+                                    .httpClient(),
+                                url,
+                            )
                         }
                         true
                     }

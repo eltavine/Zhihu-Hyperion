@@ -55,6 +55,7 @@ import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
 import com.github.zly2006.zhihu.account.LoginScreen
 import com.github.zly2006.zhihu.data.BACKGROUND_UI_DEBUG_DATA_HOME_ENV
 import com.github.zly2006.zhihu.data.macosBackgroundUiDebugDataDirectoryPath
+import com.github.zly2006.zhihu.nativeZhihuModules
 import com.github.zly2006.zhihu.platform.MacosUserMessageHost
 import com.github.zly2006.zhihu.platform.UserMessageDuration
 import com.github.zly2006.zhihu.platform.showMacosUserMessage
@@ -78,6 +79,7 @@ import kotlinx.serialization.json.put
 import org.jetbrains.skia.EncodedImageFormat
 import org.jetbrains.skia.Image
 import org.jetbrains.skia.impl.use
+import org.koin.core.context.startKoin
 import platform.Foundation.NSBundle
 import platform.Foundation.NSData
 import platform.Foundation.NSFileManager
@@ -140,6 +142,7 @@ fun main(args: Array<String>) {
         check(macosBackgroundUiDebugDataDirectoryPath() == isolatedDataHome) {
             "Background UI debugger did not activate isolated data storage"
         }
+        startKoin { modules(nativeZhihuModules()) }
         fflush(null)
         val protocolDescriptor = dup(STDOUT_FILENO)
         check(protocolDescriptor >= 0) { "Cannot duplicate stdout for the UI debug protocol" }

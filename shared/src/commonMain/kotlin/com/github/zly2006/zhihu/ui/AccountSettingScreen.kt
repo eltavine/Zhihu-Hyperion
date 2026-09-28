@@ -80,7 +80,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.github.zly2006.zhihu.account.rememberZhihuAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.Collections
 import com.github.zly2006.zhihu.navigation.LocalNavigator
@@ -107,6 +107,7 @@ import com.github.zly2006.zhihu.ui.subscreens.shouldShowAccountHistoryShortcut
 import com.github.zly2006.zhihu.util.Log
 import kotlinx.coroutines.CancellationException
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 import zhihu.shared.generated.resources.Res
 import zhihu.shared.generated.resources.ic_github_24dp
 import zhihu.shared.generated.resources.ic_launcher_foreground
@@ -150,7 +151,7 @@ fun AccountSettingScreen(
     isActive: Boolean = true,
 ) {
     val navigator = LocalNavigator.current
-    val accountStore = rememberZhihuAccountStore()
+    val accountStore = koinInject<ZhihuAccountStore>()
     val accountState = rememberAccountSettingsAccountState()
     val requestLogin = ::requestLoginNavigation
     val settings = rememberSettingsStore()

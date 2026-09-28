@@ -19,15 +19,16 @@ package com.github.zly2006.zhihu.markdown
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import com.github.zly2006.zhihu.account.androidZhihuAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.AccountData
 import com.github.zly2006.zhihu.data.toCookieHeaderString
 import com.hrm.latex.renderer.font.MathFont
+import org.koin.compose.koinInject
 
 @Composable
 actual fun rememberMarkdownMathFont(): MathFont? {
     val context = LocalContext.current
-    val httpClient = androidZhihuAccountStore(context).client.httpClient()
+    val httpClient = koinInject<ZhihuAccountStore>().client.httpClient()
     return rememberLatexFonts(context, httpClient).downloaded?.mathFont
 }
 

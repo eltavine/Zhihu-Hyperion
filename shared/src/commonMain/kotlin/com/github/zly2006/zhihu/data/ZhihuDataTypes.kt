@@ -17,9 +17,6 @@
 
 package com.github.zly2006.zhihu.data
 
-import com.github.zly2006.zhihu.account.DEFAULT_ZHIHU_USER_AGENT
-import com.github.zly2006.zhihu.account.ZhihuAccountProfileSnapshot
-import com.github.zly2006.zhihu.account.ZhihuAccountSession
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.NavDestination
@@ -56,48 +53,6 @@ import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-
-const val ZHIHU_ME_URL = "https://www.zhihu.com/api/v4/me"
-
-@Serializable
-data class ZhihuAccountProfile(
-    val id: String = "",
-    val name: String = "",
-    val urlToken: String? = null,
-    val userType: String = "",
-    val avatarUrl: String? = null,
-)
-
-suspend fun fetchVerifiedZhihuAccount(client: HttpClient): JsonObject? {
-    val response = client.get(ZHIHU_ME_URL)
-    if (response.status != HttpStatusCode.OK) {
-        return null
-    }
-    return response.jsonObject()
-}
-
-suspend fun fetchVerifiedZhihuSession(
-    client: HttpClient,
-    cookies: Map<String, String>,
-    userAgent: String = DEFAULT_ZHIHU_USER_AGENT,
-): ZhihuAccountSession? {
-    val account = fetchVerifiedZhihuAccount(client) ?: return null
-    val profile = ZhihuJson.decodeJson<ZhihuAccountProfile>(account)
-    return ZhihuAccountSession(
-        login = true,
-        username = profile.name,
-        cookies = cookies.toMutableMap(),
-        userAgent = userAgent,
-        profile = ZhihuAccountProfileSnapshot(
-            id = profile.id,
-            name = profile.name,
-            urlToken = profile.urlToken,
-            userType = profile.userType,
-            avatarUrl = profile.avatarUrl,
-        ),
-        self = account,
-    )
-}
 
 suspend fun fetchHighestQualityZhihuVideoUrl(
     httpClient: HttpClient,

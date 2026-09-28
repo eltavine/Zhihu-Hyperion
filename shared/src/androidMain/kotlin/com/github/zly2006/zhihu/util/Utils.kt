@@ -22,7 +22,7 @@ import android.net.Uri
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
-import com.github.zly2006.zhihu.account.androidZhihuAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.AccountData
 import com.github.zly2006.zhihu.platform.androidSettingsStore
 import com.github.zly2006.zhihu.util.signZhihuFetchRequest
@@ -36,6 +36,7 @@ import io.ktor.http.contentType
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.koin.mp.KoinPlatform
 import java.security.MessageDigest
 
 fun HttpRequestBuilder.signFetchRequest() {
@@ -48,7 +49,7 @@ fun telemetry(context: Context, usage: String) {
         "Usage must be either 'start' or 'login', but was '$usage'."
     }
     val settings = androidSettingsStore(context)
-    val data = AccountData.loadData(context)
+    val data = AccountData.data
     if (settings.getBoolean("allowTelemetry", true)) {
         val versionName = runCatching {
             context.packageManager.getPackageInfo(context.packageName, 0).versionName
@@ -68,7 +69,9 @@ fun telemetry(context: Context, usage: String) {
                             ?.let(this::update)
                     }.digest(data.self!!.id.toByteArray())
                     .toHexString()
-                androidZhihuAccountStore(context)
+                KoinPlatform
+                    .getKoin()
+                    .get<ZhihuAccountStore>()
                     .client
                     .httpClient()
                     .post("https://redenmc.com/api/zhihu/usage?client_hash=$hash&usage=$usage") {

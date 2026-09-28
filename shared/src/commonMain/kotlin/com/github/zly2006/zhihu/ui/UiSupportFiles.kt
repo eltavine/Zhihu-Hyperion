@@ -34,7 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.fleeksoft.ksoup.Ksoup
-import com.github.zly2006.zhihu.account.rememberZhihuAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.markdown.RenderMarkdown
 import com.github.zly2006.zhihu.navigation.AnswerNavigator
@@ -54,6 +54,7 @@ import com.github.zly2006.zhihu.viewmodel.getOrFetchContentDetail
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.jsonPrimitive
+import org.koin.compose.koinInject
 
 data class PinLikeResult(
     val isLiked: Boolean,
@@ -368,7 +369,7 @@ data class AccountSettingsAccountState(
 
 @Composable
 fun rememberAccountSettingsAccountState(): State<AccountSettingsAccountState> {
-    val accountStore = rememberZhihuAccountStore()
+    val accountStore = koinInject<ZhihuAccountStore>()
     val accounts = accountStore.accountsState.collectAsState()
     return remember(accounts) {
         derivedStateOf {

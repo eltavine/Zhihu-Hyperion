@@ -22,7 +22,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
-import com.github.zly2006.zhihu.account.androidZhihuAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.platform.androidSettingsStore
 import com.github.zly2006.zhihu.platform.isAndroidLiteVariantPackageName
 import com.github.zly2006.zhihu.updater.GithubAsset
@@ -37,6 +37,7 @@ import io.ktor.client.request.get
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
+import org.koin.mp.KoinPlatform
 import java.io.File
 import java.net.URI
 
@@ -100,7 +101,11 @@ object UpdateManager {
     }
 
     suspend fun getLatestVersion(context: Context): GithubRelease {
-        val client = androidZhihuAccountStore(context).client.httpClient()
+        val client = KoinPlatform
+            .getKoin()
+            .get<ZhihuAccountStore>()
+            .client
+            .httpClient()
         return fetchLatestZhihuRelease(client, getGitHubToken(context))
     }
 
@@ -158,7 +163,11 @@ object UpdateManager {
             updateState.value = UpdateState.Checking
             androidSettingsStore(context).putLong(PREF_LAST_UPDATE_CHECK, System.currentTimeMillis())
 
-            val client = androidZhihuAccountStore(context).client.httpClient()
+            val client = KoinPlatform
+                .getKoin()
+                .get<ZhihuAccountStore>()
+                .client
+                .httpClient()
             val currentVersion = SemanticVersion.fromString(context.versionName())
             val checkNightly = androidSettingsStore(context).getBoolean("checkNightlyUpdates", false)
 

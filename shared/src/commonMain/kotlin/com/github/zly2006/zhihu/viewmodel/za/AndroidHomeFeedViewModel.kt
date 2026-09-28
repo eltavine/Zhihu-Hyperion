@@ -65,9 +65,10 @@ class AndroidHomeFeedViewModel :
 
     public override suspend fun fetchFeeds(environment: PaginationEnvironment) {
         try {
-            val response = environment.mobileHomeFeedHttpClient().get(lastPaging?.next ?: initialUrl)
-            if (response.status.isSuccess()) {
-                val jojo = response.jsonObject()
+            val jojo = environment.withMobileHomeFeedHttpClient { client ->
+                client.get(lastPaging?.next ?: initialUrl).takeIf { it.status.isSuccess() }?.jsonObject()
+            }
+            if (jojo != null) {
                 val data = jojo["data"]?.jsonArray ?: throw IllegalStateException("No data found in response")
 
                 // 收集所有待显示的项目

@@ -17,8 +17,6 @@
 
 package com.github.zly2006.zhihu.desktop
 
-import com.github.zly2006.zhihu.account.ZhihuAccountRepository
-import com.github.zly2006.zhihu.account.ZhihuAccountSessionStore
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.navigation.NavDestination
 import io.ktor.client.call.body
@@ -33,36 +31,6 @@ import java.io.File
 import java.net.URI
 import java.nio.file.Path
 import java.util.Properties
-import kotlin.io.path.createDirectories
-import kotlin.io.path.deleteIfExists
-import kotlin.io.path.exists
-import kotlin.io.path.readText
-import kotlin.io.path.writeText
-
-val defaultDesktopAccountStore by lazy {
-    ZhihuAccountStore(
-        repository = ZhihuAccountRepository(PathAccountSessionStore(desktopZhihuLegacyAccountFile())),
-    )
-}
-
-private class PathAccountSessionStore(
-    private val accountFile: Path,
-) : ZhihuAccountSessionStore {
-    override fun readText(): String? = if (accountFile.exists()) {
-        accountFile.readText()
-    } else {
-        null
-    }
-
-    override fun writeText(text: String) {
-        accountFile.parent.createDirectories()
-        accountFile.writeText(text)
-    }
-
-    override fun delete() {
-        accountFile.deleteIfExists()
-    }
-}
 
 suspend fun ZhihuAccountStore.saveImageToDownloads(
     url: String,

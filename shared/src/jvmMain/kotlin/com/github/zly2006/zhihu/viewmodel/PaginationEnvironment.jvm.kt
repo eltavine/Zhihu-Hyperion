@@ -19,6 +19,7 @@ package com.github.zly2006.zhihu.viewmodel
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
@@ -26,7 +27,6 @@ import com.github.zly2006.zhihu.data.navDestination
 import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.desktop.DesktopHistoryStorage
 import com.github.zly2006.zhihu.desktop.copyDesktopPlainText
-import com.github.zly2006.zhihu.desktop.defaultDesktopAccountStore
 import com.github.zly2006.zhihu.desktop.desktopZhihuDataFile
 import com.github.zly2006.zhihu.desktop.desktopZhihuDownloadsDir
 import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
@@ -64,6 +64,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import org.koin.mp.KoinPlatform
 import java.awt.image.BufferedImage
 import java.io.File
 import java.util.zip.ZipEntry
@@ -113,7 +114,7 @@ class DesktopPaginationEnvironment(
 ) : PaginationEnvironment,
     CollectionContentEnvironment,
     NotificationEnvironment {
-    private val store = defaultDesktopAccountStore
+    private val store = KoinPlatform.getKoin().get<ZhihuAccountStore>()
     private val settingsStore = desktopSettingsStore()
     private val historyStorage = DesktopHistoryStorage()
     private val contentFilterDb = desktopContentFilterDb

@@ -55,7 +55,6 @@ object InstrumentedTestEnvironment {
         when (currentDataMode) {
             DataMode.MOCK -> {
                 AccountData.saveData(
-                    context,
                     AccountData.Data(
                         login = true,
                         username = "AndroidTestUser",
@@ -82,7 +81,6 @@ object InstrumentedTestEnvironment {
             DataMode.REAL -> {
                 val secretAccountData = loadRealAccountData(context)
                 AccountData.saveData(
-                    context,
                     secretAccountData.copy(
                         login = secretAccountData.login || secretAccountData.cookies.isNotEmpty(),
                         userAgent = secretAccountData.userAgent.ifBlank { AccountData.ANDROID_USER_AGENT },

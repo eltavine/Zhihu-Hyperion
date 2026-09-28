@@ -17,14 +17,11 @@
 
 package com.github.zly2006.zhihu.data
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.util.Log
 import com.github.zly2006.zhihu.account.DEFAULT_ZHIHU_USER_AGENT
 import com.github.zly2006.zhihu.account.ZhihuAccountProfileSnapshot
 import com.github.zly2006.zhihu.account.ZhihuAccountSession
-import com.github.zly2006.zhihu.account.androidZhihuAccountStore
-import com.github.zly2006.zhihu.account.currentAndroidZhihuAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.Person
 import com.github.zly2006.zhihu.data.ZhihuJson
 import kotlinx.serialization.KSerializer
@@ -33,8 +30,8 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.encodeToJsonElement
+import org.koin.mp.KoinPlatform
 
-@SuppressLint("StaticFieldLeak")
 object AccountData {
     val json = ZhihuJson.json
 
@@ -61,16 +58,15 @@ object AccountData {
         val mobileTokenExpiresAt: Long? = null,
     )
 
-    fun loadData(context: Context): Data {
-        androidZhihuAccountStore(context)
-        return data
-    }
-
     val data: Data
-        get() = currentAndroidZhihuAccountStore().session.toAndroidData()
+        get() = KoinPlatform
+            .getKoin()
+            .get<ZhihuAccountStore>()
+            .session
+            .toAndroidData()
 
-    fun saveData(context: Context, data: Data) {
-        androidZhihuAccountStore(context).save(data.toSession())
+    fun saveData(data: Data) {
+        KoinPlatform.getKoin().get<ZhihuAccountStore>().save(data.toSession())
     }
 
     private fun Data.toSession(): ZhihuAccountSession = ZhihuAccountSession(
