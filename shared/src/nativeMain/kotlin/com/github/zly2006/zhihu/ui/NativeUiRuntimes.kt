@@ -31,7 +31,6 @@ import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.unit.em
 import com.github.zly2006.zhihu.navigation.Article
-import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageSink
 import com.github.zly2006.zhihu.platform.nativeAppPrivateDirectoryPath
 import com.github.zly2006.zhihu.platform.nativeAppVersionName
@@ -41,8 +40,6 @@ import com.github.zly2006.zhihu.platform.nativeIsDesktop
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
-import com.github.zly2006.zhihu.viewmodel.NativePaginationEnvironment
-import com.github.zly2006.zhihu.viewmodel.NotificationEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.encodeBlocklistBackup
 import com.github.zly2006.zhihu.viewmodel.filter.importBlocklistBackupFromJsonText
@@ -109,11 +106,6 @@ actual fun rememberArticleBrowserOpener(): ArticleBrowserOpener {
         }
     }
 }
-
-@Composable
-actual fun rememberNotificationEnvironment(
-    settingsStore: NotificationSettingsStore,
-): NotificationEnvironment = remember(settingsStore) { NativePaginationEnvironment(notificationSettingsStore = settingsStore) }
 
 @Composable
 actual fun consumePendingCommentId(content: com.github.zly2006.zhihu.navigation.NavDestination): String? = null

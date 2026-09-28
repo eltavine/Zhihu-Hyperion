@@ -89,9 +89,10 @@ import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.util.formatRelativeTime
+import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
 import com.github.zly2006.zhihu.viewmodel.MobileNotificationCategory
-import com.github.zly2006.zhihu.viewmodel.NotificationEnvironment
 import com.github.zly2006.zhihu.viewmodel.NotificationViewModel
+import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
@@ -99,11 +100,6 @@ import kotlinx.datetime.toLocalDateTime
 import org.koin.compose.koinInject
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
-
-@Composable
-expect fun rememberNotificationEnvironment(
-    settingsStore: NotificationSettingsStore,
-): NotificationEnvironment
 
 /**
  * 通知主页复用官方 Android `message/v3` 的信息层级：四个分类、邀请回答入口和私信会话列表。
@@ -114,8 +110,9 @@ expect fun rememberNotificationEnvironment(
 fun NotificationScreen() {
     val navigator = LocalNavigator.current
     val settingsStore = koinInject<NotificationSettingsStore>()
-    val viewModel = viewModel { NotificationViewModel() }
-    val environment = rememberNotificationEnvironment(settingsStore)
+    val mobileClient = koinInject<MobileClientProvider>()
+    val viewModel = viewModel { NotificationViewModel(mobileClient) }
+    val environment = rememberPaginationEnvironment(allowGuestAccess = false)
     val coroutineScope = rememberCoroutineScope()
     val userMessages = rememberUserMessageSink()
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -140,7 +137,7 @@ fun NotificationScreen() {
                     if (viewModel.unreadCount > 0) {
                         IconButton(onClick = {
                             coroutineScope.launch {
-                                if (viewModel.markAllAsRead(environment)) {
+                                if (viewModel.markAllAsRead()) {
                                     userMessages.showMessage("已全部标记为已读")
                                 } else {
                                     userMessages.showMessage("标记已读失败")

@@ -26,6 +26,8 @@ import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.androidSettingsStore
 import com.github.zly2006.zhihu.platform.androidUserMessageSink
 import com.github.zly2006.zhihu.ui.AndroidArticleNavigationHandoff
+import com.github.zly2006.zhihu.viewmodel.AndroidMobileClientProvider
+import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
 import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
 import com.github.zly2006.zhihu.viewmodel.filter.KeywordSemanticMatcher
 import kotlinx.io.files.Path
@@ -43,6 +45,7 @@ fun androidZhihuModules(context: Context): List<Module> = listOf(
         single { AndroidArticleNavigationHandoff() }
         single { androidSettingsStore(context) }
         single<NotificationSettingsStore> { AndroidNotificationSettingsStore(context.applicationContext) }
+        single<MobileClientProvider> { AndroidMobileClientProvider(get(), get(), get()) }
         single {
             HomeFeedFilter(get(), get(), get(), semanticMatcher = get<KeywordSemanticMatcher>()) { blocked ->
                 androidUserMessageSink(context).showShortMessage("NLP 已屏蔽 ${blocked.first().title.take(10)}... 等 ${blocked.size} 条内容")

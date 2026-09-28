@@ -20,6 +20,7 @@ package com.github.zly2006.zhihu.viewmodel.za
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.platform.SettingsStore
+import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
@@ -33,9 +34,10 @@ import kotlinx.coroutines.joinAll
 class MixedHomeFeedViewModel(
     settings: SettingsStore,
     filter: HomeFeedFilter,
+    mobileClient: MobileClientProvider,
 ) : BaseFeedViewModel(settings),
     HomeFeedInteractionViewModel {
-    val android = AndroidHomeFeedViewModel(settings, filter)
+    val android = AndroidHomeFeedViewModel(settings, filter, mobileClient)
     val web = HomeFeedViewModel(settings, filter)
     override val initialUrl: String
         get() = "https://api.zhihu.com/topstory/recommend"

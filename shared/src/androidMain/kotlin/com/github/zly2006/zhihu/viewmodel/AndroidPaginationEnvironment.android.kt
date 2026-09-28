@@ -38,11 +38,9 @@ import androidx.lifecycle.LifecycleOwner
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.AccountData
 import com.github.zly2006.zhihu.data.DataHolder
-import com.github.zly2006.zhihu.data.ZhihuCookieStorage
 import com.github.zly2006.zhihu.data.ZhihuJson.json
 import com.github.zly2006.zhihu.data.navDestination
 import com.github.zly2006.zhihu.navigation.requestLoginNavigation
-import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.androidSettingsStore
 import com.github.zly2006.zhihu.platform.androidUserMessageSink
 import com.github.zly2006.zhihu.util.HttpStatusException
@@ -54,15 +52,10 @@ import com.github.zly2006.zhihu.util.exportCollectionItemsToZip
 import com.github.zly2006.zhihu.util.saveBitmapToGallery
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import io.ktor.client.HttpClient
-import io.ktor.client.HttpClientConfig
-import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.UserAgent
-import io.ktor.client.plugins.api.createClientPlugin
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.util.appendAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.int
@@ -76,12 +69,6 @@ import com.github.zly2006.zhihu.util.buildArticleExportHtml as buildAndroidArtic
 
 interface AndroidContextPaginationEnvironment : PaginationEnvironment {
     val context: Context
-}
-
-private val ZHIHU_PP_ANDROID_HEADERS = createClientPlugin("ZhihuPPAndroidHeaders", { }) {
-    onRequest { request, _ ->
-        request.headers.appendAll(AccountData.ANDROID_HEADERS)
-    }
 }
 
 open class SharedAndroidPaginationEnvironment(
@@ -111,27 +98,6 @@ open class SharedAndroidPaginationEnvironment(
             .get<ZhihuAccountStore>()
             .client
             .httpClient()
-    }
-
-    override suspend fun <T> withMobileHomeFeedHttpClient(block: suspend (HttpClient) -> T): T {
-        val loginForRecommendation = settingsStore.getBoolean("loginForRecommendation", true)
-        val configure: HttpClientConfig<*>.() -> Unit = {
-            install(ContentNegotiation) {
-                json(json)
-            }
-            install(UserAgent) {
-                agent = AccountData.ANDROID_USER_AGENT
-            }
-            install(ZHIHU_PP_ANDROID_HEADERS)
-            if (loginForRecommendation) {
-                install(HttpCookies) {
-                    storage = ZhihuCookieStorage(AccountData.data.cookies) {
-                        AccountData.saveData(AccountData.data)
-                    }
-                }
-            }
-        }
-        return HttpClient(KoinPlatform.getKoin().get<HttpClientEngine>(), configure).use { block(it) }
     }
 
     override fun authenticatedCookies(): Map<String, String> {
@@ -412,13 +378,6 @@ open class SharedAndroidPaginationEnvironment(
             }
         }
 }
-
-class SharedAndroidNotificationEnvironment(
-    context: Context,
-    allowGuestAccess: Boolean,
-    override val notificationSettingsStore: NotificationSettingsStore,
-) : SharedAndroidPaginationEnvironment(context, allowGuestAccess),
-    NotificationEnvironment
 
 fun PaginationViewModel<*>.paginationEnvironment(context: Context): AndroidContextPaginationEnvironment =
     SharedAndroidPaginationEnvironment(context, allowGuestAccess)

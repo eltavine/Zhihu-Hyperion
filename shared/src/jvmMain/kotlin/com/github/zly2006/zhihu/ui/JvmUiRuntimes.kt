@@ -34,13 +34,11 @@ import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.unit.em
 import com.github.zly2006.zhihu.desktop.openDesktopExternalUrl
 import com.github.zly2006.zhihu.navigation.Article
-import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageSink
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.subscreens.desktopVersionName
 import com.github.zly2006.zhihu.util.Log
-import com.github.zly2006.zhihu.viewmodel.DesktopPaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.desktopContentFilterDatabaseFile
 import com.github.zly2006.zhihu.viewmodel.filter.encodeBlocklistBackup
@@ -321,15 +319,6 @@ actual fun Modifier.articleMarkdownSelectionWorkaround(): Modifier = this
 actual fun ZhihuHtmlWebViewContent(html: String): Unit = error("$platformName 暂不支持 HTML WebView 渲染")
 
 actual val isLegacyWebViewSupported: Boolean = false
-
-@Composable
-actual fun rememberNotificationEnvironment(
-    settingsStore: NotificationSettingsStore,
-): com.github.zly2006.zhihu.viewmodel.NotificationEnvironment = remember(settingsStore) {
-    DesktopPaginationEnvironment(
-        notificationSettingsStore = settingsStore,
-    )
-}
 
 @Composable
 actual fun QuestionDetailWebViewContent(

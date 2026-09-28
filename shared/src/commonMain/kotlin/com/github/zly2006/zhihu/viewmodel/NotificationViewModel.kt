@@ -55,14 +55,6 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.reflect.typeOf
 
-interface NotificationSettingsEnvironment {
-    val notificationSettingsStore: NotificationSettingsStore
-}
-
-interface NotificationEnvironment :
-    PaginationEnvironment,
-    NotificationSettingsEnvironment
-
 enum class MobileNotificationCategory(
     val entryName: String,
     val detailTitle: String,
@@ -77,8 +69,9 @@ enum class MobileNotificationCategory(
         get() = "$MOBILE_NOTIFICATION_TIMELINE_URL/$entryName/actions/readall"
 }
 
-class NotificationViewModel :
-    PaginationViewModel<MobileNotificationTimelineItem>(
+class NotificationViewModel(
+    private val mobileClient: MobileClientProvider,
+) : PaginationViewModel<MobileNotificationTimelineItem>(
         dataType = typeOf<MobileNotificationTimelineItem>(),
     ) {
     override val initialUrl = "$MOBILE_NOTIFICATION_MESSAGE_URL?limit=20"
@@ -111,7 +104,7 @@ class NotificationViewModel :
     override suspend fun fetchFeeds(environment: PaginationEnvironment) {
         try {
             val url = lastPaging?.next ?: initialUrl
-            val json = environment.withMobileHomeFeedHttpClient { client ->
+            val json = mobileClient.withClient { client ->
                 client.get(url.replace("http://", "https://")).jsonObject()
             }
             val page = ZhihuJson.decodeJson<MobileNotificationMessageOverview>(json)
@@ -159,14 +152,11 @@ class NotificationViewModel :
         }
     }
 
-    suspend fun markCategoryAsRead(
-        category: MobileNotificationCategory,
-        environment: MobileHomeFeedEnvironment,
-    ): Boolean {
+    suspend fun markCategoryAsRead(category: MobileNotificationCategory): Boolean {
         if ((categoryUnreadCounts[category] ?: 0) <= 0) return true
 
         return try {
-            val status = environment.withMobileHomeFeedHttpClient { client -> client.post(category.readAllUrl).status }
+            val status = mobileClient.withClient { client -> client.post(category.readAllUrl).status }
             if (!status.isSuccess()) {
                 Log.e("NotificationViewModel", "Failed to mark ${category.entryName} notifications as read: $status")
                 false
@@ -182,10 +172,10 @@ class NotificationViewModel :
         }
     }
 
-    suspend fun markAllAsRead(environment: MobileHomeFeedEnvironment): Boolean {
+    suspend fun markAllAsRead(): Boolean {
         var succeeded = true
         MobileNotificationCategory.entries.forEach { category ->
-            if (!markCategoryAsRead(category, environment)) {
+            if (!markCategoryAsRead(category)) {
                 succeeded = false
             }
         }
@@ -195,6 +185,8 @@ class NotificationViewModel :
 
 class NotificationTimelineViewModel(
     val entryName: String,
+    private val mobileClient: MobileClientProvider,
+    private val notificationSettings: NotificationSettingsStore,
 ) : PaginationViewModel<MobileNotificationTimelineItem>(
         dataType = typeOf<MobileNotificationTimelineItem>(),
     ) {
@@ -213,10 +205,8 @@ class NotificationTimelineViewModel(
 
     override suspend fun fetchFeeds(environment: PaginationEnvironment) {
         try {
-            val notificationEnvironment = environment as? NotificationEnvironment
-                ?: error("NotificationSettingsStore is required for notification pagination")
             val url = lastPaging?.next ?: initialUrl
-            val json = environment.withMobileHomeFeedHttpClient { client ->
+            val json = mobileClient.withClient { client ->
                 client.get(url.replace("http://", "https://")).jsonObject()
             }
             val rawData = json["data"]?.jsonArray ?: JsonArray(emptyList())
@@ -241,8 +231,8 @@ class NotificationTimelineViewModel(
                 ?.let { ZhihuJson.decodeJson<ZhihuPaging>(it) }
                 ?: ZhihuPaging(isEnd = true, next = "")
 
-            if (!markedAsRead && notificationEnvironment.notificationSettingsStore.getAutoMarkAsReadEnabled()) {
-                markedAsRead = markAsRead(environment)
+            if (!markedAsRead && notificationSettings.getAutoMarkAsReadEnabled()) {
+                markedAsRead = markAsRead()
             }
         } catch (e: Exception) {
             if (e is CancellationException) throw e
@@ -264,8 +254,8 @@ class NotificationTimelineViewModel(
         return type == null || settingsStore.getDisplayInAppEnabled(type)
     }
 
-    suspend fun markAsRead(environment: MobileHomeFeedEnvironment): Boolean = try {
-        val status = environment.withMobileHomeFeedHttpClient { client -> client.post(readAllUrl).status }
+    suspend fun markAsRead(): Boolean = try {
+        val status = mobileClient.withClient { client -> client.post(readAllUrl).status }
         if (!status.isSuccess()) {
             Log.e("NotificationTimelineViewModel", "Failed to mark $entryName notifications as read: $status")
             false
@@ -281,6 +271,7 @@ class NotificationTimelineViewModel(
 
 class PrivateMessageViewModel(
     private val peerId: String,
+    private val mobileClient: MobileClientProvider,
 ) : PaginationViewModel<ZhihuPrivateMessage>(
         dataType = typeOf<ZhihuPrivateMessage>(),
     ) {
@@ -293,16 +284,13 @@ class PrivateMessageViewModel(
     var isSending by mutableStateOf(false)
         private set
 
-    suspend fun sendMessage(
-        content: String,
-        environment: MobileHomeFeedEnvironment,
-    ): Boolean {
+    suspend fun sendMessage(content: String): Boolean {
         if (content.isBlank() || isSending) return false
 
         isSending = true
         errorMessage = null
         return try {
-            environment.withMobileHomeFeedHttpClient { client ->
+            mobileClient.withClient { client ->
                 val response = client.post(MOBILE_PRIVATE_MESSAGE_URL) {
                     contentType(ContentType.Application.FormUrlEncoded)
                     header("X-Zse-93", "101_1_1.0")
@@ -350,7 +338,7 @@ class PrivateMessageViewModel(
 
     override suspend fun fetchFeeds(environment: PaginationEnvironment) {
         try {
-            environment.withMobileHomeFeedHttpClient { client ->
+            mobileClient.withClient { client ->
                 coroutineScope {
                     val peerRequest = if (peer == null) {
                         async {

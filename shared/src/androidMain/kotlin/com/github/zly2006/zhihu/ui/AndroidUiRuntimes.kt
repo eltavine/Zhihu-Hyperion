@@ -38,13 +38,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
-import com.github.zly2006.zhihu.filter.ContentOpenFrom
-import com.github.zly2006.zhihu.filter.TrackedContentIdentity
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.CommentHolder
 import com.github.zly2006.zhihu.navigation.NavDestination
-import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageSink
 import com.github.zly2006.zhihu.platform.androidSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
@@ -65,7 +61,6 @@ import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.OpenInBrowser
 import com.github.zly2006.zhihu.util.createEmojiInlineContent
 import com.github.zly2006.zhihu.util.fuckHonorService
-import com.github.zly2006.zhihu.viewmodel.SharedAndroidNotificationEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.encodeBlocklistBackup
 import com.github.zly2006.zhihu.viewmodel.filter.importBlocklistBackupFromJsonText
@@ -350,16 +345,6 @@ actual fun commentEmojiInlineKey(placeholder: String): String? {
 }
 
 actual fun Modifier.commentSelectionWorkaround(): Modifier = fuckHonorService()
-
-@Composable
-actual fun rememberNotificationEnvironment(
-    settingsStore: NotificationSettingsStore,
-): com.github.zly2006.zhihu.viewmodel.NotificationEnvironment {
-    val context = LocalContext.current
-    return remember(context, settingsStore) {
-        SharedAndroidNotificationEnvironment(context, false, settingsStore)
-    }
-}
 
 /** Android 导航前暂存的评论定位与剪贴板去重状态；进程内由 Koin 持有唯一实例。 */
 class AndroidArticleNavigationHandoff {

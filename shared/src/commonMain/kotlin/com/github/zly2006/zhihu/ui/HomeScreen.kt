@@ -155,6 +155,7 @@ import com.github.zly2006.zhihu.ui.subscreens.SystemUpdateState
 import com.github.zly2006.zhihu.ui.subscreens.rememberSystemUpdateState
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.json
+import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
 import com.github.zly2006.zhihu.viewmodel.QUALITY_FILTER_MODE_PREFERENCE_KEY
 import com.github.zly2006.zhihu.viewmodel.QualityFilterMode
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
@@ -242,6 +243,7 @@ fun HomeScreen(
     val homeState: HomeScreenState = viewModel { HomeScreenState() }
     val remoteHistory = koinInject<RemoteHistorySync>()
     val homeFeedFilter = koinInject<HomeFeedFilter>()
+    val mobileClient = koinInject<MobileClientProvider>()
     val appPrivateDirectory = rememberAppPrivateDirectory()
     val notificationSettings = koinInject<NotificationSettingsStore>()
     val userMessages = rememberUserMessageSink()
@@ -294,9 +296,9 @@ fun HomeScreen(
     val isLiteVariant = rememberIsLiteVariant()
     val viewModel: BaseFeedViewModel = when (currentRecommendationMode) {
         RecommendationMode.WEB -> viewModel { HomeFeedViewModel(settings, homeFeedFilter) }
-        RecommendationMode.ANDROID -> viewModel { AndroidHomeFeedViewModel(settings, homeFeedFilter) }
+        RecommendationMode.ANDROID -> viewModel { AndroidHomeFeedViewModel(settings, homeFeedFilter, mobileClient) }
         RecommendationMode.LOCAL -> viewModel { LocalHomeFeedViewModel(settings, KoinPlatform.getKoin().inject()) }
-        RecommendationMode.MIXED -> viewModel { MixedHomeFeedViewModel(settings, homeFeedFilter) }
+        RecommendationMode.MIXED -> viewModel { MixedHomeFeedViewModel(settings, homeFeedFilter, mobileClient) }
     }
     val localHomeViewModel = viewModel as? LocalHomeFeedViewModel
     val readingQueueSourceId = "home:${currentRecommendationMode.name}"
@@ -333,8 +335,8 @@ fun HomeScreen(
     var unreadCount by remember { mutableIntStateOf(0) }
     LaunchedEffect(Unit) {
         try {
-            unreadCount = paginationEnvironment
-                .withMobileHomeFeedHttpClient { client ->
+            unreadCount = mobileClient
+                .withClient { client ->
                     client.get("$MOBILE_NOTIFICATION_MESSAGE_URL?limit=20").json<MobileNotificationMessageOverview>()
                 }.totalUnreadCount
         } catch (_: Exception) {

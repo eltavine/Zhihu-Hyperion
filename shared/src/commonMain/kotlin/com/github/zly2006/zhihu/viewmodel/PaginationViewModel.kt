@@ -320,9 +320,6 @@ suspend fun ZhihuApiEnvironment.deleteSigned(
 }
 
 interface MobileHomeFeedEnvironment : ZhihuApiEnvironment {
-    /** 借用移动端 API client 执行 [block]；client 只在 block 内有效，由实现负责关闭临时实例。 */
-    suspend fun <T> withMobileHomeFeedHttpClient(block: suspend (HttpClient) -> T): T = block(httpClient())
-
     suspend fun handleMobileHomeFeedFailure(error: Exception) {
         handleFetchFailure("AndroidHomeFeedViewModel", error)
     }

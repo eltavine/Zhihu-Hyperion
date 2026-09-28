@@ -43,22 +43,16 @@ class NotificationViewModelTest {
                 respond("", HttpStatusCode.NoContent)
             },
         )
-        val environment = object : MobileHomeFeedEnvironment {
-            override fun httpClient() = client
-
-            override suspend fun <T> withMobileHomeFeedHttpClient(block: suspend (HttpClient) -> T): T = block(client)
-
-            override fun authenticatedCookies() = emptyMap<String, String>()
-
-            override suspend fun handleFetchFailure(tag: String?, error: Exception) = Unit
+        val mobileClient = object : MobileClientProvider {
+            override suspend fun <T> withClient(block: suspend (HttpClient) -> T): T = block(client)
         }
-        val viewModel = NotificationViewModel()
+        val viewModel = NotificationViewModel(mobileClient)
         MobileNotificationCategory.entries.forEach { category ->
             viewModel.categoryUnreadCounts[category] = 1
         }
 
         for ((index, category) in MobileNotificationCategory.entries.withIndex()) {
-            assertTrue(viewModel.markCategoryAsRead(category, environment))
+            assertTrue(viewModel.markCategoryAsRead(category))
             assertEquals(0, viewModel.categoryUnreadCounts.getValue(category))
             assertEquals(MobileNotificationCategory.entries.size - index - 1, viewModel.unreadCount)
         }
@@ -104,18 +98,12 @@ class NotificationViewModelTest {
                 )
             },
         )
-        val environment = object : MobileHomeFeedEnvironment {
-            override fun httpClient() = client
-
-            override suspend fun <T> withMobileHomeFeedHttpClient(block: suspend (HttpClient) -> T): T = block(client)
-
-            override fun authenticatedCookies() = emptyMap<String, String>()
-
-            override suspend fun handleFetchFailure(tag: String?, error: Exception) = Unit
+        val mobileClient = object : MobileClientProvider {
+            override suspend fun <T> withClient(block: suspend (HttpClient) -> T): T = block(client)
         }
-        val viewModel = PrivateMessageViewModel("peer-id")
+        val viewModel = PrivateMessageViewModel("peer-id", mobileClient)
 
-        assertTrue(viewModel.sendMessage("测试 & 消息", environment))
+        assertTrue(viewModel.sendMessage("测试 & 消息"))
 
         assertEquals(HttpMethod.Post, requestMethod)
         assertEquals("https://api.zhihu.com/messages", requestUrl)
@@ -146,18 +134,12 @@ class NotificationViewModelTest {
                 )
             },
         )
-        val environment = object : MobileHomeFeedEnvironment {
-            override fun httpClient() = client
-
-            override suspend fun <T> withMobileHomeFeedHttpClient(block: suspend (HttpClient) -> T): T = block(client)
-
-            override fun authenticatedCookies() = emptyMap<String, String>()
-
-            override suspend fun handleFetchFailure(tag: String?, error: Exception) = Unit
+        val mobileClient = object : MobileClientProvider {
+            override suspend fun <T> withClient(block: suspend (HttpClient) -> T): T = block(client)
         }
-        val viewModel = PrivateMessageViewModel("peer-id")
+        val viewModel = PrivateMessageViewModel("peer-id", mobileClient)
 
-        assertFalse(viewModel.sendMessage("保留的草稿", environment))
+        assertFalse(viewModel.sendMessage("保留的草稿"))
 
         assertTrue(viewModel.allData.isEmpty())
         assertEquals("暂时不能向对方发送私信", viewModel.errorMessage)

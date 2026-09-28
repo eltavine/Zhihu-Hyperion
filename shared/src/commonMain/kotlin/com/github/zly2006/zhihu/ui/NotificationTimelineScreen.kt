@@ -69,8 +69,10 @@ import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
+import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
 import com.github.zly2006.zhihu.viewmodel.MobileNotificationCategory
 import com.github.zly2006.zhihu.viewmodel.NotificationTimelineViewModel
+import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
@@ -87,10 +89,11 @@ fun NotificationTimelineScreen(
 ) {
     val navigator = LocalNavigator.current
     val settingsStore = koinInject<NotificationSettingsStore>()
-    val environment = rememberNotificationEnvironment(settingsStore)
+    val environment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val mobileClient = koinInject<MobileClientProvider>()
     val userMessages = rememberUserMessageSink()
     val viewModel = viewModel(key = "notification_timeline_$entryName") {
-        NotificationTimelineViewModel(entryName)
+        NotificationTimelineViewModel(entryName, mobileClient, settingsStore)
     }
     val invitations = entryName == INVITATION_ENTRY_NAME
     val listState = rememberLazyListState()

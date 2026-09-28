@@ -26,7 +26,6 @@ import com.github.zly2006.zhihu.desktop.copyDesktopPlainText
 import com.github.zly2006.zhihu.desktop.desktopZhihuDataFile
 import com.github.zly2006.zhihu.desktop.desktopZhihuDownloadsDir
 import com.github.zly2006.zhihu.navigation.Article
-import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.buildArticleExportFileName
@@ -50,11 +49,9 @@ import javax.swing.SwingUtilities
 import com.github.zly2006.zhihu.util.buildArticleExportHtml as buildSharedArticleExportHtml
 import com.github.zly2006.zhihu.util.buildOfflineArticleExportHtml as buildSharedOfflineArticleExportHtml
 
-class DesktopPaginationEnvironment(
-    override val notificationSettingsStore: NotificationSettingsStore = KoinPlatform.getKoin().get(),
-) : PaginationEnvironment,
-    CollectionContentEnvironment,
-    NotificationEnvironment {
+class DesktopPaginationEnvironment :
+    PaginationEnvironment,
+    CollectionContentEnvironment {
     private val store = KoinPlatform.getKoin().get<ZhihuAccountStore>()
     private val settingsStore: SettingsStore = KoinPlatform.getKoin().get()
     private val contentFilterDb: ContentFilterDatabase = KoinPlatform.getKoin().get()

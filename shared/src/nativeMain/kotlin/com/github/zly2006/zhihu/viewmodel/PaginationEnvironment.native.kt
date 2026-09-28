@@ -20,7 +20,6 @@ package com.github.zly2006.zhihu.viewmodel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
-import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.copyNativePlainText
 import com.github.zly2006.zhihu.platform.platformName
@@ -34,11 +33,9 @@ import org.koin.mp.KoinPlatform
 actual fun rememberPaginationEnvironment(allowGuestAccess: Boolean): PaginationEnvironment =
     remember(allowGuestAccess) { NativePaginationEnvironment() }
 
-internal class NativePaginationEnvironment(
-    override val notificationSettingsStore: NotificationSettingsStore = KoinPlatform.getKoin().get(),
-) : PaginationEnvironment,
-    CollectionContentEnvironment,
-    NotificationEnvironment {
+internal class NativePaginationEnvironment :
+    PaginationEnvironment,
+    CollectionContentEnvironment {
     private val accountStore = KoinPlatform.getKoin().get<ZhihuAccountStore>()
     private val settingsStore: SettingsStore = KoinPlatform.getKoin().get()
     private val contentFilterDatabase: ContentFilterDatabase = KoinPlatform.getKoin().get()

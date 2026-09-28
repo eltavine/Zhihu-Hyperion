@@ -32,6 +32,7 @@ import com.github.zly2006.zhihu.navigation.resolveContent
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.util.jsonObject
 import com.github.zly2006.zhihu.viewmodel.HomeFeedFilterResult
+import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
@@ -65,6 +66,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 class AndroidHomeFeedViewModel(
     settings: SettingsStore,
     private val filter: HomeFeedFilter,
+    private val mobileClient: MobileClientProvider,
 ) : BaseFeedViewModel(settings),
     HomeFeedInteractionViewModel {
     override val initialUrl: String
@@ -72,7 +74,7 @@ class AndroidHomeFeedViewModel(
 
     public override suspend fun fetchFeeds(environment: PaginationEnvironment) {
         try {
-            val jojo = environment.withMobileHomeFeedHttpClient { client ->
+            val jojo = mobileClient.withClient { client ->
                 client.get(lastPaging?.next ?: initialUrl).takeIf { it.status.isSuccess() }?.jsonObject()
             }
             if (jojo != null) {
