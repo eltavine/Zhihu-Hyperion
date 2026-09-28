@@ -22,10 +22,6 @@ plugins {
 }
 
 kotlin {
-    android {
-        namespace = "com.github.zly2006.zhihu.shared.localdb"
-    }
-
     sourceSets {
         commonMain.dependencies {
             api(libs.kotlinx.coroutines.core)

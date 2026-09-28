@@ -18,14 +18,15 @@ class ModuleGraphConventionPlugin : Plugin<Project> {
                 configurations = setOf("api", "implementation", "fullImplementation", "liteImplementation") +
                     KMP_SOURCE_SETS.flatMap { sourceSet -> listOf("${sourceSet}Api", "${sourceSet}Implementation") }
                 restricted = arrayOf(
-                    "$VENDORED -X> :(core:.*|feature:.*|shared|shared-local-db|$APPLICATIONS)",
+                    "$VENDORED -X> :(core:.*|feature:.*|shared|$APPLICATIONS)",
                     ":core:.* -X> :(feature:.*|shared|$APPLICATIONS)",
                     ":feature:.* -X> :(shared|$APPLICATIONS)",
-                    ":(shared|shared-local-db) -X> :($APPLICATIONS)",
+                    ":shared -X> :($APPLICATIONS)",
                     // Foundation layers of :core, bottom first.
                     ":core:common -X> :.*",
                     ":core:model -X> :(?!core:common$).*",
                     ":core:(navigation|network) -X> :(?!core:(common|model)$).*",
+                    ":core:database -X> :(?!core:common$).*",
                 )
             }
         }
