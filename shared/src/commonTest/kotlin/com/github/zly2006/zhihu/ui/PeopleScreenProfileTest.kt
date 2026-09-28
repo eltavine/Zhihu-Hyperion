@@ -22,7 +22,9 @@ import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.navigation.Person
 import com.github.zly2006.zhihu.util.TextDocumentStore
-import com.github.zly2006.zhihu.viewmodel.ProfileLoadEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
+import com.github.zly2006.zhihu.viewmodel.filter.FakeBlockedQuestionAuthorDao
+import com.github.zly2006.zhihu.viewmodel.filter.FakeBlockedUserDao
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.JsonObject
@@ -117,7 +119,7 @@ class PeopleScreenProfileTest {
         )
         val viewModel = PersonViewModel(person())
 
-        viewModel.load(environment, HistoryStorage(MemoryDocument()))
+        viewModel.load(environment, HistoryStorage(MemoryDocument()), FakeBlockedUserDao(), FakeBlockedQuestionAuthorDao())
 
         assertTrue(viewModel.isBlocking)
         assertEquals("4.0k", viewModel.githubSocial?.starCount)
@@ -139,7 +141,7 @@ class PeopleScreenProfileTest {
         )
         val viewModel = PersonViewModel(person())
 
-        viewModel.load(environment, HistoryStorage(MemoryDocument()))
+        viewModel.load(environment, HistoryStorage(MemoryDocument()), FakeBlockedUserDao(), FakeBlockedQuestionAuthorDao())
 
         assertEquals("Profile User", viewModel.name)
         assertTrue(viewModel.isBlocking)
@@ -183,7 +185,7 @@ class PeopleScreenProfileTest {
     private class RecordingProfileEnvironment(
         private val baseProfile: JsonObject,
         private val detailResult: Result<JsonObject?>,
-    ) : ProfileLoadEnvironment {
+    ) : ZhihuApiEnvironment {
         val requests = mutableListOf<Pair<String, String>>()
 
         override fun httpClient(): HttpClient = error("The test overrides fetchJson")

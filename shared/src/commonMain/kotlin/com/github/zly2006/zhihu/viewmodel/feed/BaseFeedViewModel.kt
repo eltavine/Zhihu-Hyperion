@@ -49,7 +49,7 @@ abstract class BaseFeedViewModel : PaginationViewModel<Feed>(typeOf<Feed>()) {
     var isPullToRefresh by mutableStateOf(false)
         protected set
 
-    override fun processResponse(environment: PaginationEnvironment, data: List<Feed>, rawData: JsonArray) {
+    override suspend fun processResponse(environment: PaginationEnvironment, data: List<Feed>, rawData: JsonArray) {
         super.processResponse(environment, data, rawData)
         val loadedItems = data.flattenFeeds().map { createDisplayItem(environment, it) }
         addDisplayItems(loadedItems)

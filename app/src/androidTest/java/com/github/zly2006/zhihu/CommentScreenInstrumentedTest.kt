@@ -481,7 +481,7 @@ class CommentScreenInstrumentedTest {
     private class SeededRootCommentViewModel(
         article: NavDestination,
         seededComments: List<DataHolder.Comment>,
-    ) : BaseCommentViewModel(article) {
+    ) : BaseCommentViewModel(article, KoinPlatform.getKoin().get<ContentFilterDatabase>().blockedUserDao()) {
         override val initialUrl: String = "https://example.invalid/root_comments"
         var loadMoreCount = 0
             private set
@@ -524,7 +524,7 @@ class CommentScreenInstrumentedTest {
     private class SeededChildCommentViewModel(
         content: CommentHolder,
         seededComments: List<DataHolder.Comment>,
-    ) : BaseCommentViewModel(content) {
+    ) : BaseCommentViewModel(content, KoinPlatform.getKoin().get<ContentFilterDatabase>().blockedUserDao()) {
         data class Submission(
             val text: String,
             val replyToCommentId: String?,

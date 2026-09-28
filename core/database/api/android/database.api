@@ -308,6 +308,7 @@ public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedUser$Compani
 public abstract interface class com/github/zly2006/zhihu/viewmodel/filter/BlockedUserDao {
 	public abstract fun clearAllUsers (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun deleteUserById (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getAllUserIds (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getAllUsers (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getUserCount (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun insertUser (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedUser;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -319,6 +320,7 @@ public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedUserDao_Impl
 	public fun <init> (Landroidx/room/RoomDatabase;)V
 	public fun clearAllUsers (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun deleteUserById (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getAllUserIds (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun getAllUsers (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun getUserCount (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun insertUser (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedUser;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;

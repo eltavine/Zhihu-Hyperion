@@ -268,7 +268,7 @@ class QuestionScreenInstrumentedTest {
     private class SeededQuestionFeedViewModel(
         questionId: Long,
         private val seededIsEnd: Boolean,
-    ) : QuestionFeedViewModel(questionId) {
+    ) : QuestionFeedViewModel(questionId, KoinPlatform.getKoin().get<ContentFilterDatabase>().blockedUserDao()) {
         var refreshCount = 0
             private set
         var loadMoreCount = 0
@@ -352,7 +352,7 @@ class QuestionScreenInstrumentedTest {
 
     private class TestableQuestionFeedViewModel(
         questionId: Long,
-    ) : QuestionFeedViewModel(questionId) {
+    ) : QuestionFeedViewModel(questionId, KoinPlatform.getKoin().get<ContentFilterDatabase>().blockedUserDao()) {
         suspend fun processForTest(context: android.content.Context, data: List<Feed>) {
             processResponse(paginationEnvironment(context), data, JsonArray(emptyList()))
         }

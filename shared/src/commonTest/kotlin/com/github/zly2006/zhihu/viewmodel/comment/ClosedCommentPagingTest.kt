@@ -25,6 +25,7 @@ import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.viewmodel.CommentItem
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
+import com.github.zly2006.zhihu.viewmodel.filter.FakeBlockedUserDao
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import kotlinx.coroutines.test.runTest
@@ -67,7 +68,7 @@ class ClosedCommentPagingTest {
  */
 private class FetchableCommentViewModel(
     article: Article,
-) : BaseCommentViewModel(article) {
+) : BaseCommentViewModel(article, FakeBlockedUserDao()) {
     override val initialUrl: String = "https://www.zhihu.com/api/v4/comment_v5/answers/${article.id}/root_comment"
 
     override fun createCommentItem(comment: DataHolder.Comment, article: NavDestination) = CommentItem(comment, null)

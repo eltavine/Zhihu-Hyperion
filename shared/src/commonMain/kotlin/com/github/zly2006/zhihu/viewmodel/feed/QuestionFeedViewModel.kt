@@ -32,10 +32,12 @@ import com.github.zly2006.zhihu.viewmodel.FeedDisplayEnvironment
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
+import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
 import com.github.zly2006.zhihu.viewmodel.postSigned
 
 open class QuestionFeedViewModel(
     private val questionId: Long,
+    private val blockedUsers: BlockedUserDao,
 ) : BaseFeedViewModel() {
     var sortOrder by mutableStateOf("default")
         private set
@@ -101,8 +103,8 @@ open class QuestionFeedViewModel(
         }
     }
 
-    override fun processResponse(environment: PaginationEnvironment, data: List<Feed>, rawData: kotlinx.serialization.json.JsonArray) {
-        val blockedUserIds = environment.blockedUserIds()
+    override suspend fun processResponse(environment: PaginationEnvironment, data: List<Feed>, rawData: kotlinx.serialization.json.JsonArray) {
+        val blockedUserIds = blockedUsers.getAllUserIds().toSet()
         val filtered = if (blockedUserIds.isEmpty()) {
             data
         } else {

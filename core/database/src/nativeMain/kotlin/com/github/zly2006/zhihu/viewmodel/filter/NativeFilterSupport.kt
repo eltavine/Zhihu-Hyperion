@@ -90,6 +90,8 @@ private val emptyBlockedKeywordDao = object : BlockedKeywordDao {
 private val emptyBlockedUserDao = object : BlockedUserDao {
     override suspend fun getAllUsers(): List<BlockedUser> = emptyList()
 
+    override suspend fun getAllUserIds(): List<String> = emptyList()
+
     override suspend fun insertUser(user: BlockedUser) = Unit
 
     override suspend fun deleteUserById(userId: String) = Unit

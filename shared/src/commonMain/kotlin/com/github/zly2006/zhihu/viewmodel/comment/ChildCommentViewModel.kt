@@ -26,6 +26,7 @@ import com.github.zly2006.zhihu.viewmodel.CommentItem
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.comment.RootCommentViewModel.Companion.submitCommentUrl
+import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
 import com.github.zly2006.zhihu.viewmodel.postSigned
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -41,8 +42,9 @@ import kotlinx.serialization.json.put
  */
 class ChildCommentViewModel(
     content: NavDestination,
+    blockedUsers: BlockedUserDao,
     private val initialComment: DataHolder.Comment? = null,
-) : BaseCommentViewModel(content) {
+) : BaseCommentViewModel(content, blockedUsers) {
     private var initialCommentLoaded = false
 
     override val initialUrl: String = when (content) {

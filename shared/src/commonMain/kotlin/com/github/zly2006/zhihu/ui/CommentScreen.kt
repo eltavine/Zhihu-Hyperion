@@ -165,6 +165,7 @@ import com.github.zly2006.zhihu.viewmodel.CommentItem
 import com.github.zly2006.zhihu.viewmodel.comment.BaseCommentViewModel
 import com.github.zly2006.zhihu.viewmodel.comment.ChildCommentViewModel
 import com.github.zly2006.zhihu.viewmodel.comment.RootCommentViewModel
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
@@ -502,15 +503,17 @@ fun CommentScreen(
         showEmojiPicker = false
     }
 
+    val blockedUsers = koinInject<ContentFilterDatabase>().blockedUserDao()
+
     // 根据内容类型选择合适的ViewModel
     val viewModel: BaseCommentViewModel = when (resolvedContent) {
         is CommentHolder -> remember(viewModelKey) {
             // 子评论不进行状态保存
-            ChildCommentViewModel(resolvedContent, initialComment)
+            ChildCommentViewModel(resolvedContent, blockedUsers, initialComment)
         }
 
         else -> viewModel(key = viewModelKey) {
-            RootCommentViewModel(resolvedContent, initialCommentId).apply {
+            RootCommentViewModel(resolvedContent, blockedUsers, initialCommentId).apply {
                 sortOrder = when (initialReadingCommentOrder) {
                     ReadingCommentOrder.Score -> CommentSortOrder.SCORE
                     ReadingCommentOrder.Time -> CommentSortOrder.TIME

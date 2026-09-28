@@ -117,14 +117,17 @@ import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.jsonObject
 import com.github.zly2006.zhihu.util.raiseForStatus
-import com.github.zly2006.zhihu.viewmodel.ContentBlocklistEnvironment
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.PaginationViewModel
-import com.github.zly2006.zhihu.viewmodel.ProfileLoadEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.addReadHistory
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
+import com.github.zly2006.zhihu.viewmodel.filter.BlockedQuestionAuthor
+import com.github.zly2006.zhihu.viewmodel.filter.BlockedQuestionAuthorDao
+import com.github.zly2006.zhihu.viewmodel.filter.BlockedUser
+import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.postSigned
 import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
 import kotlinx.coroutines.CancellationException
@@ -397,39 +400,45 @@ class PersonViewModel(
         isBlocking = newBlockingState
     }
 
-    suspend fun toggleRecommendationBlock(environment: ContentBlocklistEnvironment) {
+    suspend fun toggleRecommendationBlock(blockedUsers: BlockedUserDao) {
         if (isBlockedInRecommendations) {
-            environment.removeBlockedUser(person.id)
+            blockedUsers.deleteUserById(person.id)
             isBlockedInRecommendations = false
         } else {
-            environment.addBlockedUser(
-                userId = person.id,
-                userName = name,
-                urlToken = person.urlToken,
-                avatarUrl = avatar,
+            blockedUsers.insertUser(
+                BlockedUser(
+                    userId = person.id,
+                    userName = name,
+                    urlToken = person.urlToken,
+                    avatarUrl = avatar,
+                ),
             )
             isBlockedInRecommendations = true
         }
     }
 
-    suspend fun toggleQuestionAuthorBlock(environment: ContentBlocklistEnvironment) {
+    suspend fun toggleQuestionAuthorBlock(blockedQuestionAuthors: BlockedQuestionAuthorDao) {
         if (isBlockedAsQuestionAuthor) {
-            environment.removeBlockedQuestionAuthor(person.id)
+            blockedQuestionAuthors.deleteUserById(person.id)
             isBlockedAsQuestionAuthor = false
         } else {
-            environment.addBlockedQuestionAuthor(
-                userId = person.id,
-                userName = name,
-                urlToken = person.urlToken,
-                avatarUrl = avatar,
+            blockedQuestionAuthors.insertUser(
+                BlockedQuestionAuthor(
+                    userId = person.id,
+                    userName = name,
+                    urlToken = person.urlToken,
+                    avatarUrl = avatar,
+                ),
             )
             isBlockedAsQuestionAuthor = true
         }
     }
 
     suspend fun load(
-        environment: ProfileLoadEnvironment,
+        environment: ZhihuApiEnvironment,
         history: HistoryStorage,
+        blockedUsers: BlockedUserDao,
+        blockedQuestionAuthors: BlockedQuestionAuthorDao,
     ) {
         environment.addReadHistory(person.id, "profile")
 
@@ -459,8 +468,8 @@ class PersonViewModel(
         this.articleCount = loadedPerson.articlesCount
         this.isFollowing = loadedPerson.isFollowing
         this.isBlocking = loadedPerson.isBlocking
-        this.isBlockedInRecommendations = environment.isUserBlocked(loadedPerson.id)
-        this.isBlockedAsQuestionAuthor = environment.isQuestionAuthorBlocked(loadedPerson.id)
+        this.isBlockedInRecommendations = blockedUsers.isUserBlocked(loadedPerson.id)
+        this.isBlockedAsQuestionAuthor = blockedQuestionAuthors.isUserBlocked(loadedPerson.id)
         this.memberHashId = loadedPerson.id
         this.person.id = loadedPerson.id
         if (urlToken != null) {
@@ -643,6 +652,7 @@ fun PeopleScreen(
     val userMessages = rememberUserMessageSink()
     val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
     val history = koinInject<HistoryStorage>()
+    val contentFilterDatabase = koinInject<ContentFilterDatabase>()
     val viewModel = composeViewModel { PersonViewModel(person) }
     val coroutineScope = rememberCoroutineScope()
 
@@ -681,7 +691,7 @@ fun PeopleScreen(
 
     LaunchedEffect(viewModel) {
         try {
-            viewModel.load(paginationEnvironment, history)
+            viewModel.load(paginationEnvironment, history, contentFilterDatabase.blockedUserDao(), contentFilterDatabase.blockedQuestionAuthorDao())
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -756,7 +766,7 @@ fun PeopleScreen(
                             onRecommendationBlockToggle = {
                                 coroutineScope.launch {
                                     try {
-                                        viewModel.toggleRecommendationBlock(paginationEnvironment)
+                                        viewModel.toggleRecommendationBlock(contentFilterDatabase.blockedUserDao())
                                         userMessages.showShortMessage(if (viewModel.isBlockedInRecommendations) "已屏蔽推荐" else "已取消屏蔽推荐")
                                     } catch (e: Exception) {
                                         userMessages.showShortMessage("操作失败: ${e.message}")
@@ -766,7 +776,7 @@ fun PeopleScreen(
                             onQuestionAuthorBlockToggle = {
                                 coroutineScope.launch {
                                     try {
-                                        viewModel.toggleQuestionAuthorBlock(paginationEnvironment)
+                                        viewModel.toggleQuestionAuthorBlock(contentFilterDatabase.blockedQuestionAuthorDao())
                                         userMessages.showShortMessage(if (viewModel.isBlockedAsQuestionAuthor) "已屏蔽其提问" else "已取消屏蔽其提问")
                                     } catch (e: Exception) {
                                         userMessages.showShortMessage("操作失败: ${e.message}")

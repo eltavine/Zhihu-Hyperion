@@ -98,6 +98,7 @@ abstract interface com.github.zly2006.zhihu.viewmodel.filter/BlockedTopicDao { /
 abstract interface com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao { // com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao|null[0]
     abstract suspend fun clearAllUsers() // com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao.clearAllUsers|clearAllUsers(){}[0]
     abstract suspend fun deleteUserById(kotlin/String) // com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao.deleteUserById|deleteUserById(kotlin.String){}[0]
+    abstract suspend fun getAllUserIds(): kotlin.collections/List<kotlin/String> // com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao.getAllUserIds|getAllUserIds(){}[0]
     abstract suspend fun getAllUsers(): kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/BlockedUser> // com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao.getAllUsers|getAllUsers(){}[0]
     abstract suspend fun getUserCount(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao.getUserCount|getUserCount(){}[0]
     abstract suspend fun insertUser(com.github.zly2006.zhihu.viewmodel.filter/BlockedUser) // com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao.insertUser|insertUser(com.github.zly2006.zhihu.viewmodel.filter.BlockedUser){}[0]
@@ -727,6 +728,7 @@ final class com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao_Impl : com.
 
     final suspend fun clearAllUsers() // com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao_Impl.clearAllUsers|clearAllUsers(){}[0]
     final suspend fun deleteUserById(kotlin/String) // com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao_Impl.deleteUserById|deleteUserById(kotlin.String){}[0]
+    final suspend fun getAllUserIds(): kotlin.collections/List<kotlin/String> // com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao_Impl.getAllUserIds|getAllUserIds(){}[0]
     final suspend fun getAllUsers(): kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/BlockedUser> // com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao_Impl.getAllUsers|getAllUsers(){}[0]
     final suspend fun getUserCount(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao_Impl.getUserCount|getUserCount(){}[0]
     final suspend fun insertUser(com.github.zly2006.zhihu.viewmodel.filter/BlockedUser) // com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao_Impl.insertUser|insertUser(com.github.zly2006.zhihu.viewmodel.filter.BlockedUser){}[0]

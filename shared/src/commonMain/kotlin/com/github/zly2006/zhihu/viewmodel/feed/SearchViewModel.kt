@@ -30,6 +30,7 @@ import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.util.raiseForStatus
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
+import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
 import com.github.zly2006.zhihu.viewmodel.postSigned
 import io.ktor.http.encodeURLParameter
 import kotlinx.serialization.Serializable
@@ -43,6 +44,7 @@ private const val SEARCH_VERTICAL_INFO = "0,0,0,0,0,0,0,0,0,0,0,0"
 
 open class SearchViewModel(
     val searchQuery: String,
+    private val blockedUsers: BlockedUserDao,
     private val restrictedMemberHashId: String = "",
 ) : BaseFeedViewModel() {
     val entities = mutableStateListOf<SearchEntity>()
@@ -198,12 +200,12 @@ open class SearchViewModel(
         return feeds
     }
 
-    override fun processResponse(
+    override suspend fun processResponse(
         environment: PaginationEnvironment,
         data: List<Feed>,
         rawData: JsonArray,
     ) {
-        val blockedUserIds = environment.blockedUserIds()
+        val blockedUserIds = blockedUsers.getAllUserIds().toSet()
         super.processResponse(
             environment,
             data.filterNot { it.target?.author?.id in blockedUserIds },

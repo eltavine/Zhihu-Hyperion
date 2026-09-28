@@ -119,6 +119,7 @@ import com.github.zly2006.zhihu.viewmodel.feed.SearchTimeRange
 import com.github.zly2006.zhihu.viewmodel.feed.SearchViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.ZHIHU_HOT_SEARCH_URL
 import com.github.zly2006.zhihu.viewmodel.feed.fetchSearchSuggest
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -170,7 +171,8 @@ fun SearchScreen(
     val navigator = LocalNavigator.current
     val userMessages = rememberUserMessageSink()
     val settings = koinInject<SettingsStore>()
-    val viewModel = viewModel { SearchViewModel(search.query, search.restrictedMemberHashId) }
+    val blockedUsers = koinInject<ContentFilterDatabase>().blockedUserDao()
+    val viewModel = viewModel { SearchViewModel(search.query, blockedUsers, search.restrictedMemberHashId) }
     val readingQueueSourceId = buildString {
         append("search:")
         append(search.restrictedMemberHashId)

@@ -29,8 +29,6 @@ import com.github.zly2006.zhihu.platform.copyNativePlainText
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedKeywordService
-import com.github.zly2006.zhihu.viewmodel.filter.BlockedQuestionAuthor
-import com.github.zly2006.zhihu.viewmodel.filter.BlockedUser
 import com.github.zly2006.zhihu.viewmodel.filter.ContentDetailProvider
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterManager
@@ -43,7 +41,6 @@ import com.github.zly2006.zhihu.viewmodel.local.LocalContentDatabase
 import com.github.zly2006.zhihu.viewmodel.local.LocalRecommendationEngine
 import com.github.zly2006.zhihu.viewmodel.local.buildLocalRecommendationEngine
 import io.ktor.client.HttpClient
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonElement
 import org.koin.mp.KoinPlatform
 
@@ -84,60 +81,6 @@ internal class NativePaginationEnvironment(
     )
 
     override fun setPlainTextClipboard(label: String, text: String) = copyNativePlainText(text)
-
-    override suspend fun isUserBlocked(userId: String): Boolean =
-        contentFilterDatabase.blockedUserDao().isUserBlocked(userId)
-
-    override suspend fun isQuestionAuthorBlocked(userId: String): Boolean =
-        contentFilterDatabase.blockedQuestionAuthorDao().isUserBlocked(userId)
-
-    override fun blockedUserIds(): Set<String> = runBlocking {
-        contentFilterDatabase
-            .blockedUserDao()
-            .getAllUsers()
-            .map { it.userId }
-            .toSet()
-    }
-
-    override suspend fun addBlockedUser(
-        userId: String,
-        userName: String,
-        urlToken: String?,
-        avatarUrl: String?,
-    ) {
-        contentFilterDatabase.blockedUserDao().insertUser(
-            BlockedUser(
-                userId = userId,
-                userName = userName,
-                urlToken = urlToken,
-                avatarUrl = avatarUrl,
-            ),
-        )
-    }
-
-    override suspend fun addBlockedQuestionAuthor(
-        userId: String,
-        userName: String,
-        urlToken: String?,
-        avatarUrl: String?,
-    ) {
-        contentFilterDatabase.blockedQuestionAuthorDao().insertUser(
-            BlockedQuestionAuthor(
-                userId = userId,
-                userName = userName,
-                urlToken = urlToken,
-                avatarUrl = avatarUrl,
-            ),
-        )
-    }
-
-    override suspend fun removeBlockedUser(userId: String) {
-        contentFilterDatabase.blockedUserDao().deleteUserById(userId)
-    }
-
-    override suspend fun removeBlockedQuestionAuthor(userId: String) {
-        contentFilterDatabase.blockedQuestionAuthorDao().deleteUserById(userId)
-    }
 
     override suspend fun applyForegroundHomeFeedFilter(items: List<FeedDisplayItem>): List<FeedDisplayItem> {
         val settings = settingsStore.toFeedFilterSettings()

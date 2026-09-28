@@ -27,6 +27,9 @@ interface BlockedUserDao {
     @Query("SELECT * FROM ${BlockedUser.TABLE_NAME} ORDER BY createdTime DESC")
     suspend fun getAllUsers(): List<BlockedUser>
 
+    @Query("SELECT userId FROM ${BlockedUser.TABLE_NAME}")
+    suspend fun getAllUserIds(): List<String>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUser(user: BlockedUser)
 

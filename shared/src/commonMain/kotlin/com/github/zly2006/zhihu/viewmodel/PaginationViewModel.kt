@@ -106,7 +106,7 @@ abstract class PaginationViewModel<T : Any>(
 
     protected open fun handlePageMetadata(json: JsonObject) = Unit
 
-    protected open fun processResponse(environment: PaginationEnvironment, data: List<T>, rawData: JsonArray) {
+    protected open suspend fun processResponse(environment: PaginationEnvironment, data: List<T>, rawData: JsonArray) {
         debugData.addAll(rawData) // 保存原始JSON
         allData.addAll(data) // 保存未flatten的数据
     }
@@ -353,32 +353,6 @@ interface AigcVoteEnvironment {
     fun aigcVoteVoter(): AigcVoteVoter? = null
 }
 
-interface ContentBlocklistEnvironment {
-    suspend fun isUserBlocked(userId: String): Boolean = false
-
-    suspend fun isQuestionAuthorBlocked(userId: String): Boolean = false
-
-    fun blockedUserIds(): Set<String> = emptySet()
-
-    suspend fun addBlockedUser(
-        userId: String,
-        userName: String,
-        urlToken: String? = null,
-        avatarUrl: String? = null,
-    ) = Unit
-
-    suspend fun addBlockedQuestionAuthor(
-        userId: String,
-        userName: String,
-        urlToken: String? = null,
-        avatarUrl: String? = null,
-    ) = Unit
-
-    suspend fun removeBlockedUser(userId: String) = Unit
-
-    suspend fun removeBlockedQuestionAuthor(userId: String) = Unit
-}
-
 interface LocalRecommendationEnvironment : ZhihuApiEnvironment {
     fun localRecommendationEngine(): LocalRecommendationEngine? = null
 
@@ -439,10 +413,6 @@ interface ContentLoadEnvironment :
     ZhihuApiEnvironment,
     AigcVoteEnvironment
 
-interface ProfileLoadEnvironment :
-    ContentLoadEnvironment,
-    ContentBlocklistEnvironment
-
 interface ArticleLoadEnvironment :
     ZhihuApiEnvironment,
     ContentLoadEnvironment
@@ -454,7 +424,6 @@ interface PaginationEnvironment :
     ContentInteractionEnvironment,
     LocalRecommendationEnvironment,
     ClipboardEnvironment,
-    ProfileLoadEnvironment,
     ArticleLoadEnvironment,
     ArticleExportContentEnvironment
 

@@ -177,7 +177,7 @@ class HomeFeedViewModel :
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    override fun processResponse(environment: PaginationEnvironment, data: List<Feed>, rawData: JsonArray) {
+    override suspend fun processResponse(environment: PaginationEnvironment, data: List<Feed>, rawData: JsonArray) {
         allData.addAll(data)
         debugData.addAll(rawData)
 

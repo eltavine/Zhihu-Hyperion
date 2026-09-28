@@ -125,6 +125,7 @@ import com.github.zly2006.zhihu.ui.components.rememberShareActionExecutor
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.addReadHistory
 import com.github.zly2006.zhihu.viewmodel.feed.QuestionFeedViewModel
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 import kotlinx.coroutines.launch
@@ -182,11 +183,12 @@ fun QuestionScreen(
     val settings = koinInject<SettingsStore>()
     val history = koinInject<HistoryStorage>()
     val contentOpens = koinInject<ContentOpenTracker>()
+    val blockedUsers = koinInject<ContentFilterDatabase>().blockedUserDao()
     val executeShareAction = rememberShareActionExecutor()
     val openZhihuWebUrl = rememberZhihuWebUrlOpener()
     val navigator = LocalNavigator.current
     val viewModel: QuestionFeedViewModel = viewModel(key = "question_${question.questionId}") {
-        QuestionFeedViewModel(question.questionId)
+        QuestionFeedViewModel(question.questionId, blockedUsers)
     }
     val answerReadingQueueSourceId = "question:${question.questionId}:answers:${viewModel.sortOrder}"
     RegisterReadingQueueSource(
