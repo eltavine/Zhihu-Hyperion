@@ -274,15 +274,9 @@ class DesktopPaginationEnvironment(
     override fun requestImageExportPermission() = Unit
 
     override fun loadExportAssetText(fileName: String): String =
-        javaClass.classLoader
-            ?.getResourceAsStream(fileName)
-            ?.bufferedReader()
-            ?.use { it.readText() }
-            ?: sequenceOf(
-                File("app/src/main/assets", fileName),
-                File(System.getProperty("user.dir"), "app/src/main/assets/$fileName"),
-            ).firstOrNull { it.isFile }?.readText()
-            ?: ""
+        checkNotNull(javaClass.classLoader.getResourceAsStream(fileName)) { "桌面导出资源缺失：$fileName" }
+            .bufferedReader()
+            .use { it.readText() }
 
     override fun buildArticleExportHtml(
         content: DataHolder.Content,

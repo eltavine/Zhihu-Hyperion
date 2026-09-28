@@ -13,6 +13,7 @@ dependencies {
     compileOnly(libs.room.gradlePlugin)
     compileOnly(libs.ktlint.gradlePlugin)
     compileOnly(libs.module.graph.assertion.gradlePlugin)
+    compileOnly(libs.aboutlibraries.gradlePlugin)
 }
 
 gradlePlugin {
@@ -44,6 +45,10 @@ gradlePlugin {
         register("moduleGraph") {
             id = "zhihu.module.graph"
             implementationClass = "ModuleGraphConventionPlugin"
+        }
+        register("aboutLibraries") {
+            id = "zhihu.aboutlibraries"
+            implementationClass = "AboutLibrariesConventionPlugin"
         }
     }
 }

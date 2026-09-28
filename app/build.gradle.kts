@@ -33,7 +33,7 @@ plugins {
 
 aboutLibraries {
     collect {
-        configPath = file("aboutlibraries")
+        configPath = rootProject.file("aboutlibraries")
     }
 }
 

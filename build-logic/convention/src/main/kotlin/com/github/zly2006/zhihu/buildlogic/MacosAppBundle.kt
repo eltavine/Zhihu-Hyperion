@@ -31,7 +31,7 @@ fun Project.registerMacosAppBundle(
     val syncApp = tasks.register<Sync>("sync$buildType$taskSuffix") {
         dependsOn(
             "link${buildType}ExecutableMacosArm64",
-            ":app:prepareLibraryDefinitionsLiteDebug",
+            "exportLibraryDefinitions",
             ":shared:macosArm64AggregateResources",
         )
         into(appDirectory)
@@ -52,7 +52,7 @@ fun Project.registerMacosAppBundle(
         from(rootProject.file("desktopApp/src/main/resources/desktop-icon.png")) {
             into("Contents/Resources")
         }
-        from(rootProject.file("app/build/generated/aboutLibraries/liteDebug/res/raw/aboutlibraries.json")) {
+        from(layout.buildDirectory.file(ABOUT_LIBRARIES_EXPORT)) {
             into("Contents/Resources")
         }
         from(composeResources) {

@@ -107,6 +107,8 @@ kotlin {
         }
         jvmMain {
             dependsOn(tiqianMarkdownMain)
+            // Desktop export reuses the Android WebView/export assets; they ship on the JVM classpath.
+            resources.srcDir("src/androidMain/assets")
             dependencies {
                 implementation(libs.compose.ui.backhandler)
                 implementation(libs.androidx.navigationevent)

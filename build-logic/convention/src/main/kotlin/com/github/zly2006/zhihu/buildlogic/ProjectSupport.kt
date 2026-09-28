@@ -7,6 +7,9 @@ import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.getByType
 
+/** Build-directory path of each app's exported open-source definitions (`exportLibraryDefinitions`). */
+const val ABOUT_LIBRARIES_EXPORT = "generated/aboutLibraries/aboutlibraries.json"
+
 internal val Project.libs: VersionCatalog
     get() = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
