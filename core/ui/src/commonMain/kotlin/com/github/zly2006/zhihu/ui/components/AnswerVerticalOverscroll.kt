@@ -76,12 +76,19 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.github.zly2006.zhihu.viewmodel.ArticleViewModel.CachedAnswerContent
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlin.math.tanh
+
+/** 上一个/下一个回答预览卡片展示的内容；[sourceLabel] 为来源名称，例如“此问题”。 */
+data class AnswerPreview(
+    val authorName: String,
+    val title: String,
+    val authorAvatarUrl: String,
+    val sourceLabel: String,
+)
 
 /**
  * 上下 overscroll 切换回答容器。
@@ -90,8 +97,8 @@ import kotlin.math.tanh
  */
 @Composable
 fun AnswerVerticalOverscroll(
-    previousAnswer: CachedAnswerContent?,
-    nextAnswer: CachedAnswerContent?,
+    previousAnswer: AnswerPreview?,
+    nextAnswer: AnswerPreview?,
     onNavigatePrevious: () -> Unit,
     onNavigateNext: () -> Unit,
     isAtTop: () -> Boolean,

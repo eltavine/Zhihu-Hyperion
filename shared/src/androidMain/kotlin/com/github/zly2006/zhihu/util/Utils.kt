@@ -18,30 +18,19 @@
 package com.github.zly2006.zhihu.util
 
 import android.content.Context
-import android.net.Uri
-import androidx.browser.customtabs.CustomTabColorSchemeParams
-import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.net.toUri
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.AccountData
 import com.github.zly2006.zhihu.platform.androidSettingsStore
-import com.github.zly2006.zhihu.util.signZhihuFetchRequest
-import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
-import io.ktor.http.Url
 import io.ktor.http.contentType
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.koin.mp.KoinPlatform
 import java.security.MessageDigest
-
-fun HttpRequestBuilder.signFetchRequest() {
-    signZhihuFetchRequest(AccountData.data.cookies)
-}
 
 @OptIn(DelicateCoroutinesApi::class)
 fun telemetry(context: Context, usage: String) {

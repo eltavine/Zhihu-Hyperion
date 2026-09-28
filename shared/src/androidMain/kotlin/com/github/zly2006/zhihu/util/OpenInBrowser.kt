@@ -66,13 +66,11 @@ object OpenInBrowser {
             }
             val url = "https://api.zhihu.com/collections/contents/$contentType/${destination.id}"
             val body = "add_collections=${collection.id}"
-            return KoinPlatform
-                .getKoin()
-                .get<ZhihuAccountStore>()
-                .client
+            val accountStore = KoinPlatform.getKoin().get<ZhihuAccountStore>()
+            return accountStore.client
                 .httpClient()
                 .put(url) {
-                    signFetchRequest()
+                    signZhihuFetchRequest(accountStore.session.cookies)
                     contentType(ContentType.Application.FormUrlEncoded)
                     setBody(body)
                 }.status

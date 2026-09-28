@@ -54,6 +54,7 @@ kotlin {
             api(projects.core.notification)
             api(projects.core.updater)
             api(projects.core.data)
+            api(projects.core.ui)
             implementation(projects.feature.editor)
             api(projects.core.database)
             implementation(libs.compose.foundation)

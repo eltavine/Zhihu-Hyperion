@@ -661,4 +661,4 @@ private fun FeedCardSourceLabel(sourceLabel: String?) {
     )
 }
 
-internal val LocalSelectedContentDestination = compositionLocalOf<NavDestination?> { null }
+val LocalSelectedContentDestination = compositionLocalOf<NavDestination?> { null }

@@ -44,13 +44,11 @@ import androidx.compose.ui.test.swipe
 import androidx.compose.ui.test.swipeUp
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github.zly2006.zhihu.navigation.Article
-import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.test.MainActivityComposeRule
 import com.github.zly2006.zhihu.test.resetAppPreferences
 import com.github.zly2006.zhihu.test.setScreenContent
+import com.github.zly2006.zhihu.ui.components.AnswerPreview
 import com.github.zly2006.zhihu.ui.components.AnswerVerticalOverscroll
-import com.github.zly2006.zhihu.viewmodel.ArticleViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -241,19 +239,11 @@ class AnswerVerticalOverscrollInstrumentedTest {
         const val POSITION_TOLERANCE_PX = 1f
         const val SUBTHRESHOLD_DRAG_DP = 40f
 
-        val NEXT_ANSWER = ArticleViewModel.CachedAnswerContent(
-            article = Article(
-                type = ArticleType.Answer,
-                id = 778L,
-                title = "下一个离线回答",
-            ),
-            title = "下一个离线回答",
+        val NEXT_ANSWER = AnswerPreview(
             authorName = "离线作者",
-            authorBio = "离线签名",
+            title = "下一个离线回答",
             authorAvatarUrl = "",
-            content = "下一个离线回答正文",
-            voteUpCount = 1,
-            commentCount = 2,
+            sourceLabel = "此问题",
         )
     }
 }

@@ -25,7 +25,7 @@ import androidx.compose.runtime.remember
 import com.github.zly2006.zhihu.platform.SettingsStore
 
 @Composable
-internal fun <T> rememberObservedSetting(
+fun <T> rememberObservedSetting(
     settings: SettingsStore,
     key: String,
     read: SettingsStore.() -> T,

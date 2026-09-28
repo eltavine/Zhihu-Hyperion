@@ -28,8 +28,8 @@ import coil3.compose.AsyncImage
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.OfficialBadge
 import org.jetbrains.compose.resources.painterResource
-import zhihu.shared.generated.resources.Res
-import zhihu.shared.generated.resources.ic_zh_plus_author_badge
+import zhihu.core.ui.generated.resources.Res
+import zhihu.core.ui.generated.resources.ic_zh_plus_author_badge
 
 @Composable
 fun AuthorBadge(

@@ -144,6 +144,7 @@ import com.github.zly2006.zhihu.ui.article.voteUpNeutralContent
 import com.github.zly2006.zhihu.ui.article.voteUpNeutralContentDuo3
 import com.github.zly2006.zhihu.ui.components.ANSWER_SWITCH_SENSITIVITY_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.components.AnswerHorizontalOverscroll
+import com.github.zly2006.zhihu.ui.components.AnswerPreview
 import com.github.zly2006.zhihu.ui.components.AnswerVerticalOverscroll
 import com.github.zly2006.zhihu.ui.components.AuthorBadge
 import com.github.zly2006.zhihu.ui.components.CollectionDialogComponent
@@ -1164,8 +1165,8 @@ fun ArticleScreen(
         // 根据模式渲染
         if (article.type == ArticleType.Answer && answerSwitchMode == "vertical") {
             AnswerVerticalOverscroll(
-                previousAnswer = nav?.previousAnswer,
-                nextAnswer = nav?.nextAnswer,
+                previousAnswer = nav?.previousAnswer?.let { AnswerPreview(it.authorName, it.title, it.authorAvatarUrl, it.sourceLabel) },
+                nextAnswer = nav?.nextAnswer?.let { AnswerPreview(it.authorName, it.title, it.authorAvatarUrl, it.sourceLabel) },
                 onNavigatePrevious = answerNavigationState::navigateToPrevious,
                 onNavigateNext = answerNavigationState::navigateToNext,
                 isAtTop = { scrollState.value == 0 },

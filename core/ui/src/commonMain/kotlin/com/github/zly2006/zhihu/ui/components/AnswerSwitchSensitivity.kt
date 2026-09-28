@@ -22,7 +22,7 @@ const val DEFAULT_ANSWER_SWITCH_SENSITIVITY = 1f
 const val MIN_ANSWER_SWITCH_SENSITIVITY = 0.5f
 const val MAX_ANSWER_SWITCH_SENSITIVITY = 3f
 
-internal fun normalizedAnswerSwitchSensitivity(value: Float): Float = when {
+fun normalizedAnswerSwitchSensitivity(value: Float): Float = when {
     value.isNaN() -> DEFAULT_ANSWER_SWITCH_SENSITIVITY
     else -> value.coerceIn(MIN_ANSWER_SWITCH_SENSITIVITY, MAX_ANSWER_SWITCH_SENSITIVITY)
 }

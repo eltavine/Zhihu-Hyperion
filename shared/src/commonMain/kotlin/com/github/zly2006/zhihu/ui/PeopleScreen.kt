@@ -19,7 +19,6 @@ package com.github.zly2006.zhihu.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -134,10 +133,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonPrimitive
-import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
-import zhihu.shared.generated.resources.Res
-import zhihu.shared.generated.resources.ic_zh_plus_author_badge
 import kotlin.math.roundToInt
 import kotlin.reflect.typeOf
 import androidx.lifecycle.viewmodel.compose.viewModel as composeViewModel
@@ -1547,25 +1543,7 @@ private fun OfficialBadgeDetails(
                 modifier = Modifier.padding(top = 2.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                if (badge.iconUrl.isNotBlank()) {
-                    if (badge.iconUrl == DataHolder.ZH_PLUS_AUTHOR_BADGE_ICON) {
-                        Image(
-                            painter = painterResource(Res.drawable.ic_zh_plus_author_badge),
-                            contentDescription = badge.description,
-                            modifier = Modifier
-                                .padding(end = 6.dp)
-                                .size(18.dp),
-                        )
-                    } else {
-                        AsyncImage(
-                            model = badge.iconUrl,
-                            contentDescription = badge.description,
-                            modifier = Modifier
-                                .padding(end = 6.dp)
-                                .size(18.dp),
-                        )
-                    }
-                }
+                AuthorBadge(badge, modifier = Modifier.padding(end = 6.dp))
                 Text(
                     text = "${badge.peopleDetailTitle}: ${badge.description}",
                     style = MaterialTheme.typography.bodySmall,

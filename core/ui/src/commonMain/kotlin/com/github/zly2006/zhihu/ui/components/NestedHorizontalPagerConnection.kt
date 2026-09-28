@@ -27,7 +27,7 @@ import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.unit.Velocity
 import kotlin.math.absoluteValue
 
-internal object NoOpPagerNestedScrollConnection : NestedScrollConnection
+object NoOpPagerNestedScrollConnection : NestedScrollConnection
 
 /**
  * Hands same-axis boundary drags from a child pager to its direct parent.
@@ -37,7 +37,7 @@ internal object NoOpPagerNestedScrollConnection : NestedScrollConnection
  * default same-axis nested-scroll connections so this connection exclusively owns the hand-off.
  */
 @Composable
-internal fun rememberNestedHorizontalPagerConnection(
+fun rememberNestedHorizontalPagerConnection(
     parentState: PagerState,
     childState: PagerState,
 ): NestedScrollConnection {

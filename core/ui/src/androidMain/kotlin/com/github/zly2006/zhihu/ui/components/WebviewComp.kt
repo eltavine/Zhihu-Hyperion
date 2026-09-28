@@ -77,7 +77,7 @@ import com.github.zly2006.zhihu.util.extractImageUrl
 import com.github.zly2006.zhihu.util.luoTianYiUrlLauncher
 import com.github.zly2006.zhihu.util.saveImageToGallery
 import com.github.zly2006.zhihu.util.shareImage
-import com.github.zly2006.zhihu.util.signFetchRequest
+import com.github.zly2006.zhihu.util.signZhihuFetchRequest
 import io.ktor.client.HttpClient
 import io.ktor.http.Url
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -125,7 +125,7 @@ suspend fun getHighestQualityVideoUrl(context: Context, httpClient: HttpClient, 
         contentType = contentType,
         xsrfToken = AccountData.data.cookies["_xsrf"],
     ) {
-        signFetchRequest()
+        signZhihuFetchRequest(AccountData.data.cookies)
     }
 } catch (e: Exception) {
     Log.e("VideoDownload", "Error getting video URL: ${e.message}")
