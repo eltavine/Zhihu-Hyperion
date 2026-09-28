@@ -66,14 +66,15 @@ import com.github.zly2006.zhihu.util.OpenInBrowser
 import com.github.zly2006.zhihu.util.createEmojiInlineContent
 import com.github.zly2006.zhihu.util.fuckHonorService
 import com.github.zly2006.zhihu.viewmodel.SharedAndroidNotificationEnvironment
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.encodeBlocklistBackup
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.importBlocklistBackupFromJsonText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
+import org.koin.compose.koinInject
 import java.io.File
 
 private const val WEBVIEW_ACTIVITY_CLASS = "com.github.zly2006.zhihu.WebviewActivity"
@@ -177,7 +178,10 @@ actual fun rememberArticleBrowserOpener(): ArticleBrowserOpener {
 }
 
 @Composable
-actual fun consumePendingCommentId(content: com.github.zly2006.zhihu.navigation.NavDestination): String? = remember(content) { AndroidArticleNavigationHandoff.consumeCommentId(content) }
+actual fun consumePendingCommentId(content: com.github.zly2006.zhihu.navigation.NavDestination): String? {
+    val articleNavigationHandoff = koinInject<AndroidArticleNavigationHandoff>()
+    return remember(content) { articleNavigationHandoff.consumeCommentId(content) }
+}
 
 @Composable
 actual fun ArticleWebViewContent(
@@ -232,7 +236,7 @@ actual fun rememberBlocklistRuleImporter(
     onImported: (String) -> Unit,
 ): BlocklistRuleImporter {
     val context = LocalContext.current
-    val database = remember(context) { getContentFilterDatabase(context) }
+    val database = koinInject<ContentFilterDatabase>()
     val coroutineScope = rememberCoroutineScope()
     val currentOnImported by rememberUpdatedState(onImported)
     val importLauncher = rememberLauncherForActivityResult(
@@ -273,7 +277,7 @@ actual fun rememberBlocklistRuleImporter(
 @Composable
 actual fun rememberBlocklistRuleExporter(): BlocklistRuleExporter {
     val context = LocalContext.current
-    val database = remember(context) { getContentFilterDatabase(context) }
+    val database = koinInject<ContentFilterDatabase>()
     return remember(context, database) {
         object : BlocklistRuleExporter {
             override suspend fun invoke(): String {
@@ -357,9 +361,8 @@ actual fun rememberNotificationEnvironment(
     }
 }
 
-object AndroidArticleNavigationHandoff {
-    private var pendingContentIdentity: TrackedContentIdentity? = null
-    private var pendingContentOpenFrom: String? = null
+/** Android 导航前暂存的评论定位与剪贴板去重状态；进程内由 Koin 持有唯一实例。 */
+class AndroidArticleNavigationHandoff {
     private var pendingComment: CommentHolder? = null
     var clipboardDestination: NavDestination? = null
         private set
@@ -380,21 +383,6 @@ object AndroidArticleNavigationHandoff {
         val holder = pendingComment?.takeIf { it.article == destination } ?: return null
         pendingComment = null
         return holder.commentId
-    }
-
-    fun prepareContentOpen(
-        destination: NavDestination,
-        openFrom: String,
-    ) {
-        pendingContentIdentity = ContentOpenEventSupport.toTrackedContentIdentity(destination)
-        pendingContentOpenFrom = openFrom.takeIf { pendingContentIdentity != null }
-    }
-
-    fun consumeContentOpenFrom(destination: NavDestination): String {
-        val identity = ContentOpenEventSupport.toTrackedContentIdentity(destination) ?: return ContentOpenFrom.UNKNOWN
-        if (identity != pendingContentIdentity) return ContentOpenFrom.UNKNOWN
-        pendingContentIdentity = null
-        return pendingContentOpenFrom.also { pendingContentOpenFrom = null } ?: ContentOpenFrom.UNKNOWN
     }
 }
 

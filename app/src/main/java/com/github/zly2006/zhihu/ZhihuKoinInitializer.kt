@@ -19,9 +19,20 @@ package com.github.zly2006.zhihu
 
 import android.content.Context
 import androidx.startup.Initializer
+import com.github.zly2006.zhihu.nlp.KeywordWeightExtractor
+import com.github.zly2006.zhihu.nlp.NLPService
+import com.github.zly2006.zhihu.nlp.NlpServiceKeywordSemanticMatcher
+import com.github.zly2006.zhihu.viewmodel.filter.KeywordSemanticMatcher
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.Koin
 import org.koin.core.context.startKoin
+import org.koin.dsl.module
+
+/** lite 与 full 变体各自的 NLPService 决定语义屏蔽与关键词权重的实际能力。 */
+private val nlpModule = module {
+    single<KeywordSemanticMatcher> { NlpServiceKeywordSemanticMatcher }
+    single { KeywordWeightExtractor { text, topN -> NLPService.extractKeywordsWithWeight(text, topN) } }
+}
 
 /**
  * Android 组合根。androidx.startup 的 ContentProvider 早于 Instrumentation.onCreate 与 Application.onCreate 执行，
@@ -31,7 +42,7 @@ import org.koin.core.context.startKoin
 class ZhihuKoinInitializer : Initializer<Koin> {
     override fun create(context: Context): Koin = startKoin {
         androidContext(context)
-        modules(androidZhihuModules(context))
+        modules(androidZhihuModules(context) + nlpModule)
     }.koin
 
     override fun dependencies(): List<Class<out Initializer<*>>> = emptyList()

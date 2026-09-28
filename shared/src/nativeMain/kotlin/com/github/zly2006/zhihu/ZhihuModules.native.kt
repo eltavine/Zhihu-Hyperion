@@ -18,6 +18,7 @@
 package com.github.zly2006.zhihu
 
 import com.github.zly2006.zhihu.account.accountModule
+import com.github.zly2006.zhihu.data.databaseModule
 import com.github.zly2006.zhihu.platform.nativeAccountFilePath
 import kotlinx.io.files.Path
 import org.koin.core.module.Module
@@ -25,4 +26,6 @@ import org.koin.core.module.Module
 /** 原生进程的全部 Koin 绑定；账户路径在启动时解析，调用前必须先配置好调试数据目录等进程环境。 */
 fun nativeZhihuModules(): List<Module> = listOf(
     accountModule(Path(nativeAccountFilePath())),
+    databaseModule(),
+    zhihuSharedModule,
 )

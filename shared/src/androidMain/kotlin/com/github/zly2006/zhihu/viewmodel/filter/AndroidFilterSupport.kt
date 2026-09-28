@@ -18,11 +18,7 @@
 package com.github.zly2006.zhihu.viewmodel.filter
 
 import android.content.Context
-import com.github.zly2006.zhihu.nlp.KeywordWeightExtractor
 import com.github.zly2006.zhihu.platform.androidSettingsStore
-
-var androidKeywordSemanticMatcher: KeywordSemanticMatcher = KeywordSemanticMatcher { _, _, _ -> emptyList() }
-var androidKeywordWeightExtractor: KeywordWeightExtractor = KeywordWeightExtractor { _, _ -> emptyList() }
 
 fun Context.contentFilterSettings(): FeedFilterSettings =
     androidSettingsStore(this).toFeedFilterSettings()

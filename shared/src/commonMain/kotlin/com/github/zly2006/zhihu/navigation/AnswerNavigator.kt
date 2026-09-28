@@ -34,7 +34,6 @@ import com.github.zly2006.zhihu.viewmodel.ArticleViewModel.CachedAnswerContent
 import com.github.zly2006.zhihu.viewmodel.CollectionItem
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.ContentType
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.getOrFetchContentDetail
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -43,6 +42,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import org.koin.mp.KoinPlatform
 
 data class AnswerNavigatorPage<T>(
     val items: List<T>,
@@ -241,6 +241,15 @@ class QuestionAnswerNavigator(
     initialNextUrl: String = "",
     private val order: String? = null,
     environment: ZhihuApiEnvironment,
+    private val readOpenedAnswerIds: suspend (List<Long>) -> Set<Long> = { answerIds ->
+        ContentOpenEventSupport
+            .getAlreadyOpenedContentIds(
+                database = KoinPlatform.getKoin().get(),
+                content = answerIds.map { ContentType.ANSWER to it.toString() },
+            ).mapNotNull { key ->
+                key.substringAfter(':', "").toLongOrNull()
+            }.toSet()
+    },
 ) : AnswerNavigator("此问题", environment) {
     private val pendingInitialNextAnswers = ArrayDeque<Article>().also { deque ->
         initialNextAnswers
@@ -358,14 +367,7 @@ class QuestionAnswerNavigator(
                         id !in knownOpenedIds
                 }.toList()
             if (idsToLookup.isNotEmpty()) {
-                knownOpenedIds += openedAnswerIdsReaderForTesting?.invoke(idsToLookup)
-                    ?: ContentOpenEventSupport
-                        .getAlreadyOpenedContentIds(
-                            database = getContentFilterDatabase(),
-                            content = idsToLookup.map { ContentType.ANSWER to it.toString() },
-                        ).mapNotNull { key ->
-                            key.substringAfter(':', "").toLongOrNull()
-                        }.toSet()
+                knownOpenedIds += readOpenedAnswerIds(idsToLookup)
             }
             val partition = ContentOpenEventSupport.partitionQuestionAnswerCandidates(
                 candidates = candidates,
@@ -450,8 +452,6 @@ class QuestionAnswerNavigator(
         }
     }
 }
-
-var openedAnswerIdsReaderForTesting: (suspend (List<Long>) -> Set<Long>)? = null
 
 /**
  * 从收藏夹中导航回答。

@@ -41,14 +41,15 @@ import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.subscreens.desktopVersionName
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.viewmodel.DesktopPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.desktopContentFilterDatabaseFile
 import com.github.zly2006.zhihu.viewmodel.filter.encodeBlocklistBackup
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.importBlocklistBackupFromJsonText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import org.koin.compose.koinInject
 import java.io.File
 import javax.imageio.ImageIO
 import javax.swing.JFileChooser
@@ -229,11 +230,7 @@ actual fun rememberBlocklistRuleImporter(
     userMessages: UserMessageSink,
     onImported: (String) -> Unit,
 ): BlocklistRuleImporter {
-    val database = remember {
-        val databaseFile = desktopContentFilterDatabaseFile()
-        databaseFile.parentFile?.mkdirs()
-        getContentFilterDatabase(databaseFile)
-    }
+    val database = koinInject<ContentFilterDatabase>()
     val coroutineScope = rememberCoroutineScope()
     val currentOnImported by rememberUpdatedState(onImported)
     return remember(database, userMessages, coroutineScope) {
@@ -264,11 +261,7 @@ actual fun rememberBlocklistRuleImporter(
 
 @Composable
 actual fun rememberBlocklistRuleExporter(): BlocklistRuleExporter {
-    val database = remember {
-        val databaseFile = desktopContentFilterDatabaseFile()
-        databaseFile.parentFile?.mkdirs()
-        getContentFilterDatabase(databaseFile)
-    }
+    val database = koinInject<ContentFilterDatabase>()
     return remember(database) {
         object : BlocklistRuleExporter {
             override suspend fun invoke(): String {

@@ -15,24 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.zly2006.zhihu.viewmodel.local
+package com.github.zly2006.zhihu.data
 
-import android.content.Context
-import androidx.room.Room
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
+import com.github.zly2006.zhihu.viewmodel.filter.emptyContentFilterDatabase
+import org.koin.core.module.Module
+import org.koin.dsl.module
 
-private const val LOCAL_CONTENT_DATABASE_NAME = "local_content_database"
-
-@Volatile
-private var localContentDatabase: LocalContentDatabase? = null
-
-fun getLocalContentDatabase(context: Context): LocalContentDatabase =
-    localContentDatabase ?: synchronized(LocalContentDatabase::class) {
-        localContentDatabase ?: buildLocalContentDatabase(
-            Room.databaseBuilder<LocalContentDatabase>(
-                context.applicationContext,
-                LOCAL_CONTENT_DATABASE_NAME,
-            ),
-        ).also {
-            localContentDatabase = it
-        }
-    }
+actual fun databaseModule(): Module = module {
+    single<ContentFilterDatabase> { emptyContentFilterDatabase }
+}

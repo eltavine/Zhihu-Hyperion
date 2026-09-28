@@ -50,6 +50,7 @@ import com.github.zly2006.zhihu.data.asApiEnvironment
 import com.github.zly2006.zhihu.data.navDestination
 import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
+import com.github.zly2006.zhihu.filter.PendingContentOpen
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.navigation.requestLoginNavigation
 import com.github.zly2006.zhihu.notification.NotificationSettingsStore
@@ -68,17 +69,16 @@ import com.github.zly2006.zhihu.viewmodel.QualityFilterMode
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedKeywordService
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedQuestionAuthor
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUser
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterManager
 import com.github.zly2006.zhihu.viewmodel.filter.ContentType
 import com.github.zly2006.zhihu.viewmodel.filter.FeedContentFilterPipeline
 import com.github.zly2006.zhihu.viewmodel.filter.FeedDisplayFilterPipeline
 import com.github.zly2006.zhihu.viewmodel.filter.ForegroundReadFilterPipeline
-import com.github.zly2006.zhihu.viewmodel.filter.androidKeywordSemanticMatcher
 import com.github.zly2006.zhihu.viewmodel.filter.contentFilterSettings
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
+import com.github.zly2006.zhihu.viewmodel.local.LocalContentDatabase
 import com.github.zly2006.zhihu.viewmodel.local.LocalRecommendationEngine
 import com.github.zly2006.zhihu.viewmodel.local.buildLocalRecommendationEngine
-import com.github.zly2006.zhihu.viewmodel.local.getLocalContentDatabase
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngine
@@ -125,8 +125,9 @@ open class SharedAndroidPaginationEnvironment(
     private val allowGuestAccess: Boolean,
 ) : AndroidContextPaginationEnvironment,
     CollectionContentEnvironment {
+    private val contentFilterDatabase: ContentFilterDatabase = KoinPlatform.getKoin().get()
     private val localRecommendationEngine by lazy {
-        val dao = getLocalContentDatabase(context).contentDao()
+        val dao = KoinPlatform.getKoin().get<LocalContentDatabase>().contentDao()
         buildLocalRecommendationEngine(dao, context.asApiEnvironment())
     }
     private val settingsStore by lazy { androidSettingsStore(context) }
@@ -265,18 +266,18 @@ open class SharedAndroidPaginationEnvironment(
     }
 
     override suspend fun isUserBlocked(userId: String): Boolean =
-        getContentFilterDatabase(context).let { database ->
+        contentFilterDatabase.let { database ->
             database.blockedUserDao().isUserBlocked(userId)
         }
 
     override suspend fun isQuestionAuthorBlocked(userId: String): Boolean =
-        getContentFilterDatabase(context).let { database ->
+        contentFilterDatabase.let { database ->
             database.blockedQuestionAuthorDao().isUserBlocked(userId)
         }
 
     override fun blockedUserIds(): Set<String> =
         kotlinx.coroutines.runBlocking {
-            val database = getContentFilterDatabase(context)
+            val database = contentFilterDatabase
             database
                 .blockedUserDao()
                 .getAllUsers()
@@ -290,7 +291,7 @@ open class SharedAndroidPaginationEnvironment(
         urlToken: String?,
         avatarUrl: String?,
     ) {
-        val database = getContentFilterDatabase(context)
+        val database = contentFilterDatabase
         database.blockedUserDao().insertUser(
             BlockedUser(
                 userId = userId,
@@ -307,7 +308,7 @@ open class SharedAndroidPaginationEnvironment(
         urlToken: String?,
         avatarUrl: String?,
     ) {
-        val database = getContentFilterDatabase(context)
+        val database = contentFilterDatabase
         database.blockedQuestionAuthorDao().insertUser(
             BlockedQuestionAuthor(
                 userId = userId,
@@ -319,12 +320,12 @@ open class SharedAndroidPaginationEnvironment(
     }
 
     override suspend fun removeBlockedUser(userId: String) {
-        val database = getContentFilterDatabase(context)
+        val database = contentFilterDatabase
         database.blockedUserDao().deleteUserById(userId)
     }
 
     override suspend fun removeBlockedQuestionAuthor(userId: String) {
-        val database = getContentFilterDatabase(context)
+        val database = contentFilterDatabase
         database.blockedQuestionAuthorDao().deleteUserById(userId)
     }
 
@@ -334,10 +335,10 @@ open class SharedAndroidPaginationEnvironment(
         openFrom: String,
     ) {
         val resolvedOpenFrom = openFrom.ifBlank {
-            AndroidArticleNavigationHandoff.consumeContentOpenFrom(destination)
+            KoinPlatform.getKoin().get<PendingContentOpen>().consume(destination)
         }
         ContentOpenEventSupport.recordOpenEvent(
-            database = getContentFilterDatabase(context),
+            database = contentFilterDatabase,
             destination = destination,
             questionId = questionId,
             openFrom = resolvedOpenFrom.ifBlank { "unknown" },
@@ -353,7 +354,7 @@ open class SharedAndroidPaginationEnvironment(
 
     override suspend fun applyForegroundHomeFeedFilter(items: List<FeedDisplayItem>): List<FeedDisplayItem> {
         val filterSettings = context.contentFilterSettings()
-        val filterDatabase = getContentFilterDatabase(context)
+        val filterDatabase = contentFilterDatabase
         return ForegroundReadFilterPipeline(
             settings = filterSettings,
             contentFilterManager = ContentFilterManager(filterDatabase.contentFilterDao()),
@@ -364,7 +365,7 @@ open class SharedAndroidPaginationEnvironment(
 
     override suspend fun applyBackgroundHomeFeedFilter(items: List<FeedDisplayItem>): List<FeedDisplayItem> {
         val filterSettings = context.contentFilterSettings()
-        val filterDatabase = getContentFilterDatabase(context)
+        val filterDatabase = contentFilterDatabase
         return FeedDisplayFilterPipeline(
             settings = filterSettings,
             contentDetailProvider = this::getOrFetchContentDetail,
@@ -377,7 +378,7 @@ open class SharedAndroidPaginationEnvironment(
                 blockedKeywordService = BlockedKeywordService(
                     keywordDao = filterDatabase.blockedKeywordDao(),
                     recordDao = filterDatabase.blockedContentRecordDao(),
-                    semanticMatcher = androidKeywordSemanticMatcher,
+                    semanticMatcher = KoinPlatform.getKoin().get(),
                 ),
                 onNlpBlocked = { blockedThisRound ->
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -392,7 +393,7 @@ open class SharedAndroidPaginationEnvironment(
     override suspend fun recordContentInteraction(feed: Feed) {
         val settings = context.contentFilterSettings()
         if (!settings.enableContentFilter) return
-        val database = getContentFilterDatabase(context)
+        val database = contentFilterDatabase
         val target = feed.target ?: return
         val (targetType, targetId) = when (target) {
             is Feed.AnswerTarget -> ContentType.ANSWER to target.id.toString()

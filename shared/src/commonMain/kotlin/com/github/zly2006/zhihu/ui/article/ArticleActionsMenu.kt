@@ -83,6 +83,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.compose.koinInject
 
 private val VoteUpNeutralContent = Color(0xFF3671EE)
 private val VoteUpNeutralContentDark = Color(0xFF628DF7)
@@ -130,6 +131,7 @@ fun ArticleActionsMenu(
     val openArticleInBrowser = rememberArticleBrowserOpener()
     val executeShareAction = rememberShareActionExecutor()
     val coroutineScope = rememberCoroutineScope()
+    val readingQueueSources = koinInject<ReadingQueueSourceRegistry>()
     val readingItem = ReadingQueueItem(
         contentType = when (article.type) {
             ArticleType.Answer -> ReadingContentType.Answer
@@ -261,7 +263,7 @@ fun ArticleActionsMenu(
                             // Home feed mixes unrelated content; the question navigator owns answer order.
                             val useQuestionAnswerOrder = article.type == ArticleType.Answer &&
                                 article.readingQueueSourceId?.startsWith("home:") == true
-                            val originQueue = ReadingQueueSourceRegistry.queueStartingAt(
+                            val originQueue = readingQueueSources.queueStartingAt(
                                 current = readingItem,
                                 sourceId = article.readingQueueSourceId.takeUnless { useQuestionAnswerOrder },
                                 limit = readingPreferences.queueLimit,
@@ -301,7 +303,7 @@ fun ArticleActionsMenu(
                                     Log.w("ArticleActionsMenu", "Failed to load the remaining reading queue", error)
                                     emptyList()
                                 }
-                                ReadingQueueSourceRegistry.queueStartingAt(
+                                readingQueueSources.queueStartingAt(
                                     current = readingItem,
                                     sourceId = article.readingQueueSourceId.takeUnless { useQuestionAnswerOrder },
                                     limit = readingPreferences.queueLimit,

@@ -42,10 +42,11 @@ import com.github.zly2006.zhihu.platform.androidUserMessageSink
 import com.github.zly2006.zhihu.ui.AndroidArticleNavigationHandoff
 import com.github.zly2006.zhihu.util.clipboardManager
 import com.github.zly2006.zhihu.util.luoTianYiUrlLauncher
-import com.github.zly2006.zhihu.viewmodel.filter.androidKeywordWeightExtractor
 import me.saket.telephoto.zoomable.coil3.ZoomableAsyncImage
 import me.saket.telephoto.zoomable.rememberZoomableImageState
 import me.saket.telephoto.zoomable.rememberZoomableState
+import org.koin.compose.koinInject
+import org.koin.mp.KoinPlatform
 
 class OpenImageDialog(
     context: Context,
@@ -116,7 +117,7 @@ actual suspend fun extractFeedKeywords(
     excerpt = excerpt,
     content = null,
     topN = 10,
-    extractor = androidKeywordWeightExtractor,
+    extractor = KoinPlatform.getKoin().get(),
 )
 
 actual val feedKeywordExtractionAvailable: Boolean = true
@@ -124,11 +125,12 @@ actual val feedKeywordExtractionAvailable: Boolean = true
 @Composable
 actual fun rememberShareActionExecutor(): ShareActionExecutor {
     val context = LocalContext.current
+    val articleNavigationHandoff = koinInject<AndroidArticleNavigationHandoff>()
     return remember(context) {
         object : ShareActionExecutor {
             override fun invoke(action: ShareAction, content: NavDestination, shareText: String) {
                 if (action == ShareAction.CopyLink) {
-                    AndroidArticleNavigationHandoff.markClipboardDestination(content)
+                    articleNavigationHandoff.markClipboardDestination(content)
                     context.clipboardManager.setPrimaryClip(ClipData.newPlainText("Link", shareText))
                     androidUserMessageSink(context).showShortMessage("已复制链接")
                 } else {

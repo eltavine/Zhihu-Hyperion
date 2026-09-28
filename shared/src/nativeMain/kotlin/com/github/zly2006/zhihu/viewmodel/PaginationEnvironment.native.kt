@@ -26,6 +26,7 @@ import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
 import com.github.zly2006.zhihu.filter.ContentOpenFrom
+import com.github.zly2006.zhihu.filter.PendingContentOpen
 import com.github.zly2006.zhihu.filter.TrackedContentIdentity
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.NavDestination
@@ -39,16 +40,16 @@ import com.github.zly2006.zhihu.viewmodel.filter.BlockedKeywordService
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedQuestionAuthor
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUser
 import com.github.zly2006.zhihu.viewmodel.filter.ContentDetailProvider
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterManager
 import com.github.zly2006.zhihu.viewmodel.filter.ContentType
 import com.github.zly2006.zhihu.viewmodel.filter.FeedContentFilterPipeline
 import com.github.zly2006.zhihu.viewmodel.filter.FeedDisplayFilterPipeline
 import com.github.zly2006.zhihu.viewmodel.filter.ForegroundReadFilterPipeline
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.toFeedFilterSettings
+import com.github.zly2006.zhihu.viewmodel.local.LocalContentDatabase
 import com.github.zly2006.zhihu.viewmodel.local.LocalRecommendationEngine
 import com.github.zly2006.zhihu.viewmodel.local.buildLocalRecommendationEngine
-import com.github.zly2006.zhihu.viewmodel.local.getNativeLocalContentDatabase
 import io.ktor.client.HttpClient
 import io.ktor.client.request.setBody
 import io.ktor.http.contentType
@@ -59,34 +60,6 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import org.koin.mp.KoinPlatform
 import io.ktor.http.ContentType as KtorContentType
-
-private var nativePendingContentOpenIdentity: TrackedContentIdentity? = null
-private var nativePendingContentOpenFrom: String? = null
-
-internal fun prepareNativePendingContentOpen(
-    target: NavDestination,
-    currentMainTabOpenFrom: String?,
-    source: NavDestination?,
-) {
-    val identity = ContentOpenEventSupport.toTrackedContentIdentity(target)
-    if (identity == null) {
-        nativePendingContentOpenIdentity = null
-        nativePendingContentOpenFrom = null
-        return
-    }
-    nativePendingContentOpenIdentity = identity
-    nativePendingContentOpenFrom = currentMainTabOpenFrom
-        ?: ContentOpenEventSupport.inferOpenFrom(source, target)
-}
-
-private fun consumeNativePendingContentOpenFrom(destination: NavDestination): String {
-    val identity = ContentOpenEventSupport.toTrackedContentIdentity(destination) ?: return ContentOpenFrom.UNKNOWN
-    if (identity != nativePendingContentOpenIdentity) return ContentOpenFrom.UNKNOWN
-    val openFrom = nativePendingContentOpenFrom ?: ContentOpenFrom.UNKNOWN
-    nativePendingContentOpenIdentity = null
-    nativePendingContentOpenFrom = null
-    return openFrom
-}
 
 @Composable
 actual fun rememberPaginationEnvironment(allowGuestAccess: Boolean): PaginationEnvironment =
@@ -100,9 +73,9 @@ internal class NativePaginationEnvironment(
     private val accountStore = KoinPlatform.getKoin().get<ZhihuAccountStore>()
     private val settingsStore = nativeSettingsStore("settings.properties")
     private val historyStorage = NativeHistoryStorage()
-    private val contentFilterDatabase = getContentFilterDatabase()
+    private val contentFilterDatabase: ContentFilterDatabase = KoinPlatform.getKoin().get()
     private val localRecommendationEngine by lazy {
-        getNativeLocalContentDatabase()?.contentDao()?.let { dao ->
+        KoinPlatform.getKoin().getOrNull<LocalContentDatabase>()?.contentDao()?.let { dao ->
             buildLocalRecommendationEngine(
                 dao = dao,
                 environment = this,
@@ -190,7 +163,7 @@ internal class NativePaginationEnvironment(
         questionId: Long?,
         openFrom: String,
     ) {
-        val resolvedOpenFrom = openFrom.ifBlank { consumeNativePendingContentOpenFrom(destination) }
+        val resolvedOpenFrom = openFrom.ifBlank { KoinPlatform.getKoin().get<PendingContentOpen>().consume(destination) }
         ContentOpenEventSupport.recordOpenEvent(
             database = contentFilterDatabase,
             destination = destination,

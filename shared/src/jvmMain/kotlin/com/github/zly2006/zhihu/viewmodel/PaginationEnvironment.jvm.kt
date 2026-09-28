@@ -31,6 +31,7 @@ import com.github.zly2006.zhihu.desktop.desktopZhihuDataFile
 import com.github.zly2006.zhihu.desktop.desktopZhihuDownloadsDir
 import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
 import com.github.zly2006.zhihu.filter.ContentOpenFrom
+import com.github.zly2006.zhihu.filter.PendingContentOpen
 import com.github.zly2006.zhihu.filter.TrackedContentIdentity
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.NavDestination
@@ -44,16 +45,16 @@ import com.github.zly2006.zhihu.util.sanitizeArticleExportFileNamePart
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedKeywordService
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUser
 import com.github.zly2006.zhihu.viewmodel.filter.ContentDetailProvider
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterManager
 import com.github.zly2006.zhihu.viewmodel.filter.ContentType
 import com.github.zly2006.zhihu.viewmodel.filter.FeedContentFilterPipeline
 import com.github.zly2006.zhihu.viewmodel.filter.FeedDisplayFilterPipeline
 import com.github.zly2006.zhihu.viewmodel.filter.ForegroundReadFilterPipeline
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.toFeedFilterSettings
+import com.github.zly2006.zhihu.viewmodel.local.LocalContentDatabase
 import com.github.zly2006.zhihu.viewmodel.local.LocalRecommendationEngine
 import com.github.zly2006.zhihu.viewmodel.local.buildLocalRecommendationEngine
-import com.github.zly2006.zhihu.viewmodel.local.getLocalContentDatabase
 import io.ktor.client.HttpClient
 import io.ktor.client.request.setBody
 import io.ktor.http.contentType
@@ -78,37 +79,6 @@ import com.github.zly2006.zhihu.util.buildArticleExportHtml as buildSharedArticl
 import com.github.zly2006.zhihu.util.buildOfflineArticleExportHtml as buildSharedOfflineArticleExportHtml
 import io.ktor.http.ContentType as KtorContentType
 
-private val desktopContentFilterDb = getContentFilterDatabase()
-private var desktopPendingContentOpenIdentity: TrackedContentIdentity? = null
-private var desktopPendingContentOpenFrom: String? = null
-
-internal fun prepareDesktopPendingContentOpen(
-    target: NavDestination,
-    currentMainTabOpenFrom: String?,
-    source: NavDestination?,
-) {
-    val identity = ContentOpenEventSupport.toTrackedContentIdentity(target)
-    if (identity == null) {
-        desktopPendingContentOpenIdentity = null
-        desktopPendingContentOpenFrom = null
-        return
-    }
-    desktopPendingContentOpenIdentity = identity
-    desktopPendingContentOpenFrom = currentMainTabOpenFrom
-        ?: ContentOpenEventSupport.inferOpenFrom(source, target)
-}
-
-private fun consumeDesktopPendingContentOpenFrom(destination: NavDestination): String {
-    val identity = ContentOpenEventSupport.toTrackedContentIdentity(destination) ?: return ContentOpenFrom.UNKNOWN
-    if (identity != desktopPendingContentOpenIdentity) {
-        return ContentOpenFrom.UNKNOWN
-    }
-    val openFrom = desktopPendingContentOpenFrom ?: ContentOpenFrom.UNKNOWN
-    desktopPendingContentOpenIdentity = null
-    desktopPendingContentOpenFrom = null
-    return openFrom
-}
-
 class DesktopPaginationEnvironment(
     override val notificationSettingsStore: NotificationSettingsStore = desktopNotificationSettingsStore(),
 ) : PaginationEnvironment,
@@ -117,12 +87,9 @@ class DesktopPaginationEnvironment(
     private val store = KoinPlatform.getKoin().get<ZhihuAccountStore>()
     private val settingsStore = desktopSettingsStore()
     private val historyStorage = DesktopHistoryStorage()
-    private val contentFilterDb = desktopContentFilterDb
+    private val contentFilterDb: ContentFilterDatabase = KoinPlatform.getKoin().get()
     private val localRecommendationEngine by lazy {
-        val databaseFile = desktopZhihuDataFile("local-content.db")
-        databaseFile.parentFile?.mkdirs()
-        val dao = getLocalContentDatabase(databaseFile).contentDao()
-        buildLocalRecommendationEngine(dao, this)
+        buildLocalRecommendationEngine(KoinPlatform.getKoin().get<LocalContentDatabase>().contentDao(), this)
     }
 
     override fun httpClient(): HttpClient = store.client.httpClient()
@@ -222,7 +189,7 @@ class DesktopPaginationEnvironment(
         openFrom: String,
     ) {
         val resolvedOpenFrom = openFrom.ifBlank {
-            consumeDesktopPendingContentOpenFrom(destination)
+            KoinPlatform.getKoin().get<PendingContentOpen>().consume(destination)
         }
         ContentOpenEventSupport.recordOpenEvent(
             database = contentFilterDb,

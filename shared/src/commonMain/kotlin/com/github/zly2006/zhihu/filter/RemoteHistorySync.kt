@@ -27,9 +27,9 @@ import com.github.zly2006.zhihu.navigation.resolveContent
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.ContentOpenEvent
 import com.github.zly2006.zhihu.viewmodel.filter.ContentOpenEventDao
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
 import io.ktor.http.URLProtocol
 import io.ktor.http.Url
 import kotlinx.coroutines.CancellationException
@@ -43,6 +43,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.json.JsonArray
+import org.koin.mp.KoinPlatform
 import kotlin.time.Clock
 
 internal const val REMOTE_HISTORY_FIRST_URL =
@@ -53,7 +54,7 @@ private const val LAST_ATTEMPT_KEY = "lastRemoteHistorySync"
 /** One home-screen owner shares this job across recommendation modes and tab/lifecycle re-entry. */
 class RemoteHistorySync(
     private val settings: SettingsStore,
-    private val dao: ContentOpenEventDao = getContentFilterDatabase().contentOpenEventDao(),
+    private val dao: ContentOpenEventDao = KoinPlatform.getKoin().get<ContentFilterDatabase>().contentOpenEventDao(),
 ) {
     private var job: Job? = null
     private var recentPage = CompletableDeferred(Unit)

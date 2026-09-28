@@ -160,6 +160,7 @@ dependencies {
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.android)
     implementation(libs.koin.android)
+    implementation(libs.koin.compose)
     implementation(libs.androidx.startup.runtime)
     implementation(libs.coil.compose)
     implementation(libs.zxing.android.embedded)

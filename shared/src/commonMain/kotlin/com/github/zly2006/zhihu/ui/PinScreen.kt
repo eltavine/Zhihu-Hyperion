@@ -132,6 +132,7 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.putJsonArray
+import org.koin.compose.koinInject
 import kotlin.time.Instant
 import androidx.compose.material.icons.outlined.ThumbUp as OutlinedThumbUp
 
@@ -209,6 +210,7 @@ fun PinScreen(
 ) {
     val navigator = LocalNavigator.current
     val coroutineScope = rememberCoroutineScope()
+    val readingQueueSources = koinInject<ReadingQueueSourceRegistry>()
     val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
 
     val settings = rememberSettingsStore()
@@ -321,7 +323,7 @@ fun PinScreen(
                                 coroutineScope.launch {
                                     readingPlayer.start(
                                         ReadingStartRequest(
-                                            queue = ReadingQueueSourceRegistry.queueStartingAt(
+                                            queue = readingQueueSources.queueStartingAt(
                                                 current = item,
                                                 sourceId = pin.readingQueueSourceId,
                                                 limit = readingPreferences.queueLimit,

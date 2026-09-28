@@ -112,6 +112,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.mp.KoinPlatform
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
@@ -146,8 +147,9 @@ class ArticleScreenInstrumentedTest {
     fun tearDown() {
         composeRule.activity.stopService(Intent(composeRule.activity, ContentReadingService::class.java))
         AndroidReadingPlayerBridge.publish(ReadingPlayerState())
-        ReadingQueueSourceRegistry.register(FULL_ORIGIN_SOURCE_ID, emptyList())
-        ReadingQueueSourceRegistry.register(PARTIAL_ORIGIN_SOURCE_ID, emptyList())
+        val readingQueueSources = KoinPlatform.getKoin().get<ReadingQueueSourceRegistry>()
+        readingQueueSources.register(FULL_ORIGIN_SOURCE_ID, emptyList())
+        readingQueueSources.register(PARTIAL_ORIGIN_SOURCE_ID, emptyList())
         composeRule.runOnIdle {
             sharedArticleAnswerSwitchState.navigator = null
             sharedArticleAnswerSwitchState.pendingNavigator = null

@@ -37,11 +37,11 @@ import kotlin.time.Clock
 class LocalRecommendationEngine(
     private val dao: LocalContentDao,
     private val crawlingExecutor: CrawlingExecutor,
+    private val initializeContent: suspend () -> Unit = LocalContentInitializer(dao)::initializeIfNeeded,
+    private val startScheduling: () -> Unit = TaskScheduler(dao, crawlingExecutor)::startScheduling,
 ) {
     private val feedGenerator = FeedGenerator(dao)
     private val userBehaviorAnalyzer = UserBehaviorAnalyzer(dao)
-    private val contentInitializer = LocalContentInitializer(dao)
-    private val taskScheduler = TaskScheduler(dao, crawlingExecutor)
 
     @kotlin.concurrent.Volatile
     private var initialized = false
@@ -55,10 +55,8 @@ class LocalRecommendationEngine(
             if (initialized) {
                 return@withContext
             }
-            localRecommendationEngineForTesting?.initializeContent?.invoke()
-                ?: contentInitializer.initializeIfNeeded()
-            localRecommendationEngineForTesting?.startScheduling?.invoke()
-                ?: taskScheduler.startScheduling()
+            initializeContent()
+            startScheduling()
             initialized = true
         }
     }
@@ -125,8 +123,7 @@ class LocalRecommendationEngine(
             .take(3)
             .forEach { task ->
                 try {
-                    localRecommendationEngineForTesting?.executeTask?.invoke(task)
-                        ?: crawlingExecutor.executeTask(task)
+                    crawlingExecutor.executeTask(task)
                     delay(1_000L)
                 } catch (e: Exception) {
                     Log.e("LocalRecommendationEngine", "Task execution failed: ${e.message}", e)
@@ -139,14 +136,6 @@ fun buildLocalRecommendationEngine(
     dao: LocalContentDao,
     environment: ZhihuApiEnvironment,
 ): LocalRecommendationEngine = LocalRecommendationEngine(dao, CrawlingExecutor(dao, environment))
-
-data class LocalRecommendationEngineTestOverrides(
-    val initializeContent: suspend () -> Unit = {},
-    val startScheduling: () -> Unit = {},
-    val executeTask: suspend (CrawlingTask) -> Unit = {},
-)
-
-var localRecommendationEngineForTesting: LocalRecommendationEngineTestOverrides? = null
 
 data class RankedLocalResult(
     val result: CrawlingResult,

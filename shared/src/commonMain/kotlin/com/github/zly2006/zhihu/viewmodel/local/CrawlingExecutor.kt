@@ -44,8 +44,7 @@ class CrawlingExecutor(
                 dao.updateTask(
                     task.copy(
                         status = CrawlingStatus.InProgress,
-                        executedAt = crawlingNowMillisForTesting?.invoke()
-                            ?: Clock.System.now().toEpochMilliseconds(),
+                        executedAt = Clock.System.now().toEpochMilliseconds(),
                     ),
                 )
 
@@ -141,8 +140,7 @@ class CrawlingExecutor(
     private suspend fun executeCollaborativeFilteringTask(task: CrawlingTask): List<CrawlingResult> {
         // 基于用户行为的协同过滤推荐
         // 获取用户最近点赞的内容，用于发现相似用户
-        val nowMillis = crawlingNowMillisForTesting?.invoke()
-            ?: Clock.System.now().toEpochMilliseconds()
+        val nowMillis = Clock.System.now().toEpochMilliseconds()
         val recentLikes = dao.getBehaviorsByActionSince("like", nowMillis - 7 * 24 * 60 * 60 * 1000)
 
         if (recentLikes.isEmpty()) {
@@ -164,10 +162,5 @@ class CrawlingExecutor(
     }
 
     private suspend fun fetchFeedArray(url: String): JsonArray =
-        crawlingFeedArrayForTesting?.invoke(url)
-            ?: environment.fetchJson(url, "")?.get("data")?.jsonArray
-            ?: JsonArray(emptyList())
+        environment.fetchJson(url, "")?.get("data")?.jsonArray ?: JsonArray(emptyList())
 }
-
-var crawlingFeedArrayForTesting: (suspend (String) -> JsonArray)? = null
-var crawlingNowMillisForTesting: (() -> Long)? = null

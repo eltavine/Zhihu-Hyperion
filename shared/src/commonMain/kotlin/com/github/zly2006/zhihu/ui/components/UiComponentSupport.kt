@@ -54,13 +54,14 @@ import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedKeyword
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedQuestionAuthor
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUser
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.KeywordType
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonPrimitive
+import org.koin.compose.koinInject
 
 expect suspend fun extractFeedKeywords(
     title: String,
@@ -78,7 +79,7 @@ fun FeedAuthorBlockConfirmDialog(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val userMessages = rememberUserMessageSink()
-    val database = remember { getContentFilterDatabase() }
+    val database = koinInject<ContentFilterDatabase>()
     val environment = rememberPaginationEnvironment(allowGuestAccess = false)
     var questionAuthorStats by remember(request) { mutableStateOf<QuestionAuthorActivityStats?>(null) }
     var isQuestionAuthorStatsLoading by remember(request) {
@@ -165,7 +166,7 @@ fun BlockByKeywordsDialog(
 ) {
     val userMessages = rememberUserMessageSink()
     val coroutineScope = rememberCoroutineScope()
-    val database = remember { getContentFilterDatabase() }
+    val database = koinInject<ContentFilterDatabase>()
 
     var extractedKeywords by remember { mutableStateOf<List<String>>(emptyList()) }
     var keywordInfoList by remember { mutableStateOf<List<KeywordWithWeight>>(emptyList()) }

@@ -79,9 +79,10 @@ import com.github.zly2006.zhihu.viewmodel.filter.BlockedQuestionAuthor
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedTopic
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUser
 import com.github.zly2006.zhihu.viewmodel.filter.BlocklistStats
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.KeywordType
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 object BlocklistSettingsTestTags {
     const val ROOT = "blocklistSettings:root"
@@ -130,7 +131,7 @@ fun BlocklistSettingsScreen(
     val navigator = LocalNavigator.current
     val userMessages = rememberUserMessageSink()
     val exportRules = rememberBlocklistRuleExporter()
-    val database = remember { getContentFilterDatabase() }
+    val database = koinInject<ContentFilterDatabase>()
     val coroutineScope = rememberCoroutineScope()
 
     val nlpSupported = isBlocklistNlpSupported && !rememberIsLiteVariant()

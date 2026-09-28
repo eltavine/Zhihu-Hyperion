@@ -55,7 +55,7 @@ import com.github.zly2006.zhihu.ui.QuestionScreen
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.QuestionFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUser
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.paginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 import io.ktor.http.HttpMethod
@@ -69,6 +69,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.mp.KoinPlatform
 import com.github.zly2006.zhihu.data.Person as FeedPerson
 
 @RunWith(AndroidJUnit4::class)
@@ -81,13 +82,13 @@ class QuestionScreenInstrumentedTest {
         composeRule.resetAppPreferences()
         ZhihuMockApi.install(enabled = true)
         ZhihuMockApi.reset()
-        val database = getContentFilterDatabase(composeRule.activity)
+        val database = KoinPlatform.getKoin().get<ContentFilterDatabase>()
         database.blockedUserDao().clearAllUsers()
     }
 
     @After
     fun tearDown() = runBlocking {
-        val database = getContentFilterDatabase(composeRule.activity)
+        val database = KoinPlatform.getKoin().get<ContentFilterDatabase>()
         database.blockedUserDao().clearAllUsers()
         ZhihuMockApi.install(enabled = InstrumentedTestEnvironment.isMockMode())
     }
@@ -205,7 +206,7 @@ class QuestionScreenInstrumentedTest {
          */
         val viewModel = TestableQuestionFeedViewModel(123456789L)
         runBlocking {
-            val database = getContentFilterDatabase(composeRule.activity)
+            val database = KoinPlatform.getKoin().get<ContentFilterDatabase>()
             database.blockedUserDao().insertUser(BlockedUser("blocked-answer-author", "被屏蔽回答作者"))
             viewModel.processForTest(
                 composeRule.activity,

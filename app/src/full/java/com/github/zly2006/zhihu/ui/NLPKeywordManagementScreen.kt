@@ -80,15 +80,16 @@ import com.github.zly2006.zhihu.nlp.NLPService
 import com.github.zly2006.zhihu.nlp.SentenceEmbeddingManager
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedContentRecord
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedKeyword
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.KeywordType
 import com.github.zly2006.zhihu.viewmodel.filter.MatchedKeywordInfo
 import com.github.zly2006.zhihu.viewmodel.filter.contentFilterSettings
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
+import org.koin.compose.koinInject
 
 private const val NLP_KEYWORD_MANAGEMENT_TAG = "NLPKeywordManagement"
 
@@ -104,7 +105,7 @@ fun NLPKeywordManagementScreen(
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val database = remember(context) { getContentFilterDatabase(context) }
+    val database = koinInject<ContentFilterDatabase>()
     val modelState by SentenceEmbeddingManager.state.collectAsState()
 
     var isExtracting by remember { mutableStateOf(false) }

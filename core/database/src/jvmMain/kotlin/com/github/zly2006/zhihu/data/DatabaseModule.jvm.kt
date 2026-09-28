@@ -15,8 +15,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.zly2006.zhihu.viewmodel.local
+package com.github.zly2006.zhihu.data
 
-fun getNativeLocalContentDatabase(): LocalContentDatabase? = nativeLocalContentDatabase()
+import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
+import com.github.zly2006.zhihu.viewmodel.local.getLocalContentDatabase
+import org.koin.dsl.module
+import org.koin.dsl.onClose
+import java.io.File
 
-internal expect fun nativeLocalContentDatabase(): LocalContentDatabase?
+/** 每个数据库在进程内只有一个 Room 实例；组合根传入各自的存量文件路径。 */
+fun databaseModule(
+    contentFilterDatabaseFile: File,
+    localContentDatabaseFile: File,
+) = module {
+    single { getContentFilterDatabase(contentFilterDatabaseFile.also { it.parentFile?.mkdirs() }) } onClose { it?.close() }
+    single { getLocalContentDatabase(localContentDatabaseFile.also { it.parentFile?.mkdirs() }) } onClose { it?.close() }
+}

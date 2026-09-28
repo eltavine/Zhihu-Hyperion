@@ -39,6 +39,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.fetchHighestQualityZhihuVideoUrl
+import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
+import com.github.zly2006.zhihu.filter.PendingContentOpen
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
@@ -75,7 +77,6 @@ import com.github.zly2006.zhihu.ui.subscreens.normalizeBottomBarSelection
 import com.github.zly2006.zhihu.ui.subscreens.resolveValidStartDestinationKey
 import com.github.zly2006.zhihu.util.signZhihuFetchRequest
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel
-import com.github.zly2006.zhihu.viewmodel.prepareNativePendingContentOpen
 import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -92,6 +93,7 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
     /** 主返回栈控制器，承载 MainTabs 主壳和单栏页面。 */
     val navController = rememberNavController()
     val accountStore = koinInject<ZhihuAccountStore>()
+    val pendingContentOpen = koinInject<PendingContentOpen>()
     val accounts by accountStore.accountsState.collectAsState()
     val accountSession = accounts.session
     val httpClient = remember(accountStore, accountSession) { accountStore.client.httpClient() }
@@ -192,16 +194,16 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
             }
 
             else -> {
-                prepareNativePendingContentOpen(
-                    target = route,
-                    currentMainTabOpenFrom = if (
+                pendingContentOpen.prepare(
+                    destination = route,
+                    openFrom = if (
                         runCatching { navController.currentBackStackEntry?.toRoute<MainTabs>() }.getOrNull() != null
                     ) {
                         currentMainTabOpenFrom
                     } else {
                         null
-                    },
-                    source = currentContentOpenSource(targetController),
+                    }
+                        ?: ContentOpenEventSupport.inferOpenFrom(currentContentOpenSource(targetController), route),
                 )
                 targetController.navigate(route)
             }

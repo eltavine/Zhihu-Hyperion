@@ -72,7 +72,7 @@ import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.comment.BaseCommentViewModel
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUser
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.paginationEnvironment
 import io.ktor.http.HttpMethod
 import kotlinx.coroutines.runBlocking
@@ -85,6 +85,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.mp.KoinPlatform
 
 @RunWith(AndroidJUnit4::class)
 class CommentScreenInstrumentedTest {
@@ -96,7 +97,7 @@ class CommentScreenInstrumentedTest {
         composeRule.resetAppPreferences()
         ZhihuMockApi.install(enabled = true)
         ZhihuMockApi.reset()
-        val database = getContentFilterDatabase(composeRule.activity)
+        val database = KoinPlatform.getKoin().get<ContentFilterDatabase>()
         database.blockedUserDao().clearAllUsers()
         ZhihuMockApi.mockJsonPrefix(
             method = HttpMethod.Post,
@@ -133,7 +134,7 @@ class CommentScreenInstrumentedTest {
             urlPrefix = "https://www.zhihu.com/api/v4/comment_v5/comment/liked-root-comment/child_comment",
             commentId = "other-child-comment",
         )
-        AndroidArticleNavigationHandoff.prepareComment(CommentHolder("liked-child-comment", ROOT_ARTICLE))
+        KoinPlatform.getKoin().get<AndroidArticleNavigationHandoff>().prepareComment(CommentHolder("liked-child-comment", ROOT_ARTICLE))
 
         composeRule.setScreenContent {
             CommentScreenComponent(
@@ -158,7 +159,7 @@ class CommentScreenInstrumentedTest {
 
     @After
     fun tearDown() = runBlocking {
-        val database = getContentFilterDatabase(composeRule.activity)
+        val database = KoinPlatform.getKoin().get<ContentFilterDatabase>()
         database.blockedUserDao().clearAllUsers()
         ZhihuMockApi.install(enabled = InstrumentedTestEnvironment.isMockMode())
     }
@@ -404,7 +405,7 @@ class CommentScreenInstrumentedTest {
          *    the screen receives them.
          */
         runBlocking {
-            val database = getContentFilterDatabase(composeRule.activity)
+            val database = KoinPlatform.getKoin().get<ContentFilterDatabase>()
             database.blockedUserDao().insertUser(BlockedUser("blocked-root-author", "被屏蔽根评论作者"))
             database.blockedUserDao().insertUser(BlockedUser("blocked-child-author", "被屏蔽子评论作者"))
             mockRootComments(

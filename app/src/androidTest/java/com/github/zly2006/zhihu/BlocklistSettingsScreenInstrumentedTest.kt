@@ -36,13 +36,14 @@ import com.github.zly2006.zhihu.test.setScreenContent
 import com.github.zly2006.zhihu.ui.BlocklistSettingsScreen
 import com.github.zly2006.zhihu.ui.BlocklistSettingsTestTags
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedQuestionAuthor
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.mp.KoinPlatform
 
 @RunWith(AndroidJUnit4::class)
 class BlocklistSettingsScreenInstrumentedTest {
@@ -53,7 +54,7 @@ class BlocklistSettingsScreenInstrumentedTest {
     fun setUp() {
         composeRule.resetAppPreferences()
         runBlocking {
-            getContentFilterDatabase(composeRule.activity).blockedQuestionAuthorDao().apply {
+            KoinPlatform.getKoin().get<ContentFilterDatabase>().blockedQuestionAuthorDao().apply {
                 clearAllUsers()
                 seededQuestionAuthors().forEach { insertUser(it) }
             }
@@ -76,7 +77,7 @@ class BlocklistSettingsScreenInstrumentedTest {
          *    blocklist used by the production screen.
          * 4. The add dialog should support both cancel and confirm paths deterministically.
          */
-        val dao = getContentFilterDatabase(composeRule.activity).blockedQuestionAuthorDao()
+        val dao = KoinPlatform.getKoin().get<ContentFilterDatabase>().blockedQuestionAuthorDao()
         val navigator = setScreen()
 
         composeRule.onNode(hasText("屏蔽提问者") and hasClickAction()).performClick()

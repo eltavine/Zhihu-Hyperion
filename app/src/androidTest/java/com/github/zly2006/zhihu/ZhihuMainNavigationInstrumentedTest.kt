@@ -62,6 +62,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.zly2006.zhihu.filter.ContentOpenFrom
+import com.github.zly2006.zhihu.filter.PendingContentOpen
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
@@ -104,6 +105,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.mp.KoinPlatform
 
 @RunWith(AndroidJUnit4::class)
 class ZhihuMainNavigationInstrumentedTest {
@@ -188,7 +190,7 @@ class ZhihuMainNavigationInstrumentedTest {
         var openFrom: String? = null
         composeRule.runOnIdle {
             composeRule.activity.navigate(article)
-            openFrom = AndroidArticleNavigationHandoff.consumeContentOpenFrom(article)
+            openFrom = KoinPlatform.getKoin().get<PendingContentOpen>().consume(article)
         }
 
         assertEquals(ContentOpenFrom.HOME_FEED, openFrom)

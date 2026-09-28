@@ -35,10 +35,11 @@ import com.github.zly2006.zhihu.viewmodel.PaginationViewModel
 import com.github.zly2006.zhihu.viewmodel.QualityFilterMode
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedTopic
 import com.github.zly2006.zhihu.viewmodel.filter.ContentDetailProvider
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.getOrFetchContentDetail
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonArray
+import org.koin.mp.KoinPlatform
 import kotlin.reflect.typeOf
 
 abstract class BaseFeedViewModel : PaginationViewModel<Feed>(typeOf<Feed>()) {
@@ -159,7 +160,9 @@ abstract class BaseFeedViewModel : PaginationViewModel<Feed>(typeOf<Feed>()) {
     ) {
         viewModelScope.launch {
             try {
-                getContentFilterDatabase()
+                KoinPlatform
+                    .getKoin()
+                    .get<ContentFilterDatabase>()
                     .blockedTopicDao()
                     .insertTopic(BlockedTopic(topicId = topicId, topicName = topicName))
                 userMessages.showShortMessage("已屏蔽主题「$topicName」")

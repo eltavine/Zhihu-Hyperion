@@ -49,6 +49,7 @@ import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.AccountData
 import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
+import com.github.zly2006.zhihu.filter.PendingContentOpen
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.CollectionContent
@@ -63,9 +64,6 @@ import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.TopLevelDestination
 import com.github.zly2006.zhihu.navigation.Video
 import com.github.zly2006.zhihu.navigation.resolveContent
-import com.github.zly2006.zhihu.nlp.KeywordWeightExtractor
-import com.github.zly2006.zhihu.nlp.NLPService
-import com.github.zly2006.zhihu.nlp.NlpServiceKeywordSemanticMatcher
 import com.github.zly2006.zhihu.nlp.SentenceEmbeddingManager
 import com.github.zly2006.zhihu.platform.androidSettingsStore
 import com.github.zly2006.zhihu.platform.androidUserMessageSink
@@ -90,9 +88,6 @@ import com.github.zly2006.zhihu.util.clearShareImageCache
 import com.github.zly2006.zhihu.util.clipboardManager
 import com.github.zly2006.zhihu.util.enableEdgeToEdgeCompat
 import com.github.zly2006.zhihu.util.telemetry
-import com.github.zly2006.zhihu.viewmodel.filter.androidKeywordSemanticMatcher
-import com.github.zly2006.zhihu.viewmodel.filter.androidKeywordWeightExtractor
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -104,6 +99,8 @@ import java.util.concurrent.TimeUnit
 class MainActivity : ComponentActivity() {
     lateinit var history: HistoryStorage
     private val accountStore: ZhihuAccountStore by inject()
+    private val articleNavigationHandoff: AndroidArticleNavigationHandoff by inject()
+    private val pendingContentOpen: PendingContentOpen by inject()
     val httpClient
         get() = accountStore.client.httpClient()
 
@@ -147,11 +144,6 @@ class MainActivity : ComponentActivity() {
         continuousUsageReminderManager = ContinuousUsageReminderManager(this)
         history = HistoryStorage(this)
         AndroidThemeSettings.initialize(this)
-        androidKeywordSemanticMatcher = NlpServiceKeywordSemanticMatcher
-        androidKeywordWeightExtractor = KeywordWeightExtractor { text, topN ->
-            NLPService.extractKeywordsWithWeight(text, topN)
-        }
-        getContentFilterDatabase(this)
 
         val settings = androidSettingsStore(this)
         val lastLaunchTimestamp = settings.getLong(KEY_LAST_LAUNCH_TIMESTAMP, 0L)
@@ -358,8 +350,8 @@ class MainActivity : ComponentActivity() {
                         val destination = regex.findAll(text).firstNotNullOfOrNull {
                             resolveContent(it.value)
                         }
-                        if (destination != null && destination != AndroidArticleNavigationHandoff.clipboardDestination) {
-                            AndroidArticleNavigationHandoff.markClipboardDestination(destination)
+                        if (destination != null && destination != articleNavigationHandoff.clipboardDestination) {
+                            articleNavigationHandoff.markClipboardDestination(destination)
                             navigate(destination, popup = true)
                         }
                     }
@@ -385,8 +377,8 @@ class MainActivity : ComponentActivity() {
         Log.i(TAG, "Intent data: $data")
         val destination = resolveContent(data.toString())
         if (destination != null) {
-            if (forceNavigation || destination != AndroidArticleNavigationHandoff.clipboardDestination) {
-                AndroidArticleNavigationHandoff.markClipboardDestination(destination)
+            if (forceNavigation || destination != articleNavigationHandoff.clipboardDestination) {
+                articleNavigationHandoff.markClipboardDestination(destination)
                 navigate(destination, popup = true)
             }
         } else {
@@ -431,11 +423,11 @@ class MainActivity : ComponentActivity() {
         popup: Boolean,
     ) {
         if (route is CommentHolder) {
-            AndroidArticleNavigationHandoff.prepareComment(route)
+            articleNavigationHandoff.prepareComment(route)
             navigate(route.article, targetController, popup)
             return
         }
-        AndroidArticleNavigationHandoff.clearCommentUnless(route)
+        articleNavigationHandoff.clearCommentUnless(route)
         preparePendingContentOpen(route, targetController)
         history.add(route)
         if (route is Video) {
@@ -511,7 +503,7 @@ class MainActivity : ComponentActivity() {
             null
         }
             ?: ContentOpenEventSupport.inferOpenFrom(currentContentOpenSource(sourceController), target)
-        AndroidArticleNavigationHandoff.prepareContentOpen(target, openFrom)
+        pendingContentOpen.prepare(target, openFrom)
     }
 
     private fun navigateToMainTabs() {

@@ -86,9 +86,10 @@ import com.github.zly2006.zhihu.viewmodel.QUESTION_FOLLOWERS_THRESHOLD_PREFERENC
 import com.github.zly2006.zhihu.viewmodel.QualityFilterMode
 import com.github.zly2006.zhihu.viewmodel.VIDEO_FOLLOWERS_THRESHOLD_PREFERENCE_KEY
 import com.github.zly2006.zhihu.viewmodel.VIDEO_VOTE_THRESHOLD_PREFERENCE_KEY
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -107,7 +108,7 @@ fun ContentFilterSettingsScreen(
     val navigator = LocalNavigator.current
     val coroutineScope = rememberCoroutineScope()
     val settings = rememberSettingsStore()
-    val contentFilterDao = remember { getContentFilterDatabase().contentFilterDao() }
+    val contentFilterDao = koinInject<ContentFilterDatabase>().contentFilterDao()
     val userMessages = rememberUserMessageSink()
     val highlightedSetting = setting.orEmpty()
 

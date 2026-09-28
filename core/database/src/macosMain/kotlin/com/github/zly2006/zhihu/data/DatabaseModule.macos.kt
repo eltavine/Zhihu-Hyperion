@@ -17,13 +17,28 @@
 
 @file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
 
-package com.github.zly2006.zhihu.viewmodel.local
+package com.github.zly2006.zhihu.data
 
 import androidx.room.Room
-import com.github.zly2006.zhihu.data.macosAppDataDirectoryPath
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
+import com.github.zly2006.zhihu.viewmodel.filter.buildContentFilterDatabase
+import com.github.zly2006.zhihu.viewmodel.local.LocalContentDatabase
+import com.github.zly2006.zhihu.viewmodel.local.buildLocalContentDatabase
+import org.koin.core.module.Module
+import org.koin.dsl.module
+import org.koin.dsl.onClose
 import platform.Foundation.NSFileManager
 
-private val macosLocalContentDatabase by lazy {
+actual fun databaseModule(): Module = module {
+    single {
+        buildContentFilterDatabase(Room.databaseBuilder<ContentFilterDatabase>(name = macosDatabasePath("content-filter.db")))
+    } onClose { it?.close() }
+    single {
+        buildLocalContentDatabase(Room.databaseBuilder<LocalContentDatabase>(name = macosDatabasePath("local-content.db")))
+    } onClose { it?.close() }
+}
+
+private fun macosDatabasePath(fileName: String): String {
     val dataDirectory = macosAppDataDirectoryPath()
     NSFileManager.defaultManager.createDirectoryAtPath(
         dataDirectory,
@@ -31,11 +46,5 @@ private val macosLocalContentDatabase by lazy {
         attributes = null,
         error = null,
     )
-    buildLocalContentDatabase(
-        Room.databaseBuilder<LocalContentDatabase>(
-            name = "$dataDirectory/local-content.db",
-        ),
-    )
+    return "$dataDirectory/$fileName"
 }
-
-internal actual fun nativeLocalContentDatabase(): LocalContentDatabase? = macosLocalContentDatabase

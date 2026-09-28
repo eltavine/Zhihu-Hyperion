@@ -27,21 +27,15 @@ import com.github.zly2006.zhihu.viewmodel.local.LocalReasonPreference
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
 import kotlin.io.path.createTempDirectory
-import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class LocalRecommendationSupportTest {
-    @AfterTest
-    fun clearTestOverrides() {
-        localRecommendationEngineForTesting = null
-        crawlingFeedArrayForTesting = null
-        crawlingNowMillisForTesting = null
-    }
-
     @Test
     fun buildFallbackRecommendationsRanksRecentResultsAndCreatesEntries() = runTest {
         val database = testLocalContentDatabase()
@@ -352,9 +346,11 @@ class LocalRecommendationSupportTest {
         val database = testLocalContentDatabase()
         var initializeCount = 0
         var startCount = 0
-        val engine = localRecommendationEngineForTest(
-            dao = database.contentDao(),
-            initializeContentIfNeeded = { initializeCount++ },
+        val dao = database.contentDao()
+        val engine = LocalRecommendationEngine(
+            dao = dao,
+            crawlingExecutor = CrawlingExecutor(dao, NoopLocalRecommendationEnvironment),
+            initializeContent = { initializeCount++ },
             startScheduling = { startCount++ },
         )
 
@@ -380,14 +376,14 @@ class LocalRecommendationSupportTest {
         )
         val taskId = dao.getTasksByStatus(CrawlingStatus.NotStarted).single().id
         val requestedUrls = mutableListOf<String>()
-        crawlingFeedArrayForTesting = { url ->
-            requestedUrls.add(url)
-            JsonArray(emptyList())
-        }
-        crawlingNowMillisForTesting = { 42L }
         val executor = CrawlingExecutor(
             dao = dao,
-            environment = NoopLocalRecommendationEnvironment,
+            environment = object : ZhihuApiEnvironment by NoopLocalRecommendationEnvironment {
+                override suspend fun fetchJson(url: String, include: String): JsonObject {
+                    requestedUrls.add(url)
+                    return buildJsonObject { put("data", JsonArray(emptyList())) }
+                }
+            },
         )
 
         executor.executeTask(
@@ -403,20 +399,6 @@ class LocalRecommendationSupportTest {
         assertEquals(1, dao.getTasksByStatus(CrawlingStatus.Completed).size)
         assertEquals(emptyList(), dao.getRecentResults(10))
         database.close()
-    }
-
-    private fun localRecommendationEngineForTest(
-        dao: LocalContentDao,
-        initializeContentIfNeeded: suspend () -> Unit = {},
-        startScheduling: () -> Unit = {},
-        executeTask: suspend (CrawlingTask) -> Unit = {},
-    ): LocalRecommendationEngine {
-        localRecommendationEngineForTesting = LocalRecommendationEngineTestOverrides(
-            initializeContent = initializeContentIfNeeded,
-            startScheduling = startScheduling,
-            executeTask = executeTask,
-        )
-        return LocalRecommendationEngine(dao, CrawlingExecutor(dao, NoopLocalRecommendationEnvironment))
     }
 
     private fun testLocalContentDatabase(): LocalContentDatabase =

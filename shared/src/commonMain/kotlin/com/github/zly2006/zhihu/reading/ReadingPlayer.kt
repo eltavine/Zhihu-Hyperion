@@ -34,14 +34,15 @@ import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.platform.SettingsStore
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.ContentType
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.koin.compose.koinInject
 import kotlin.time.Clock
 import kotlin.time.Instant
 
@@ -637,14 +638,17 @@ fun splitReadingSpeechIntoChunks(
     return chunks
 }
 
-object ReadingQueueSourceRegistry {
+/** 页面注册的朗读队列来源；进程内由 Koin 持有唯一实例，朗读入口按来源 id 取后续队列。 */
+class ReadingQueueSourceRegistry(
+    private val database: ContentFilterDatabase,
+) {
     private val sources = LinkedHashMap<String, List<ReadingQueueItem>>()
 
     private suspend fun lookupOpenedAnswerIds(answerIds: List<Long>): Set<Long> {
         if (answerIds.isEmpty()) return emptySet()
         return ContentOpenEventSupport
             .getAlreadyOpenedContentIds(
-                database = getContentFilterDatabase(),
+                database = database,
                 content = answerIds.map { answerId -> ContentType.ANSWER to answerId.toString() },
             ).mapNotNull { key -> key.substringAfter(':', "").toLongOrNull() }
             .toSet()
@@ -733,10 +737,6 @@ object ReadingQueueSourceRegistry {
             .distinctBy(ReadingQueueItem::key)
             .take(safeLimit)
     }
-
-    internal fun clearForTesting() {
-        sources.clear()
-    }
 }
 
 @Composable
@@ -749,8 +749,9 @@ fun RegisterReadingQueueSource(
         .filterNot { it.isFiltered }
         .mapNotNull(FeedDisplayItem::toReadingQueueItem)
         .toList()
+    val readingQueueSources = koinInject<ReadingQueueSourceRegistry>()
     SideEffect {
-        ReadingQueueSourceRegistry.register(sourceId, queueItems)
+        readingQueueSources.register(sourceId, queueItems)
     }
 }
 

@@ -43,8 +43,8 @@ import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.viewmodel.NativePaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.NotificationEnvironment
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.encodeBlocklistBackup
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.importBlocklistBackupFromJsonText
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ByteVar
@@ -56,6 +56,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import org.koin.compose.koinInject
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSString
 import platform.Foundation.NSUTF8StringEncoding
@@ -210,7 +211,7 @@ actual fun rememberBlocklistRuleImporter(
     userMessages: UserMessageSink,
     onImported: (String) -> Unit,
 ): BlocklistRuleImporter {
-    val database = remember { getContentFilterDatabase() }
+    val database = koinInject<ContentFilterDatabase>()
     val coroutineScope = rememberCoroutineScope()
     val currentOnImported by rememberUpdatedState(onImported)
     return remember(database, coroutineScope, userMessages) {
@@ -245,7 +246,7 @@ actual fun rememberBlocklistRuleImporter(
 @Composable
 @OptIn(BetaInteropApi::class, ExperimentalForeignApi::class)
 actual fun rememberBlocklistRuleExporter(): BlocklistRuleExporter {
-    val database = remember { getContentFilterDatabase() }
+    val database = koinInject<ContentFilterDatabase>()
     return remember(database) {
         object : BlocklistRuleExporter {
             override suspend fun invoke(): String {

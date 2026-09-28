@@ -19,11 +19,17 @@ package com.github.zly2006.zhihu
 
 import android.content.Context
 import com.github.zly2006.zhihu.account.accountModule
+import com.github.zly2006.zhihu.data.databaseModule
+import com.github.zly2006.zhihu.ui.AndroidArticleNavigationHandoff
 import kotlinx.io.files.Path
 import org.koin.core.module.Module
+import org.koin.dsl.module
 import java.io.File
 
 /** Android 进程的全部 Koin 绑定，由 app 的组合根启动。 */
 fun androidZhihuModules(context: Context): List<Module> = listOf(
     accountModule(Path(File(context.filesDir, "account.json").path)),
+    databaseModule(context),
+    zhihuSharedModule,
+    module { single { AndroidArticleNavigationHandoff() } },
 )
