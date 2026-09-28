@@ -26,7 +26,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Run KtLint and module graph assertions
-        run: ./gradlew ktlintCheck :app:assertModuleGraph :desktopApp:assertModuleGraph :macosApp:assertModuleGraph :macosUiDebug:assertModuleGraph
+        run: ./gradlew ktlintCheck checkKotlinAbi :app:assertModuleGraph :desktopApp:assertModuleGraph :macosApp:assertModuleGraph :macosUiDebug:assertModuleGraph
 
   build_pr:
     name: Build PR

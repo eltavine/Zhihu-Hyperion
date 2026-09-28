@@ -10,6 +10,7 @@ import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.getByName
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 
 /**
  * Kotlin Multiplatform library targeting every platform Zhihu++ ships on: Android, desktop JVM and macOS,
@@ -49,6 +50,16 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
 
                 sourceSets.commonTest.dependencies {
                     implementation(kotlin("test"))
+                }
+
+                // :core modules are consumed by every feature; their public API is reviewed through committed
+                // dumps (`updateKotlinAbi` to regenerate). Linux CI cannot compile the Apple targets, so their
+                // klib entries are kept from the reference dump instead of failing the check there.
+                if (path.startsWith(":core:")) {
+                    @OptIn(ExperimentalAbiValidation::class)
+                    abiValidation {
+                        keepLocallyUnsupportedTargets.set(true)
+                    }
                 }
             }
             alignComposeMaterial3()

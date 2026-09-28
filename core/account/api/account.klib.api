@@ -1,0 +1,482 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, macosArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <Zhihu.core:account>
+abstract interface com.github.zly2006.zhihu.account/ZhihuAccountSessionStore { // com.github.zly2006.zhihu.account/ZhihuAccountSessionStore|null[0]
+    abstract fun delete() // com.github.zly2006.zhihu.account/ZhihuAccountSessionStore.delete|delete(){}[0]
+    abstract fun readText(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuAccountSessionStore.readText|readText(){}[0]
+    abstract fun writeText(kotlin/String) // com.github.zly2006.zhihu.account/ZhihuAccountSessionStore.writeText|writeText(kotlin.String){}[0]
+}
+
+sealed interface com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult { // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult|null[0]
+    final class CaptchaRequired : com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult { // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.CaptchaRequired|null[0]
+        constructor <init>(kotlin/String?) // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.CaptchaRequired.<init>|<init>(kotlin.String?){}[0]
+
+        final val imageBase64 // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.CaptchaRequired.imageBase64|{}imageBase64[0]
+            final fun <get-imageBase64>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.CaptchaRequired.imageBase64.<get-imageBase64>|<get-imageBase64>(){}[0]
+
+        final fun component1(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.CaptchaRequired.component1|component1(){}[0]
+        final fun copy(kotlin/String? = ...): com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.CaptchaRequired // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.CaptchaRequired.copy|copy(kotlin.String?){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.CaptchaRequired.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.CaptchaRequired.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.CaptchaRequired.toString|toString(){}[0]
+    }
+
+    final object Sent : com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult { // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.Sent|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.Sent.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.Sent.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.Sent.toString|toString(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.account/FileZhihuAccountSessionStore : com.github.zly2006.zhihu.account/ZhihuAccountSessionStore { // com.github.zly2006.zhihu.account/FileZhihuAccountSessionStore|null[0]
+    constructor <init>(kotlinx.io.files/Path) // com.github.zly2006.zhihu.account/FileZhihuAccountSessionStore.<init>|<init>(kotlinx.io.files.Path){}[0]
+
+    final fun delete() // com.github.zly2006.zhihu.account/FileZhihuAccountSessionStore.delete|delete(){}[0]
+    final fun readText(): kotlin/String? // com.github.zly2006.zhihu.account/FileZhihuAccountSessionStore.readText|readText(){}[0]
+    final fun writeText(kotlin/String) // com.github.zly2006.zhihu.account/FileZhihuAccountSessionStore.writeText|writeText(kotlin.String){}[0]
+}
+
+final class com.github.zly2006.zhihu.account/ZhihuAccountClient : kotlin/AutoCloseable { // com.github.zly2006.zhihu.account/ZhihuAccountClient|null[0]
+    final fun close() // com.github.zly2006.zhihu.account/ZhihuAccountClient.close|close(){}[0]
+    final fun httpClient(): io.ktor.client/HttpClient // com.github.zly2006.zhihu.account/ZhihuAccountClient.httpClient|httpClient(){}[0]
+    final fun load(): com.github.zly2006.zhihu.account/ZhihuAccountSession // com.github.zly2006.zhihu.account/ZhihuAccountClient.load|load(){}[0]
+    final fun save(com.github.zly2006.zhihu.account/ZhihuAccountSession) // com.github.zly2006.zhihu.account/ZhihuAccountClient.save|save(com.github.zly2006.zhihu.account.ZhihuAccountSession){}[0]
+    final fun temporaryHttpClient(kotlin.collections/MutableMap<kotlin/String, kotlin/String>): io.ktor.client/HttpClient // com.github.zly2006.zhihu.account/ZhihuAccountClient.temporaryHttpClient|temporaryHttpClient(kotlin.collections.MutableMap<kotlin.String,kotlin.String>){}[0]
+    final suspend fun <#A1: kotlin/Any?> withAuthenticatedClient(kotlin.coroutines/SuspendFunction2<io.ktor.client/HttpClient, kotlin.collections/Map<kotlin/String, kotlin/String>, #A1>): #A1 // com.github.zly2006.zhihu.account/ZhihuAccountClient.withAuthenticatedClient|withAuthenticatedClient(kotlin.coroutines.SuspendFunction2<io.ktor.client.HttpClient,kotlin.collections.Map<kotlin.String,kotlin.String>,0:0>){0§<kotlin.Any?>}[0]
+    final suspend fun refreshAndSaveProfile(): com.github.zly2006.zhihu.account/ZhihuAccountSession? // com.github.zly2006.zhihu.account/ZhihuAccountClient.refreshAndSaveProfile|refreshAndSaveProfile(){}[0]
+}
+
+final class com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot { // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot|null[0]
+    constructor <init>(kotlin/String = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/String = ..., kotlin/String? = ...) // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.<init>|<init>(kotlin.String;kotlin.String;kotlin.String?;kotlin.String;kotlin.String?){}[0]
+
+    final val avatarUrl // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.avatarUrl|{}avatarUrl[0]
+        final fun <get-avatarUrl>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.avatarUrl.<get-avatarUrl>|<get-avatarUrl>(){}[0]
+    final val id // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.id|{}id[0]
+        final fun <get-id>(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.id.<get-id>|<get-id>(){}[0]
+    final val name // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.name|{}name[0]
+        final fun <get-name>(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.name.<get-name>|<get-name>(){}[0]
+    final val urlToken // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.urlToken|{}urlToken[0]
+        final fun <get-urlToken>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.urlToken.<get-urlToken>|<get-urlToken>(){}[0]
+    final val userType // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.userType|{}userType[0]
+        final fun <get-userType>(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.userType.<get-userType>|<get-userType>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.component2|component2(){}[0]
+    final fun component3(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.component3|component3(){}[0]
+    final fun component4(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.component4|component4(){}[0]
+    final fun component5(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.component5|component5(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/String = ..., kotlin/String? = ...): com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.copy|copy(kotlin.String;kotlin.String;kotlin.String?;kotlin.String;kotlin.String?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot> { // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot) // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.account.ZhihuAccountProfileSnapshot){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot> // com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.account/ZhihuAccountRepository { // com.github.zly2006.zhihu.account/ZhihuAccountRepository|null[0]
+    constructor <init>(com.github.zly2006.zhihu.account/ZhihuAccountSessionStore, kotlinx.serialization.json/Json = ...) // com.github.zly2006.zhihu.account/ZhihuAccountRepository.<init>|<init>(com.github.zly2006.zhihu.account.ZhihuAccountSessionStore;kotlinx.serialization.json.Json){}[0]
+
+    final fun clear() // com.github.zly2006.zhihu.account/ZhihuAccountRepository.clear|clear(){}[0]
+    final fun load(): com.github.zly2006.zhihu.account/ZhihuAccountSession // com.github.zly2006.zhihu.account/ZhihuAccountRepository.load|load(){}[0]
+    final fun loadAccounts(): com.github.zly2006.zhihu.account/ZhihuAccounts // com.github.zly2006.zhihu.account/ZhihuAccountRepository.loadAccounts|loadAccounts(){}[0]
+    final fun save(com.github.zly2006.zhihu.account/ZhihuAccountSession) // com.github.zly2006.zhihu.account/ZhihuAccountRepository.save|save(com.github.zly2006.zhihu.account.ZhihuAccountSession){}[0]
+    final fun saveAccounts(com.github.zly2006.zhihu.account/ZhihuAccounts) // com.github.zly2006.zhihu.account/ZhihuAccountRepository.saveAccounts|saveAccounts(com.github.zly2006.zhihu.account.ZhihuAccounts){}[0]
+}
+
+final class com.github.zly2006.zhihu.account/ZhihuAccountSession { // com.github.zly2006.zhihu.account/ZhihuAccountSession|null[0]
+    constructor <init>(kotlin/Boolean = ..., kotlin/String = ..., kotlin.collections/MutableMap<kotlin/String, kotlin/String> = ..., kotlin/String = ..., com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot? = ..., kotlinx.serialization.json/JsonElement? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/Long? = ...) // com.github.zly2006.zhihu.account/ZhihuAccountSession.<init>|<init>(kotlin.Boolean;kotlin.String;kotlin.collections.MutableMap<kotlin.String,kotlin.String>;kotlin.String;com.github.zly2006.zhihu.account.ZhihuAccountProfileSnapshot?;kotlinx.serialization.json.JsonElement?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.Long?){}[0]
+
+    final val cookies // com.github.zly2006.zhihu.account/ZhihuAccountSession.cookies|{}cookies[0]
+        final fun <get-cookies>(): kotlin.collections/MutableMap<kotlin/String, kotlin/String> // com.github.zly2006.zhihu.account/ZhihuAccountSession.cookies.<get-cookies>|<get-cookies>(){}[0]
+    final val login // com.github.zly2006.zhihu.account/ZhihuAccountSession.login|{}login[0]
+        final fun <get-login>(): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuAccountSession.login.<get-login>|<get-login>(){}[0]
+    final val mobileAccessToken // com.github.zly2006.zhihu.account/ZhihuAccountSession.mobileAccessToken|{}mobileAccessToken[0]
+        final fun <get-mobileAccessToken>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuAccountSession.mobileAccessToken.<get-mobileAccessToken>|<get-mobileAccessToken>(){}[0]
+    final val mobileRefreshToken // com.github.zly2006.zhihu.account/ZhihuAccountSession.mobileRefreshToken|{}mobileRefreshToken[0]
+        final fun <get-mobileRefreshToken>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuAccountSession.mobileRefreshToken.<get-mobileRefreshToken>|<get-mobileRefreshToken>(){}[0]
+    final val mobileTokenExpiresAt // com.github.zly2006.zhihu.account/ZhihuAccountSession.mobileTokenExpiresAt|{}mobileTokenExpiresAt[0]
+        final fun <get-mobileTokenExpiresAt>(): kotlin/Long? // com.github.zly2006.zhihu.account/ZhihuAccountSession.mobileTokenExpiresAt.<get-mobileTokenExpiresAt>|<get-mobileTokenExpiresAt>(){}[0]
+    final val mobileTokenType // com.github.zly2006.zhihu.account/ZhihuAccountSession.mobileTokenType|{}mobileTokenType[0]
+        final fun <get-mobileTokenType>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuAccountSession.mobileTokenType.<get-mobileTokenType>|<get-mobileTokenType>(){}[0]
+    final val profile // com.github.zly2006.zhihu.account/ZhihuAccountSession.profile|{}profile[0]
+        final fun <get-profile>(): com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot? // com.github.zly2006.zhihu.account/ZhihuAccountSession.profile.<get-profile>|<get-profile>(){}[0]
+    final val self // com.github.zly2006.zhihu.account/ZhihuAccountSession.self|{}self[0]
+        final fun <get-self>(): kotlinx.serialization.json/JsonElement? // com.github.zly2006.zhihu.account/ZhihuAccountSession.self.<get-self>|<get-self>(){}[0]
+    final val userAgent // com.github.zly2006.zhihu.account/ZhihuAccountSession.userAgent|{}userAgent[0]
+        final fun <get-userAgent>(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuAccountSession.userAgent.<get-userAgent>|<get-userAgent>(){}[0]
+    final val username // com.github.zly2006.zhihu.account/ZhihuAccountSession.username|{}username[0]
+        final fun <get-username>(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuAccountSession.username.<get-username>|<get-username>(){}[0]
+
+    final fun component1(): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuAccountSession.component1|component1(){}[0]
+    final fun component10(): kotlin/Long? // com.github.zly2006.zhihu.account/ZhihuAccountSession.component10|component10(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuAccountSession.component2|component2(){}[0]
+    final fun component3(): kotlin.collections/MutableMap<kotlin/String, kotlin/String> // com.github.zly2006.zhihu.account/ZhihuAccountSession.component3|component3(){}[0]
+    final fun component4(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuAccountSession.component4|component4(){}[0]
+    final fun component5(): com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot? // com.github.zly2006.zhihu.account/ZhihuAccountSession.component5|component5(){}[0]
+    final fun component6(): kotlinx.serialization.json/JsonElement? // com.github.zly2006.zhihu.account/ZhihuAccountSession.component6|component6(){}[0]
+    final fun component7(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuAccountSession.component7|component7(){}[0]
+    final fun component8(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuAccountSession.component8|component8(){}[0]
+    final fun component9(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuAccountSession.component9|component9(){}[0]
+    final fun copy(kotlin/Boolean = ..., kotlin/String = ..., kotlin.collections/MutableMap<kotlin/String, kotlin/String> = ..., kotlin/String = ..., com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot? = ..., kotlinx.serialization.json/JsonElement? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/Long? = ...): com.github.zly2006.zhihu.account/ZhihuAccountSession // com.github.zly2006.zhihu.account/ZhihuAccountSession.copy|copy(kotlin.Boolean;kotlin.String;kotlin.collections.MutableMap<kotlin.String,kotlin.String>;kotlin.String;com.github.zly2006.zhihu.account.ZhihuAccountProfileSnapshot?;kotlinx.serialization.json.JsonElement?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.Long?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuAccountSession.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuAccountSession.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuAccountSession.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.account/ZhihuAccountSession> { // com.github.zly2006.zhihu.account/ZhihuAccountSession.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.account/ZhihuAccountSession.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.account/ZhihuAccountSession.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.account/ZhihuAccountSession.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.account/ZhihuAccountSession // com.github.zly2006.zhihu.account/ZhihuAccountSession.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.account/ZhihuAccountSession) // com.github.zly2006.zhihu.account/ZhihuAccountSession.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.account.ZhihuAccountSession){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.account/ZhihuAccountSession.Companion|null[0]
+        final val $childSerializers // com.github.zly2006.zhihu.account/ZhihuAccountSession.Companion.$childSerializers|{}$childSerializers[0]
+
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.account/ZhihuAccountSession> // com.github.zly2006.zhihu.account/ZhihuAccountSession.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.account/ZhihuAccountStore : kotlin/AutoCloseable { // com.github.zly2006.zhihu.account/ZhihuAccountStore|null[0]
+    constructor <init>(com.github.zly2006.zhihu.account/ZhihuAccountRepository, io.ktor.client.engine/HttpClientEngine) // com.github.zly2006.zhihu.account/ZhihuAccountStore.<init>|<init>(com.github.zly2006.zhihu.account.ZhihuAccountRepository;io.ktor.client.engine.HttpClientEngine){}[0]
+
+    final val accounts // com.github.zly2006.zhihu.account/ZhihuAccountStore.accounts|{}accounts[0]
+        final fun <get-accounts>(): kotlin.collections/List<com.github.zly2006.zhihu.account/ZhihuSavedAccount> // com.github.zly2006.zhihu.account/ZhihuAccountStore.accounts.<get-accounts>|<get-accounts>(){}[0]
+    final val accountsState // com.github.zly2006.zhihu.account/ZhihuAccountStore.accountsState|{}accountsState[0]
+        final fun <get-accountsState>(): kotlinx.coroutines.flow/StateFlow<com.github.zly2006.zhihu.account/ZhihuAccounts> // com.github.zly2006.zhihu.account/ZhihuAccountStore.accountsState.<get-accountsState>|<get-accountsState>(){}[0]
+    final val client // com.github.zly2006.zhihu.account/ZhihuAccountStore.client|{}client[0]
+        final fun <get-client>(): com.github.zly2006.zhihu.account/ZhihuAccountClient // com.github.zly2006.zhihu.account/ZhihuAccountStore.client.<get-client>|<get-client>(){}[0]
+    final val session // com.github.zly2006.zhihu.account/ZhihuAccountStore.session|{}session[0]
+        final fun <get-session>(): com.github.zly2006.zhihu.account/ZhihuAccountSession // com.github.zly2006.zhihu.account/ZhihuAccountStore.session.<get-session>|<get-session>(){}[0]
+
+    final fun clear() // com.github.zly2006.zhihu.account/ZhihuAccountStore.clear|clear(){}[0]
+    final fun close() // com.github.zly2006.zhihu.account/ZhihuAccountStore.close|close(){}[0]
+    final fun removeAccount(kotlin/String) // com.github.zly2006.zhihu.account/ZhihuAccountStore.removeAccount|removeAccount(kotlin.String){}[0]
+    final fun replaceSession(com.github.zly2006.zhihu.account/ZhihuAccountSession) // com.github.zly2006.zhihu.account/ZhihuAccountStore.replaceSession|replaceSession(com.github.zly2006.zhihu.account.ZhihuAccountSession){}[0]
+    final fun save(com.github.zly2006.zhihu.account/ZhihuAccountSession) // com.github.zly2006.zhihu.account/ZhihuAccountStore.save|save(com.github.zly2006.zhihu.account.ZhihuAccountSession){}[0]
+    final suspend fun login(com.github.zly2006.zhihu.account/ZhihuMobileLoginToken): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuAccountStore.login|login(com.github.zly2006.zhihu.account.ZhihuMobileLoginToken){}[0]
+    final suspend fun login(kotlin.collections/MutableMap<kotlin/String, kotlin/String>): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuAccountStore.login|login(kotlin.collections.MutableMap<kotlin.String,kotlin.String>){}[0]
+    final suspend fun switchAccount(kotlin/String): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuAccountStore.switchAccount|switchAccount(kotlin.String){}[0]
+}
+
+final class com.github.zly2006.zhihu.account/ZhihuAccounts { // com.github.zly2006.zhihu.account/ZhihuAccounts|null[0]
+    constructor <init>(kotlin/String? = ..., kotlin.collections/List<com.github.zly2006.zhihu.account/ZhihuSavedAccount> = ...) // com.github.zly2006.zhihu.account/ZhihuAccounts.<init>|<init>(kotlin.String?;kotlin.collections.List<com.github.zly2006.zhihu.account.ZhihuSavedAccount>){}[0]
+
+    final val accounts // com.github.zly2006.zhihu.account/ZhihuAccounts.accounts|{}accounts[0]
+        final fun <get-accounts>(): kotlin.collections/List<com.github.zly2006.zhihu.account/ZhihuSavedAccount> // com.github.zly2006.zhihu.account/ZhihuAccounts.accounts.<get-accounts>|<get-accounts>(){}[0]
+    final val activeAccountId // com.github.zly2006.zhihu.account/ZhihuAccounts.activeAccountId|{}activeAccountId[0]
+        final fun <get-activeAccountId>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuAccounts.activeAccountId.<get-activeAccountId>|<get-activeAccountId>(){}[0]
+    final val session // com.github.zly2006.zhihu.account/ZhihuAccounts.session|{}session[0]
+        final fun <get-session>(): com.github.zly2006.zhihu.account/ZhihuAccountSession // com.github.zly2006.zhihu.account/ZhihuAccounts.session.<get-session>|<get-session>(){}[0]
+
+    final fun component1(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuAccounts.component1|component1(){}[0]
+    final fun component2(): kotlin.collections/List<com.github.zly2006.zhihu.account/ZhihuSavedAccount> // com.github.zly2006.zhihu.account/ZhihuAccounts.component2|component2(){}[0]
+    final fun copy(kotlin/String? = ..., kotlin.collections/List<com.github.zly2006.zhihu.account/ZhihuSavedAccount> = ...): com.github.zly2006.zhihu.account/ZhihuAccounts // com.github.zly2006.zhihu.account/ZhihuAccounts.copy|copy(kotlin.String?;kotlin.collections.List<com.github.zly2006.zhihu.account.ZhihuSavedAccount>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuAccounts.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuAccounts.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuAccounts.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.account/ZhihuAccounts> { // com.github.zly2006.zhihu.account/ZhihuAccounts.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.account/ZhihuAccounts.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.account/ZhihuAccounts.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.account/ZhihuAccounts.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.account/ZhihuAccounts // com.github.zly2006.zhihu.account/ZhihuAccounts.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.account/ZhihuAccounts) // com.github.zly2006.zhihu.account/ZhihuAccounts.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.account.ZhihuAccounts){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.account/ZhihuAccounts.Companion|null[0]
+        final val $childSerializers // com.github.zly2006.zhihu.account/ZhihuAccounts.Companion.$childSerializers|{}$childSerializers[0]
+
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.account/ZhihuAccounts> // com.github.zly2006.zhihu.account/ZhihuAccounts.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.account/ZhihuMobileLoginToken { // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken|null[0]
+    constructor <init>(kotlin/String, kotlin/String?, kotlin/String, kotlin/Long?, kotlin.collections/Map<kotlin/String, kotlin/String>) // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.<init>|<init>(kotlin.String;kotlin.String?;kotlin.String;kotlin.Long?;kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
+
+    final val accessToken // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.accessToken|{}accessToken[0]
+        final fun <get-accessToken>(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.accessToken.<get-accessToken>|<get-accessToken>(){}[0]
+    final val cookies // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.cookies|{}cookies[0]
+        final fun <get-cookies>(): kotlin.collections/Map<kotlin/String, kotlin/String> // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.cookies.<get-cookies>|<get-cookies>(){}[0]
+    final val expiresAt // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.expiresAt|{}expiresAt[0]
+        final fun <get-expiresAt>(): kotlin/Long? // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.expiresAt.<get-expiresAt>|<get-expiresAt>(){}[0]
+    final val refreshToken // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.refreshToken|{}refreshToken[0]
+        final fun <get-refreshToken>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.refreshToken.<get-refreshToken>|<get-refreshToken>(){}[0]
+    final val tokenType // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.tokenType|{}tokenType[0]
+        final fun <get-tokenType>(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.tokenType.<get-tokenType>|<get-tokenType>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.component1|component1(){}[0]
+    final fun component2(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.component2|component2(){}[0]
+    final fun component3(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.component3|component3(){}[0]
+    final fun component4(): kotlin/Long? // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.component4|component4(){}[0]
+    final fun component5(): kotlin.collections/Map<kotlin/String, kotlin/String> // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.component5|component5(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String? = ..., kotlin/String = ..., kotlin/Long? = ..., kotlin.collections/Map<kotlin/String, kotlin/String> = ...): com.github.zly2006.zhihu.account/ZhihuMobileLoginToken // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.copy|copy(kotlin.String;kotlin.String?;kotlin.String;kotlin.Long?;kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuMobileLoginToken.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.account/ZhihuPhoneLoginClient : kotlin/AutoCloseable { // com.github.zly2006.zhihu.account/ZhihuPhoneLoginClient|null[0]
+    constructor <init>(com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo, io.ktor.client.engine/HttpClientEngine, kotlin.collections/MutableMap<kotlin/String, kotlin/String> = ..., kotlin.time/Clock = ...) // com.github.zly2006.zhihu.account/ZhihuPhoneLoginClient.<init>|<init>(com.github.zly2006.zhihu.account.ZhihuPhoneLoginDeviceInfo;io.ktor.client.engine.HttpClientEngine;kotlin.collections.MutableMap<kotlin.String,kotlin.String>;kotlin.time.Clock){}[0]
+
+    final fun close() // com.github.zly2006.zhihu.account/ZhihuPhoneLoginClient.close|close(){}[0]
+    final suspend fun refreshCaptcha(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuPhoneLoginClient.refreshCaptcha|refreshCaptcha(){}[0]
+    final suspend fun requestDigits(kotlin/String): com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult // com.github.zly2006.zhihu.account/ZhihuPhoneLoginClient.requestDigits|requestDigits(kotlin.String){}[0]
+    final suspend fun signIn(kotlin/String, kotlin/String): com.github.zly2006.zhihu.account/ZhihuMobileLoginToken // com.github.zly2006.zhihu.account/ZhihuPhoneLoginClient.signIn|signIn(kotlin.String;kotlin.String){}[0]
+    final suspend fun verifyCaptcha(kotlin/String): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuPhoneLoginClient.verifyCaptcha|verifyCaptcha(kotlin.String){}[0]
+}
+
+final class com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo { // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo|null[0]
+    constructor <init>(kotlin/Long, kotlin/Long, kotlin/Boolean, kotlin/Boolean, kotlin/String, kotlin/String, kotlin/String, kotlin/String, kotlin/Int, kotlin/String, kotlin/Int, kotlin/Int, kotlin/Int, kotlin/Int) // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.<init>|<init>(kotlin.Long;kotlin.Long;kotlin.Boolean;kotlin.Boolean;kotlin.String;kotlin.String;kotlin.String;kotlin.String;kotlin.Int;kotlin.String;kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+
+    final val androidRelease // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.androidRelease|{}androidRelease[0]
+        final fun <get-androidRelease>(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.androidRelease.<get-androidRelease>|<get-androidRelease>(){}[0]
+    final val appInstallTimeMillis // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.appInstallTimeMillis|{}appInstallTimeMillis[0]
+        final fun <get-appInstallTimeMillis>(): kotlin/Long // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.appInstallTimeMillis.<get-appInstallTimeMillis>|<get-appInstallTimeMillis>(){}[0]
+    final val bluetoothAvailable // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.bluetoothAvailable|{}bluetoothAvailable[0]
+        final fun <get-bluetoothAvailable>(): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.bluetoothAvailable.<get-bluetoothAvailable>|<get-bluetoothAvailable>(){}[0]
+    final val cpuCount // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.cpuCount|{}cpuCount[0]
+        final fun <get-cpuCount>(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.cpuCount.<get-cpuCount>|<get-cpuCount>(){}[0]
+    final val cpuType // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.cpuType|{}cpuType[0]
+        final fun <get-cpuType>(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.cpuType.<get-cpuType>|<get-cpuType>(){}[0]
+    final val cpuUsage // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.cpuUsage|{}cpuUsage[0]
+        final fun <get-cpuUsage>(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.cpuUsage.<get-cpuUsage>|<get-cpuUsage>(){}[0]
+    final val freeMemoryMegabytes // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.freeMemoryMegabytes|{}freeMemoryMegabytes[0]
+        final fun <get-freeMemoryMegabytes>(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.freeMemoryMegabytes.<get-freeMemoryMegabytes>|<get-freeMemoryMegabytes>(){}[0]
+    final val freeStorageMegabytes // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.freeStorageMegabytes|{}freeStorageMegabytes[0]
+        final fun <get-freeStorageMegabytes>(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.freeStorageMegabytes.<get-freeStorageMegabytes>|<get-freeStorageMegabytes>(){}[0]
+    final val notificationEnabled // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.notificationEnabled|{}notificationEnabled[0]
+        final fun <get-notificationEnabled>(): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.notificationEnabled.<get-notificationEnabled>|<get-notificationEnabled>(){}[0]
+    final val phoneBrand // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.phoneBrand|{}phoneBrand[0]
+        final fun <get-phoneBrand>(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.phoneBrand.<get-phoneBrand>|<get-phoneBrand>(){}[0]
+    final val phoneModel // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.phoneModel|{}phoneModel[0]
+        final fun <get-phoneModel>(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.phoneModel.<get-phoneModel>|<get-phoneModel>(){}[0]
+    final val timezoneOffsetSeconds // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.timezoneOffsetSeconds|{}timezoneOffsetSeconds[0]
+        final fun <get-timezoneOffsetSeconds>(): kotlin/Long // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.timezoneOffsetSeconds.<get-timezoneOffsetSeconds>|<get-timezoneOffsetSeconds>(){}[0]
+    final val totalMemoryMegabytes // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.totalMemoryMegabytes|{}totalMemoryMegabytes[0]
+        final fun <get-totalMemoryMegabytes>(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.totalMemoryMegabytes.<get-totalMemoryMegabytes>|<get-totalMemoryMegabytes>(){}[0]
+    final val totalStorageMegabytes // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.totalStorageMegabytes|{}totalStorageMegabytes[0]
+        final fun <get-totalStorageMegabytes>(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.totalStorageMegabytes.<get-totalStorageMegabytes>|<get-totalStorageMegabytes>(){}[0]
+
+    final fun component1(): kotlin/Long // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.component1|component1(){}[0]
+    final fun component10(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.component10|component10(){}[0]
+    final fun component11(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.component11|component11(){}[0]
+    final fun component12(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.component12|component12(){}[0]
+    final fun component13(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.component13|component13(){}[0]
+    final fun component14(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.component14|component14(){}[0]
+    final fun component2(): kotlin/Long // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.component2|component2(){}[0]
+    final fun component3(): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.component3|component3(){}[0]
+    final fun component4(): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.component4|component4(){}[0]
+    final fun component5(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.component5|component5(){}[0]
+    final fun component6(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.component6|component6(){}[0]
+    final fun component7(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.component7|component7(){}[0]
+    final fun component8(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.component8|component8(){}[0]
+    final fun component9(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.component9|component9(){}[0]
+    final fun copy(kotlin/Long = ..., kotlin/Long = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/Int = ..., kotlin/String = ..., kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ...): com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.copy|copy(kotlin.Long;kotlin.Long;kotlin.Boolean;kotlin.Boolean;kotlin.String;kotlin.String;kotlin.String;kotlin.String;kotlin.Int;kotlin.String;kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuPhoneLoginDeviceInfo.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.account/ZhihuQrCodeResponse { // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse|null[0]
+    constructor <init>(kotlin/Long? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...) // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.<init>|<init>(kotlin.Long?;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
+
+    final val expiresAt // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.expiresAt|{}expiresAt[0]
+        final fun <get-expiresAt>(): kotlin/Long? // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.expiresAt.<get-expiresAt>|<get-expiresAt>(){}[0]
+    final val link // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.link|{}link[0]
+        final fun <get-link>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.link.<get-link>|<get-link>(){}[0]
+    final val qrcodeToken // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.qrcodeToken|{}qrcodeToken[0]
+        final fun <get-qrcodeToken>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.qrcodeToken.<get-qrcodeToken>|<get-qrcodeToken>(){}[0]
+    final val token // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.token|{}token[0]
+        final fun <get-token>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.token.<get-token>|<get-token>(){}[0]
+
+    final fun component1(): kotlin/Long? // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.component1|component1(){}[0]
+    final fun component2(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.component2|component2(){}[0]
+    final fun component3(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.component3|component3(){}[0]
+    final fun component4(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.component4|component4(){}[0]
+    final fun copy(kotlin/Long? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...): com.github.zly2006.zhihu.account/ZhihuQrCodeResponse // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.copy|copy(kotlin.Long?;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.account/ZhihuQrCodeResponse> { // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.account/ZhihuQrCodeResponse // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.account/ZhihuQrCodeResponse) // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.account.ZhihuQrCodeResponse){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.account/ZhihuQrCodeResponse> // com.github.zly2006.zhihu.account/ZhihuQrCodeResponse.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.account/ZhihuQrScanError { // com.github.zly2006.zhihu.account/ZhihuQrScanError|null[0]
+    constructor <init>(kotlin/Boolean? = ..., kotlin/String? = ..., kotlin/Int? = ..., kotlin/String? = ...) // com.github.zly2006.zhihu.account/ZhihuQrScanError.<init>|<init>(kotlin.Boolean?;kotlin.String?;kotlin.Int?;kotlin.String?){}[0]
+
+    final val code // com.github.zly2006.zhihu.account/ZhihuQrScanError.code|{}code[0]
+        final fun <get-code>(): kotlin/Int? // com.github.zly2006.zhihu.account/ZhihuQrScanError.code.<get-code>|<get-code>(){}[0]
+    final val message // com.github.zly2006.zhihu.account/ZhihuQrScanError.message|{}message[0]
+        final fun <get-message>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrScanError.message.<get-message>|<get-message>(){}[0]
+    final val needLogin // com.github.zly2006.zhihu.account/ZhihuQrScanError.needLogin|{}needLogin[0]
+        final fun <get-needLogin>(): kotlin/Boolean? // com.github.zly2006.zhihu.account/ZhihuQrScanError.needLogin.<get-needLogin>|<get-needLogin>(){}[0]
+    final val redirect // com.github.zly2006.zhihu.account/ZhihuQrScanError.redirect|{}redirect[0]
+        final fun <get-redirect>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrScanError.redirect.<get-redirect>|<get-redirect>(){}[0]
+
+    final fun component1(): kotlin/Boolean? // com.github.zly2006.zhihu.account/ZhihuQrScanError.component1|component1(){}[0]
+    final fun component2(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrScanError.component2|component2(){}[0]
+    final fun component3(): kotlin/Int? // com.github.zly2006.zhihu.account/ZhihuQrScanError.component3|component3(){}[0]
+    final fun component4(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrScanError.component4|component4(){}[0]
+    final fun copy(kotlin/Boolean? = ..., kotlin/String? = ..., kotlin/Int? = ..., kotlin/String? = ...): com.github.zly2006.zhihu.account/ZhihuQrScanError // com.github.zly2006.zhihu.account/ZhihuQrScanError.copy|copy(kotlin.Boolean?;kotlin.String?;kotlin.Int?;kotlin.String?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuQrScanError.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuQrScanError.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuQrScanError.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.account/ZhihuQrScanError> { // com.github.zly2006.zhihu.account/ZhihuQrScanError.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.account/ZhihuQrScanError.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.account/ZhihuQrScanError.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.account/ZhihuQrScanError.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.account/ZhihuQrScanError // com.github.zly2006.zhihu.account/ZhihuQrScanError.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.account/ZhihuQrScanError) // com.github.zly2006.zhihu.account/ZhihuQrScanError.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.account.ZhihuQrScanError){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.account/ZhihuQrScanError.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.account/ZhihuQrScanError> // com.github.zly2006.zhihu.account/ZhihuQrScanError.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.account/ZhihuQrScanInfo { // com.github.zly2006.zhihu.account/ZhihuQrScanInfo|null[0]
+    constructor <init>(kotlin/Int? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/Boolean? = ..., kotlin/Boolean? = ..., kotlin/String? = ..., com.github.zly2006.zhihu.account/ZhihuQrScanError? = ...) // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.<init>|<init>(kotlin.Int?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.Boolean?;kotlin.Boolean?;kotlin.String?;com.github.zly2006.zhihu.account.ZhihuQrScanError?){}[0]
+
+    final val accessToken // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.accessToken|{}accessToken[0]
+        final fun <get-accessToken>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.accessToken.<get-accessToken>|<get-accessToken>(){}[0]
+    final val cookie // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.cookie|{}cookie[0]
+        final fun <get-cookie>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.cookie.<get-cookie>|<get-cookie>(){}[0]
+    final val cookies // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.cookies|{}cookies[0]
+        final fun <get-cookies>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.cookies.<get-cookies>|<get-cookies>(){}[0]
+    final val error // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.error|{}error[0]
+        final fun <get-error>(): com.github.zly2006.zhihu.account/ZhihuQrScanError? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.error.<get-error>|<get-error>(){}[0]
+    final val loggedIn // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.loggedIn|{}loggedIn[0]
+        final fun <get-loggedIn>(): kotlin/Boolean? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.loggedIn.<get-loggedIn>|<get-loggedIn>(){}[0]
+    final val loginStatus // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.loginStatus|{}loginStatus[0]
+        final fun <get-loginStatus>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.loginStatus.<get-loginStatus>|<get-loginStatus>(){}[0]
+    final val status // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.status|{}status[0]
+        final fun <get-status>(): kotlin/Int? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.status.<get-status>|<get-status>(){}[0]
+    final val success // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.success|{}success[0]
+        final fun <get-success>(): kotlin/Boolean? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.success.<get-success>|<get-success>(){}[0]
+    final val userId // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.userId|{}userId[0]
+        final fun <get-userId>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.userId.<get-userId>|<get-userId>(){}[0]
+    final val zC0 // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.zC0|{}zC0[0]
+        final fun <get-zC0>(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.zC0.<get-zC0>|<get-zC0>(){}[0]
+
+    final fun component1(): kotlin/Int? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.component1|component1(){}[0]
+    final fun component10(): com.github.zly2006.zhihu.account/ZhihuQrScanError? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.component10|component10(){}[0]
+    final fun component2(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.component2|component2(){}[0]
+    final fun component3(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.component3|component3(){}[0]
+    final fun component4(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.component4|component4(){}[0]
+    final fun component5(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.component5|component5(){}[0]
+    final fun component6(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.component6|component6(){}[0]
+    final fun component7(): kotlin/Boolean? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.component7|component7(){}[0]
+    final fun component8(): kotlin/Boolean? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.component8|component8(){}[0]
+    final fun component9(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.component9|component9(){}[0]
+    final fun copy(kotlin/Int? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/Boolean? = ..., kotlin/Boolean? = ..., kotlin/String? = ..., com.github.zly2006.zhihu.account/ZhihuQrScanError? = ...): com.github.zly2006.zhihu.account/ZhihuQrScanInfo // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.copy|copy(kotlin.Int?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.Boolean?;kotlin.Boolean?;kotlin.String?;com.github.zly2006.zhihu.account.ZhihuQrScanError?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.account/ZhihuQrScanInfo> { // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.account/ZhihuQrScanInfo // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.account/ZhihuQrScanInfo) // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.account.ZhihuQrScanInfo){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.account/ZhihuQrScanInfo> // com.github.zly2006.zhihu.account/ZhihuQrScanInfo.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.account/ZhihuSavedAccount { // com.github.zly2006.zhihu.account/ZhihuSavedAccount|null[0]
+    constructor <init>(kotlin/String, com.github.zly2006.zhihu.account/ZhihuAccountSession) // com.github.zly2006.zhihu.account/ZhihuSavedAccount.<init>|<init>(kotlin.String;com.github.zly2006.zhihu.account.ZhihuAccountSession){}[0]
+
+    final val id // com.github.zly2006.zhihu.account/ZhihuSavedAccount.id|{}id[0]
+        final fun <get-id>(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuSavedAccount.id.<get-id>|<get-id>(){}[0]
+    final val session // com.github.zly2006.zhihu.account/ZhihuSavedAccount.session|{}session[0]
+        final fun <get-session>(): com.github.zly2006.zhihu.account/ZhihuAccountSession // com.github.zly2006.zhihu.account/ZhihuSavedAccount.session.<get-session>|<get-session>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuSavedAccount.component1|component1(){}[0]
+    final fun component2(): com.github.zly2006.zhihu.account/ZhihuAccountSession // com.github.zly2006.zhihu.account/ZhihuSavedAccount.component2|component2(){}[0]
+    final fun copy(kotlin/String = ..., com.github.zly2006.zhihu.account/ZhihuAccountSession = ...): com.github.zly2006.zhihu.account/ZhihuSavedAccount // com.github.zly2006.zhihu.account/ZhihuSavedAccount.copy|copy(kotlin.String;com.github.zly2006.zhihu.account.ZhihuAccountSession){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.account/ZhihuSavedAccount.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuSavedAccount.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuSavedAccount.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.account/ZhihuSavedAccount> { // com.github.zly2006.zhihu.account/ZhihuSavedAccount.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.account/ZhihuSavedAccount.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.account/ZhihuSavedAccount.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.account/ZhihuSavedAccount.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.account/ZhihuSavedAccount // com.github.zly2006.zhihu.account/ZhihuSavedAccount.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.account/ZhihuSavedAccount) // com.github.zly2006.zhihu.account/ZhihuSavedAccount.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.account.ZhihuSavedAccount){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.account/ZhihuSavedAccount.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.account/ZhihuSavedAccount> // com.github.zly2006.zhihu.account/ZhihuSavedAccount.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final const val com.github.zly2006.zhihu.account/DEFAULT_ZHIHU_USER_AGENT // com.github.zly2006.zhihu.account/DEFAULT_ZHIHU_USER_AGENT|{}DEFAULT_ZHIHU_USER_AGENT[0]
+    final fun <get-DEFAULT_ZHIHU_USER_AGENT>(): kotlin/String // com.github.zly2006.zhihu.account/DEFAULT_ZHIHU_USER_AGENT.<get-DEFAULT_ZHIHU_USER_AGENT>|<get-DEFAULT_ZHIHU_USER_AGENT>(){}[0]
+final const val com.github.zly2006.zhihu.account/ZHIHU_ANDROID_PHONE_LOGIN_USER_AGENT // com.github.zly2006.zhihu.account/ZHIHU_ANDROID_PHONE_LOGIN_USER_AGENT|{}ZHIHU_ANDROID_PHONE_LOGIN_USER_AGENT[0]
+    final fun <get-ZHIHU_ANDROID_PHONE_LOGIN_USER_AGENT>(): kotlin/String // com.github.zly2006.zhihu.account/ZHIHU_ANDROID_PHONE_LOGIN_USER_AGENT.<get-ZHIHU_ANDROID_PHONE_LOGIN_USER_AGENT>|<get-ZHIHU_ANDROID_PHONE_LOGIN_USER_AGENT>(){}[0]
+final const val com.github.zly2006.zhihu.account/ZHIHU_DESKTOP_USER_AGENT // com.github.zly2006.zhihu.account/ZHIHU_DESKTOP_USER_AGENT|{}ZHIHU_DESKTOP_USER_AGENT[0]
+    final fun <get-ZHIHU_DESKTOP_USER_AGENT>(): kotlin/String // com.github.zly2006.zhihu.account/ZHIHU_DESKTOP_USER_AGENT.<get-ZHIHU_DESKTOP_USER_AGENT>|<get-ZHIHU_DESKTOP_USER_AGENT>(){}[0]
+final const val com.github.zly2006.zhihu.account/ZHIHU_HOME_URL // com.github.zly2006.zhihu.account/ZHIHU_HOME_URL|{}ZHIHU_HOME_URL[0]
+    final fun <get-ZHIHU_HOME_URL>(): kotlin/String // com.github.zly2006.zhihu.account/ZHIHU_HOME_URL.<get-ZHIHU_HOME_URL>|<get-ZHIHU_HOME_URL>(){}[0]
+final const val com.github.zly2006.zhihu.account/ZHIHU_ME_URL // com.github.zly2006.zhihu.account/ZHIHU_ME_URL|{}ZHIHU_ME_URL[0]
+    final fun <get-ZHIHU_ME_URL>(): kotlin/String // com.github.zly2006.zhihu.account/ZHIHU_ME_URL.<get-ZHIHU_ME_URL>|<get-ZHIHU_ME_URL>(){}[0]
+final const val com.github.zly2006.zhihu.account/ZHIHU_RISK_CONTROL_URL // com.github.zly2006.zhihu.account/ZHIHU_RISK_CONTROL_URL|{}ZHIHU_RISK_CONTROL_URL[0]
+    final fun <get-ZHIHU_RISK_CONTROL_URL>(): kotlin/String // com.github.zly2006.zhihu.account/ZHIHU_RISK_CONTROL_URL.<get-ZHIHU_RISK_CONTROL_URL>|<get-ZHIHU_RISK_CONTROL_URL>(){}[0]
+final const val com.github.zly2006.zhihu.account/ZHIHU_SIGNIN_REFERER_URL // com.github.zly2006.zhihu.account/ZHIHU_SIGNIN_REFERER_URL|{}ZHIHU_SIGNIN_REFERER_URL[0]
+    final fun <get-ZHIHU_SIGNIN_REFERER_URL>(): kotlin/String // com.github.zly2006.zhihu.account/ZHIHU_SIGNIN_REFERER_URL.<get-ZHIHU_SIGNIN_REFERER_URL>|<get-ZHIHU_SIGNIN_REFERER_URL>(){}[0]
+final const val com.github.zly2006.zhihu.account/ZHIHU_SIGNIN_URL // com.github.zly2006.zhihu.account/ZHIHU_SIGNIN_URL|{}ZHIHU_SIGNIN_URL[0]
+    final fun <get-ZHIHU_SIGNIN_URL>(): kotlin/String // com.github.zly2006.zhihu.account/ZHIHU_SIGNIN_URL.<get-ZHIHU_SIGNIN_URL>|<get-ZHIHU_SIGNIN_URL>(){}[0]
+
+final val com.github.zly2006.zhihu.account/QR_LOGIN_REQUEST_TIMEOUT // com.github.zly2006.zhihu.account/QR_LOGIN_REQUEST_TIMEOUT|{}QR_LOGIN_REQUEST_TIMEOUT[0]
+    final fun <get-QR_LOGIN_REQUEST_TIMEOUT>(): kotlin.time/Duration // com.github.zly2006.zhihu.account/QR_LOGIN_REQUEST_TIMEOUT.<get-QR_LOGIN_REQUEST_TIMEOUT>|<get-QR_LOGIN_REQUEST_TIMEOUT>(){}[0]
+
+final fun com.github.zly2006.zhihu.account/accountModule(kotlinx.io.files/Path): org.koin.core.module/Module // com.github.zly2006.zhihu.account/accountModule|accountModule(kotlinx.io.files.Path){}[0]
+final fun com.github.zly2006.zhihu.account/createDesktopHeaders(kotlin/String? = ...): kotlin.collections/MutableMap<kotlin/String, kotlin/String> // com.github.zly2006.zhihu.account/createDesktopHeaders|createDesktopHeaders(kotlin.String?){}[0]
+final fun com.github.zly2006.zhihu.account/createZhihuLoginHeaders(kotlin.collections/Map<kotlin/String, kotlin/String>, kotlin/String, kotlin/Boolean = ...): kotlin.collections/Map<kotlin/String, kotlin/String> // com.github.zly2006.zhihu.account/createZhihuLoginHeaders|createZhihuLoginHeaders(kotlin.collections.Map<kotlin.String,kotlin.String>;kotlin.String;kotlin.Boolean){}[0]
+final fun com.github.zly2006.zhihu.account/isQrLoginExpired(com.github.zly2006.zhihu.account/ZhihuQrScanInfo): kotlin/Boolean // com.github.zly2006.zhihu.account/isQrLoginExpired|isQrLoginExpired(com.github.zly2006.zhihu.account.ZhihuQrScanInfo){}[0]
+final fun com.github.zly2006.zhihu.account/isQrLoginSuccessful(com.github.zly2006.zhihu.account/ZhihuQrScanInfo): kotlin/Boolean // com.github.zly2006.zhihu.account/isQrLoginSuccessful|isQrLoginSuccessful(com.github.zly2006.zhihu.account.ZhihuQrScanInfo){}[0]
+final fun com.github.zly2006.zhihu.account/isRiskControlResponse(kotlin/Int, com.github.zly2006.zhihu.account/ZhihuQrScanInfo): kotlin/Boolean // com.github.zly2006.zhihu.account/isRiskControlResponse|isRiskControlResponse(kotlin.Int;com.github.zly2006.zhihu.account.ZhihuQrScanInfo){}[0]
+final fun com.github.zly2006.zhihu.account/normalizeDeadline(kotlin/Long?): kotlin/Long // com.github.zly2006.zhihu.account/normalizeDeadline|normalizeDeadline(kotlin.Long?){}[0]
+final fun com.github.zly2006.zhihu.account/parseCookieAssignments(kotlin/String): kotlin.collections/Map<kotlin/String, kotlin/String> // com.github.zly2006.zhihu.account/parseCookieAssignments|parseCookieAssignments(kotlin.String){}[0]
+final fun com.github.zly2006.zhihu.account/syncCookiesFromScanInfo(kotlin.collections/MutableMap<kotlin/String, kotlin/String>, com.github.zly2006.zhihu.account/ZhihuQrScanInfo) // com.github.zly2006.zhihu.account/syncCookiesFromScanInfo|syncCookiesFromScanInfo(kotlin.collections.MutableMap<kotlin.String,kotlin.String>;com.github.zly2006.zhihu.account.ZhihuQrScanInfo){}[0]
+final suspend fun com.github.zly2006.zhihu.account/pollQrCodeLogin(io.ktor.client/HttpClient, kotlin.collections/MutableMap<kotlin/String, kotlin/String>, kotlin/String, kotlin/Long, kotlin/Function0<kotlin/Unit>, kotlin/Function2<kotlin/String?, kotlin/String?, kotlin/Unit>): kotlin/Boolean // com.github.zly2006.zhihu.account/pollQrCodeLogin|pollQrCodeLogin(io.ktor.client.HttpClient;kotlin.collections.MutableMap<kotlin.String,kotlin.String>;kotlin.String;kotlin.Long;kotlin.Function0<kotlin.Unit>;kotlin.Function2<kotlin.String?,kotlin.String?,kotlin.Unit>){}[0]
+final suspend fun com.github.zly2006.zhihu.account/prefetchQrLoginContext(io.ktor.client/HttpClient, kotlin.collections/Map<kotlin/String, kotlin/String>) // com.github.zly2006.zhihu.account/prefetchQrLoginContext|prefetchQrLoginContext(io.ktor.client.HttpClient;kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
+final suspend fun com.github.zly2006.zhihu.account/requestQrCode(io.ktor.client/HttpClient, kotlin.collections/Map<kotlin/String, kotlin/String>): com.github.zly2006.zhihu.account/ZhihuQrCodeResponse // com.github.zly2006.zhihu.account/requestQrCode|requestQrCode(io.ktor.client.HttpClient;kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]

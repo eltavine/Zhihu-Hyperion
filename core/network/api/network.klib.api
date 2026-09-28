@@ -1,0 +1,68 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, macosArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <Zhihu.core:network>
+final class com.github.zly2006.zhihu.data/ZhihuCookieStorage : io.ktor.client.plugins.cookies/CookiesStorage { // com.github.zly2006.zhihu.data/ZhihuCookieStorage|null[0]
+    constructor <init>(kotlin.collections/MutableMap<kotlin/String, kotlin/String>, kotlin/Function0<kotlin/Unit> = ...) // com.github.zly2006.zhihu.data/ZhihuCookieStorage.<init>|<init>(kotlin.collections.MutableMap<kotlin.String,kotlin.String>;kotlin.Function0<kotlin.Unit>){}[0]
+
+    final fun close() // com.github.zly2006.zhihu.data/ZhihuCookieStorage.close|close(){}[0]
+    final suspend fun addCookie(io.ktor.http/Url, io.ktor.http/Cookie) // com.github.zly2006.zhihu.data/ZhihuCookieStorage.addCookie|addCookie(io.ktor.http.Url;io.ktor.http.Cookie){}[0]
+    final suspend fun get(io.ktor.http/Url): kotlin.collections/List<io.ktor.http/Cookie> // com.github.zly2006.zhihu.data/ZhihuCookieStorage.get|get(io.ktor.http.Url){}[0]
+}
+
+final class com.github.zly2006.zhihu.util/HttpStatusException : kotlin/Exception { // com.github.zly2006.zhihu.util/HttpStatusException|null[0]
+    constructor <init>(io.ktor.http/HttpStatusCode, io.ktor.http/Url, kotlin/String) // com.github.zly2006.zhihu.util/HttpStatusException.<init>|<init>(io.ktor.http.HttpStatusCode;io.ktor.http.Url;kotlin.String){}[0]
+    constructor <init>(io.ktor.http/HttpStatusCode, io.ktor.http/Url, kotlin/String, kotlin/String?) // com.github.zly2006.zhihu.util/HttpStatusException.<init>|<init>(io.ktor.http.HttpStatusCode;io.ktor.http.Url;kotlin.String;kotlin.String?){}[0]
+
+    final val bodyText // com.github.zly2006.zhihu.util/HttpStatusException.bodyText|{}bodyText[0]
+        final fun <get-bodyText>(): kotlin/String // com.github.zly2006.zhihu.util/HttpStatusException.bodyText.<get-bodyText>|<get-bodyText>(){}[0]
+    final val message // com.github.zly2006.zhihu.util/HttpStatusException.message|{}message[0]
+        final fun <get-message>(): kotlin/String // com.github.zly2006.zhihu.util/HttpStatusException.message.<get-message>|<get-message>(){}[0]
+    final val requestUrl // com.github.zly2006.zhihu.util/HttpStatusException.requestUrl|{}requestUrl[0]
+        final fun <get-requestUrl>(): io.ktor.http/Url // com.github.zly2006.zhihu.util/HttpStatusException.requestUrl.<get-requestUrl>|<get-requestUrl>(){}[0]
+    final val status // com.github.zly2006.zhihu.util/HttpStatusException.status|{}status[0]
+        final fun <get-status>(): io.ktor.http/HttpStatusCode // com.github.zly2006.zhihu.util/HttpStatusException.status.<get-status>|<get-status>(){}[0]
+
+    final var dumpedCurlRequest // com.github.zly2006.zhihu.util/HttpStatusException.dumpedCurlRequest|{}dumpedCurlRequest[0]
+        final fun <get-dumpedCurlRequest>(): kotlin/String? // com.github.zly2006.zhihu.util/HttpStatusException.dumpedCurlRequest.<get-dumpedCurlRequest>|<get-dumpedCurlRequest>(){}[0]
+        final fun <set-dumpedCurlRequest>(kotlin/String?) // com.github.zly2006.zhihu.util/HttpStatusException.dumpedCurlRequest.<set-dumpedCurlRequest>|<set-dumpedCurlRequest>(kotlin.String?){}[0]
+}
+
+final object com.github.zly2006.zhihu.util/ZhihuCredentialRefresher { // com.github.zly2006.zhihu.util/ZhihuCredentialRefresher|null[0]
+    final suspend fun fetchRefreshToken(io.ktor.client/HttpClient): kotlin/String // com.github.zly2006.zhihu.util/ZhihuCredentialRefresher.fetchRefreshToken|fetchRefreshToken(io.ktor.client.HttpClient){}[0]
+    final suspend fun refreshZhihuToken(kotlin/String, io.ktor.client/HttpClient): kotlin/String // com.github.zly2006.zhihu.util/ZhihuCredentialRefresher.refreshZhihuToken|refreshZhihuToken(kotlin.String;io.ktor.client.HttpClient){}[0]
+}
+
+final object com.github.zly2006.zhihu.util/ZhihuFetchSignature { // com.github.zly2006.zhihu.util/ZhihuFetchSignature|null[0]
+    final fun createZse96Header(kotlin/String, kotlin/String, kotlin/String, kotlin/String? = ...): kotlin/String // com.github.zly2006.zhihu.util/ZhihuFetchSignature.createZse96Header|createZse96Header(kotlin.String;kotlin.String;kotlin.String;kotlin.String?){}[0]
+    final fun md5Hex(kotlin/ByteArray): kotlin/String // com.github.zly2006.zhihu.util/ZhihuFetchSignature.md5Hex|md5Hex(kotlin.ByteArray){}[0]
+    final fun md5Hex(kotlin/String): kotlin/String // com.github.zly2006.zhihu.util/ZhihuFetchSignature.md5Hex|md5Hex(kotlin.String){}[0]
+}
+
+final object com.github.zly2006.zhihu.util/ZhihuMessageBodyEncryptor { // com.github.zly2006.zhihu.util/ZhihuMessageBodyEncryptor|null[0]
+    final fun encrypt(kotlin/String): kotlin/String // com.github.zly2006.zhihu.util/ZhihuMessageBodyEncryptor.encrypt|encrypt(kotlin.String){}[0]
+}
+
+final object com.github.zly2006.zhihu.util/ZseSigner { // com.github.zly2006.zhihu.util/ZseSigner|null[0]
+    final fun encryptZseV4(kotlin/String): kotlin/String // com.github.zly2006.zhihu.util/ZseSigner.encryptZseV4|encryptZseV4(kotlin.String){}[0]
+}
+
+final const val com.github.zly2006.zhihu.util/ZHIHU_WEB_ZSE93 // com.github.zly2006.zhihu.util/ZHIHU_WEB_ZSE93|{}ZHIHU_WEB_ZSE93[0]
+    final fun <get-ZHIHU_WEB_ZSE93>(): kotlin/String // com.github.zly2006.zhihu.util/ZHIHU_WEB_ZSE93.<get-ZHIHU_WEB_ZSE93>|<get-ZHIHU_WEB_ZSE93>(){}[0]
+
+final fun (io.ktor.client.request/HttpRequestBuilder).com.github.zly2006.zhihu.util/signZhihuFetchRequest(kotlin.collections/Map<kotlin/String, kotlin/String>, kotlin/String? = ...) // com.github.zly2006.zhihu.util/signZhihuFetchRequest|signZhihuFetchRequest@io.ktor.client.request.HttpRequestBuilder(kotlin.collections.Map<kotlin.String,kotlin.String>;kotlin.String?){}[0]
+final fun (io.ktor.client.request/HttpRequestBuilder).com.github.zly2006.zhihu.util/signZhihuFetchRequest(kotlin/String = ..., kotlin/String, kotlin/String? = ...) // com.github.zly2006.zhihu.util/signZhihuFetchRequest|signZhihuFetchRequest@io.ktor.client.request.HttpRequestBuilder(kotlin.String;kotlin.String;kotlin.String?){}[0]
+final fun (io.ktor.client.statement/HttpResponse).com.github.zly2006.zhihu.util/dumpCurlRequest(): kotlin/String // com.github.zly2006.zhihu.util/dumpCurlRequest|dumpCurlRequest@io.ktor.client.statement.HttpResponse(){}[0]
+final fun (kotlin.collections/Map<kotlin/String, kotlin/String>).com.github.zly2006.zhihu.data/toCookieHeaderString(): kotlin/String // com.github.zly2006.zhihu.data/toCookieHeaderString|toCookieHeaderString@kotlin.collections.Map<kotlin.String,kotlin.String>(){}[0]
+final fun <#A: io.ktor.client.engine/HttpClientEngineConfig> (io.ktor.client/HttpClientConfig<#A>).com.github.zly2006.zhihu.data/installZhihuCommonClientConfig(kotlin.collections/MutableMap<kotlin/String, kotlin/String>, kotlin/String, kotlin/Function0<kotlin/Unit> = ..., kotlin/Boolean = ...) // com.github.zly2006.zhihu.data/installZhihuCommonClientConfig|installZhihuCommonClientConfig@io.ktor.client.HttpClientConfig<0:0>(kotlin.collections.MutableMap<kotlin.String,kotlin.String>;kotlin.String;kotlin.Function0<kotlin.Unit>;kotlin.Boolean){0§<io.ktor.client.engine.HttpClientEngineConfig>}[0]
+final fun com.github.zly2006.zhihu.util/hmacSha1Hex(kotlin/String, kotlin/String): kotlin/String // com.github.zly2006.zhihu.util/hmacSha1Hex|hmacSha1Hex(kotlin.String;kotlin.String){}[0]
+final suspend fun (io.ktor.client.statement/HttpResponse).com.github.zly2006.zhihu.util/json(): kotlinx.serialization.json/JsonElement // com.github.zly2006.zhihu.util/json|json@io.ktor.client.statement.HttpResponse(){}[0]
+final suspend fun (io.ktor.client.statement/HttpResponse).com.github.zly2006.zhihu.util/jsonObject(): kotlinx.serialization.json/JsonObject // com.github.zly2006.zhihu.util/jsonObject|jsonObject@io.ktor.client.statement.HttpResponse(){}[0]
+final suspend fun (io.ktor.client.statement/HttpResponse).com.github.zly2006.zhihu.util/raiseForStatus(kotlin/Boolean = ...): io.ktor.client.statement/HttpResponse // com.github.zly2006.zhihu.util/raiseForStatus|raiseForStatus@io.ktor.client.statement.HttpResponse(kotlin.Boolean){}[0]
+final suspend fun com.github.zly2006.zhihu.data/executeZhihuAuthenticatedRequest(io.ktor.client/HttpClient, kotlin/String, kotlin.coroutines/SuspendFunction1<io.ktor.client.request/HttpRequestBuilder, kotlin/Unit> = ...): io.ktor.client.statement/HttpResponse // com.github.zly2006.zhihu.data/executeZhihuAuthenticatedRequest|executeZhihuAuthenticatedRequest(io.ktor.client.HttpClient;kotlin.String;kotlin.coroutines.SuspendFunction1<io.ktor.client.request.HttpRequestBuilder,kotlin.Unit>){}[0]
+final suspend fun com.github.zly2006.zhihu.data/fetchZhihuAuthenticatedJson(io.ktor.client/HttpClient, kotlin/String, kotlin.coroutines/SuspendFunction1<io.ktor.client.request/HttpRequestBuilder, kotlin/Unit> = ...): kotlinx.serialization.json/JsonObject? // com.github.zly2006.zhihu.data/fetchZhihuAuthenticatedJson|fetchZhihuAuthenticatedJson(io.ktor.client.HttpClient;kotlin.String;kotlin.coroutines.SuspendFunction1<io.ktor.client.request.HttpRequestBuilder,kotlin.Unit>){}[0]
+final suspend inline fun <#A: reified kotlin/Any?> (io.ktor.client.statement/HttpResponse).com.github.zly2006.zhihu.util/json(): #A // com.github.zly2006.zhihu.util/json|json@io.ktor.client.statement.HttpResponse(){0§<kotlin.Any?>}[0]
