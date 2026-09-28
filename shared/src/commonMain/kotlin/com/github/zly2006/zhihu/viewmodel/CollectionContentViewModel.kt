@@ -88,7 +88,7 @@ class CollectionContentViewModel(
     val nextPageUrl: String
         get() = lastPaging?.next.orEmpty()
 
-    override suspend fun processResponse(environment: PaginationEnvironment, data: List<CollectionItem>, rawData: JsonArray) {
+    override suspend fun processResponse(environment: ZhihuApiEnvironment, data: List<CollectionItem>, rawData: JsonArray) {
         super.processResponse(environment, data, rawData)
         displayItems.addAll(data.map { createDisplayItem(it) }) // 展示用的已flatten数据
         if (randomPageOffsets != null) {
@@ -116,7 +116,7 @@ class CollectionContentViewModel(
         },
     )
 
-    override fun refresh(environment: PaginationEnvironment) {
+    override fun refresh(environment: ZhihuApiEnvironment) {
         activeRandomSeed = null
         activeRandomItemCount = null
         randomDisplayOrderKeys.clear()
@@ -126,7 +126,7 @@ class CollectionContentViewModel(
     }
 
     fun refreshRandom(
-        environment: PaginationEnvironment,
+        environment: ZhihuApiEnvironment,
         itemCount: Int,
         randomSeed: Int,
     ) {
@@ -163,7 +163,7 @@ class CollectionContentViewModel(
         randomDisplayOrderKeys.addAll(keys)
     }
 
-    private fun refreshCurrentPagingMode(environment: PaginationEnvironment) {
+    private fun refreshCurrentPagingMode(environment: ZhihuApiEnvironment) {
         displayItems.clear()
         viewModelScope.launch {
             collection = environment.fetchCollection(collectionId)
@@ -172,7 +172,7 @@ class CollectionContentViewModel(
     }
 
     fun exportAllToHtmlZip(
-        environment: PaginationEnvironment,
+        environment: ZhihuApiEnvironment,
         exporter: CollectionExporter,
         includeImages: Boolean,
     ) {
@@ -263,7 +263,7 @@ class CollectionContentViewModel(
         exportDialogState = null
     }
 
-    private suspend fun ensureAllCollectionItemsLoaded(environment: PaginationEnvironment): List<CollectionItem> {
+    private suspend fun ensureAllCollectionItemsLoaded(environment: ZhihuApiEnvironment): List<CollectionItem> {
         if (collection == null) {
             collection = environment.fetchCollection(collectionId)
         }

@@ -17,12 +17,15 @@
 
 package com.github.zly2006.zhihu.viewmodel.local
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
 import com.github.zly2006.zhihu.platform.SettingsStore
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedInteractionViewModel
@@ -38,16 +41,19 @@ class LocalHomeFeedViewModel(
     HomeFeedInteractionViewModel {
     private val recommendationResults = mutableMapOf<String, CrawlingResult>()
 
+    /** Room 生成代码缺失时本地推荐无法工作，首页据此提示用户重启或清除数据。 */
+    var showDatabaseError by mutableStateOf(false)
+
     override val initialUrl: String
         get() = error("LocalHomeFeedViewModel should not be used directly. Use LocalFeedViewModel instead.")
 
-    override fun loadMore(environment: PaginationEnvironment) {
+    override fun loadMore(environment: ZhihuApiEnvironment) {
         if (displayItems.isEmpty()) {
             super.loadMore(environment)
         }
     }
 
-    override suspend fun fetchFeeds(environment: PaginationEnvironment) {
+    override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) {
         try {
             val engine = recommendationEngine.value.also { it.initialize() }
             val recommendations = engine.generateRecommendations(20)
@@ -72,9 +78,9 @@ class LocalHomeFeedViewModel(
                 latestLoadedDisplayItems.value = loadedItems
             }
         } catch (e: Exception) {
-            environment.handleLocalRecommendationFailure(e)
+            Log.e("LocalHomeFeedViewModel", "Error fetching local feeds", e)
             if (e.message?.contains("does not exist. Is Room annotation processor correctly configured?") == true) {
-                environment.showLocalRecommendationDatabaseError()
+                showDatabaseError = true
             }
             generateFallbackContent()
         } finally {

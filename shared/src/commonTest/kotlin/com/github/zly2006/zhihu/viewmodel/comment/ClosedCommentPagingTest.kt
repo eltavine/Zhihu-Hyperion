@@ -23,7 +23,6 @@ import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.viewmodel.CommentItem
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.FakeBlockedUserDao
 import io.ktor.client.HttpClient
@@ -81,7 +80,7 @@ private class FetchableCommentViewModel(
         onSuccess: () -> Unit,
     ) = Unit
 
-    suspend fun fetch(environment: PaginationEnvironment) = fetchFeeds(environment)
+    suspend fun fetch(environment: ZhihuApiEnvironment) = fetchFeeds(environment)
 }
 
 private fun commentListEnvironment(
@@ -89,7 +88,7 @@ private fun commentListEnvironment(
     statusType: Int,
     statusText: String = "",
     canReply: Boolean = true,
-): PaginationEnvironment = object : PaginationEnvironment {
+): ZhihuApiEnvironment = object : ZhihuApiEnvironment {
     override fun httpClient() = HttpClient(MockEngine { error("Unexpected HTTP request") })
 
     override fun authenticatedCookies() = emptyMap<String, String>()

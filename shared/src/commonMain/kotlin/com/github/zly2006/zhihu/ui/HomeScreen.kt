@@ -164,7 +164,7 @@ import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedInteractionViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
 import com.github.zly2006.zhihu.viewmodel.local.LocalHomeFeedViewModel
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.za.AndroidHomeFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.za.MixedHomeFeedViewModel
 import io.ktor.client.request.get
@@ -239,7 +239,7 @@ fun HomeScreen(
 ) {
     val readingPlayerOverlayPadding = LocalReadingPlayerOverlayPadding.current
     val navigator = LocalNavigator.current
-    val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = true)
+    val paginationEnvironment = rememberZhihuApiEnvironment(allowGuestAccess = true)
     val settings = koinInject<SettingsStore>()
     val homeState: HomeScreenState = viewModel { HomeScreenState() }
     val remoteHistory = koinInject<RemoteHistorySync>()
@@ -303,6 +303,18 @@ fun HomeScreen(
         RecommendationMode.MIXED -> viewModel { MixedHomeFeedViewModel(settings, homeFeedFilter, mobileClient) }
     }
     val localHomeViewModel = viewModel as? LocalHomeFeedViewModel
+    if (localHomeViewModel?.showDatabaseError == true) {
+        AlertDialog(
+            onDismissRequest = { localHomeViewModel.showDatabaseError = false },
+            title = { Text("数据库错误") },
+            text = { Text("本地推荐系统的数据库未正确初始化。请尝试重启应用或清除应用数据。") },
+            confirmButton = {
+                TextButton(onClick = { localHomeViewModel.showDatabaseError = false }) {
+                    Text("确定")
+                }
+            },
+        )
+    }
     val readingQueueSourceId = "home:${currentRecommendationMode.name}"
     RegisterReadingQueueSource(
         sourceId = readingQueueSourceId,

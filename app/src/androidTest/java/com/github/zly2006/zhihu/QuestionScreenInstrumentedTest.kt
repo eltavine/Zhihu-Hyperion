@@ -52,11 +52,10 @@ import com.github.zly2006.zhihu.ui.QUESTION_SORT_DEFAULT_TAG
 import com.github.zly2006.zhihu.ui.QUESTION_SORT_UPDATED_TAG
 import com.github.zly2006.zhihu.ui.QUESTION_WRITE_ANSWER_BUTTON_TAG
 import com.github.zly2006.zhihu.ui.QuestionScreen
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.QuestionFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUser
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
-import com.github.zly2006.zhihu.viewmodel.paginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 import io.ktor.http.HttpMethod
 import kotlinx.coroutines.runBlocking
@@ -277,11 +276,11 @@ class QuestionScreenInstrumentedTest {
         override val isEnd: Boolean
             get() = seededIsEnd
 
-        override fun refresh(environment: PaginationEnvironment) {
+        override fun refresh(environment: ZhihuApiEnvironment) {
             refreshCount += 1
         }
 
-        override fun loadMore(environment: PaginationEnvironment) {
+        override fun loadMore(environment: ZhihuApiEnvironment) {
             loadMoreCount += 1
         }
     }
@@ -354,7 +353,7 @@ class QuestionScreenInstrumentedTest {
         questionId: Long,
     ) : QuestionFeedViewModel(questionId, KoinPlatform.getKoin().get(), KoinPlatform.getKoin().get<ContentFilterDatabase>().blockedUserDao()) {
         suspend fun processForTest(context: android.content.Context, data: List<Feed>) {
-            processResponse(paginationEnvironment(context), data, JsonArray(emptyList()))
+            processResponse(KoinPlatform.getKoin().get<ZhihuApiEnvironment>(), data, JsonArray(emptyList()))
         }
     }
 

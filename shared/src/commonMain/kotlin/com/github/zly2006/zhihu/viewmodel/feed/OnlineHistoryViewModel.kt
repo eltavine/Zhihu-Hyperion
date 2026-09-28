@@ -27,7 +27,7 @@ import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.resolveContent
 import com.github.zly2006.zhihu.platform.SettingsStore
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteOnlineHistory
 import io.ktor.http.isSuccess
 import kotlinx.serialization.json.JsonArray
@@ -40,7 +40,7 @@ class OnlineHistoryViewModel(
     override val shouldLogDecodeFailures: Boolean = false
     private val deletionPairs = mutableMapOf<FeedDisplayItem, OnlineHistoryDeletePair>()
 
-    override suspend fun processResponse(environment: PaginationEnvironment, data: List<Feed>, rawData: JsonArray) {
+    override suspend fun processResponse(environment: ZhihuApiEnvironment, data: List<Feed>, rawData: JsonArray) {
         if (displayItems.isEmpty()) {
             deletionPairs.clear()
         }
@@ -84,7 +84,7 @@ class OnlineHistoryViewModel(
         }
     }
 
-    suspend fun deleteItem(environment: PaginationEnvironment, item: FeedDisplayItem) {
+    suspend fun deleteItem(environment: ZhihuApiEnvironment, item: FeedDisplayItem) {
         val pair = checkNotNull(deletionPairs[item]) { "在线历史记录缺少删除标识" }
         val response = environment.deleteOnlineHistory(listOf(pair), clear = false)
         check(response.status.isSuccess()) { "删除在线历史记录失败: ${response.status}" }

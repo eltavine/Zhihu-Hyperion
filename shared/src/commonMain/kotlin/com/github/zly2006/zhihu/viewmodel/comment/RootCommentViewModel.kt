@@ -34,7 +34,6 @@ import com.github.zly2006.zhihu.navigation.SegmentCommentHolder
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.jsonObject
 import com.github.zly2006.zhihu.viewmodel.CommentItem
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
 import com.github.zly2006.zhihu.viewmodel.postSigned
@@ -131,7 +130,7 @@ class RootCommentViewModel(
             return "$baseUrl${separator}order_by=$orderParam"
         }
 
-    override suspend fun fetchFeeds(environment: PaginationEnvironment) {
+    override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) {
         if (!initialCommentLoaded && initialCommentId != null) {
             initialCommentLoaded = true
             try {

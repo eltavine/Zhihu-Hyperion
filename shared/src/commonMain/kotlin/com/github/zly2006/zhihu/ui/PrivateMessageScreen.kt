@@ -75,7 +75,7 @@ import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.util.formatRelativeTime
 import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
 import com.github.zly2006.zhihu.viewmodel.PrivateMessageViewModel
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -83,7 +83,7 @@ import org.koin.compose.koinInject
 @Composable
 fun PrivateMessageScreen(destination: Notification.Message) {
     val navigator = LocalNavigator.current
-    val environment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = false)
     val mobileClient = koinInject<MobileClientProvider>()
     val viewModel = viewModel(key = "private_message_${destination.peerId}") {
         PrivateMessageViewModel(destination.peerId, mobileClient)

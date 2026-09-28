@@ -72,7 +72,7 @@ import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
 import com.github.zly2006.zhihu.viewmodel.MobileNotificationCategory
 import com.github.zly2006.zhihu.viewmodel.NotificationTimelineViewModel
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
@@ -89,7 +89,7 @@ fun NotificationTimelineScreen(
 ) {
     val navigator = LocalNavigator.current
     val settingsStore = koinInject<NotificationSettingsStore>()
-    val environment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = false)
     val mobileClient = koinInject<MobileClientProvider>()
     val userMessages = rememberUserMessageSink()
     val viewModel = viewModel(key = "notification_timeline_$entryName") {

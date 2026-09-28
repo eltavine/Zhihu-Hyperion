@@ -33,9 +33,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.launch
 
 val LocalPullToRefreshViewModel = compositionLocalOf<BaseFeedViewModel?> {
@@ -51,7 +51,7 @@ fun FeedPullToRefresh(
 ) {
     FeedPullToRefresh(
         viewModel = viewModel,
-        environment = rememberPaginationEnvironment(viewModel.allowGuestAccess),
+        environment = rememberZhihuApiEnvironment(viewModel.allowGuestAccess),
         padding = padding,
         content = content,
     )
@@ -61,7 +61,7 @@ fun FeedPullToRefresh(
 @Composable
 fun FeedPullToRefresh(
     viewModel: BaseFeedViewModel,
-    environment: PaginationEnvironment,
+    environment: ZhihuApiEnvironment,
     padding: PaddingValues = PaddingValues(0.dp),
     content: @Composable BoxScope.() -> Unit,
 ) {

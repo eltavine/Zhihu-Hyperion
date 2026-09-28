@@ -33,7 +33,7 @@ import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.viewmodel.feed.HistoryViewModel
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import org.koin.compose.koinInject
 
 @Composable
@@ -48,7 +48,7 @@ fun LegacyLocalHistoryScreen(
         sourceId = readingQueueSourceId,
         items = viewModel.displayItems,
     )
-    val environment = rememberPaginationEnvironment(allowGuestAccess = true)
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = true)
     val listState = rememberLazyListState()
     val pageTurnTarget = rememberPageTurnTarget(listState, enabled = true)
 

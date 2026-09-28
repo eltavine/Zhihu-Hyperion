@@ -44,7 +44,8 @@ import androidx.media.app.NotificationCompat.MediaStyle
 import com.fleeksoft.ksoup.Ksoup
 import com.github.zly2006.zhihu.data.decodeZhihuCommentData
 import com.github.zly2006.zhihu.util.Log
-import com.github.zly2006.zhihu.viewmodel.SharedAndroidPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.AndroidFetchFailurePresenter
+import com.github.zly2006.zhihu.viewmodel.ScreenZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.getOrFetchContentDetail
 import kotlinx.coroutines.CancellationException
@@ -59,13 +60,14 @@ import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import java.util.Locale
 
 class ContentReadingService : Service() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val environment by lazy {
-        SharedAndroidPaginationEnvironment(applicationContext, allowGuestAccess = true)
+        ScreenZhihuApiEnvironment(get(), get(), get(), allowGuestAccess = true, failures = AndroidFetchFailurePresenter(applicationContext))
     }
     private val contentFilterDatabase: ContentFilterDatabase by inject()
     private val audioManager by lazy { getSystemService(AudioManager::class.java) }

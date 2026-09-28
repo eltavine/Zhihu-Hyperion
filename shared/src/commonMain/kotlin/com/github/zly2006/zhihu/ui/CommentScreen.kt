@@ -166,7 +166,7 @@ import com.github.zly2006.zhihu.viewmodel.comment.BaseCommentViewModel
 import com.github.zly2006.zhihu.viewmodel.comment.ChildCommentViewModel
 import com.github.zly2006.zhihu.viewmodel.comment.RootCommentViewModel
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -451,7 +451,7 @@ fun CommentScreen(
     pageTurnEnabled: Boolean = false,
     showPageTurnFab: Boolean = false,
 ) {
-    val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val paginationEnvironment = rememberZhihuApiEnvironment(allowGuestAccess = false)
     val readingSettings = koinInject<SettingsStore>()
     val initialReadingCommentOrder = remember(readingSettings) {
         loadReadingPreferences(readingSettings).commentOrder

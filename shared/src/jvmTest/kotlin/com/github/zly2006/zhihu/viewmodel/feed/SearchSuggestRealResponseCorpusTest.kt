@@ -18,7 +18,7 @@
 package com.github.zly2006.zhihu.viewmodel.feed
 
 import com.github.zly2006.zhihu.data.ZhihuJson
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -108,7 +108,7 @@ class SearchSuggestRealResponseCorpusTest {
         respondFixture: String?,
         statusCode: HttpStatusCode = HttpStatusCode.OK,
         onRequest: (String) -> Unit = {},
-    ) = object : PaginationEnvironment {
+    ) = object : ZhihuApiEnvironment {
         override fun httpClient() = HttpClient(
             MockEngine { request ->
                 onRequest(request.url.toString())

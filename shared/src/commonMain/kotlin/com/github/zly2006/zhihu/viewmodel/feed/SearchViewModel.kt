@@ -29,7 +29,7 @@ import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.util.raiseForStatus
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
 import com.github.zly2006.zhihu.viewmodel.postSigned
@@ -64,7 +64,7 @@ open class SearchViewModel(
     override val include = "data[*].highlight,object,type"
 
     fun selectTab(
-        environment: PaginationEnvironment,
+        environment: ZhihuApiEnvironment,
         tab: SearchTab,
     ) {
         if (searchTab == tab) return
@@ -73,7 +73,7 @@ open class SearchViewModel(
     }
 
     fun updateFilters(
-        environment: PaginationEnvironment,
+        environment: ZhihuApiEnvironment,
         newFilters: SearchFilters,
     ) {
         if (filters == newFilters) return
@@ -82,7 +82,7 @@ open class SearchViewModel(
     }
 
     suspend fun setTopicFollowing(
-        environment: PaginationEnvironment,
+        environment: ZhihuApiEnvironment,
         topicId: String,
         following: Boolean,
     ): Result<Unit> {
@@ -106,18 +106,18 @@ open class SearchViewModel(
         }
     }
 
-    override fun refresh(environment: PaginationEnvironment) {
+    override fun refresh(environment: ZhihuApiEnvironment) {
         entities.clear()
         super.refresh(environment)
     }
 
-    fun retry(environment: PaginationEnvironment) {
+    fun retry(environment: ZhihuApiEnvironment) {
         errorMessage = null
         loadMore(environment)
     }
 
     override fun decodePage(
-        environment: PaginationEnvironment,
+        environment: ZhihuApiEnvironment,
         rawData: JsonArray,
     ): List<Feed> {
         val existingIds = entities.mapTo(mutableSetOf(), SearchEntity::id)
@@ -204,7 +204,7 @@ open class SearchViewModel(
     }
 
     override suspend fun processResponse(
-        environment: PaginationEnvironment,
+        environment: ZhihuApiEnvironment,
         data: List<Feed>,
         rawData: JsonArray,
     ) {
@@ -250,7 +250,7 @@ data class SearchSuggestItem(
  * 网络或解码失败时静默返回空列表，UI 回落到热搜/历史建议。
  */
 suspend fun fetchSearchSuggest(
-    environment: PaginationEnvironment,
+    environment: ZhihuApiEnvironment,
     query: String,
 ): List<SearchSuggestItem> {
     val json = runCatching {

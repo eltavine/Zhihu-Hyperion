@@ -25,7 +25,7 @@ import com.github.zly2006.zhihu.navigation.Person
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.platform.SettingsStore
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 
 class HistoryViewModel(
     settings: SettingsStore,
@@ -37,7 +37,7 @@ class HistoryViewModel(
     override val isEnd: Boolean
         get() = displayItems.isNotEmpty()
 
-    override fun refresh(environment: PaginationEnvironment) {
+    override fun refresh(environment: ZhihuApiEnvironment) {
         if (isLoading) return
         isLoading = true
         errorMessage = null
@@ -102,9 +102,9 @@ class HistoryViewModel(
         isLoading = false
     }
 
-    override suspend fun fetchFeeds(environment: PaginationEnvironment) = Unit
+    override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) = Unit
 
-    override fun loadMore(environment: PaginationEnvironment) {
+    override fun loadMore(environment: ZhihuApiEnvironment) {
         // 不需要loadMore，所有数据一次性加载
     }
 }

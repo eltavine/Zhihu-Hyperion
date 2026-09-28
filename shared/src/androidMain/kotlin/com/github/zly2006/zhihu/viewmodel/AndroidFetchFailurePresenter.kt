@@ -25,69 +25,25 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
-import com.github.zly2006.zhihu.data.AccountData
 import com.github.zly2006.zhihu.data.ZhihuJson.json
 import com.github.zly2006.zhihu.navigation.requestLoginNavigation
-import com.github.zly2006.zhihu.platform.androidSettingsStore
 import com.github.zly2006.zhihu.platform.androidUserMessageSink
 import com.github.zly2006.zhihu.util.HttpStatusException
 import com.github.zly2006.zhihu.util.clipboardManager
-import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.UserAgent
-import io.ktor.client.plugins.cache.HttpCache
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.serialization.kotlinx.json.json
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.koin.mp.KoinPlatform
 
-interface AndroidContextPaginationEnvironment : PaginationEnvironment {
-    val context: Context
-}
-
-open class SharedAndroidPaginationEnvironment(
-    override val context: Context,
-    private val allowGuestAccess: Boolean,
-) : AndroidContextPaginationEnvironment {
-    private val contentFilterDatabase: ContentFilterDatabase = KoinPlatform.getKoin().get()
-    private val settingsStore by lazy { androidSettingsStore(context) }
+/** 登录过期与接口错误对话框需要可见的 Activity；传入应用 Context 时只用 Toast 提示。 */
+class AndroidFetchFailurePresenter(
+    private val context: Context,
+) : FetchFailurePresenter {
     private val userMessageSink by lazy { androidUserMessageSink(context) }
-
-    override fun httpClient(): HttpClient {
-        val loginForRecommendation = settingsStore.getBoolean("loginForRecommendation", true)
-        if (allowGuestAccess && !loginForRecommendation) {
-            return HttpClient {
-                install(HttpCache)
-                install(ContentNegotiation) {
-                    json(json)
-                }
-                install(UserAgent) {
-                    agent = AccountData.data.userAgent
-                }
-            }
-        }
-        return KoinPlatform
-            .getKoin()
-            .get<ZhihuAccountStore>()
-            .client
-            .httpClient()
-    }
-
-    override fun authenticatedCookies(): Map<String, String> {
-        val loginForRecommendation = settingsStore.getBoolean("loginForRecommendation", true)
-        return if (allowGuestAccess && !loginForRecommendation) {
-            emptyMap()
-        } else {
-            AccountData.data.cookies
-        }
-    }
 
     override suspend fun handleFetchFailure(
         tag: String?,
@@ -104,25 +60,7 @@ open class SharedAndroidPaginationEnvironment(
         userMessageSink.showShortMessage("加载失败: ${error.message}")
     }
 
-    override suspend fun handleMobileHomeFeedFailure(error: Exception) {
-        Log.e("AndroidHomeFeedViewModel", "Failed to fetch feeds", error)
-        userMessageSink.showShortMessage("安卓端推荐加载失败: ${error.message}")
-    }
-
-    override suspend fun handleLocalRecommendationFailure(error: Exception) {
-        Log.e("LocalHomeFeedViewModel", "Error fetching local feeds", error)
-    }
-
-    override suspend fun showLocalRecommendationDatabaseError() {
-        withContext(Dispatchers.Main) {
-            AlertDialog
-                .Builder(context)
-                .setTitle("数据库错误")
-                .setMessage("本地推荐系统的数据库未正确初始化。请尝试重启应用或清除应用数据。")
-                .setPositiveButton("确定") { dialog, _ -> dialog.dismiss() }
-                .show()
-        }
-    }
+    override fun showFailureMessage(message: String) = userMessageSink.showShortMessage(message)
 
     private fun tryShowLoginExpiredDialog(error: HttpStatusException): Boolean {
         try {
@@ -131,7 +69,7 @@ open class SharedAndroidPaginationEnvironment(
             if (errorBody["code"]?.jsonPrimitive?.int == 100 &&
                 errorBody["message"]?.jsonPrimitive?.content == "ERR_TICKET_NOT_EXIST"
             ) {
-                context.mainExecutor.execute {
+                ContextCompat.getMainExecutor(context).execute {
                     if (context.canSafelyShowDialog()) {
                         AlertDialog
                             .Builder(context)
@@ -152,7 +90,7 @@ open class SharedAndroidPaginationEnvironment(
     }
 
     private fun showDebugErrorDialog(error: HttpStatusException) {
-        context.mainExecutor.execute {
+        ContextCompat.getMainExecutor(context).execute {
             if (context.canSafelyShowDialog()) {
                 AlertDialog
                     .Builder(context)
@@ -172,29 +110,13 @@ open class SharedAndroidPaginationEnvironment(
             }
         }
     }
-
-    // Export methods
 }
-
-fun PaginationViewModel<*>.paginationEnvironment(context: Context): AndroidContextPaginationEnvironment =
-    SharedAndroidPaginationEnvironment(context, allowGuestAccess)
 
 @Composable
-actual fun rememberPaginationEnvironment(allowGuestAccess: Boolean): PaginationEnvironment {
+actual fun rememberFetchFailurePresenter(): FetchFailurePresenter {
     val context = LocalContext.current
-    return remember(context, allowGuestAccess) { SharedAndroidPaginationEnvironment(context, allowGuestAccess) }
+    return remember(context) { AndroidFetchFailurePresenter(context) }
 }
-
-fun PaginationViewModel<*>.refresh(context: Context) {
-    refresh(paginationEnvironment(context))
-}
-
-fun PaginationViewModel<*>.loadMore(context: Context) {
-    loadMore(paginationEnvironment(context))
-}
-
-fun PaginationViewModel<*>.httpClient(context: Context): HttpClient =
-    paginationEnvironment(context).httpClient()
 
 private fun Context.canSafelyShowDialog(): Boolean {
     val activity = this as? Activity ?: return false

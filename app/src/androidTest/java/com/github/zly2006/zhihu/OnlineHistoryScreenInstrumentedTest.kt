@@ -31,7 +31,7 @@ import com.github.zly2006.zhihu.test.resetAppPreferences
 import com.github.zly2006.zhihu.test.seedViewModel
 import com.github.zly2006.zhihu.test.setScreenContent
 import com.github.zly2006.zhihu.ui.OnlineHistoryScreen
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.OnlineHistoryViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -137,7 +137,7 @@ class OnlineHistoryScreenInstrumentedTest {
                 }
                 """.trimIndent(),
             ).jsonObject
-        val environment = object : PaginationEnvironment {
+        val environment = object : ZhihuApiEnvironment {
             override fun httpClient() = client
 
             override fun authenticatedCookies() = emptyMap<String, String>()

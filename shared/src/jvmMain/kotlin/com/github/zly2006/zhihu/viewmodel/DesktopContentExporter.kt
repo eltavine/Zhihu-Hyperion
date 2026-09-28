@@ -365,7 +365,3 @@ private fun addFileToZip(
     }
     outputStream.closeEntry()
 }
-
-@Composable
-actual fun rememberPaginationEnvironment(allowGuestAccess: Boolean): PaginationEnvironment =
-    remember(allowGuestAccess) { DesktopPaginationEnvironment() }

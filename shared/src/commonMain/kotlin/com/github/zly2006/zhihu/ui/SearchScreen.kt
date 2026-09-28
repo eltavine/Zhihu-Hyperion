@@ -109,7 +109,7 @@ import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.util.parseEmphasizedHtmlTextWithTheme
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.SearchContentType
 import com.github.zly2006.zhihu.viewmodel.feed.SearchEntity
 import com.github.zly2006.zhihu.viewmodel.feed.SearchSortOption
@@ -120,7 +120,7 @@ import com.github.zly2006.zhihu.viewmodel.feed.SearchViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.ZHIHU_HOT_SEARCH_URL
 import com.github.zly2006.zhihu.viewmodel.feed.fetchSearchSuggest
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
@@ -191,7 +191,7 @@ fun SearchScreen(
         sourceId = readingQueueSourceId,
         items = viewModel.displayItems,
     )
-    val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val paginationEnvironment = rememberZhihuApiEnvironment(allowGuestAccess = false)
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val searchInputFocusRequester = remember { FocusRequester() }
@@ -927,7 +927,7 @@ private fun SearchFilterMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     viewModel: SearchViewModel,
-    paginationEnvironment: PaginationEnvironment,
+    paginationEnvironment: ZhihuApiEnvironment,
 ) {
     DropdownMenu(
         expanded = expanded,

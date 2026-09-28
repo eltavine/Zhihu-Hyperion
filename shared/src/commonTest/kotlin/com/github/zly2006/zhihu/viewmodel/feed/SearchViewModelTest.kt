@@ -23,7 +23,7 @@ import com.github.zly2006.zhihu.data.Person
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.platform.MapSettingsStore
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
 import com.github.zly2006.zhihu.viewmodel.filter.FakeBlockedUserDao
 import io.ktor.client.HttpClient
@@ -84,10 +84,10 @@ class SearchViewModelTest {
     private class TestSearchViewModel(
         blockedUsers: BlockedUserDao = FakeBlockedUserDao(),
     ) : SearchViewModel("query", MapSettingsStore(), blockedUsers) {
-        override fun refresh(environment: PaginationEnvironment) = Unit
+        override fun refresh(environment: ZhihuApiEnvironment) = Unit
 
         suspend fun process(
-            environment: PaginationEnvironment,
+            environment: ZhihuApiEnvironment,
             feeds: List<Feed>,
         ) = processResponse(environment, feeds, JsonArray(emptyList()))
     }
@@ -95,7 +95,7 @@ class SearchViewModelTest {
     private fun environment(
         response: String,
         status: HttpStatusCode = HttpStatusCode.OK,
-    ) = object : PaginationEnvironment {
+    ) = object : ZhihuApiEnvironment {
         override fun httpClient() = HttpClient(
             MockEngine {
                 respond(response, status, headersOf(HttpHeaders.ContentType, "application/json"))

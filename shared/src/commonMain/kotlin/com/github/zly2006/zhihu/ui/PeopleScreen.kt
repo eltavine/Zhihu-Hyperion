@@ -118,7 +118,6 @@ import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.jsonObject
 import com.github.zly2006.zhihu.util.raiseForStatus
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.PaginationViewModel
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.addReadHistory
@@ -130,7 +129,7 @@ import com.github.zly2006.zhihu.viewmodel.filter.BlockedUser
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.postSigned
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.int
@@ -166,7 +165,7 @@ class PeopleAnswersViewModel(
         return true
     }
 
-    fun changeSortBy(newSort: String, environment: PaginationEnvironment) {
+    fun changeSortBy(newSort: String, environment: ZhihuApiEnvironment) {
         if (updateSortBy(newSort)) {
             refresh(environment)
         }
@@ -195,7 +194,7 @@ class PeopleArticlesViewModel(
         return true
     }
 
-    fun changeSortBy(newSort: String, environment: PaginationEnvironment) {
+    fun changeSortBy(newSort: String, environment: ZhihuApiEnvironment) {
         if (updateSortBy(newSort)) {
             refresh(environment)
         }
@@ -653,7 +652,7 @@ fun PeopleScreen(
 ) {
     val navigator = LocalNavigator.current
     val userMessages = rememberUserMessageSink()
-    val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val paginationEnvironment = rememberZhihuApiEnvironment(allowGuestAccess = false)
     val history = koinInject<HistoryStorage>()
     val contentFilterDatabase = koinInject<ContentFilterDatabase>()
     val settings = koinInject<SettingsStore>()

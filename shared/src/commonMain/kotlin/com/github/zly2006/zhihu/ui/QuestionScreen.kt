@@ -126,7 +126,7 @@ import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.addReadHistory
 import com.github.zly2006.zhihu.viewmodel.feed.QuestionFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -195,7 +195,7 @@ fun QuestionScreen(
         sourceId = answerReadingQueueSourceId,
         items = viewModel.displayItems,
     )
-    val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val paginationEnvironment = rememberZhihuApiEnvironment(allowGuestAccess = false)
     val answerSwitchState = sharedArticleAnswerSwitchState
     val listState = rememberLazyListState()
     var questionContent by remember(question.questionId) { mutableStateOf("") }

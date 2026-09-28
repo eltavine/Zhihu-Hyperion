@@ -30,7 +30,6 @@ import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.viewmodel.HomeFeedFilterResult
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.QualityFilterMode
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.ContentDetailProvider
@@ -177,13 +176,13 @@ class HomeFeedViewModel(
         allowGuestAccess = true
     }
 
-    public override suspend fun fetchFeeds(environment: PaginationEnvironment) {
+    public override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) {
         markItemsAsTouched(environment)
         super.fetchFeeds(environment)
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    override suspend fun processResponse(environment: PaginationEnvironment, data: List<Feed>, rawData: JsonArray) {
+    override suspend fun processResponse(environment: ZhihuApiEnvironment, data: List<Feed>, rawData: JsonArray) {
         allData.addAll(data)
         debugData.addAll(rawData)
 
@@ -310,7 +309,7 @@ class HomeFeedViewModel(
         }
     }
 
-    override fun refresh(environment: PaginationEnvironment) {
+    override fun refresh(environment: ZhihuApiEnvironment) {
         super.refresh(environment)
         reportedTouchedItems.clear()
     }

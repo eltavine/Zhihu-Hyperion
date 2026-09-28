@@ -120,7 +120,7 @@ import com.github.zly2006.zhihu.viewmodel.deleteSigned
 import com.github.zly2006.zhihu.viewmodel.loadVotersPage
 import com.github.zly2006.zhihu.viewmodel.nextUrlOrNull
 import com.github.zly2006.zhihu.viewmodel.postSigned
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.replaceOrAppendUniqueVoters
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -214,7 +214,7 @@ fun PinScreen(
     val navigator = LocalNavigator.current
     val coroutineScope = rememberCoroutineScope()
     val readingQueueSources = koinInject<ReadingQueueSourceRegistry>()
-    val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val paginationEnvironment = rememberZhihuApiEnvironment(allowGuestAccess = false)
 
     val settings = koinInject<SettingsStore>()
     val history = koinInject<HistoryStorage>()

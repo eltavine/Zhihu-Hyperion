@@ -77,6 +77,11 @@ interface ZhihuApiEnvironment {
 
     fun xsrfToken(): String = ""
 
+    /** 向用户提示一条失败信息；没有界面提示渠道的实现只记录日志。 */
+    fun showFailureMessage(message: String) {
+        Log.w("ZhihuApiEnvironment", message)
+    }
+
     fun logDecodeFailure(
         tag: String?,
         item: JsonElement,

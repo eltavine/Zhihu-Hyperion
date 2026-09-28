@@ -102,7 +102,7 @@ import com.github.zly2006.zhihu.ui.components.WriteContentPreviewSheet
 import com.github.zly2006.zhihu.util.json
 import com.github.zly2006.zhihu.util.raiseForStatus
 import com.github.zly2006.zhihu.viewmodel.postSigned
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import io.ktor.client.request.header
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -217,7 +217,7 @@ fun WritePinScreen(destination: WritePin = WritePin()) {
     val settings = koinInject<SettingsStore>()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val environment = rememberPaginationEnvironment(false)
+    val environment = rememberZhihuApiEnvironment(false)
 
     val initialTopic = remember(destination.publishTopicId, destination.topicName) {
         destination.publishTopicId

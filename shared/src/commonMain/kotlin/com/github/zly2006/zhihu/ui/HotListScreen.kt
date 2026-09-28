@@ -50,7 +50,7 @@ import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.viewmodel.feed.HotListViewModel
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import org.koin.compose.koinInject
 
 const val HOT_LIST_LIST_TAG = "hot_list_list"
@@ -77,7 +77,7 @@ fun HotListScreen(
             items = viewModel.displayItems,
         )
     }
-    val environment = rememberPaginationEnvironment(viewModel.allowGuestAccess)
+    val environment = rememberZhihuApiEnvironment(viewModel.allowGuestAccess)
     val userMessages = rememberUserMessageSink()
     val listState = rememberLazyListState()
     val pageTurnTarget = rememberPageTurnTarget(listState = listState, enabled = isActive)

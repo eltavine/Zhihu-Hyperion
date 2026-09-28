@@ -32,6 +32,7 @@ public final class com/github/zly2006/zhihu/account/ZhihuAccountApiEnvironment :
 	public fun httpClient ()Lio/ktor/client/HttpClient;
 	public fun logDecodeFailure (Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Exception;)V
 	public fun refreshToken (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun showFailureMessage (Ljava/lang/String;)V
 	public fun signedGetText (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun withAuthenticatedClient (Lkotlin/jvm/functions/Function3;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun xsrfToken ()Ljava/lang/String;

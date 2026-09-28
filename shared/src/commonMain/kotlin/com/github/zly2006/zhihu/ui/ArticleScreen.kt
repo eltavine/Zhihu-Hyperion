@@ -162,7 +162,7 @@ import com.github.zly2006.zhihu.viewmodel.ArticleViewModel
 import com.github.zly2006.zhihu.viewmodel.addReadHistory
 import com.github.zly2006.zhihu.viewmodel.formatArticleDateTime
 import com.github.zly2006.zhihu.viewmodel.rememberContentExporter
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 import com.materialkolor.ktx.harmonize
 import kotlinx.coroutines.delay
@@ -199,7 +199,7 @@ fun ArticleScreen(
     val navigator = LocalNavigator.current
     val readingPlayerOverlayPadding = LocalReadingPlayerOverlayPadding.current
     val readingPlayerOverlayOffsetState = LocalReadingPlayerOverlayOffsetState.current
-    val environment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = false)
     val articleNavController = LocalArticleNavController.current
     val backStackEntry by articleNavController?.currentBackStackEntryAsState()
         ?: remember { mutableStateOf(null) }

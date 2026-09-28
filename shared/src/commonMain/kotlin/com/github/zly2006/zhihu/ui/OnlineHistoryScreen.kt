@@ -59,7 +59,7 @@ import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.ui.topLevelReselectAction
 import com.github.zly2006.zhihu.viewmodel.deleteOnlineHistory
 import com.github.zly2006.zhihu.viewmodel.feed.OnlineHistoryViewModel
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -89,7 +89,7 @@ fun OnlineHistoryScreen(
             items = viewModel.displayItems,
         )
     }
-    val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val paginationEnvironment = rememberZhihuApiEnvironment(allowGuestAccess = false)
     val userMessages = rememberUserMessageSink()
     val coroutineScope = rememberCoroutineScope()
     val listState = rememberLazyListState()

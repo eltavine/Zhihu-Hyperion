@@ -25,7 +25,6 @@ import com.github.zly2006.zhihu.data.CommentSortOrder
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.viewmodel.CommentItem
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.PaginationViewModel
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
@@ -52,7 +51,7 @@ abstract class BaseCommentViewModel(
     override val isEnd: Boolean
         get() = commentClosedMessage != null || super.isEnd
 
-    override fun refresh(environment: PaginationEnvironment) {
+    override fun refresh(environment: ZhihuApiEnvironment) {
         commentClosedMessage = null
         super.refresh(environment)
     }
@@ -67,7 +66,7 @@ abstract class BaseCommentViewModel(
             ?: "评论区已关闭"
     }
 
-    override suspend fun processResponse(environment: PaginationEnvironment, data: List<DataHolder.Comment>, rawData: JsonArray) {
+    override suspend fun processResponse(environment: ZhihuApiEnvironment, data: List<DataHolder.Comment>, rawData: JsonArray) {
         debugData.addAll(rawData) // 保存原始JSON
         filterBlockedComments(data).forEach { comment ->
             if (allData.none { it.id == comment.id }) {
@@ -100,7 +99,7 @@ abstract class BaseCommentViewModel(
 
     abstract fun createCommentItem(comment: DataHolder.Comment, article: NavDestination): CommentItem
 
-    fun changeSortOrder(newSortOrder: CommentSortOrder, environment: PaginationEnvironment) {
+    fun changeSortOrder(newSortOrder: CommentSortOrder, environment: ZhihuApiEnvironment) {
         if (sortOrder != newSortOrder) {
             sortOrder = newSortOrder
             refresh(environment)

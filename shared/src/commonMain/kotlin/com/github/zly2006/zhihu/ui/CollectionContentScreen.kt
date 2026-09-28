@@ -70,10 +70,10 @@ import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.viewmodel.CollectionContentViewModel
 import com.github.zly2006.zhihu.viewmodel.CollectionHtmlExportDialogState
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.formatArticleDateTime
 import com.github.zly2006.zhihu.viewmodel.rememberContentExporter
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,7 +83,7 @@ fun CollectionContentScreen(
 ) {
     val navigator = LocalNavigator.current
     val screenViewModel = viewModel { CollectionContentViewModel(collectionId) }
-    val collectionEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val collectionEnvironment = rememberZhihuApiEnvironment(allowGuestAccess = false)
     val exporter = rememberContentExporter()
     val listState = rememberLazyListState()
     var showActionsMenu by remember { mutableStateOf(false) }
@@ -192,7 +192,7 @@ fun CollectionContentScreen(
 @Composable
 internal fun CollectionContentBody(
     viewModel: CollectionContentViewModel,
-    environment: PaginationEnvironment,
+    environment: ZhihuApiEnvironment,
     collectionId: String,
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState(),

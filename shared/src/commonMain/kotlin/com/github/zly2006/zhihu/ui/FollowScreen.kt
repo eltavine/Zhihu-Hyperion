@@ -98,7 +98,7 @@ import com.github.zly2006.zhihu.ui.topLevelReselectAction
 import com.github.zly2006.zhihu.viewmodel.feed.FollowRecommendViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.FollowViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.RecentMomentsViewModel
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -269,7 +269,7 @@ private fun FollowTabRow(
 fun FollowingUsersRow() {
     val navigator = LocalNavigator.current
     val viewModel: RecentMomentsViewModel = viewModel { RecentMomentsViewModel() }
-    val environment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = false)
 
     LaunchedEffect(Unit) {
         viewModel.load(environment)
@@ -358,7 +358,7 @@ fun FollowRecommendScreen(
             items = viewModel.displayItems,
         )
     }
-    val environment = rememberPaginationEnvironment(allowGuestAccess = viewModel.allowGuestAccess)
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = viewModel.allowGuestAccess)
     val userMessages = rememberUserMessageSink()
     val showRefreshFab = remember { settings.getBoolean("showRefreshFab", true) }
     val listState = rememberLazyListState()
@@ -518,7 +518,7 @@ fun FollowDynamicScreen(
             items = viewModel.displayItems,
         )
     }
-    val environment = rememberPaginationEnvironment(allowGuestAccess = viewModel.allowGuestAccess)
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = viewModel.allowGuestAccess)
     val userMessages = rememberUserMessageSink()
     val showRefreshFab = remember { settings.getBoolean("showRefreshFab", true) }
     val listState = rememberLazyListState()

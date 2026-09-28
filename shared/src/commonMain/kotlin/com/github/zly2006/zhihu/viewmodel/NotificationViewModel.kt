@@ -93,7 +93,7 @@ class NotificationViewModel(
         }
     }
 
-    override fun refresh(environment: PaginationEnvironment) {
+    override fun refresh(environment: ZhihuApiEnvironment) {
         if (isLoading) return
         errorMessage = null
         lastPaging = null
@@ -101,7 +101,7 @@ class NotificationViewModel(
         loadMore(environment)
     }
 
-    override suspend fun fetchFeeds(environment: PaginationEnvironment) {
+    override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) {
         try {
             val url = lastPaging?.next ?: initialUrl
             val json = mobileClient.withClient { client ->
@@ -203,7 +203,7 @@ class NotificationTimelineViewModel(
     val readAllUrl: String
         get() = "$MOBILE_NOTIFICATION_TIMELINE_URL/$entryName/actions/readall"
 
-    override suspend fun fetchFeeds(environment: PaginationEnvironment) {
+    override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) {
         try {
             val url = lastPaging?.next ?: initialUrl
             val json = mobileClient.withClient { client ->
@@ -336,7 +336,7 @@ class PrivateMessageViewModel(
         }
     }
 
-    override suspend fun fetchFeeds(environment: PaginationEnvironment) {
+    override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) {
         try {
             mobileClient.withClient { client ->
                 coroutineScope {

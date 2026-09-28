@@ -17,7 +17,6 @@
 
 package com.github.zly2006.zhihu.viewmodel
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -90,7 +89,7 @@ abstract class PaginationViewModel<T : Any>(
      */
     open val include = "data[*].content,excerpt,headline,target.author.badge_v2"
 
-    open fun refresh(environment: PaginationEnvironment) {
+    open fun refresh(environment: ZhihuApiEnvironment) {
         currentJob?.cancel()
         currentJob = null
         isLoading = false
@@ -103,13 +102,13 @@ abstract class PaginationViewModel<T : Any>(
 
     protected open fun handlePageMetadata(json: JsonObject) = Unit
 
-    protected open suspend fun processResponse(environment: PaginationEnvironment, data: List<T>, rawData: JsonArray) {
+    protected open suspend fun processResponse(environment: ZhihuApiEnvironment, data: List<T>, rawData: JsonArray) {
         debugData.addAll(rawData) // 保存原始JSON
         allData.addAll(data) // 保存未flatten的数据
     }
 
     protected open fun decodePage(
-        environment: PaginationEnvironment,
+        environment: ZhihuApiEnvironment,
         rawData: JsonArray,
     ): List<T> = rawData.mapNotNull {
         if ("type" in it.jsonObject &&
@@ -132,7 +131,7 @@ abstract class PaginationViewModel<T : Any>(
         }
     }
 
-    protected open suspend fun fetchFeeds(environment: PaginationEnvironment) {
+    protected open suspend fun fetchFeeds(environment: ZhihuApiEnvironment) {
         try {
             val url = resolvePageUrl()
 
@@ -160,7 +159,7 @@ abstract class PaginationViewModel<T : Any>(
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    open fun loadMore(environment: PaginationEnvironment) {
+    open fun loadMore(environment: ZhihuApiEnvironment) {
         if (isLoading || isEnd) return // 使用新的isEnd getter
         isLoading = true
         currentJob = viewModelScope.launch {
@@ -317,25 +316,6 @@ suspend fun ZhihuApiEnvironment.deleteSigned(
     }
 }
 
-interface MobileHomeFeedEnvironment : ZhihuApiEnvironment {
-    suspend fun handleMobileHomeFeedFailure(error: Exception) {
-        handleFetchFailure("AndroidHomeFeedViewModel", error)
-    }
-}
-
-interface LocalRecommendationEnvironment : ZhihuApiEnvironment {
-    suspend fun handleLocalRecommendationFailure(error: Exception) {
-        handleFetchFailure("LocalHomeFeedViewModel", error)
-    }
-
-    suspend fun showLocalRecommendationDatabaseError() = Unit
-}
-
-interface PaginationEnvironment :
-    ZhihuApiEnvironment,
-    MobileHomeFeedEnvironment,
-    LocalRecommendationEnvironment
-
 data class FeedDisplaySettings(
     val qualityFilterMode: QualityFilterMode = QualityFilterMode.RULES,
     val qualityFilter: QualityFilterSettings = QualityFilterSettings(),
@@ -383,6 +363,3 @@ data class HomeFeedFilterResult(
     val filteredItems: List<FeedDisplayItem>,
     val reverseBlock: Boolean,
 )
-
-@Composable
-expect fun rememberPaginationEnvironment(allowGuestAccess: Boolean): PaginationEnvironment

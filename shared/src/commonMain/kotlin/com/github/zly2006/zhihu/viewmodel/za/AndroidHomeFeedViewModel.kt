@@ -30,10 +30,10 @@ import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.resolveContent
 import com.github.zly2006.zhihu.platform.SettingsStore
+import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.jsonObject
 import com.github.zly2006.zhihu.viewmodel.HomeFeedFilterResult
 import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedInteractionViewModel
@@ -72,7 +72,7 @@ class AndroidHomeFeedViewModel(
     override val initialUrl: String
         get() = "https://api.zhihu.com/topstory/recommend"
 
-    public override suspend fun fetchFeeds(environment: PaginationEnvironment) {
+    public override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) {
         try {
             val jojo = mobileClient.withClient { client ->
                 client.get(lastPaging?.next ?: initialUrl).takeIf { it.status.isSuccess() }?.jsonObject()
@@ -128,7 +128,8 @@ class AndroidHomeFeedViewModel(
             }
         } catch (e: Exception) {
             if (e !is CancellationException) {
-                environment.handleMobileHomeFeedFailure(e)
+                Log.e("AndroidHomeFeedViewModel", "Failed to fetch feeds", e)
+                environment.showFailureMessage("安卓端推荐加载失败: ${e.message}")
             }
             throw e
         } finally {

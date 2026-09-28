@@ -31,9 +31,9 @@ import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageSink
 import com.github.zly2006.zhihu.viewmodel.FeedDisplaySettings
 import com.github.zly2006.zhihu.viewmodel.HomeFeedFilterResult
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.PaginationViewModel
 import com.github.zly2006.zhihu.viewmodel.QualityFilterMode
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedTopic
 import com.github.zly2006.zhihu.viewmodel.filter.ContentDetailProvider
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
@@ -53,7 +53,7 @@ abstract class BaseFeedViewModel(
     var isPullToRefresh by mutableStateOf(false)
         protected set
 
-    override suspend fun processResponse(environment: PaginationEnvironment, data: List<Feed>, rawData: JsonArray) {
+    override suspend fun processResponse(environment: ZhihuApiEnvironment, data: List<Feed>, rawData: JsonArray) {
         super.processResponse(environment, data, rawData)
         val display = settings.toFeedDisplaySettings()
         val loadedItems = data.flattenFeeds().map { createDisplayItem(display, it) }
@@ -61,12 +61,12 @@ abstract class BaseFeedViewModel(
         latestLoadedDisplayItems.value = loadedItems
     }
 
-    override fun refresh(environment: PaginationEnvironment) {
+    override fun refresh(environment: ZhihuApiEnvironment) {
         displayItems.clear()
         super.refresh(environment)
     }
 
-    suspend fun pullToRefresh(environment: PaginationEnvironment) {
+    suspend fun pullToRefresh(environment: ZhihuApiEnvironment) {
         isPullToRefresh = true
         displayItems.clear()
         if (isLoading) return
@@ -99,7 +99,7 @@ abstract class BaseFeedViewModel(
     }
 
     fun handleBlockUser(
-        environment: PaginationEnvironment,
+        environment: ZhihuApiEnvironment,
         userMessages: UserMessageSink,
         feedItem: FeedDisplayItem,
         onShowDialog: (Pair<String, String>) -> Unit,
@@ -118,7 +118,7 @@ abstract class BaseFeedViewModel(
     }
 
     fun handleBlockQuestionAuthor(
-        environment: PaginationEnvironment,
+        environment: ZhihuApiEnvironment,
         userMessages: UserMessageSink,
         feedItem: FeedDisplayItem,
         onShowDialog: (Pair<String, String>) -> Unit,
@@ -137,7 +137,7 @@ abstract class BaseFeedViewModel(
     }
 
     fun handleBlockByKeywords(
-        environment: PaginationEnvironment,
+        environment: ZhihuApiEnvironment,
         userMessages: UserMessageSink,
         feedItem: FeedDisplayItem,
         onShowDialog: (Pair<FeedDisplayItem, Triple<String, String, String?>>) -> Unit,

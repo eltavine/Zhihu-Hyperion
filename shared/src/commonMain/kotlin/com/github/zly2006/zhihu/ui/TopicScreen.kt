@@ -100,11 +100,10 @@ import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.ui.components.rememberShareActionExecutor
 import com.github.zly2006.zhihu.util.raiseForStatus
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
 import com.github.zly2006.zhihu.viewmodel.postSigned
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import io.ktor.http.Url
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
@@ -226,7 +225,7 @@ class TopicViewModel(
     var isFollowingChanging by mutableStateOf(false)
         private set
 
-    suspend fun loadDetail(environment: PaginationEnvironment) {
+    suspend fun loadDetail(environment: ZhihuApiEnvironment) {
         detailErrorMessage = null
         runCatching {
             environment.fetchJson(
@@ -240,7 +239,7 @@ class TopicViewModel(
             }
     }
 
-    fun selectTab(environment: PaginationEnvironment, tab: TopicFeedTab) {
+    fun selectTab(environment: ZhihuApiEnvironment, tab: TopicFeedTab) {
         if (selectedTab == tab && items.isNotEmpty()) return
         loadJob?.cancel()
         loadJob = null
@@ -254,7 +253,7 @@ class TopicViewModel(
         loadMore(environment)
     }
 
-    fun selectDiscussionSort(environment: PaginationEnvironment, sort: TopicDiscussionSort) {
+    fun selectDiscussionSort(environment: ZhihuApiEnvironment, sort: TopicDiscussionSort) {
         if (discussionSort == sort) return
         loadJob?.cancel()
         loadJob = null
@@ -268,7 +267,7 @@ class TopicViewModel(
         loadMore(environment)
     }
 
-    fun selectIdeasSort(environment: PaginationEnvironment, sort: TopicIdeasSort) {
+    fun selectIdeasSort(environment: ZhihuApiEnvironment, sort: TopicIdeasSort) {
         if (ideasSort == sort) return
         loadJob?.cancel()
         loadJob = null
@@ -282,7 +281,7 @@ class TopicViewModel(
         loadMore(environment)
     }
 
-    private suspend fun loadMoreNow(environment: PaginationEnvironment) {
+    private suspend fun loadMoreNow(environment: ZhihuApiEnvironment) {
         if (isEnd) return
         val generation = requestGeneration
         isLoading = true
@@ -326,12 +325,12 @@ class TopicViewModel(
         }
     }
 
-    fun loadMore(environment: PaginationEnvironment) {
+    fun loadMore(environment: ZhihuApiEnvironment) {
         if (isEnd || isLoading || errorMessage != null || loadJob?.isActive == true) return
         loadJob = viewModelScope.launch { loadMoreNow(environment) }
     }
 
-    fun retry(environment: PaginationEnvironment) {
+    fun retry(environment: ZhihuApiEnvironment) {
         errorMessage = null
         loadMore(environment)
     }
@@ -433,7 +432,7 @@ fun normalizeTopicPagingUrl(rawUrl: String): String? {
 @Composable
 fun TopicScreen(topic: Topic) {
     val navigator = LocalNavigator.current
-    val environment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = false)
     val messages = rememberUserMessageSink()
     val settings = koinInject<SettingsStore>()
     val executeShareAction = rememberShareActionExecutor()

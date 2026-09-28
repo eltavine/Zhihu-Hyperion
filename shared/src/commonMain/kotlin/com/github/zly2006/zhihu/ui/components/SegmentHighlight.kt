@@ -59,10 +59,10 @@ import com.github.zly2006.zhihu.navigation.SegmentCommentHolder
 import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
 import com.github.zly2006.zhihu.util.SegmentHighlightSpan
 import com.github.zly2006.zhihu.util.json
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
 import com.github.zly2006.zhihu.viewmodel.postSigned
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import com.hrm.markdown.parser.ast.ContainerNode
 import com.hrm.markdown.parser.ast.Document
 import com.hrm.markdown.parser.ast.Node
@@ -163,7 +163,7 @@ internal fun SegmentHighlightInteractionHost(
     document: Document,
     content: @Composable () -> Unit,
 ) {
-    val environment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = false)
     val copyPlainText = rememberPlainTextClipboard()
     val coroutineScope = rememberCoroutineScope()
     val metaStates = remember { mutableStateMapOf<String, SegmentInfoMeta>() }
@@ -230,7 +230,7 @@ internal fun SegmentHighlightInteractionHost(
 }
 
 private suspend fun toggleSegmentLike(
-    environment: PaginationEnvironment,
+    environment: ZhihuApiEnvironment,
     highlight: SegmentHighlightSpan,
 ): SegmentInfoMeta {
     val contentId = highlight.contentId ?: return highlight.meta

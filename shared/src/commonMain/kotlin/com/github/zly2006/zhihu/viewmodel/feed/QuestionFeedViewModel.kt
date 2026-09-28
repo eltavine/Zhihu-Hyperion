@@ -30,7 +30,6 @@ import com.github.zly2006.zhihu.navigation.QuestionAnswerNavigator
 import com.github.zly2006.zhihu.navigation.zhihuQuestionFeedsUrl
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.viewmodel.FeedDisplaySettings
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
@@ -105,7 +104,7 @@ open class QuestionFeedViewModel(
         }
     }
 
-    override suspend fun processResponse(environment: PaginationEnvironment, data: List<Feed>, rawData: kotlinx.serialization.json.JsonArray) {
+    override suspend fun processResponse(environment: ZhihuApiEnvironment, data: List<Feed>, rawData: kotlinx.serialization.json.JsonArray) {
         val blockedUserIds = blockedUsers.getAllUserIds().toSet()
         val filtered = if (blockedUserIds.isEmpty()) {
             data

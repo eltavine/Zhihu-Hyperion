@@ -23,7 +23,6 @@ import com.github.zly2006.zhihu.navigation.CommentHolder
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.util.json
 import com.github.zly2006.zhihu.viewmodel.CommentItem
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.comment.RootCommentViewModel.Companion.submitCommentUrl
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
@@ -52,7 +51,7 @@ class ChildCommentViewModel(
         else -> ""
     }
 
-    override suspend fun fetchFeeds(environment: PaginationEnvironment) {
+    override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) {
         if (!initialCommentLoaded && initialComment != null) {
             initialCommentLoaded = true
             processResponse(

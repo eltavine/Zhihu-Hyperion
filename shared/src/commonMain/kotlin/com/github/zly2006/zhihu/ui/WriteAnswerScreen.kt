@@ -96,7 +96,7 @@ import com.github.zly2006.zhihu.util.json
 import com.github.zly2006.zhihu.util.raiseForStatus
 import com.github.zly2006.zhihu.viewmodel.fetchContentDetail
 import com.github.zly2006.zhihu.viewmodel.postSigned
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import io.ktor.client.request.header
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -118,7 +118,7 @@ fun WriteAnswerScreen(
 ) {
     val navigator = LocalNavigator.current
     val userMessages = rememberUserMessageSink()
-    val environment = rememberPaginationEnvironment(false)
+    val environment = rememberZhihuApiEnvironment(false)
     val coroutineScope = rememberCoroutineScope()
     val copyToClipboard = rememberPlainTextClipboard()
     val settings = koinInject<SettingsStore>()

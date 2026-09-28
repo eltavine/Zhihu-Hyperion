@@ -21,7 +21,7 @@ import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.platform.MapSettingsStore
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.FakeBlockedUserDao
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -82,7 +82,7 @@ class SearchRealResponseCorpusTest {
     private class CorpusSearchViewModel : SearchViewModel("kotlin", MapSettingsStore(), FakeBlockedUserDao()) {
         private val testEnvironment = environment()
 
-        override fun refresh(environment: PaginationEnvironment) = Unit
+        override fun refresh(environment: ZhihuApiEnvironment) = Unit
 
         fun decode(
             tab: SearchTab,
@@ -103,7 +103,7 @@ class SearchRealResponseCorpusTest {
     }
 
     private companion object {
-        fun environment(status: HttpStatusCode = HttpStatusCode.OK) = object : PaginationEnvironment {
+        fun environment(status: HttpStatusCode = HttpStatusCode.OK) = object : ZhihuApiEnvironment {
             override fun httpClient() = HttpClient(MockEngine { respond("{}", status) })
 
             override fun authenticatedCookies() = mapOf("d_c0" to "test")
