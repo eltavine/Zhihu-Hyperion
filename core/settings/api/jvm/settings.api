@@ -8,6 +8,10 @@ public final class com/github/zly2006/zhihu/platform/DesktopSettingsStoreKt {
 	public static final fun desktopSettingsStore (Ljava/io/File;)Lcom/github/zly2006/zhihu/platform/SettingsStore;
 }
 
+public final class com/github/zly2006/zhihu/platform/NoopSettingsStoreKt {
+	public static final fun noopSettingsStore ()Lcom/github/zly2006/zhihu/platform/SettingsStore;
+}
+
 public abstract interface class com/github/zly2006/zhihu/platform/SettingsStore {
 	public abstract fun getBoolean (Ljava/lang/String;Z)Z
 	public abstract fun getFloat (Ljava/lang/String;F)F

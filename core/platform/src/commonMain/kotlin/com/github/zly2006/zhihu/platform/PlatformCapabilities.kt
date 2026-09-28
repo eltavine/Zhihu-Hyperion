@@ -21,7 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import kotlinx.io.files.Path
 
-internal expect val platformBottomBarItemLimit: Int?
+expect val platformBottomBarItemLimit: Int?
 
 expect val isJvm: Boolean
 
@@ -151,3 +151,6 @@ expect fun PlatformPredictiveBackHandler(
 
 @Composable
 expect fun rememberIsLiteVariant(): Boolean
+
+/** macOS 关闭主窗口时是否退出应用的偏好键，设置页与窗口宿主共用。 */
+const val MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY = "macosQuitOnWindowClose"

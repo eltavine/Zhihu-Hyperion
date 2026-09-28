@@ -31,6 +31,7 @@ class ModuleGraphConventionPlugin : Plugin<Project> {
                     ":core:account -X> :(?!core:(common|model|network)$).*",
                     ":core:database -X> :(?!core:common$).*",
                     ":core:designsystem -X> :(?!core:settings$).*",
+                    ":core:platform -X> :(?!core:(common|model|network|account|settings)$).*",
                 )
             }
         }

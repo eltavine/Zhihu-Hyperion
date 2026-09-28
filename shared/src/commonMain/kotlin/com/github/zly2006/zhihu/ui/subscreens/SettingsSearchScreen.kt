@@ -55,6 +55,7 @@ import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.navigation.Notification
 import com.github.zly2006.zhihu.notification.NotificationType
+import com.github.zly2006.zhihu.platform.MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isAnswerSwipeSupported
 import com.github.zly2006.zhihu.platform.isPageTurnSupported

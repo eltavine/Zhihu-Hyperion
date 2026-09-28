@@ -1,0 +1,126 @@
+public final class com/github/zly2006/zhihu/platform/AndroidPlatformCapabilitiesKt {
+	public static final fun PlatformBackHandler (ZLkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;I)V
+	public static final fun PlatformPredictiveBackHandler (ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;I)V
+	public static final fun androidUserMessageSink (Landroid/content/Context;)Lcom/github/zly2006/zhihu/platform/UserMessageSink;
+	public static final fun exportTestTagsForUiAutomation (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
+	public static final fun getPlatformBottomBarItemLimit ()Ljava/lang/Integer;
+	public static final fun isAigcVoteSupported ()Z
+	public static final fun isAndroidLiteVariantPackageName (Ljava/lang/String;)Z
+	public static final fun isAnswerSwipeSupported ()Z
+	public static final fun isArticleHtmlExportSupported ()Z
+	public static final fun isArticleImageExportSupported ()Z
+	public static final fun isBlocklistNlpSupported ()Z
+	public static final fun isJvm ()Z
+	public static final fun isNative ()Z
+	public static final fun isPageTurnSupported ()Z
+	public static final fun isSentenceSimilaritySupported ()Z
+	public static final fun rememberAppPrivateDirectory (Landroidx/compose/runtime/Composer;I)Lkotlinx/io/files/Path;
+	public static final fun rememberExternalUrlOpener (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/ExternalUrlOpener;
+	public static final fun rememberImageGalleryOpener (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/ImageGalleryOpener;
+	public static final fun rememberImagePreviewOpener (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/ImagePreviewOpener;
+	public static final fun rememberImageSaver (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/ImageSaver;
+	public static final fun rememberImageSharer (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/ImageSharer;
+	public static final fun rememberIsLiteVariant (Landroidx/compose/runtime/Composer;I)Z
+	public static final fun rememberPlainTextClipboard (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/PlainTextClipboard;
+	public static final fun rememberSystemUrlOpener (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/SystemUrlOpener;
+	public static final fun rememberUserMessageSink (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/UserMessageSink;
+	public static final fun rememberWebViewUrlOpener (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/WebViewUrlOpener;
+	public static final fun rememberZhihuWebUrlOpener (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/ZhihuWebUrlOpener;
+}
+
+public abstract interface class com/github/zly2006/zhihu/platform/ExternalUrlOpener : com/github/zly2006/zhihu/platform/ImagePreviewOpener, com/github/zly2006/zhihu/platform/SystemUrlOpener, com/github/zly2006/zhihu/platform/ZhihuWebUrlOpener {
+}
+
+public abstract interface class com/github/zly2006/zhihu/platform/ImageGalleryOpener {
+	public abstract fun invoke (Ljava/util/List;I)V
+}
+
+public abstract interface class com/github/zly2006/zhihu/platform/ImagePreviewOpener {
+	public abstract fun invoke (Ljava/lang/String;)V
+}
+
+public abstract interface class com/github/zly2006/zhihu/platform/ImageSaver {
+	public abstract fun invoke (Ljava/lang/String;)V
+}
+
+public abstract interface class com/github/zly2006/zhihu/platform/ImageSharer {
+	public abstract fun invoke (Ljava/lang/String;)V
+}
+
+public abstract interface class com/github/zly2006/zhihu/platform/PlainTextClipboard {
+	public abstract fun invoke (Ljava/lang/String;Ljava/lang/String;)V
+}
+
+public final class com/github/zly2006/zhihu/platform/PlatformCapabilitiesKt {
+	public static final field MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY Ljava/lang/String;
+}
+
+public abstract interface class com/github/zly2006/zhihu/platform/SystemUrlOpener {
+	public abstract fun invoke (Ljava/lang/String;)V
+}
+
+public final class com/github/zly2006/zhihu/platform/UserMessageDuration : java/lang/Enum {
+	public static final field Long Lcom/github/zly2006/zhihu/platform/UserMessageDuration;
+	public static final field Short Lcom/github/zly2006/zhihu/platform/UserMessageDuration;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/zly2006/zhihu/platform/UserMessageDuration;
+	public static fun values ()[Lcom/github/zly2006/zhihu/platform/UserMessageDuration;
+}
+
+public abstract interface class com/github/zly2006/zhihu/platform/UserMessageSink {
+	public fun showLongMessage (Ljava/lang/String;)V
+	public fun showMessage (Ljava/lang/String;Lcom/github/zly2006/zhihu/platform/UserMessageDuration;)V
+	public static synthetic fun showMessage$default (Lcom/github/zly2006/zhihu/platform/UserMessageSink;Ljava/lang/String;Lcom/github/zly2006/zhihu/platform/UserMessageDuration;ILjava/lang/Object;)V
+	public abstract fun showShortMessage (Ljava/lang/String;)V
+}
+
+public final class com/github/zly2006/zhihu/platform/UserMessageSink$DefaultImpls {
+	public static fun showLongMessage (Lcom/github/zly2006/zhihu/platform/UserMessageSink;Ljava/lang/String;)V
+	public static fun showMessage (Lcom/github/zly2006/zhihu/platform/UserMessageSink;Ljava/lang/String;Lcom/github/zly2006/zhihu/platform/UserMessageDuration;)V
+	public static synthetic fun showMessage$default (Lcom/github/zly2006/zhihu/platform/UserMessageSink;Ljava/lang/String;Lcom/github/zly2006/zhihu/platform/UserMessageDuration;ILjava/lang/Object;)V
+}
+
+public abstract interface class com/github/zly2006/zhihu/platform/WebViewUrlOpener {
+	public abstract fun invoke (Ljava/lang/String;)V
+}
+
+public abstract interface class com/github/zly2006/zhihu/platform/ZhihuWebUrlOpener {
+	public abstract fun invoke (Ljava/lang/String;)V
+}
+
+public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$OpenImageDialogKt {
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/ui/components/ComposableSingletons$OpenImageDialogKt;
+	public fun <init> ()V
+	public final fun getLambda$1140190723$Zhihu_core_platform ()Lkotlin/jvm/functions/Function6;
+}
+
+public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$OpenImagePreviewContentKt {
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/ui/components/ComposableSingletons$OpenImagePreviewContentKt;
+	public fun <init> ()V
+	public final fun getLambda$-1741611983$Zhihu_core_platform ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-959804743$Zhihu_core_platform ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$414515440$Zhihu_core_platform ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/github/zly2006/zhihu/ui/components/OpenImageDialog : androidx/activity/ComponentDialog {
+	public static final field $stable I
+	public fun <init> (Landroid/content/Context;Ljava/lang/String;)V
+	public fun <init> (Landroid/content/Context;Ljava/util/List;I)V
+	public synthetic fun <init> (Landroid/content/Context;Ljava/util/List;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class com/github/zly2006/zhihu/ui/components/OpenImagePreviewContentKt {
+	public static final fun OpenImagePreviewContent (Ljava/util/List;ILkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function6;Landroidx/compose/runtime/Composer;I)V
+}
+
+public final class com/github/zly2006/zhihu/util/AndroidImageActionsKt {
+	public static final fun saveImageToGallery (Landroid/content/Context;Lio/ktor/client/HttpClient;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun saveImageToMediaStore (Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static final fun shareImage (Landroid/content/Context;Lio/ktor/client/HttpClient;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/util/AndroidPlatformUtilsKt {
+	public static final fun getClipboardManager (Landroid/content/Context;)Landroid/content/ClipboardManager;
+	public static final fun luoTianYiUrlLauncher (Landroid/content/Context;Landroid/net/Uri;)V
+}
+

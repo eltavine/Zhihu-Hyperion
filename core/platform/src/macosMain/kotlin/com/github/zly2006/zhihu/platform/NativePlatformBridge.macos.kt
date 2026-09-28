@@ -21,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.github.zly2006.zhihu.data.macosAppDataDirectoryPath
 import com.github.zly2006.zhihu.data.macosBackgroundUiDebugDataDirectoryPath
-import com.github.zly2006.zhihu.ui.subscreens.MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.channels.Channel
 import org.koin.mp.KoinPlatform
@@ -33,7 +32,7 @@ import platform.AppKit.NSWorkspace
 import platform.Foundation.NSHomeDirectory
 import platform.Foundation.NSURL
 
-internal actual val nativeIsDesktop: Boolean = true
+actual val nativeIsDesktop: Boolean = true
 
 fun isMacosQuitOnWindowCloseEnabled(): Boolean =
     KoinPlatform.getKoin().get<SettingsStore>().getBoolean(MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY, false)
@@ -61,21 +60,21 @@ actual fun rememberWebViewUrlOpener(): WebViewUrlOpener = remember {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-internal actual fun copyNativePlainText(text: String) {
+actual fun copyNativePlainText(text: String) {
     NSPasteboard.generalPasteboard.apply {
         clearContents()
         setString(text, forType = NSPasteboardTypeString)
     }
 }
 
-internal actual fun nativeAccountFilePath(): String =
+actual fun nativeAccountFilePath(): String =
     macosBackgroundUiDebugDataDirectoryPath()?.let { "$it/account.json" }
         ?: "${NSHomeDirectory()}/.zhihu-plus-plus/account.json"
 
-internal actual fun nativeSettingsStore(relativePath: String): SettingsStore =
+actual fun nativeSettingsStore(relativePath: String): SettingsStore =
     macosSettingsStore("${nativeAppPrivateDirectoryPath()}/$relativePath")
 
-internal actual fun nativeAppPrivateDirectoryPath(): String =
+actual fun nativeAppPrivateDirectoryPath(): String =
     macosAppDataDirectoryPath()
 
 internal actual fun nativeDownloadsDirectoryPath(): String =
@@ -83,7 +82,7 @@ internal actual fun nativeDownloadsDirectoryPath(): String =
         ?: "${NSHomeDirectory()}/Downloads"
 
 @OptIn(ExperimentalForeignApi::class)
-internal actual fun nativeChooseBlocklistImportFilePath(): String? {
+actual fun nativeChooseBlocklistImportFilePath(): String? {
     val panel = NSOpenPanel.openPanel()
     panel.title = "导入屏蔽规则"
     panel.canChooseFiles = true
@@ -92,7 +91,7 @@ internal actual fun nativeChooseBlocklistImportFilePath(): String? {
     return if (panel.runModal() == NSModalResponseOK) panel.URL?.path else null
 }
 
-internal data class MacosUserMessage(
+data class MacosUserMessage(
     val text: String,
     val duration: UserMessageDuration,
 )
@@ -109,4 +108,4 @@ fun showMacosUserMessage(
     }
 }
 
-internal actual val platformBottomBarItemLimit: Int? = null
+actual val platformBottomBarItemLimit: Int? = null

@@ -20,4 +20,4 @@ package com.github.zly2006.zhihu.data
 import org.koin.core.module.Module
 
 /** 原生平台的数据库绑定；不支持本地内容库的平台不注册该绑定，调用方用 getOrNull 判断。 */
-expect fun databaseModule(): Module
+expect fun databaseModule(dataDirectory: String): Module

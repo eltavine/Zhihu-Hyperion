@@ -173,7 +173,7 @@ actual fun PlatformPredictiveBackHandler(
 @Composable
 actual fun rememberIsLiteVariant(): Boolean = false
 
-internal actual val platformBottomBarItemLimit: Int? = null
+actual val platformBottomBarItemLimit: Int? = null
 
 actual val isJvm: Boolean = true
 

@@ -322,68 +322,6 @@ suspend fun fetchArticleExportImageDataUrl(
     return "data:$mimeType;base64,${Base64.Default.encode(bytes)}"
 }
 
-fun resolveArticleExportImageMimeType(
-    contentTypeHeader: String?,
-    imageUrl: String,
-    imageBytes: ByteArray,
-): String {
-    contentTypeHeader
-        ?.substringBefore(';')
-        ?.trim()
-        ?.takeIf { it.startsWith("image/") }
-        ?.let { return it }
-
-    guessArticleExportImageMimeTypeFromName(imageUrl)?.let { return it }
-    guessArticleExportImageMimeTypeFromBytes(imageBytes)?.let { return it }
-    return "image/jpeg"
-}
-
-private fun guessArticleExportImageMimeTypeFromName(imageUrl: String): String? =
-    imageUrl
-        .substringBefore('?')
-        .substringBefore('#')
-        .substringAfterLast('.', missingDelimiterValue = "")
-        .lowercase()
-        .let { extension ->
-            when (extension) {
-                "jpg", "jpeg" -> "image/jpeg"
-                "png" -> "image/png"
-                "gif" -> "image/gif"
-                "webp" -> "image/webp"
-                "bmp" -> "image/bmp"
-                "svg", "svgz" -> "image/svg+xml"
-                "avif" -> "image/avif"
-                "heic" -> "image/heic"
-                "heif" -> "image/heif"
-                else -> null
-            }
-        }
-
-private fun guessArticleExportImageMimeTypeFromBytes(imageBytes: ByteArray): String? {
-    fun matches(vararg values: Int): Boolean =
-        imageBytes.size >= values.size &&
-            values.indices.all { index -> imageBytes[index].toInt() and 0xff == values[index] }
-
-    return when {
-        matches(0xff, 0xd8, 0xff) -> "image/jpeg"
-
-        matches(0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a) -> "image/png"
-
-        matches(0x47, 0x49, 0x46, 0x38) -> "image/gif"
-
-        matches(0x42, 0x4d) -> "image/bmp"
-
-        imageBytes.size >= 12 &&
-            matches(0x52, 0x49, 0x46, 0x46) &&
-            imageBytes[8].toInt().toChar() == 'W' &&
-            imageBytes[9].toInt().toChar() == 'E' &&
-            imageBytes[10].toInt().toChar() == 'B' &&
-            imageBytes[11].toInt().toChar() == 'P' -> "image/webp"
-
-        else -> null
-    }
-}
-
 fun prepareArticleExportContentHtml(content: String): String {
     val document = Ksoup.parseBodyFragment(content)
     document.select("noscript").remove()

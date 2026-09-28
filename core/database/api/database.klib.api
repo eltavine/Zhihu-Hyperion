@@ -636,7 +636,7 @@ final class com.github.zly2006.zhihu.viewmodel.local/UserBehavior { // com.githu
 }
 
 final fun <#A: androidx.room/RoomDatabase> (androidx.room/RoomDatabase.Builder<#A>).com.github.zly2006.zhihu.data/applyPlatformDriver(): androidx.room/RoomDatabase.Builder<#A> // com.github.zly2006.zhihu.data/applyPlatformDriver|applyPlatformDriver@androidx.room.RoomDatabase.Builder<0:0>(){0§<androidx.room.RoomDatabase>}[0]
-final fun com.github.zly2006.zhihu.data/databaseModule(): org.koin.core.module/Module // com.github.zly2006.zhihu.data/databaseModule|databaseModule(){}[0]
+final fun com.github.zly2006.zhihu.data/databaseModule(kotlin/String): org.koin.core.module/Module // com.github.zly2006.zhihu.data/databaseModule|databaseModule(kotlin.String){}[0]
 final fun com.github.zly2006.zhihu.viewmodel.filter/buildContentFilterDatabase(androidx.room/RoomDatabase.Builder<com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase>): com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase // com.github.zly2006.zhihu.viewmodel.filter/buildContentFilterDatabase|buildContentFilterDatabase(androidx.room.RoomDatabase.Builder<com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase>){}[0]
 final fun com.github.zly2006.zhihu.viewmodel.local/buildLocalContentDatabase(androidx.room/RoomDatabase.Builder<com.github.zly2006.zhihu.viewmodel.local/LocalContentDatabase>): com.github.zly2006.zhihu.viewmodel.local/LocalContentDatabase // com.github.zly2006.zhihu.viewmodel.local/buildLocalContentDatabase|buildLocalContentDatabase(androidx.room.RoomDatabase.Builder<com.github.zly2006.zhihu.viewmodel.local.LocalContentDatabase>){}[0]
 
@@ -831,13 +831,3 @@ final object com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabaseCons
 final object com.github.zly2006.zhihu.viewmodel.local/LocalContentDatabaseConstructor : androidx.room/RoomDatabaseConstructor<com.github.zly2006.zhihu.viewmodel.local/LocalContentDatabase> { // com.github.zly2006.zhihu.viewmodel.local/LocalContentDatabaseConstructor|null[0]
     final fun initialize(): com.github.zly2006.zhihu.viewmodel.local/LocalContentDatabase // com.github.zly2006.zhihu.viewmodel.local/LocalContentDatabaseConstructor.initialize|initialize(){}[0]
 }
-
-// Targets: [macosArm64]
-final const val com.github.zly2006.zhihu.data/BACKGROUND_UI_DEBUG_DATA_HOME_ENV // com.github.zly2006.zhihu.data/BACKGROUND_UI_DEBUG_DATA_HOME_ENV|{}BACKGROUND_UI_DEBUG_DATA_HOME_ENV[0]
-    final fun <get-BACKGROUND_UI_DEBUG_DATA_HOME_ENV>(): kotlin/String // com.github.zly2006.zhihu.data/BACKGROUND_UI_DEBUG_DATA_HOME_ENV.<get-BACKGROUND_UI_DEBUG_DATA_HOME_ENV>|<get-BACKGROUND_UI_DEBUG_DATA_HOME_ENV>(){}[0]
-
-// Targets: [macosArm64]
-final fun com.github.zly2006.zhihu.data/macosAppDataDirectoryPath(): kotlin/String // com.github.zly2006.zhihu.data/macosAppDataDirectoryPath|macosAppDataDirectoryPath(){}[0]
-
-// Targets: [macosArm64]
-final fun com.github.zly2006.zhihu.data/macosBackgroundUiDebugDataDirectoryPath(): kotlin/String? // com.github.zly2006.zhihu.data/macosBackgroundUiDebugDataDirectoryPath|macosBackgroundUiDebugDataDirectoryPath(){}[0]

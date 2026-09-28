@@ -85,28 +85,3 @@ fun telemetry(context: Context, usage: String) {
         }
     }
 }
-
-/**
- * 洛天依主题浏览器打开
- */
-fun luoTianYiUrlLauncher(context: Context, uri: Uri) {
-    if (uri.host == "link.zhihu.com") {
-        Url(uri.toString()).parameters["target"]?.let {
-            luoTianYiUrlLauncher(context, it.toUri())
-            return
-        }
-    }
-    val color = androidSettingsStore(context).getInt("luotianyi_color", 0xff_66CCFF.toInt())
-    val intent = CustomTabsIntent
-        .Builder()
-        .setDefaultColorSchemeParams(
-            CustomTabColorSchemeParams
-                .Builder()
-                .setToolbarColor(color)
-                .build(),
-        ).build()
-    intent.launchUrl(context, uri)
-}
-
-val Context.clipboardManager
-    get() = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager

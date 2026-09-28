@@ -73,7 +73,7 @@ actual fun rememberWebViewUrlOpener(): WebViewUrlOpener {
     }
 }
 
-internal actual val platformBottomBarItemLimit: Int? = 5
+actual val platformBottomBarItemLimit: Int? = 5
 
 actual val isJvm: Boolean = false
 
@@ -221,7 +221,7 @@ actual fun rememberIsLiteVariant(): Boolean {
     return remember(context) { isAndroidLiteVariantPackageName(context.packageName) }
 }
 
-internal fun isAndroidLiteVariantPackageName(packageName: String): Boolean = packageName.endsWith(".lite")
+fun isAndroidLiteVariantPackageName(packageName: String): Boolean = packageName.endsWith(".lite")
 
 @Composable
 actual fun PlatformBackHandler(

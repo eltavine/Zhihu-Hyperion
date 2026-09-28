@@ -19,22 +19,22 @@ package com.github.zly2006.zhihu.platform
 
 import platform.Foundation.NSBundle
 
-internal expect val nativeIsDesktop: Boolean
+expect val nativeIsDesktop: Boolean
 
-internal val nativeAppVersionName: String
+val nativeAppVersionName: String
     get() = NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleShortVersionString") as? String ?: "0.0.0"
 
-internal expect fun copyNativePlainText(text: String)
+expect fun copyNativePlainText(text: String)
 
-internal expect fun nativeAccountFilePath(): String
+expect fun nativeAccountFilePath(): String
 
-internal expect fun nativeAppPrivateDirectoryPath(): String
+expect fun nativeAppPrivateDirectoryPath(): String
 
 internal expect fun nativeDownloadsDirectoryPath(): String
 
-internal expect fun nativeChooseBlocklistImportFilePath(): String?
+expect fun nativeChooseBlocklistImportFilePath(): String?
 
-internal fun nativeBundledResourcePath(relativePath: String): String? =
+fun nativeBundledResourcePath(relativePath: String): String? =
     NSBundle.mainBundle.resourcePath?.let { resourceDirectory -> "$resourceDirectory/$relativePath" }
 
-internal expect fun nativeSettingsStore(relativePath: String): SettingsStore
+expect fun nativeSettingsStore(relativePath: String): SettingsStore

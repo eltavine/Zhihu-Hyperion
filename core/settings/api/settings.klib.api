@@ -25,5 +25,7 @@ abstract interface com.github.zly2006.zhihu.platform/SettingsStore { // com.gith
     open fun removeByPrefix(kotlin/String) // com.github.zly2006.zhihu.platform/SettingsStore.removeByPrefix|removeByPrefix(kotlin.String){}[0]
 }
 
+final fun com.github.zly2006.zhihu.platform/noopSettingsStore(): com.github.zly2006.zhihu.platform/SettingsStore // com.github.zly2006.zhihu.platform/noopSettingsStore|noopSettingsStore(){}[0]
+
 // Targets: [macosArm64]
 final fun com.github.zly2006.zhihu.platform/macosSettingsStore(kotlin/String): com.github.zly2006.zhihu.platform/SettingsStore // com.github.zly2006.zhihu.platform/macosSettingsStore|macosSettingsStore(kotlin.String){}[0]

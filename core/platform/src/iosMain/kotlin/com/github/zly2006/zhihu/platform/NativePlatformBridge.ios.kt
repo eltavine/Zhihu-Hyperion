@@ -19,7 +19,6 @@ package com.github.zly2006.zhihu.platform
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import com.github.zly2006.zhihu.ui.noopSettingsStore
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
@@ -29,10 +28,10 @@ import platform.Foundation.NSUserDomainMask
 import platform.UIKit.UIApplication
 import platform.UIKit.UIPasteboard
 
-internal actual val nativeIsDesktop: Boolean = false
+actual val nativeIsDesktop: Boolean = false
 
 // iPhone tab bars show at most five items, the same limit as Android phones.
-internal actual val platformBottomBarItemLimit: Int? = 5
+actual val platformBottomBarItemLimit: Int? = 5
 
 actual val isAigcVoteSupported: Boolean = false
 
@@ -69,24 +68,24 @@ actual fun rememberImageGalleryOpener(): ImageGalleryOpener {
     }
 }
 
-internal actual fun copyNativePlainText(text: String) {
+actual fun copyNativePlainText(text: String) {
     UIPasteboard.generalPasteboard.string = text
 }
 
 @OptIn(ExperimentalForeignApi::class)
-internal actual fun nativeAccountFilePath(): String = "${nativeAppPrivateDirectoryPath()}/account.json"
+actual fun nativeAccountFilePath(): String = "${nativeAppPrivateDirectoryPath()}/account.json"
 
 @OptIn(ExperimentalForeignApi::class)
-internal actual fun nativeAppPrivateDirectoryPath(): String {
+actual fun nativeAppPrivateDirectoryPath(): String {
     val urls = NSFileManager.defaultManager.URLsForDirectory(NSDocumentDirectory, NSUserDomainMask)
     return (urls.firstOrNull() as? NSURL)?.path ?: NSTemporaryDirectory()
 }
 
 internal actual fun nativeDownloadsDirectoryPath(): String = "${nativeAppPrivateDirectoryPath()}/Downloads"
 
-internal actual fun nativeChooseBlocklistImportFilePath(): String? = null
+actual fun nativeChooseBlocklistImportFilePath(): String? = null
 
-internal actual fun nativeSettingsStore(relativePath: String): SettingsStore = noopSettingsStore()
+actual fun nativeSettingsStore(relativePath: String): SettingsStore = noopSettingsStore()
 
 @Composable
 actual fun rememberUserMessageSink(): UserMessageSink = remember {

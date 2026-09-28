@@ -10,6 +10,10 @@ public final class com/github/zly2006/zhihu/util/DisplayFormatKt {
 	public static final fun twoDigitString (I)Ljava/lang/String;
 }
 
+public final class com/github/zly2006/zhihu/util/ImageMimeTypeKt {
+	public static final fun resolveArticleExportImageMimeType (Ljava/lang/String;Ljava/lang/String;[B)Ljava/lang/String;
+}
+
 public final class com/github/zly2006/zhihu/util/Log {
 	public static final field INSTANCE Lcom/github/zly2006/zhihu/util/Log;
 	public final fun d (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V

@@ -29,17 +29,19 @@ import org.koin.dsl.module
 import org.koin.dsl.onClose
 import platform.Foundation.NSFileManager
 
-actual fun databaseModule(): Module = module {
+actual fun databaseModule(dataDirectory: String): Module = module {
     single {
-        buildContentFilterDatabase(Room.databaseBuilder<ContentFilterDatabase>(name = macosDatabasePath("content-filter.db")))
+        buildContentFilterDatabase(Room.databaseBuilder<ContentFilterDatabase>(name = databasePath(dataDirectory, "content-filter.db")))
     } onClose { it?.close() }
     single {
-        buildLocalContentDatabase(Room.databaseBuilder<LocalContentDatabase>(name = macosDatabasePath("local-content.db")))
+        buildLocalContentDatabase(Room.databaseBuilder<LocalContentDatabase>(name = databasePath(dataDirectory, "local-content.db")))
     } onClose { it?.close() }
 }
 
-private fun macosDatabasePath(fileName: String): String {
-    val dataDirectory = macosAppDataDirectoryPath()
+private fun databasePath(
+    dataDirectory: String,
+    fileName: String,
+): String {
     NSFileManager.defaultManager.createDirectoryAtPath(
         dataDirectory,
         withIntermediateDirectories = true,

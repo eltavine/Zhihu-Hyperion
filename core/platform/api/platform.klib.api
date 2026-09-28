@@ -1,0 +1,162 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, macosArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <Zhihu.core:platform>
+final enum class com.github.zly2006.zhihu.platform/UserMessageDuration : kotlin/Enum<com.github.zly2006.zhihu.platform/UserMessageDuration> { // com.github.zly2006.zhihu.platform/UserMessageDuration|null[0]
+    enum entry Long // com.github.zly2006.zhihu.platform/UserMessageDuration.Long|null[0]
+    enum entry Short // com.github.zly2006.zhihu.platform/UserMessageDuration.Short|null[0]
+
+    final val entries // com.github.zly2006.zhihu.platform/UserMessageDuration.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.github.zly2006.zhihu.platform/UserMessageDuration> // com.github.zly2006.zhihu.platform/UserMessageDuration.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.github.zly2006.zhihu.platform/UserMessageDuration // com.github.zly2006.zhihu.platform/UserMessageDuration.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.github.zly2006.zhihu.platform/UserMessageDuration> // com.github.zly2006.zhihu.platform/UserMessageDuration.values|values#static(){}[0]
+}
+
+abstract interface com.github.zly2006.zhihu.platform/ExternalUrlOpener : com.github.zly2006.zhihu.platform/ImagePreviewOpener, com.github.zly2006.zhihu.platform/SystemUrlOpener, com.github.zly2006.zhihu.platform/ZhihuWebUrlOpener // com.github.zly2006.zhihu.platform/ExternalUrlOpener|null[0]
+
+abstract interface com.github.zly2006.zhihu.platform/ImageGalleryOpener { // com.github.zly2006.zhihu.platform/ImageGalleryOpener|null[0]
+    abstract fun invoke(kotlin.collections/List<kotlin/String>, kotlin/Int) // com.github.zly2006.zhihu.platform/ImageGalleryOpener.invoke|invoke(kotlin.collections.List<kotlin.String>;kotlin.Int){}[0]
+}
+
+abstract interface com.github.zly2006.zhihu.platform/ImagePreviewOpener { // com.github.zly2006.zhihu.platform/ImagePreviewOpener|null[0]
+    abstract fun invoke(kotlin/String) // com.github.zly2006.zhihu.platform/ImagePreviewOpener.invoke|invoke(kotlin.String){}[0]
+}
+
+abstract interface com.github.zly2006.zhihu.platform/ImageSaver { // com.github.zly2006.zhihu.platform/ImageSaver|null[0]
+    abstract fun invoke(kotlin/String) // com.github.zly2006.zhihu.platform/ImageSaver.invoke|invoke(kotlin.String){}[0]
+}
+
+abstract interface com.github.zly2006.zhihu.platform/ImageSharer { // com.github.zly2006.zhihu.platform/ImageSharer|null[0]
+    abstract fun invoke(kotlin/String) // com.github.zly2006.zhihu.platform/ImageSharer.invoke|invoke(kotlin.String){}[0]
+}
+
+abstract interface com.github.zly2006.zhihu.platform/PlainTextClipboard { // com.github.zly2006.zhihu.platform/PlainTextClipboard|null[0]
+    abstract fun invoke(kotlin/String, kotlin/String) // com.github.zly2006.zhihu.platform/PlainTextClipboard.invoke|invoke(kotlin.String;kotlin.String){}[0]
+}
+
+abstract interface com.github.zly2006.zhihu.platform/SystemUrlOpener { // com.github.zly2006.zhihu.platform/SystemUrlOpener|null[0]
+    abstract fun invoke(kotlin/String) // com.github.zly2006.zhihu.platform/SystemUrlOpener.invoke|invoke(kotlin.String){}[0]
+}
+
+abstract interface com.github.zly2006.zhihu.platform/UserMessageSink { // com.github.zly2006.zhihu.platform/UserMessageSink|null[0]
+    abstract fun showShortMessage(kotlin/String) // com.github.zly2006.zhihu.platform/UserMessageSink.showShortMessage|showShortMessage(kotlin.String){}[0]
+    open fun showLongMessage(kotlin/String) // com.github.zly2006.zhihu.platform/UserMessageSink.showLongMessage|showLongMessage(kotlin.String){}[0]
+    open fun showMessage(kotlin/String, com.github.zly2006.zhihu.platform/UserMessageDuration = ...) // com.github.zly2006.zhihu.platform/UserMessageSink.showMessage|showMessage(kotlin.String;com.github.zly2006.zhihu.platform.UserMessageDuration){}[0]
+}
+
+abstract interface com.github.zly2006.zhihu.platform/WebViewUrlOpener { // com.github.zly2006.zhihu.platform/WebViewUrlOpener|null[0]
+    abstract fun invoke(kotlin/String) // com.github.zly2006.zhihu.platform/WebViewUrlOpener.invoke|invoke(kotlin.String){}[0]
+}
+
+abstract interface com.github.zly2006.zhihu.platform/ZhihuWebUrlOpener { // com.github.zly2006.zhihu.platform/ZhihuWebUrlOpener|null[0]
+    abstract fun invoke(kotlin/String) // com.github.zly2006.zhihu.platform/ZhihuWebUrlOpener.invoke|invoke(kotlin.String){}[0]
+}
+
+final const val com.github.zly2006.zhihu.platform/MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY // com.github.zly2006.zhihu.platform/MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY|{}MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY[0]
+    final fun <get-MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY>(): kotlin/String // com.github.zly2006.zhihu.platform/MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY.<get-MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY>|<get-MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY>(){}[0]
+
+final val com.github.zly2006.zhihu.platform/isAigcVoteSupported // com.github.zly2006.zhihu.platform/isAigcVoteSupported|{}isAigcVoteSupported[0]
+    final fun <get-isAigcVoteSupported>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isAigcVoteSupported.<get-isAigcVoteSupported>|<get-isAigcVoteSupported>(){}[0]
+final val com.github.zly2006.zhihu.platform/isAnswerSwipeSupported // com.github.zly2006.zhihu.platform/isAnswerSwipeSupported|{}isAnswerSwipeSupported[0]
+    final fun <get-isAnswerSwipeSupported>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isAnswerSwipeSupported.<get-isAnswerSwipeSupported>|<get-isAnswerSwipeSupported>(){}[0]
+final val com.github.zly2006.zhihu.platform/isArticleHtmlExportSupported // com.github.zly2006.zhihu.platform/isArticleHtmlExportSupported|{}isArticleHtmlExportSupported[0]
+    final fun <get-isArticleHtmlExportSupported>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isArticleHtmlExportSupported.<get-isArticleHtmlExportSupported>|<get-isArticleHtmlExportSupported>(){}[0]
+final val com.github.zly2006.zhihu.platform/isArticleImageExportSupported // com.github.zly2006.zhihu.platform/isArticleImageExportSupported|{}isArticleImageExportSupported[0]
+    final fun <get-isArticleImageExportSupported>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isArticleImageExportSupported.<get-isArticleImageExportSupported>|<get-isArticleImageExportSupported>(){}[0]
+final val com.github.zly2006.zhihu.platform/isBlocklistNlpSupported // com.github.zly2006.zhihu.platform/isBlocklistNlpSupported|{}isBlocklistNlpSupported[0]
+    final fun <get-isBlocklistNlpSupported>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isBlocklistNlpSupported.<get-isBlocklistNlpSupported>|<get-isBlocklistNlpSupported>(){}[0]
+final val com.github.zly2006.zhihu.platform/isJvm // com.github.zly2006.zhihu.platform/isJvm|{}isJvm[0]
+    final fun <get-isJvm>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isJvm.<get-isJvm>|<get-isJvm>(){}[0]
+final val com.github.zly2006.zhihu.platform/isNative // com.github.zly2006.zhihu.platform/isNative|{}isNative[0]
+    final fun <get-isNative>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isNative.<get-isNative>|<get-isNative>(){}[0]
+final val com.github.zly2006.zhihu.platform/isPageTurnSupported // com.github.zly2006.zhihu.platform/isPageTurnSupported|{}isPageTurnSupported[0]
+    final fun <get-isPageTurnSupported>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isPageTurnSupported.<get-isPageTurnSupported>|<get-isPageTurnSupported>(){}[0]
+final val com.github.zly2006.zhihu.platform/isSentenceSimilaritySupported // com.github.zly2006.zhihu.platform/isSentenceSimilaritySupported|{}isSentenceSimilaritySupported[0]
+    final fun <get-isSentenceSimilaritySupported>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isSentenceSimilaritySupported.<get-isSentenceSimilaritySupported>|<get-isSentenceSimilaritySupported>(){}[0]
+final val com.github.zly2006.zhihu.platform/nativeAppVersionName // com.github.zly2006.zhihu.platform/nativeAppVersionName|{}nativeAppVersionName[0]
+    final fun <get-nativeAppVersionName>(): kotlin/String // com.github.zly2006.zhihu.platform/nativeAppVersionName.<get-nativeAppVersionName>|<get-nativeAppVersionName>(){}[0]
+final val com.github.zly2006.zhihu.platform/nativeIsDesktop // com.github.zly2006.zhihu.platform/nativeIsDesktop|{}nativeIsDesktop[0]
+    final fun <get-nativeIsDesktop>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/nativeIsDesktop.<get-nativeIsDesktop>|<get-nativeIsDesktop>(){}[0]
+final val com.github.zly2006.zhihu.platform/platformBottomBarItemLimit // com.github.zly2006.zhihu.platform/platformBottomBarItemLimit|{}platformBottomBarItemLimit[0]
+    final fun <get-platformBottomBarItemLimit>(): kotlin/Int? // com.github.zly2006.zhihu.platform/platformBottomBarItemLimit.<get-platformBottomBarItemLimit>|<get-platformBottomBarItemLimit>(){}[0]
+
+final fun (androidx.compose.ui/Modifier).com.github.zly2006.zhihu.platform/exportTestTagsForUiAutomation(): androidx.compose.ui/Modifier // com.github.zly2006.zhihu.platform/exportTestTagsForUiAutomation|exportTestTagsForUiAutomation@androidx.compose.ui.Modifier(){}[0]
+final fun com.github.zly2006.zhihu.platform/PlatformBackHandler(kotlin/Boolean, kotlin/Function0<kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int) // com.github.zly2006.zhihu.platform/PlatformBackHandler|PlatformBackHandler(kotlin.Boolean;kotlin.Function0<kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.platform/PlatformPredictiveBackHandler(kotlin/Boolean, kotlin/Function1<kotlin/Float, kotlin/Unit>, kotlin/Function0<kotlin/Unit>, kotlin/Function0<kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int) // com.github.zly2006.zhihu.platform/PlatformPredictiveBackHandler|PlatformPredictiveBackHandler(kotlin.Boolean;kotlin.Function1<kotlin.Float,kotlin.Unit>;kotlin.Function0<kotlin.Unit>;kotlin.Function0<kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.platform/copyNativePlainText(kotlin/String) // com.github.zly2006.zhihu.platform/copyNativePlainText|copyNativePlainText(kotlin.String){}[0]
+final fun com.github.zly2006.zhihu.platform/nativeAccountFilePath(): kotlin/String // com.github.zly2006.zhihu.platform/nativeAccountFilePath|nativeAccountFilePath(){}[0]
+final fun com.github.zly2006.zhihu.platform/nativeAppPrivateDirectoryPath(): kotlin/String // com.github.zly2006.zhihu.platform/nativeAppPrivateDirectoryPath|nativeAppPrivateDirectoryPath(){}[0]
+final fun com.github.zly2006.zhihu.platform/nativeBundledResourcePath(kotlin/String): kotlin/String? // com.github.zly2006.zhihu.platform/nativeBundledResourcePath|nativeBundledResourcePath(kotlin.String){}[0]
+final fun com.github.zly2006.zhihu.platform/nativeChooseBlocklistImportFilePath(): kotlin/String? // com.github.zly2006.zhihu.platform/nativeChooseBlocklistImportFilePath|nativeChooseBlocklistImportFilePath(){}[0]
+final fun com.github.zly2006.zhihu.platform/nativeSettingsStore(kotlin/String): com.github.zly2006.zhihu.platform/SettingsStore // com.github.zly2006.zhihu.platform/nativeSettingsStore|nativeSettingsStore(kotlin.String){}[0]
+final fun com.github.zly2006.zhihu.platform/rememberAppPrivateDirectory(androidx.compose.runtime/Composer?, kotlin/Int): kotlinx.io.files/Path // com.github.zly2006.zhihu.platform/rememberAppPrivateDirectory|rememberAppPrivateDirectory(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.platform/rememberExternalUrlOpener(androidx.compose.runtime/Composer?, kotlin/Int): com.github.zly2006.zhihu.platform/ExternalUrlOpener // com.github.zly2006.zhihu.platform/rememberExternalUrlOpener|rememberExternalUrlOpener(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.platform/rememberImageGalleryOpener(androidx.compose.runtime/Composer?, kotlin/Int): com.github.zly2006.zhihu.platform/ImageGalleryOpener // com.github.zly2006.zhihu.platform/rememberImageGalleryOpener|rememberImageGalleryOpener(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.platform/rememberImagePreviewOpener(androidx.compose.runtime/Composer?, kotlin/Int): com.github.zly2006.zhihu.platform/ImagePreviewOpener // com.github.zly2006.zhihu.platform/rememberImagePreviewOpener|rememberImagePreviewOpener(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.platform/rememberImageSaver(androidx.compose.runtime/Composer?, kotlin/Int): com.github.zly2006.zhihu.platform/ImageSaver // com.github.zly2006.zhihu.platform/rememberImageSaver|rememberImageSaver(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.platform/rememberImageSharer(androidx.compose.runtime/Composer?, kotlin/Int): com.github.zly2006.zhihu.platform/ImageSharer // com.github.zly2006.zhihu.platform/rememberImageSharer|rememberImageSharer(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.platform/rememberIsLiteVariant(androidx.compose.runtime/Composer?, kotlin/Int): kotlin/Boolean // com.github.zly2006.zhihu.platform/rememberIsLiteVariant|rememberIsLiteVariant(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.platform/rememberPlainTextClipboard(androidx.compose.runtime/Composer?, kotlin/Int): com.github.zly2006.zhihu.platform/PlainTextClipboard // com.github.zly2006.zhihu.platform/rememberPlainTextClipboard|rememberPlainTextClipboard(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.platform/rememberSystemUrlOpener(androidx.compose.runtime/Composer?, kotlin/Int): com.github.zly2006.zhihu.platform/SystemUrlOpener // com.github.zly2006.zhihu.platform/rememberSystemUrlOpener|rememberSystemUrlOpener(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.platform/rememberUserMessageSink(androidx.compose.runtime/Composer?, kotlin/Int): com.github.zly2006.zhihu.platform/UserMessageSink // com.github.zly2006.zhihu.platform/rememberUserMessageSink|rememberUserMessageSink(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.platform/rememberWebViewUrlOpener(androidx.compose.runtime/Composer?, kotlin/Int): com.github.zly2006.zhihu.platform/WebViewUrlOpener // com.github.zly2006.zhihu.platform/rememberWebViewUrlOpener|rememberWebViewUrlOpener(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.platform/rememberZhihuWebUrlOpener(androidx.compose.runtime/Composer?, kotlin/Int): com.github.zly2006.zhihu.platform/ZhihuWebUrlOpener // com.github.zly2006.zhihu.platform/rememberZhihuWebUrlOpener|rememberZhihuWebUrlOpener(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.ui.components/OpenImagePreviewContent(kotlin.collections/List<kotlin/String>, kotlin/Int, kotlin/Function0<kotlin/Unit>, kotlin/Function1<kotlin/String, kotlin/Unit>, kotlin/Function6<kotlin/String, kotlin/Function0<kotlin/Unit>, kotlin/Function1<androidx.compose.ui.geometry/Offset, kotlin/Unit>, kotlin/Function1<kotlin/Boolean, kotlin/Unit>, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int) // com.github.zly2006.zhihu.ui.components/OpenImagePreviewContent|OpenImagePreviewContent(kotlin.collections.List<kotlin.String>;kotlin.Int;kotlin.Function0<kotlin.Unit>;kotlin.Function1<kotlin.String,kotlin.Unit>;kotlin.Function6<kotlin.String,kotlin.Function0<kotlin.Unit>,kotlin.Function1<androidx.compose.ui.geometry.Offset,kotlin.Unit>,kotlin.Function1<kotlin.Boolean,kotlin.Unit>,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+// Targets: [macosArm64]
+final class com.github.zly2006.zhihu.platform/MacosUserMessage { // com.github.zly2006.zhihu.platform/MacosUserMessage|null[0]
+    constructor <init>(kotlin/String, com.github.zly2006.zhihu.platform/UserMessageDuration) // com.github.zly2006.zhihu.platform/MacosUserMessage.<init>|<init>(kotlin.String;com.github.zly2006.zhihu.platform.UserMessageDuration){}[0]
+
+    final val duration // com.github.zly2006.zhihu.platform/MacosUserMessage.duration|{}duration[0]
+        final fun <get-duration>(): com.github.zly2006.zhihu.platform/UserMessageDuration // com.github.zly2006.zhihu.platform/MacosUserMessage.duration.<get-duration>|<get-duration>(){}[0]
+    final val text // com.github.zly2006.zhihu.platform/MacosUserMessage.text|{}text[0]
+        final fun <get-text>(): kotlin/String // com.github.zly2006.zhihu.platform/MacosUserMessage.text.<get-text>|<get-text>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.platform/MacosUserMessage.component1|component1(){}[0]
+    final fun component2(): com.github.zly2006.zhihu.platform/UserMessageDuration // com.github.zly2006.zhihu.platform/MacosUserMessage.component2|component2(){}[0]
+    final fun copy(kotlin/String = ..., com.github.zly2006.zhihu.platform/UserMessageDuration = ...): com.github.zly2006.zhihu.platform/MacosUserMessage // com.github.zly2006.zhihu.platform/MacosUserMessage.copy|copy(kotlin.String;com.github.zly2006.zhihu.platform.UserMessageDuration){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.platform/MacosUserMessage.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.platform/MacosUserMessage.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.platform/MacosUserMessage.toString|toString(){}[0]
+}
+
+// Targets: [macosArm64]
+final const val com.github.zly2006.zhihu.data/BACKGROUND_UI_DEBUG_DATA_HOME_ENV // com.github.zly2006.zhihu.data/BACKGROUND_UI_DEBUG_DATA_HOME_ENV|{}BACKGROUND_UI_DEBUG_DATA_HOME_ENV[0]
+    final fun <get-BACKGROUND_UI_DEBUG_DATA_HOME_ENV>(): kotlin/String // com.github.zly2006.zhihu.data/BACKGROUND_UI_DEBUG_DATA_HOME_ENV.<get-BACKGROUND_UI_DEBUG_DATA_HOME_ENV>|<get-BACKGROUND_UI_DEBUG_DATA_HOME_ENV>(){}[0]
+
+// Targets: [macosArm64]
+final const val com.github.zly2006.zhihu.platform/MACOS_USER_MESSAGE_HOST_TAG // com.github.zly2006.zhihu.platform/MACOS_USER_MESSAGE_HOST_TAG|{}MACOS_USER_MESSAGE_HOST_TAG[0]
+    final fun <get-MACOS_USER_MESSAGE_HOST_TAG>(): kotlin/String // com.github.zly2006.zhihu.platform/MACOS_USER_MESSAGE_HOST_TAG.<get-MACOS_USER_MESSAGE_HOST_TAG>|<get-MACOS_USER_MESSAGE_HOST_TAG>(){}[0]
+
+// Targets: [macosArm64]
+final val com.github.zly2006.zhihu.platform/com_github_zly2006_zhihu_platform_MacosUserMessage$stableprop // com.github.zly2006.zhihu.platform/com_github_zly2006_zhihu_platform_MacosUserMessage$stableprop|#static{}com_github_zly2006_zhihu_platform_MacosUserMessage$stableprop[0]
+
+// Targets: [macosArm64]
+final val com.github.zly2006.zhihu.platform/macosContentAreaInsetState // com.github.zly2006.zhihu.platform/macosContentAreaInsetState|{}macosContentAreaInsetState[0]
+    final fun <get-macosContentAreaInsetState>(): androidx.compose.runtime/MutableState<androidx.compose.ui.unit/Dp> // com.github.zly2006.zhihu.platform/macosContentAreaInsetState.<get-macosContentAreaInsetState>|<get-macosContentAreaInsetState>(){}[0]
+
+// Targets: [macosArm64]
+final fun com.github.zly2006.zhihu.data/macosAppDataDirectoryPath(): kotlin/String // com.github.zly2006.zhihu.data/macosAppDataDirectoryPath|macosAppDataDirectoryPath(){}[0]
+
+// Targets: [macosArm64]
+final fun com.github.zly2006.zhihu.data/macosBackgroundUiDebugDataDirectoryPath(): kotlin/String? // com.github.zly2006.zhihu.data/macosBackgroundUiDebugDataDirectoryPath|macosBackgroundUiDebugDataDirectoryPath(){}[0]
+
+// Targets: [macosArm64]
+final fun com.github.zly2006.zhihu.platform/MacosBackNavigationHost(platform.AppKit/NSWindow, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int) // com.github.zly2006.zhihu.platform/MacosBackNavigationHost|MacosBackNavigationHost(platform.AppKit.NSWindow;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+// Targets: [macosArm64]
+final fun com.github.zly2006.zhihu.platform/MacosUserMessageHost(androidx.compose.ui/Modifier?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.github.zly2006.zhihu.platform/MacosUserMessageHost|MacosUserMessageHost(androidx.compose.ui.Modifier?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+
+// Targets: [macosArm64]
+final fun com.github.zly2006.zhihu.platform/com_github_zly2006_zhihu_platform_MacosUserMessage$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.platform/com_github_zly2006_zhihu_platform_MacosUserMessage$stableprop_getter|com_github_zly2006_zhihu_platform_MacosUserMessage$stableprop_getter(){}[0]
+
+// Targets: [macosArm64]
+final fun com.github.zly2006.zhihu.platform/isMacosQuitOnWindowCloseEnabled(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isMacosQuitOnWindowCloseEnabled|isMacosQuitOnWindowCloseEnabled(){}[0]
+
+// Targets: [macosArm64]
+final fun com.github.zly2006.zhihu.platform/showMacosUserMessage(kotlin/String, com.github.zly2006.zhihu.platform/UserMessageDuration = ...) // com.github.zly2006.zhihu.platform/showMacosUserMessage|showMacosUserMessage(kotlin.String;com.github.zly2006.zhihu.platform.UserMessageDuration){}[0]

@@ -3,6 +3,10 @@ public final class com/github/zly2006/zhihu/platform/AndroidSettingsStoreKt {
 	public static final fun androidSettingsStore (Landroid/content/Context;)Lcom/github/zly2006/zhihu/platform/SettingsStore;
 }
 
+public final class com/github/zly2006/zhihu/platform/NoopSettingsStoreKt {
+	public static final fun noopSettingsStore ()Lcom/github/zly2006/zhihu/platform/SettingsStore;
+}
+
 public abstract interface class com/github/zly2006/zhihu/platform/SettingsStore {
 	public abstract fun getBoolean (Ljava/lang/String;Z)Z
 	public abstract fun getFloat (Ljava/lang/String;F)F

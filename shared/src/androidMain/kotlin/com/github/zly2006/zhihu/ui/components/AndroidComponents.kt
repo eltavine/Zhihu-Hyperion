@@ -48,67 +48,6 @@ import me.saket.telephoto.zoomable.rememberZoomableState
 import org.koin.compose.koinInject
 import org.koin.mp.KoinPlatform
 
-class OpenImageDialog(
-    context: Context,
-    urls: List<String>,
-    initialIndex: Int = 0,
-) : ComponentDialog(context) {
-    constructor(
-        context: Context,
-        url: String,
-    ) : this(context, listOf(url), 0)
-
-    private val imageUrls = urls
-        .filter { it.isNotBlank() && !it.startsWith("data") }
-        .distinct()
-        .ifEmpty { listOf("") }
-    private val initialPage = initialIndex.coerceIn(0, imageUrls.lastIndex)
-
-    init {
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setCanceledOnTouchOutside(true)
-        setContentView(
-            ComposeView(context).apply {
-                setContent {
-                    OpenImagePreviewContent(
-                        urls = imageUrls,
-                        initialIndex = initialPage,
-                        onDismiss = { dismiss() },
-                        onOpenInBrowser = { imageUrl ->
-                            luoTianYiUrlLauncher(context, imageUrl.toUri())
-                        },
-                    ) { imageUrl, onClick, onLongClick, onPageSwipeEnabledChange ->
-                        val imageState = rememberZoomableImageState(rememberZoomableState())
-                        LaunchedEffect(imageState) {
-                            snapshotFlow { imageState.zoomableState.zoomFraction }
-                                .collect { zoomFraction ->
-                                    onPageSwipeEnabledChange((zoomFraction ?: 0f) <= 0.01f)
-                                }
-                        }
-                        ZoomableAsyncImage(
-                            model = imageUrl,
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize(),
-                            state = imageState,
-                            onClick = { onClick() },
-                            onLongClick = onLongClick,
-                        )
-                    }
-                }
-            },
-        )
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        window?.setBackgroundDrawable(BLACK.toDrawable())
-    }
-}
-
 actual suspend fun extractFeedKeywords(
     title: String,
     excerpt: String?,

@@ -75,6 +75,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.github.zly2006.zhihu.data.AIGC_MARKING_ENABLED_PREFERENCE_KEY
 import com.github.zly2006.zhihu.navigation.LocalNavigator
+import com.github.zly2006.zhihu.platform.MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
@@ -93,7 +94,6 @@ import zhihu.shared.generated.resources.ic_github_24dp
 import zhihu.shared.generated.resources.ic_telegram_24dp
 
 internal const val CONTINUOUS_USAGE_REMINDER_INTERVAL_MINUTES_KEY = "continuousUsageReminderIntervalMinutes"
-internal const val MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY = "macosQuitOnWindowClose"
 const val SYSTEM_SETTINGS_AIGC_MARKING_TAG = "system_settings_aigc_marking"
 
 /**
