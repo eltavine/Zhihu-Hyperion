@@ -38,6 +38,7 @@ import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.Home
 import com.github.zly2006.zhihu.navigation.Search
+import com.github.zly2006.zhihu.platform.PREFERENCE_NAME
 import com.github.zly2006.zhihu.reading.AndroidReadingPlayerBridge
 import com.github.zly2006.zhihu.reading.ContentReadingService
 import com.github.zly2006.zhihu.reading.ReadingContentType
@@ -49,7 +50,6 @@ import com.github.zly2006.zhihu.test.resetAppPreferences
 import com.github.zly2006.zhihu.test.setZhihuMainContent
 import com.github.zly2006.zhihu.ui.HOME_REFRESH_BUTTON_TAG
 import com.github.zly2006.zhihu.ui.HOME_SEARCH_BUTTON_TAG
-import com.github.zly2006.zhihu.ui.PREFERENCE_NAME
 import com.github.zly2006.zhihu.ui.components.READING_PLAYER_BAR_TAG
 import com.github.zly2006.zhihu.ui.components.READING_PLAYER_COMPACT_TAG
 import com.github.zly2006.zhihu.ui.components.READING_PLAYER_QUEUE_TAG

@@ -1,0 +1,29 @@
+public final class com/github/zly2006/zhihu/platform/AndroidSettingsStoreKt {
+	public static final field PREFERENCE_NAME Ljava/lang/String;
+	public static final fun androidSettingsStore (Landroid/content/Context;)Lcom/github/zly2006/zhihu/platform/SettingsStore;
+}
+
+public abstract interface class com/github/zly2006/zhihu/platform/SettingsStore {
+	public abstract fun getBoolean (Ljava/lang/String;Z)Z
+	public abstract fun getFloat (Ljava/lang/String;F)F
+	public abstract fun getInt (Ljava/lang/String;I)I
+	public abstract fun getLong (Ljava/lang/String;J)J
+	public abstract fun getString (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public abstract fun getStringOrNull (Ljava/lang/String;)Ljava/lang/String;
+	public abstract fun getStringSet (Ljava/lang/String;Ljava/util/Set;)Ljava/util/Set;
+	public fun observeKeyChanges (Lkotlin/jvm/functions/Function1;)Ljava/lang/AutoCloseable;
+	public abstract fun putBoolean (Ljava/lang/String;Z)V
+	public abstract fun putFloat (Ljava/lang/String;F)V
+	public abstract fun putInt (Ljava/lang/String;I)V
+	public abstract fun putLong (Ljava/lang/String;J)V
+	public abstract fun putString (Ljava/lang/String;Ljava/lang/String;)V
+	public abstract fun putStringSet (Ljava/lang/String;Ljava/util/Set;)V
+	public abstract fun remove (Ljava/lang/String;)V
+	public fun removeByPrefix (Ljava/lang/String;)V
+}
+
+public final class com/github/zly2006/zhihu/platform/SettingsStore$DefaultImpls {
+	public static fun observeKeyChanges (Lcom/github/zly2006/zhihu/platform/SettingsStore;Lkotlin/jvm/functions/Function1;)Ljava/lang/AutoCloseable;
+	public static fun removeByPrefix (Lcom/github/zly2006/zhihu/platform/SettingsStore;Ljava/lang/String;)V
+}
+

@@ -47,6 +47,7 @@ kotlin {
             api(projects.core.navigation)
             api(projects.core.network)
             api(projects.core.account)
+            api(projects.core.settings)
             implementation(projects.feature.editor)
             api(projects.core.database)
             implementation(libs.compose.foundation)

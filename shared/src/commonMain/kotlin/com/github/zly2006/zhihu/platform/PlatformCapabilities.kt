@@ -65,40 +65,6 @@ interface UserMessageSink {
 @Composable
 expect fun rememberUserMessageSink(): UserMessageSink
 
-interface SettingsStore {
-    fun getBoolean(key: String, defaultValue: Boolean): Boolean
-
-    fun putBoolean(key: String, value: Boolean)
-
-    fun getString(key: String, defaultValue: String): String
-
-    fun putString(key: String, value: String)
-
-    fun getStringOrNull(key: String): String?
-
-    fun putStringSet(key: String, value: Set<String>)
-
-    fun getStringSet(key: String, defaultValue: Set<String>): Set<String>
-
-    fun getInt(key: String, defaultValue: Int): Int
-
-    fun putInt(key: String, value: Int)
-
-    fun getLong(key: String, defaultValue: Long): Long
-
-    fun putLong(key: String, value: Long)
-
-    fun getFloat(key: String, defaultValue: Float): Float
-
-    fun putFloat(key: String, value: Float)
-
-    fun remove(key: String)
-
-    fun removeByPrefix(prefix: String) = Unit
-
-    fun observeKeyChanges(onChanged: (String) -> Unit): AutoCloseable = AutoCloseable { }
-}
-
 interface SystemUrlOpener {
     operator fun invoke(url: String)
 }

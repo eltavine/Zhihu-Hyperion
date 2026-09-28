@@ -72,6 +72,9 @@ internal actual fun nativeAccountFilePath(): String =
     macosBackgroundUiDebugDataDirectoryPath()?.let { "$it/account.json" }
         ?: "${NSHomeDirectory()}/.zhihu-plus-plus/account.json"
 
+internal actual fun nativeSettingsStore(relativePath: String): SettingsStore =
+    macosSettingsStore("${nativeAppPrivateDirectoryPath()}/$relativePath")
+
 internal actual fun nativeAppPrivateDirectoryPath(): String =
     macosAppDataDirectoryPath()
 

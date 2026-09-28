@@ -19,12 +19,13 @@ package com.github.zly2006.zhihu.notification
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import com.github.zly2006.zhihu.desktop.DesktopPropertiesFile
+import com.github.zly2006.zhihu.desktop.desktopZhihuDataFile
+import com.github.zly2006.zhihu.platform.DesktopPropertiesFile
 
 internal fun desktopNotificationSettingsStore(): NotificationSettingsStore = DesktopNotificationSettingsStore()
 
 private class DesktopNotificationSettingsStore : NotificationSettingsStore {
-    private val propertiesFile = DesktopPropertiesFile("notification_settings.properties", "Zhihu++ desktop notification settings")
+    private val propertiesFile = DesktopPropertiesFile(desktopZhihuDataFile("notification_settings.properties"), "Zhihu++ desktop notification settings")
     private val properties = propertiesFile.properties
 
     override fun getSystemNotificationEnabled(type: NotificationType): Boolean =

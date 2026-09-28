@@ -99,27 +99,6 @@ fun desktopZhihuDataDir(): File =
 fun desktopZhihuDataFile(relativePath: String): File =
     File(desktopZhihuDataDir(), relativePath)
 
-internal class DesktopPropertiesFile(
-    relativePath: String,
-    private val comments: String,
-) {
-    private val file = desktopZhihuDataFile(relativePath)
-    val properties: Properties = Properties()
-
-    init {
-        if (file.isFile) {
-            file.inputStream().use(properties::load)
-        }
-    }
-
-    fun save() {
-        file.parentFile?.mkdirs()
-        file.outputStream().use { output ->
-            properties.store(output, comments)
-        }
-    }
-}
-
 fun desktopZhihuDownloadsDir(errorMessage: String = "无法创建下载目录"): File =
     File(System.getProperty("user.home"), "Downloads/Zhihu++").also { directory ->
         if (!directory.exists() && !directory.mkdirs()) {

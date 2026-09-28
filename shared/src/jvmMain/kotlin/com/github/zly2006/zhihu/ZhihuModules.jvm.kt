@@ -34,7 +34,7 @@ fun desktopZhihuModules(): List<Module> = listOf(
     databaseModule(desktopContentFilterDatabaseFile(), desktopZhihuDataFile("local-content.db")),
     zhihuSharedModule,
     module {
-        single { desktopSettingsStore() }
+        single { desktopSettingsStore(desktopZhihuDataFile("settings.properties")) }
         single { desktopNotificationSettingsStore() }
     },
 )

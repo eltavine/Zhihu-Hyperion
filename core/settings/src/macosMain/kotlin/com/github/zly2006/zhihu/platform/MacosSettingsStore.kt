@@ -27,8 +27,9 @@ import platform.Foundation.dataUsingEncoding
 
 private const val STRING_SET_SEPARATOR = '\u001F'
 
-internal actual fun nativeSettingsStore(relativePath: String): SettingsStore {
-    val propertiesFile = MacosPropertiesFile("${nativeAppPrivateDirectoryPath()}/$relativePath")
+/** macOS 的 properties 格式设置文件；每个文件在进程内只能有一个实例。 */
+fun macosSettingsStore(filePath: String): SettingsStore {
+    val propertiesFile = MacosPropertiesFile(filePath)
 
     return object : SettingsStore {
         override fun getBoolean(key: String, defaultValue: Boolean) = propertiesFile[key]?.toBooleanStrictOrNull() ?: defaultValue

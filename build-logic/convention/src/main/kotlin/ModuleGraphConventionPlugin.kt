@@ -25,7 +25,7 @@ class ModuleGraphConventionPlugin : Plugin<Project> {
                     ":feature:.* -X> :feature:.*",
                     ":shared -X> :($APPLICATIONS)",
                     // Foundation layers of :core, bottom first.
-                    ":core:common -X> :.*",
+                    ":core:(common|settings) -X> :.*",
                     ":core:model -X> :(?!core:common$).*",
                     ":core:(navigation|network) -X> :(?!core:(common|model)$).*",
                     ":core:account -X> :(?!core:(common|model|network)$).*",

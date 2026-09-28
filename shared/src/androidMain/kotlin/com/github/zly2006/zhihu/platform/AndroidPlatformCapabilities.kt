@@ -35,7 +35,6 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
-import com.github.zly2006.zhihu.ui.PREFERENCE_NAME
 import com.github.zly2006.zhihu.ui.components.OpenImageDialog
 import com.github.zly2006.zhihu.util.clipboardManager
 import com.github.zly2006.zhihu.util.luoTianYiUrlLauncher
@@ -184,57 +183,6 @@ actual fun Modifier.exportTestTagsForUiAutomation(): Modifier = semantics { test
 actual fun rememberAppPrivateDirectory(): Path {
     val context = LocalContext.current.applicationContext
     return remember(context) { Path(context.filesDir.absolutePath) }
-}
-
-fun androidSettingsStore(context: Context): SettingsStore {
-    val preferences = context.applicationContext.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
-    return object : SettingsStore {
-        override fun getBoolean(key: String, defaultValue: Boolean) = preferences.getBoolean(key, defaultValue)
-
-        override fun putBoolean(key: String, value: Boolean) = preferences.edit { putBoolean(key, value) }
-
-        override fun getString(key: String, defaultValue: String) = preferences.getString(key, defaultValue) ?: defaultValue
-
-        override fun putString(key: String, value: String) = preferences.edit { putString(key, value) }
-
-        override fun getStringOrNull(key: String) = preferences.getString(key, null)
-
-        override fun putStringSet(key: String, value: Set<String>) = preferences.edit { putStringSet(key, value) }
-
-        override fun getStringSet(key: String, defaultValue: Set<String>) = preferences.getStringSet(key, defaultValue)?.toSet() ?: defaultValue
-
-        override fun getInt(key: String, defaultValue: Int) = preferences.getInt(key, defaultValue)
-
-        override fun putInt(key: String, value: Int) = preferences.edit { putInt(key, value) }
-
-        override fun getLong(key: String, defaultValue: Long) = preferences.getLong(key, defaultValue)
-
-        override fun putLong(key: String, value: Long) = preferences.edit { putLong(key, value) }
-
-        override fun getFloat(key: String, defaultValue: Float) = preferences.getFloat(key, defaultValue)
-
-        override fun putFloat(key: String, value: Float) = preferences.edit { putFloat(key, value) }
-
-        override fun remove(key: String) = preferences.edit { remove(key) }
-
-        override fun removeByPrefix(prefix: String) = preferences.edit {
-            preferences.all.keys
-                .filter { it.startsWith(prefix) }
-                .forEach(::remove)
-        }
-
-        override fun observeKeyChanges(onChanged: (String) -> Unit): AutoCloseable {
-            val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-                if (key != null) {
-                    onChanged(key)
-                }
-            }
-            preferences.registerOnSharedPreferenceChangeListener(listener)
-            return AutoCloseable {
-                preferences.unregisterOnSharedPreferenceChangeListener(listener)
-            }
-        }
-    }
 }
 
 fun androidUserMessageSink(context: Context): UserMessageSink {

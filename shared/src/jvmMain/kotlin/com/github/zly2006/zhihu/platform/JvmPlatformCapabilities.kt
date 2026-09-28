@@ -24,7 +24,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
-import com.github.zly2006.zhihu.desktop.DesktopPropertiesFile
 import com.github.zly2006.zhihu.desktop.copyDesktopPlainText
 import com.github.zly2006.zhihu.desktop.desktopZhihuDataDir
 import com.github.zly2006.zhihu.desktop.openDesktopExternalUrl
@@ -37,58 +36,6 @@ actual fun Modifier.exportTestTagsForUiAutomation(): Modifier = this
 
 @Composable
 actual fun rememberAppPrivateDirectory(): Path = remember { Path(desktopZhihuDataDir().absolutePath) }
-
-internal fun desktopSettingsStore(): SettingsStore {
-    val propertiesFile = DesktopPropertiesFile("settings.properties", "Zhihu++ desktop settings")
-    val properties = propertiesFile.properties
-
-    return object : SettingsStore {
-        override fun getBoolean(key: String, defaultValue: Boolean) = properties.getProperty(key)?.toBooleanStrictOrNull() ?: defaultValue
-
-        override fun putBoolean(key: String, value: Boolean) = write(key, value.toString())
-
-        override fun getString(key: String, defaultValue: String) = properties.getProperty(key) ?: defaultValue
-
-        override fun putString(key: String, value: String) = write(key, value)
-
-        override fun getStringOrNull(key: String) = properties.getProperty(key)
-
-        override fun putStringSet(key: String, value: Set<String>) = write(key, value.joinToString("\u001F"))
-
-        override fun getStringSet(key: String, defaultValue: Set<String>) = properties
-            .getProperty(key)
-            ?.split("\u001F")
-            ?.filter(String::isNotEmpty)
-            ?.toSet() ?: defaultValue
-
-        override fun getInt(key: String, defaultValue: Int) = properties.getProperty(key)?.toIntOrNull() ?: defaultValue
-
-        override fun putInt(key: String, value: Int) = write(key, value.toString())
-
-        override fun getLong(key: String, defaultValue: Long) = properties.getProperty(key)?.toLongOrNull() ?: defaultValue
-
-        override fun putLong(key: String, value: Long) = write(key, value.toString())
-
-        override fun getFloat(key: String, defaultValue: Float) = properties.getProperty(key)?.toFloatOrNull() ?: defaultValue
-
-        override fun putFloat(key: String, value: Float) = write(key, value.toString())
-
-        override fun remove(key: String) {
-            properties.remove(key)
-            propertiesFile.save()
-        }
-
-        override fun removeByPrefix(prefix: String) {
-            properties.stringPropertyNames().filter { it.startsWith(prefix) }.forEach(properties::remove)
-            propertiesFile.save()
-        }
-
-        private fun write(key: String, value: String) {
-            properties.setProperty(key, value)
-            propertiesFile.save()
-        }
-    }
-}
 
 @Composable
 actual fun rememberExternalUrlOpener(): ExternalUrlOpener = remember {
