@@ -35,6 +35,8 @@ actual val platformBottomBarItemLimit: Int? = 5
 
 actual val isAigcVoteSupported: Boolean = false
 
+actual val isFeedQualityFilterSupported: Boolean = false
+
 @Composable
 @OptIn(ExperimentalForeignApi::class)
 actual fun rememberExternalUrlOpener(): ExternalUrlOpener = remember {

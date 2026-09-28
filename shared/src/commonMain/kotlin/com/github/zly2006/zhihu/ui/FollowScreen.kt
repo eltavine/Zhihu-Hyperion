@@ -349,7 +349,8 @@ fun FollowRecommendScreen(
     scrollToTopTrigger: Int = 0,
     isActive: Boolean = true,
 ) {
-    val viewModel: FollowRecommendViewModel = viewModel { FollowRecommendViewModel() }
+    val settings = koinInject<SettingsStore>()
+    val viewModel: FollowRecommendViewModel = viewModel { FollowRecommendViewModel(settings) }
     val readingQueueSourceId = "follow:recommend"
     if (isActive) {
         RegisterReadingQueueSource(
@@ -358,7 +359,6 @@ fun FollowRecommendScreen(
         )
     }
     val environment = rememberPaginationEnvironment(allowGuestAccess = viewModel.allowGuestAccess)
-    val settings = koinInject<SettingsStore>()
     val userMessages = rememberUserMessageSink()
     val showRefreshFab = remember { settings.getBoolean("showRefreshFab", true) }
     val listState = rememberLazyListState()
@@ -509,7 +509,8 @@ fun FollowDynamicScreen(
     scrollToTopTrigger: Int = 0,
     isActive: Boolean = true,
 ) {
-    val viewModel: FollowViewModel = viewModel { FollowViewModel() }
+    val settings = koinInject<SettingsStore>()
+    val viewModel: FollowViewModel = viewModel { FollowViewModel(settings) }
     val readingQueueSourceId = "follow:dynamic"
     if (isActive) {
         RegisterReadingQueueSource(
@@ -518,7 +519,6 @@ fun FollowDynamicScreen(
         )
     }
     val environment = rememberPaginationEnvironment(allowGuestAccess = viewModel.allowGuestAccess)
-    val settings = koinInject<SettingsStore>()
     val userMessages = rememberUserMessageSink()
     val showRefreshFab = remember { settings.getBoolean("showRefreshFab", true) }
     val listState = rememberLazyListState()

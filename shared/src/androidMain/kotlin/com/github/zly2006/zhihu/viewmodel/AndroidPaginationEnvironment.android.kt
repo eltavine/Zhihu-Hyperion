@@ -40,14 +40,10 @@ import com.github.zly2006.zhihu.data.AIGC_MARKING_ENABLED_PREFERENCE_KEY
 import com.github.zly2006.zhihu.data.AccountData
 import com.github.zly2006.zhihu.data.AigcVoteVoter
 import com.github.zly2006.zhihu.data.DataHolder
-import com.github.zly2006.zhihu.data.Feed
-import com.github.zly2006.zhihu.data.FeedDisplayItem
-import com.github.zly2006.zhihu.data.QualityFilterSettings
 import com.github.zly2006.zhihu.data.ZhihuCookieStorage
 import com.github.zly2006.zhihu.data.ZhihuJson.json
 import com.github.zly2006.zhihu.data.asApiEnvironment
 import com.github.zly2006.zhihu.data.navDestination
-import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.navigation.requestLoginNavigation
 import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.androidSettingsStore
@@ -59,16 +55,7 @@ import com.github.zly2006.zhihu.util.buildOfflineArticleExportHtml
 import com.github.zly2006.zhihu.util.clipboardManager
 import com.github.zly2006.zhihu.util.exportCollectionItemsToZip
 import com.github.zly2006.zhihu.util.saveBitmapToGallery
-import com.github.zly2006.zhihu.viewmodel.QUALITY_FILTER_MODE_PREFERENCE_KEY
-import com.github.zly2006.zhihu.viewmodel.QualityFilterMode
-import com.github.zly2006.zhihu.viewmodel.filter.BlockedKeywordService
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
-import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterManager
-import com.github.zly2006.zhihu.viewmodel.filter.ContentType
-import com.github.zly2006.zhihu.viewmodel.filter.FeedContentFilterPipeline
-import com.github.zly2006.zhihu.viewmodel.filter.FeedDisplayFilterPipeline
-import com.github.zly2006.zhihu.viewmodel.filter.ForegroundReadFilterPipeline
-import com.github.zly2006.zhihu.viewmodel.filter.contentFilterSettings
 import com.github.zly2006.zhihu.viewmodel.local.LocalContentDatabase
 import com.github.zly2006.zhihu.viewmodel.local.LocalRecommendationEngine
 import com.github.zly2006.zhihu.viewmodel.local.buildLocalRecommendationEngine
@@ -229,75 +216,6 @@ open class SharedAndroidPaginationEnvironment(
     override suspend fun handleMobileHomeFeedFailure(error: Exception) {
         Log.e("AndroidHomeFeedViewModel", "Failed to fetch feeds", error)
         userMessageSink.showShortMessage("安卓端推荐加载失败: ${error.message}")
-    }
-
-    override fun feedDisplaySettings(): FeedDisplaySettings = FeedDisplaySettings(
-        qualityFilterMode = QualityFilterMode.entries.firstOrNull {
-            it.name == settingsStore.getString(QUALITY_FILTER_MODE_PREFERENCE_KEY, QualityFilterMode.RULES.name)
-        } ?: QualityFilterMode.RULES,
-        qualityFilter = QualityFilterSettings(
-            answerVoteupCount = settingsStore.getInt(ANSWER_VOTEUP_THRESHOLD_PREFERENCE_KEY, 10).coerceAtLeast(0),
-            articleVoteupCount = settingsStore.getInt(ARTICLE_VOTEUP_THRESHOLD_PREFERENCE_KEY, 20).coerceAtLeast(0),
-            articleFollowersCount = settingsStore.getInt(ARTICLE_FOLLOWERS_THRESHOLD_PREFERENCE_KEY, 50).coerceAtLeast(0),
-            videoVoteCount = settingsStore.getInt(VIDEO_VOTE_THRESHOLD_PREFERENCE_KEY, 20).coerceAtLeast(0),
-            videoFollowersCount = settingsStore.getInt(VIDEO_FOLLOWERS_THRESHOLD_PREFERENCE_KEY, 50).coerceAtLeast(0),
-            questionAnswerCount = settingsStore.getInt(QUESTION_ANSWER_THRESHOLD_PREFERENCE_KEY, 0).coerceAtLeast(0),
-            questionFollowersCount = settingsStore.getInt(QUESTION_FOLLOWERS_THRESHOLD_PREFERENCE_KEY, 50).coerceAtLeast(0),
-        ),
-        reverseBlock = settingsStore.getBoolean("reverseBlock", false),
-    )
-
-    override suspend fun applyForegroundHomeFeedFilter(items: List<FeedDisplayItem>): List<FeedDisplayItem> {
-        val filterSettings = context.contentFilterSettings()
-        val filterDatabase = contentFilterDatabase
-        return ForegroundReadFilterPipeline(
-            settings = filterSettings,
-            contentFilterManager = ContentFilterManager(filterDatabase.contentFilterDao()),
-            contentOpenEventDao = filterDatabase.contentOpenEventDao(),
-            blockedFeedRecordDao = filterDatabase.blockedFeedRecordDao(),
-        ).filter(items)
-    }
-
-    override suspend fun applyBackgroundHomeFeedFilter(items: List<FeedDisplayItem>): List<FeedDisplayItem> {
-        val filterSettings = context.contentFilterSettings()
-        val filterDatabase = contentFilterDatabase
-        return FeedDisplayFilterPipeline(
-            settings = filterSettings,
-            contentDetailProvider = this::getOrFetchContentDetail,
-            contentFilterPipeline = FeedContentFilterPipeline(
-                settings = filterSettings,
-                blockedKeywordDao = filterDatabase.blockedKeywordDao(),
-                blockedUserDao = filterDatabase.blockedUserDao(),
-                blockedQuestionAuthorDao = filterDatabase.blockedQuestionAuthorDao(),
-                blockedTopicDao = filterDatabase.blockedTopicDao(),
-                blockedKeywordService = BlockedKeywordService(
-                    keywordDao = filterDatabase.blockedKeywordDao(),
-                    recordDao = filterDatabase.blockedContentRecordDao(),
-                    semanticMatcher = KoinPlatform.getKoin().get(),
-                ),
-                onNlpBlocked = { blockedThisRound ->
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        userMessageSink.showShortMessage("NLP 已屏蔽 ${blockedThisRound.first().title.take(10)}... 等 ${blockedThisRound.size} 条内容")
-                    }
-                },
-            ),
-            blockedFeedRecordDao = filterDatabase.blockedFeedRecordDao(),
-        ).filter(items)
-    }
-
-    override suspend fun recordContentInteraction(feed: Feed) {
-        val settings = context.contentFilterSettings()
-        if (!settings.enableContentFilter) return
-        val database = contentFilterDatabase
-        val target = feed.target ?: return
-        val (targetType, targetId) = when (target) {
-            is Feed.AnswerTarget -> ContentType.ANSWER to target.id.toString()
-            is Feed.ArticleTarget -> ContentType.ARTICLE to target.id.toString()
-            is Feed.QuestionTarget -> ContentType.QUESTION to target.id.toString()
-            is Feed.PinTarget -> ContentType.PIN to target.id.toString()
-            else -> return
-        }
-        ContentFilterManager(database.contentFilterDao()).recordContentInteraction(targetType, targetId)
     }
 
     override fun localRecommendationEngine(): LocalRecommendationEngine = localRecommendationEngine

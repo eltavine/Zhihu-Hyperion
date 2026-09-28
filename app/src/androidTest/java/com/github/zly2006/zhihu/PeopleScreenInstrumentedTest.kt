@@ -69,6 +69,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.mp.KoinPlatform
 
 @RunWith(AndroidJUnit4::class)
 class PeopleScreenInstrumentedTest {
@@ -307,7 +308,7 @@ class PeopleScreenInstrumentedTest {
         mockAnswers: List<DataHolder.Answer>? = null,
     ): PersonViewModel {
         val seededViewModel = composeRule.seedViewModel<PersonViewModel> {
-            PersonViewModel(ROOT_PERSON.copy())
+            PersonViewModel(ROOT_PERSON.copy(), KoinPlatform.getKoin().get())
         }
         val answerData = answers ?: List(itemCount) { index -> seededAnswer(index + 1L) }
         val articleData = List(itemCount) { index -> seededArticle(index + 1L) }

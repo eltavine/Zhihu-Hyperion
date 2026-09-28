@@ -26,14 +26,16 @@ import com.github.zly2006.zhihu.data.ZhihuJson.decodeJson
 import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.resolveContent
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteOnlineHistory
 import io.ktor.http.isSuccess
 import kotlinx.serialization.json.JsonArray
 
 class OnlineHistoryViewModel(
+    settings: SettingsStore,
     private val history: HistoryStorage,
-) : BaseFeedViewModel() {
+) : BaseFeedViewModel(settings) {
     override val initialUrl: String = "https://api.zhihu.com/unify-consumption/read_history?offset=0&limit=10"
     override val shouldLogDecodeFailures: Boolean = false
     private val deletionPairs = mutableMapOf<FeedDisplayItem, OnlineHistoryDeletePair>()

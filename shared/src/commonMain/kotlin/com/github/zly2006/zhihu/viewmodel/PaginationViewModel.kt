@@ -27,7 +27,6 @@ import androidx.lifecycle.viewModelScope
 import com.github.zly2006.zhihu.data.AigcVoteVoter
 import com.github.zly2006.zhihu.data.ContentDetailCache
 import com.github.zly2006.zhihu.data.DataHolder
-import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.OnlineHistoryDeletePair
 import com.github.zly2006.zhihu.data.QualityFilterSettings
@@ -37,6 +36,8 @@ import com.github.zly2006.zhihu.data.fetchZhihuContentDetail
 import com.github.zly2006.zhihu.data.getOrFetchContentDetail
 import com.github.zly2006.zhihu.navigation.AnswerNavigator
 import com.github.zly2006.zhihu.navigation.NavDestination
+import com.github.zly2006.zhihu.platform.SettingsStore
+import com.github.zly2006.zhihu.platform.isFeedQualityFilterSupported
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.ui.ArticleAnswerSwitchState
 import com.github.zly2006.zhihu.ui.ArticleAnswerTransitionDirection
@@ -329,18 +330,6 @@ interface MobileHomeFeedEnvironment : ZhihuApiEnvironment {
     }
 }
 
-interface FeedDisplayEnvironment {
-    fun feedDisplaySettings(): FeedDisplaySettings = FeedDisplaySettings()
-
-    suspend fun applyForegroundHomeFeedFilter(items: List<FeedDisplayItem>): List<FeedDisplayItem> = items
-
-    suspend fun applyBackgroundHomeFeedFilter(items: List<FeedDisplayItem>): List<FeedDisplayItem> = items
-}
-
-interface ContentInteractionEnvironment : ZhihuApiEnvironment {
-    suspend fun recordContentInteraction(feed: Feed) = Unit
-}
-
 interface AigcVoteEnvironment {
     fun isAigcVoteEnabled(): Boolean = false
 
@@ -420,8 +409,6 @@ interface ArticleLoadEnvironment :
 interface PaginationEnvironment :
     ZhihuApiEnvironment,
     MobileHomeFeedEnvironment,
-    FeedDisplayEnvironment,
-    ContentInteractionEnvironment,
     LocalRecommendationEnvironment,
     ClipboardEnvironment,
     ArticleLoadEnvironment,
@@ -447,6 +434,27 @@ const val VIDEO_VOTE_THRESHOLD_PREFERENCE_KEY = "videoVoteThreshold"
 const val VIDEO_FOLLOWERS_THRESHOLD_PREFERENCE_KEY = "videoFollowersThreshold"
 const val QUESTION_ANSWER_THRESHOLD_PREFERENCE_KEY = "questionAnswerThreshold"
 const val QUESTION_FOLLOWERS_THRESHOLD_PREFERENCE_KEY = "questionFollowersThreshold"
+
+/** 列表卡片的质量屏蔽与反向屏蔽展示方式；未支持质量屏蔽的平台始终按关闭处理。 */
+fun SettingsStore.toFeedDisplaySettings(): FeedDisplaySettings = FeedDisplaySettings(
+    qualityFilterMode = if (isFeedQualityFilterSupported) {
+        QualityFilterMode.entries.firstOrNull {
+            it.name == getString(QUALITY_FILTER_MODE_PREFERENCE_KEY, QualityFilterMode.RULES.name)
+        } ?: QualityFilterMode.RULES
+    } else {
+        QualityFilterMode.OFF
+    },
+    qualityFilter = QualityFilterSettings(
+        answerVoteupCount = getInt(ANSWER_VOTEUP_THRESHOLD_PREFERENCE_KEY, 10).coerceAtLeast(0),
+        articleVoteupCount = getInt(ARTICLE_VOTEUP_THRESHOLD_PREFERENCE_KEY, 20).coerceAtLeast(0),
+        articleFollowersCount = getInt(ARTICLE_FOLLOWERS_THRESHOLD_PREFERENCE_KEY, 50).coerceAtLeast(0),
+        videoVoteCount = getInt(VIDEO_VOTE_THRESHOLD_PREFERENCE_KEY, 20).coerceAtLeast(0),
+        videoFollowersCount = getInt(VIDEO_FOLLOWERS_THRESHOLD_PREFERENCE_KEY, 50).coerceAtLeast(0),
+        questionAnswerCount = getInt(QUESTION_ANSWER_THRESHOLD_PREFERENCE_KEY, 0).coerceAtLeast(0),
+        questionFollowersCount = getInt(QUESTION_FOLLOWERS_THRESHOLD_PREFERENCE_KEY, 50).coerceAtLeast(0),
+    ),
+    reverseBlock = getBoolean("reverseBlock", false),
+)
 
 data class HomeFeedFilterResult(
     val foregroundItems: List<FeedDisplayItem>,

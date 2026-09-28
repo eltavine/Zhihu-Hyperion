@@ -47,6 +47,7 @@ import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.navigation.History
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.platform.PlatformBackHandler
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
 import com.github.zly2006.zhihu.ui.TopLevelReselectAction
@@ -79,7 +80,8 @@ fun OnlineHistoryScreen(
 ) {
     val navigator = LocalNavigator.current
     val history = koinInject<HistoryStorage>()
-    val viewModel: OnlineHistoryViewModel = viewModel { OnlineHistoryViewModel(history) }
+    val settings = koinInject<SettingsStore>()
+    val viewModel: OnlineHistoryViewModel = viewModel { OnlineHistoryViewModel(settings, history) }
     val readingQueueSourceId = "history:online"
     if (isActive) {
         RegisterReadingQueueSource(

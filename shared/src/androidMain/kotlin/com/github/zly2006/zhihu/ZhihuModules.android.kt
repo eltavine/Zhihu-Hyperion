@@ -24,7 +24,10 @@ import com.github.zly2006.zhihu.data.databaseModule
 import com.github.zly2006.zhihu.notification.AndroidNotificationSettingsStore
 import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.androidSettingsStore
+import com.github.zly2006.zhihu.platform.androidUserMessageSink
 import com.github.zly2006.zhihu.ui.AndroidArticleNavigationHandoff
+import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
+import com.github.zly2006.zhihu.viewmodel.filter.KeywordSemanticMatcher
 import kotlinx.io.files.Path
 import org.koin.core.module.Module
 import org.koin.dsl.module
@@ -40,5 +43,10 @@ fun androidZhihuModules(context: Context): List<Module> = listOf(
         single { AndroidArticleNavigationHandoff() }
         single { androidSettingsStore(context) }
         single<NotificationSettingsStore> { AndroidNotificationSettingsStore(context.applicationContext) }
+        single {
+            HomeFeedFilter(get(), get(), get(), semanticMatcher = get<KeywordSemanticMatcher>()) { blocked ->
+                androidUserMessageSink(context).showShortMessage("NLP 已屏蔽 ${blocked.first().title.take(10)}... 等 ${blocked.size} 条内容")
+            }
+        }
     },
 )

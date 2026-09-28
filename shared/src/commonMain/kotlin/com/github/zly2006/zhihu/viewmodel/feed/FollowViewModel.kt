@@ -28,18 +28,21 @@ import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.sourceLabel
 import com.github.zly2006.zhihu.data.target
-import com.github.zly2006.zhihu.viewmodel.FeedDisplayEnvironment
+import com.github.zly2006.zhihu.platform.SettingsStore
+import com.github.zly2006.zhihu.viewmodel.FeedDisplaySettings
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.jsonArray
 
-class FollowViewModel : BaseFeedViewModel() {
+class FollowViewModel(
+    settings: SettingsStore,
+) : BaseFeedViewModel(settings) {
     override val initialUrl: String
         get() = "https://www.zhihu.com/api/v3/moments?limit=10&desktop=true"
 
-    override fun createDisplayItem(environment: FeedDisplayEnvironment, feed: Feed): FeedDisplayItem {
-        val item = super.createDisplayItem(environment, feed)
+    override fun createDisplayItem(display: FeedDisplaySettings, feed: Feed): FeedDisplayItem {
+        val item = super.createDisplayItem(display, feed)
         return if (item.isFiltered || feed.sourceLabel == null) {
             item
         } else {
@@ -48,7 +51,9 @@ class FollowViewModel : BaseFeedViewModel() {
     }
 }
 
-class FollowRecommendViewModel : BaseFeedViewModel() {
+class FollowRecommendViewModel(
+    settings: SettingsStore,
+) : BaseFeedViewModel(settings) {
     override val initialUrl: String
         get() = "https://api.zhihu.com/moments_v3?feed_type=recommend"
 }

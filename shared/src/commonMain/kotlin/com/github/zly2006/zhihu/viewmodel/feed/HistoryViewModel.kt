@@ -24,11 +24,13 @@ import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.Person
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 
 class HistoryViewModel(
+    settings: SettingsStore,
     private val history: HistoryStorage,
-) : BaseFeedViewModel() {
+) : BaseFeedViewModel(settings) {
     override val initialUrl: String
         get() = error("不需要URL")
 

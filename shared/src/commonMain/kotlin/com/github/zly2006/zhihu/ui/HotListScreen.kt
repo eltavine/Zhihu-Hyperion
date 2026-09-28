@@ -68,7 +68,8 @@ fun HotListScreen(
     scrollToTopTrigger: Int = 0,
     isActive: Boolean = true,
 ) {
-    val viewModel: HotListViewModel = viewModel { HotListViewModel() }
+    val settings = koinInject<SettingsStore>()
+    val viewModel: HotListViewModel = viewModel { HotListViewModel(settings) }
     val readingQueueSourceId = "hot-list:total"
     if (isActive) {
         RegisterReadingQueueSource(
@@ -78,7 +79,6 @@ fun HotListScreen(
     }
     val environment = rememberPaginationEnvironment(viewModel.allowGuestAccess)
     val userMessages = rememberUserMessageSink()
-    val settings = koinInject<SettingsStore>()
     val listState = rememberLazyListState()
     val pageTurnTarget = rememberPageTurnTarget(listState = listState, enabled = isActive)
     var cachedScrollToTopTrigger by remember { mutableIntStateOf(scrollToTopTrigger) }

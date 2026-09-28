@@ -188,7 +188,7 @@ fun QuestionScreen(
     val openZhihuWebUrl = rememberZhihuWebUrlOpener()
     val navigator = LocalNavigator.current
     val viewModel: QuestionFeedViewModel = viewModel(key = "question_${question.questionId}") {
-        QuestionFeedViewModel(question.questionId, blockedUsers)
+        QuestionFeedViewModel(question.questionId, settings, blockedUsers)
     }
     val answerReadingQueueSourceId = "question:${question.questionId}:answers:${viewModel.sortOrder}"
     RegisterReadingQueueSource(

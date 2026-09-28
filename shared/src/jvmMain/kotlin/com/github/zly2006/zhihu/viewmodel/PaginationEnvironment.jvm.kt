@@ -21,10 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.DataHolder
-import com.github.zly2006.zhihu.data.Feed
-import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.navDestination
-import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.desktop.copyDesktopPlainText
 import com.github.zly2006.zhihu.desktop.desktopZhihuDataFile
 import com.github.zly2006.zhihu.desktop.desktopZhihuDownloadsDir
@@ -35,15 +32,7 @@ import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.buildArticleExportFileName
 import com.github.zly2006.zhihu.util.buildCollectionExportZipFileName
 import com.github.zly2006.zhihu.util.sanitizeArticleExportFileNamePart
-import com.github.zly2006.zhihu.viewmodel.filter.BlockedKeywordService
-import com.github.zly2006.zhihu.viewmodel.filter.ContentDetailProvider
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
-import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterManager
-import com.github.zly2006.zhihu.viewmodel.filter.ContentType
-import com.github.zly2006.zhihu.viewmodel.filter.FeedContentFilterPipeline
-import com.github.zly2006.zhihu.viewmodel.filter.FeedDisplayFilterPipeline
-import com.github.zly2006.zhihu.viewmodel.filter.ForegroundReadFilterPipeline
-import com.github.zly2006.zhihu.viewmodel.filter.toFeedFilterSettings
 import com.github.zly2006.zhihu.viewmodel.local.LocalContentDatabase
 import com.github.zly2006.zhihu.viewmodel.local.LocalRecommendationEngine
 import com.github.zly2006.zhihu.viewmodel.local.buildLocalRecommendationEngine
@@ -93,61 +82,11 @@ class DesktopPaginationEnvironment(
         Log.e(tag ?: "PaginationViewModel", "Failed to fetch feeds", error)
     }
 
-    override fun feedDisplaySettings(): FeedDisplaySettings = FeedDisplaySettings(
-        qualityFilterMode = QualityFilterMode.OFF,
-        reverseBlock = settingsStore.toFeedFilterSettings().reverseBlock,
-    )
-
     override fun setPlainTextClipboard(
         label: String,
         text: String,
     ) {
         copyDesktopPlainText(text)
-    }
-
-    override suspend fun applyForegroundHomeFeedFilter(items: List<FeedDisplayItem>): List<FeedDisplayItem> {
-        val settings = settingsStore.toFeedFilterSettings()
-        return ForegroundReadFilterPipeline(
-            settings = settings,
-            contentFilterManager = ContentFilterManager(contentFilterDb.contentFilterDao()),
-            contentOpenEventDao = contentFilterDb.contentOpenEventDao(),
-            blockedFeedRecordDao = contentFilterDb.blockedFeedRecordDao(),
-        ).filter(items)
-    }
-
-    override suspend fun applyBackgroundHomeFeedFilter(items: List<FeedDisplayItem>): List<FeedDisplayItem> {
-        val settings = settingsStore.toFeedFilterSettings()
-        return FeedDisplayFilterPipeline(
-            settings = settings,
-            contentDetailProvider = ContentDetailProvider(::getOrFetchContentDetail),
-            contentFilterPipeline = FeedContentFilterPipeline(
-                settings = settings,
-                blockedKeywordDao = contentFilterDb.blockedKeywordDao(),
-                blockedUserDao = contentFilterDb.blockedUserDao(),
-                blockedQuestionAuthorDao = contentFilterDb.blockedQuestionAuthorDao(),
-                blockedTopicDao = contentFilterDb.blockedTopicDao(),
-                blockedKeywordService = BlockedKeywordService(
-                    keywordDao = contentFilterDb.blockedKeywordDao(),
-                    recordDao = contentFilterDb.blockedContentRecordDao(),
-                    semanticMatcher = null,
-                ),
-            ),
-            blockedFeedRecordDao = contentFilterDb.blockedFeedRecordDao(),
-        ).filter(items)
-    }
-
-    override suspend fun recordContentInteraction(feed: Feed) {
-        val settings = settingsStore.toFeedFilterSettings()
-        if (!settings.enableContentFilter) return
-        val target = feed.target ?: return
-        val (targetType, targetId) = when (target) {
-            is Feed.AnswerTarget -> ContentType.ANSWER to target.id.toString()
-            is Feed.ArticleTarget -> ContentType.ARTICLE to target.id.toString()
-            is Feed.QuestionTarget -> ContentType.QUESTION to target.id.toString()
-            is Feed.PinTarget -> ContentType.PIN to target.id.toString()
-            else -> return
-        }
-        ContentFilterManager(contentFilterDb.contentFilterDao()).recordContentInteraction(targetType, targetId)
     }
 
     override fun localRecommendationEngine(): LocalRecommendationEngine = localRecommendationEngine

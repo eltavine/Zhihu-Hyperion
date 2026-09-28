@@ -37,6 +37,7 @@ public final class com/github/zly2006/zhihu/platform/JvmPlatformCapabilitiesKt {
 	public static final fun isArticleHtmlExportSupported ()Z
 	public static final fun isArticleImageExportSupported ()Z
 	public static final fun isBlocklistNlpSupported ()Z
+	public static final fun isFeedQualityFilterSupported ()Z
 	public static final fun isJvm ()Z
 	public static final fun isNative ()Z
 	public static final fun isPageTurnSupported ()Z

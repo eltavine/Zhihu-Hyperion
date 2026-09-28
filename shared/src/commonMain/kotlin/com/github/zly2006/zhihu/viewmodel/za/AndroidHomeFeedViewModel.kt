@@ -29,14 +29,19 @@ import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.resolveContent
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.util.jsonObject
-import com.github.zly2006.zhihu.viewmodel.ContentInteractionEnvironment
 import com.github.zly2006.zhihu.viewmodel.HomeFeedFilterResult
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedInteractionViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.replaceHomeFeedItemsWithFilteredResult
+import com.github.zly2006.zhihu.viewmodel.filter.ContentDetailProvider
+import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
+import com.github.zly2006.zhihu.viewmodel.getOrFetchContentDetail
 import com.github.zly2006.zhihu.viewmodel.postSigned
+import com.github.zly2006.zhihu.viewmodel.toFeedDisplaySettings
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.get
@@ -57,8 +62,10 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-class AndroidHomeFeedViewModel :
-    BaseFeedViewModel(),
+class AndroidHomeFeedViewModel(
+    settings: SettingsStore,
+    private val filter: HomeFeedFilter,
+) : BaseFeedViewModel(settings),
     HomeFeedInteractionViewModel {
     override val initialUrl: String
         get() = "https://api.zhihu.com/topstory/recommend"
@@ -86,15 +93,15 @@ class AndroidHomeFeedViewModel :
                     }
 
                 // 前台先做本地已读过滤，再立即展示
-                val reverseBlock = environment.feedDisplaySettings().reverseBlock
-                val foregroundItems = environment.applyForegroundHomeFeedFilter(itemsToDisplay)
+                val reverseBlock = settings.toFeedDisplaySettings().reverseBlock
+                val foregroundItems = filter.foreground(itemsToDisplay)
                 if (!reverseBlock) {
                     withContext(Dispatchers.Main) {
                         addDisplayItems(foregroundItems)
                     }
                 }
 
-                val filteredItems = environment.applyBackgroundHomeFeedFilter(foregroundItems)
+                val filteredItems = filter.background(foregroundItems, ContentDetailProvider(environment::getOrFetchContentDetail))
                 if (reverseBlock) {
                     addDisplayItems(filteredItems)
                 }
@@ -127,11 +134,11 @@ class AndroidHomeFeedViewModel :
         }
     }
 
-    override suspend fun recordContentInteraction(environment: ContentInteractionEnvironment, feed: Feed) {
+    override suspend fun recordContentInteraction(environment: ZhihuApiEnvironment, feed: Feed) {
         // Android 版本暂不记录交互
     }
 
-    override fun onUiContentClick(environment: ContentInteractionEnvironment, feed: Feed, item: FeedDisplayItem) {
+    override fun onUiContentClick(environment: ZhihuApiEnvironment, feed: Feed, item: FeedDisplayItem) {
         viewModelScope.launch(Dispatchers.Default) {
             if (environment.authenticatedCookies()["d_c0"] != null) {
                 val payloadItem = when (val target = feed.target) {

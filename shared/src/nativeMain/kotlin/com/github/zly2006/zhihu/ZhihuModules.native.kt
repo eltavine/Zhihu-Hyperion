@@ -24,6 +24,7 @@ import com.github.zly2006.zhihu.notification.nativeNotificationSettingsStore
 import com.github.zly2006.zhihu.platform.nativeAccountFilePath
 import com.github.zly2006.zhihu.platform.nativeAppPrivateDirectoryPath
 import com.github.zly2006.zhihu.platform.nativeSettingsStore
+import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
 import kotlinx.io.files.Path
 import org.koin.core.module.Module
 import org.koin.dsl.module
@@ -37,5 +38,6 @@ fun nativeZhihuModules(): List<Module> = listOf(
     module {
         single { nativeSettingsStore("settings.properties") }
         single { nativeNotificationSettingsStore() }
+        single { HomeFeedFilter(get(), get(), get()) }
     },
 )

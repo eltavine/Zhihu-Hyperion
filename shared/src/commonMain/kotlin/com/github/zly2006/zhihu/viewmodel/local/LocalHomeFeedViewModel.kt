@@ -21,17 +21,19 @@ import androidx.lifecycle.viewModelScope
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
-import com.github.zly2006.zhihu.viewmodel.ContentInteractionEnvironment
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.viewmodel.LocalRecommendationEnvironment
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedInteractionViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class LocalHomeFeedViewModel :
-    BaseFeedViewModel(),
+class LocalHomeFeedViewModel(
+    settings: SettingsStore,
+) : BaseFeedViewModel(settings),
     HomeFeedInteractionViewModel {
     private lateinit var recommendationEngine: LocalRecommendationEngine
     private val recommendationResults = mutableMapOf<String, CrawlingResult>()
@@ -127,9 +129,9 @@ class LocalHomeFeedViewModel :
     }
 
     override suspend fun recordContentInteraction(
-        environment: ContentInteractionEnvironment,
+        environment: ZhihuApiEnvironment,
         feed: Feed,
     ) = Unit
 
-    override fun onUiContentClick(environment: ContentInteractionEnvironment, feed: Feed, item: FeedDisplayItem) = Unit
+    override fun onUiContentClick(environment: ZhihuApiEnvironment, feed: Feed, item: FeedDisplayItem) = Unit
 }

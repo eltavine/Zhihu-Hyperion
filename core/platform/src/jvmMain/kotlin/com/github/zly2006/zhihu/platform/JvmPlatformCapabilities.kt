@@ -181,6 +181,8 @@ actual val isNative: Boolean = false
 
 actual val isAigcVoteSupported: Boolean = false
 
+actual val isFeedQualityFilterSupported: Boolean = false
+
 actual val isBlocklistNlpSupported: Boolean = false
 
 actual val isSentenceSimilaritySupported: Boolean = false

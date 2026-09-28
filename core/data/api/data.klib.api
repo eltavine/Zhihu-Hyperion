@@ -68,7 +68,7 @@ final class com.github.zly2006.zhihu.filter/QuestionAnswerCandidatePartition { /
 }
 
 final class com.github.zly2006.zhihu.filter/RemoteHistorySync { // com.github.zly2006.zhihu.filter/RemoteHistorySync|null[0]
-    constructor <init>(com.github.zly2006.zhihu.platform/SettingsStore, com.github.zly2006.zhihu.viewmodel.filter/ContentOpenEventDao = ...) // com.github.zly2006.zhihu.filter/RemoteHistorySync.<init>|<init>(com.github.zly2006.zhihu.platform.SettingsStore;com.github.zly2006.zhihu.viewmodel.filter.ContentOpenEventDao){}[0]
+    constructor <init>(com.github.zly2006.zhihu.platform/SettingsStore, com.github.zly2006.zhihu.viewmodel.filter/ContentOpenEventDao) // com.github.zly2006.zhihu.filter/RemoteHistorySync.<init>|<init>(com.github.zly2006.zhihu.platform.SettingsStore;com.github.zly2006.zhihu.viewmodel.filter.ContentOpenEventDao){}[0]
 
     final val importedRevision // com.github.zly2006.zhihu.filter/RemoteHistorySync.importedRevision|{}importedRevision[0]
         final fun <get-importedRevision>(): kotlinx.coroutines.flow/StateFlow<kotlin/Int> // com.github.zly2006.zhihu.filter/RemoteHistorySync.importedRevision.<get-importedRevision>|<get-importedRevision>(){}[0]
@@ -343,6 +343,14 @@ final class com.github.zly2006.zhihu.viewmodel.filter/ForegroundReadFilterPipeli
     constructor <init>(com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings, com.github.zly2006.zhihu.viewmodel.filter/ContentFilterManager, com.github.zly2006.zhihu.viewmodel.filter/ContentOpenEventDao, com.github.zly2006.zhihu.viewmodel.filter/BlockedFeedRecordDao) // com.github.zly2006.zhihu.viewmodel.filter/ForegroundReadFilterPipeline.<init>|<init>(com.github.zly2006.zhihu.viewmodel.filter.FeedFilterSettings;com.github.zly2006.zhihu.viewmodel.filter.ContentFilterManager;com.github.zly2006.zhihu.viewmodel.filter.ContentOpenEventDao;com.github.zly2006.zhihu.viewmodel.filter.BlockedFeedRecordDao){}[0]
 
     final suspend fun filter(kotlin.collections/List<com.github.zly2006.zhihu.data/FeedDisplayItem>): kotlin.collections/List<com.github.zly2006.zhihu.data/FeedDisplayItem> // com.github.zly2006.zhihu.viewmodel.filter/ForegroundReadFilterPipeline.filter|filter(kotlin.collections.List<com.github.zly2006.zhihu.data.FeedDisplayItem>){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/HomeFeedFilter { // com.github.zly2006.zhihu.viewmodel.filter/HomeFeedFilter|null[0]
+    constructor <init>(com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase, com.github.zly2006.zhihu.platform/SettingsStore, com.github.zly2006.zhihu.filter/RemoteHistorySync, com.github.zly2006.zhihu.viewmodel.filter/KeywordSemanticMatcher? = ..., kotlin.coroutines/SuspendFunction1<kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/FilterableContent>, kotlin/Unit> = ...) // com.github.zly2006.zhihu.viewmodel.filter/HomeFeedFilter.<init>|<init>(com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase;com.github.zly2006.zhihu.platform.SettingsStore;com.github.zly2006.zhihu.filter.RemoteHistorySync;com.github.zly2006.zhihu.viewmodel.filter.KeywordSemanticMatcher?;kotlin.coroutines.SuspendFunction1<kotlin.collections.List<com.github.zly2006.zhihu.viewmodel.filter.FilterableContent>,kotlin.Unit>){}[0]
+
+    final suspend fun background(kotlin.collections/List<com.github.zly2006.zhihu.data/FeedDisplayItem>, com.github.zly2006.zhihu.viewmodel.filter/ContentDetailProvider): kotlin.collections/List<com.github.zly2006.zhihu.data/FeedDisplayItem> // com.github.zly2006.zhihu.viewmodel.filter/HomeFeedFilter.background|background(kotlin.collections.List<com.github.zly2006.zhihu.data.FeedDisplayItem>;com.github.zly2006.zhihu.viewmodel.filter.ContentDetailProvider){}[0]
+    final suspend fun foreground(kotlin.collections/List<com.github.zly2006.zhihu.data/FeedDisplayItem>): kotlin.collections/List<com.github.zly2006.zhihu.data/FeedDisplayItem> // com.github.zly2006.zhihu.viewmodel.filter/HomeFeedFilter.foreground|foreground(kotlin.collections.List<com.github.zly2006.zhihu.data.FeedDisplayItem>){}[0]
+    final suspend fun recordInteraction(com.github.zly2006.zhihu.data/Feed) // com.github.zly2006.zhihu.viewmodel.filter/HomeFeedFilter.recordInteraction|recordInteraction(com.github.zly2006.zhihu.data.Feed){}[0]
 }
 
 final class com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup { // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup|null[0]

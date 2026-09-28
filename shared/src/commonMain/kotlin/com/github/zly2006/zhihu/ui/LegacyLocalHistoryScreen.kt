@@ -25,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.zly2006.zhihu.data.HistoryStorage
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
 import com.github.zly2006.zhihu.ui.components.FeedCard
 import com.github.zly2006.zhihu.ui.components.FeedPullToRefresh
@@ -40,7 +41,8 @@ fun LegacyLocalHistoryScreen(
     innerPadding: PaddingValues,
 ) {
     val history = koinInject<HistoryStorage>()
-    val viewModel: HistoryViewModel = viewModel { HistoryViewModel(history) }
+    val settings = koinInject<SettingsStore>()
+    val viewModel: HistoryViewModel = viewModel { HistoryViewModel(settings, history) }
     val readingQueueSourceId = "history:local"
     RegisterReadingQueueSource(
         sourceId = readingQueueSourceId,

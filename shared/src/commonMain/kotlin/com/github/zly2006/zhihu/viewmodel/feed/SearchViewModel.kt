@@ -27,11 +27,13 @@ import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.target
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.util.raiseForStatus
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
 import com.github.zly2006.zhihu.viewmodel.postSigned
+import com.github.zly2006.zhihu.viewmodel.toFeedDisplaySettings
 import io.ktor.http.encodeURLParameter
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonArray
@@ -44,9 +46,10 @@ private const val SEARCH_VERTICAL_INFO = "0,0,0,0,0,0,0,0,0,0,0,0"
 
 open class SearchViewModel(
     val searchQuery: String,
+    settings: SettingsStore,
     private val blockedUsers: BlockedUserDao,
     private val restrictedMemberHashId: String = "",
-) : BaseFeedViewModel() {
+) : BaseFeedViewModel(settings) {
     val entities = mutableStateListOf<SearchEntity>()
     private var pendingGeneralEntities = emptyList<PendingGeneralEntity>()
     val changingTopicIds = mutableStateListOf<String>()
@@ -219,7 +222,7 @@ open class SearchViewModel(
             val entity = when (pending) {
                 is PendingGeneralEntity.Person -> SearchEntity.Person(pending.person)
 
-                is PendingGeneralEntity.Content -> createDisplayItem(environment, pending.feed)
+                is PendingGeneralEntity.Content -> createDisplayItem(settings.toFeedDisplaySettings(), pending.feed)
                     .stableKey
                     .let(loadedContent::get)
                     ?.let { SearchEntity.Content(it) }

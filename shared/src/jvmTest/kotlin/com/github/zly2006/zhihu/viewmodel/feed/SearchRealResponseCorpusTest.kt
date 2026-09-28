@@ -20,6 +20,7 @@ package com.github.zly2006.zhihu.viewmodel.feed
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.target
+import com.github.zly2006.zhihu.platform.MapSettingsStore
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.FakeBlockedUserDao
 import io.ktor.client.HttpClient
@@ -78,7 +79,7 @@ class SearchRealResponseCorpusTest {
     private fun fixture(name: String) =
         checkNotNull(javaClass.getResource("/search/$name")).readText()
 
-    private class CorpusSearchViewModel : SearchViewModel("kotlin", FakeBlockedUserDao()) {
+    private class CorpusSearchViewModel : SearchViewModel("kotlin", MapSettingsStore(), FakeBlockedUserDao()) {
         private val testEnvironment = environment()
 
         override fun refresh(environment: PaginationEnvironment) = Unit

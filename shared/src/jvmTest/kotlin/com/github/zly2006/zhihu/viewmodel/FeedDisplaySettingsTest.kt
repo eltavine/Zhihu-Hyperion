@@ -15,16 +15,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.zly2006.zhihu.filter
+package com.github.zly2006.zhihu.viewmodel
 
-import com.github.zly2006.zhihu.data.FeedDisplayItem
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.platform.MapSettingsStore
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
-/** 首页推荐在前台过滤前短暂等待最近一页远端历史，避免刚在别处读过的内容再次出现。 */
-fun RemoteHistorySync.feedEnvironment(environment: PaginationEnvironment): PaginationEnvironment =
-    object : PaginationEnvironment by environment {
-        override suspend fun applyForegroundHomeFeedFilter(items: List<FeedDisplayItem>): List<FeedDisplayItem> {
-            awaitRecentPage()
-            return environment.applyForegroundHomeFeedFilter(items)
+class FeedDisplaySettingsTest {
+    @Test
+    fun desktopIgnoresSavedQualityFilterModeButKeepsReverseBlock() {
+        val settings = MapSettingsStore().apply {
+            putString(QUALITY_FILTER_MODE_PREFERENCE_KEY, QualityFilterMode.HIDE.name)
+            putBoolean("reverseBlock", true)
         }
+
+        val display = settings.toFeedDisplaySettings()
+
+        assertEquals(QualityFilterMode.OFF, display.qualityFilterMode)
+        assertTrue(display.reverseBlock)
     }
+}

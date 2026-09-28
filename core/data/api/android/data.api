@@ -163,7 +163,6 @@ public final class com/github/zly2006/zhihu/filter/QuestionAnswerCandidatePartit
 
 public final class com/github/zly2006/zhihu/filter/RemoteHistorySync {
 	public fun <init> (Lcom/github/zly2006/zhihu/platform/SettingsStore;Lcom/github/zly2006/zhihu/viewmodel/filter/ContentOpenEventDao;)V
-	public synthetic fun <init> (Lcom/github/zly2006/zhihu/platform/SettingsStore;Lcom/github/zly2006/zhihu/viewmodel/filter/ContentOpenEventDao;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun awaitRecentPage (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun filterRemoteReads (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getImportedRevision ()Lkotlinx/coroutines/flow/StateFlow;
@@ -420,6 +419,14 @@ public final class com/github/zly2006/zhihu/viewmodel/filter/FilterableContent {
 public final class com/github/zly2006/zhihu/viewmodel/filter/ForegroundReadFilterPipeline {
 	public fun <init> (Lcom/github/zly2006/zhihu/viewmodel/filter/FeedFilterSettings;Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterManager;Lcom/github/zly2006/zhihu/viewmodel/filter/ContentOpenEventDao;Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedFeedRecordDao;)V
 	public final fun filter (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/HomeFeedFilter {
+	public fun <init> (Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterDatabase;Lcom/github/zly2006/zhihu/platform/SettingsStore;Lcom/github/zly2006/zhihu/filter/RemoteHistorySync;Lcom/github/zly2006/zhihu/viewmodel/filter/KeywordSemanticMatcher;Lkotlin/jvm/functions/Function2;)V
+	public synthetic fun <init> (Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterDatabase;Lcom/github/zly2006/zhihu/platform/SettingsStore;Lcom/github/zly2006/zhihu/filter/RemoteHistorySync;Lcom/github/zly2006/zhihu/viewmodel/filter/KeywordSemanticMatcher;Lkotlin/jvm/functions/Function2;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun background (Ljava/util/List;Lcom/github/zly2006/zhihu/viewmodel/filter/ContentDetailProvider;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun foreground (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun recordInteraction (Lcom/github/zly2006/zhihu/data/Feed;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class com/github/zly2006/zhihu/viewmodel/filter/KeywordBackup {

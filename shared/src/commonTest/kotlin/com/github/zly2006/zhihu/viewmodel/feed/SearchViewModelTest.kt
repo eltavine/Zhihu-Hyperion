@@ -22,6 +22,7 @@ import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.Person
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.target
+import com.github.zly2006.zhihu.platform.MapSettingsStore
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
 import com.github.zly2006.zhihu.viewmodel.filter.FakeBlockedUserDao
@@ -82,7 +83,7 @@ class SearchViewModelTest {
 
     private class TestSearchViewModel(
         blockedUsers: BlockedUserDao = FakeBlockedUserDao(),
-    ) : SearchViewModel("query", blockedUsers) {
+    ) : SearchViewModel("query", MapSettingsStore(), blockedUsers) {
         override fun refresh(environment: PaginationEnvironment) = Unit
 
         suspend fun process(

@@ -146,7 +146,7 @@ class OnlineHistoryScreenInstrumentedTest {
 
             override suspend fun handleFetchFailure(tag: String?, error: Exception) = Unit
         }
-        val viewModel = OnlineHistoryViewModel(KoinPlatform.getKoin().get())
+        val viewModel = OnlineHistoryViewModel(KoinPlatform.getKoin().get(), KoinPlatform.getKoin().get())
 
         composeRule.activity.runOnUiThread {
             viewModel.refresh(environment)

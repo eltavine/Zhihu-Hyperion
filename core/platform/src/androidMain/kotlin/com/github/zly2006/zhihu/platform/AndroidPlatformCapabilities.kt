@@ -32,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
-import androidx.core.content.edit
 import androidx.core.net.toUri
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.ui.components.OpenImageDialog
@@ -80,6 +79,8 @@ actual val isJvm: Boolean = false
 actual val isNative: Boolean = false
 
 actual val isAigcVoteSupported: Boolean = true
+
+actual val isFeedQualityFilterSupported: Boolean = true
 
 actual val isBlocklistNlpSupported: Boolean = true
 

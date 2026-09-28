@@ -70,6 +70,8 @@ final val com.github.zly2006.zhihu.platform/isArticleImageExportSupported // com
     final fun <get-isArticleImageExportSupported>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isArticleImageExportSupported.<get-isArticleImageExportSupported>|<get-isArticleImageExportSupported>(){}[0]
 final val com.github.zly2006.zhihu.platform/isBlocklistNlpSupported // com.github.zly2006.zhihu.platform/isBlocklistNlpSupported|{}isBlocklistNlpSupported[0]
     final fun <get-isBlocklistNlpSupported>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isBlocklistNlpSupported.<get-isBlocklistNlpSupported>|<get-isBlocklistNlpSupported>(){}[0]
+final val com.github.zly2006.zhihu.platform/isFeedQualityFilterSupported // com.github.zly2006.zhihu.platform/isFeedQualityFilterSupported|{}isFeedQualityFilterSupported[0]
+    final fun <get-isFeedQualityFilterSupported>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isFeedQualityFilterSupported.<get-isFeedQualityFilterSupported>|<get-isFeedQualityFilterSupported>(){}[0]
 final val com.github.zly2006.zhihu.platform/isJvm // com.github.zly2006.zhihu.platform/isJvm|{}isJvm[0]
     final fun <get-isJvm>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isJvm.<get-isJvm>|<get-isJvm>(){}[0]
 final val com.github.zly2006.zhihu.platform/isNative // com.github.zly2006.zhihu.platform/isNative|{}isNative[0]

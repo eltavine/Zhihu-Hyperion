@@ -28,7 +28,8 @@ import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.QuestionAnswerNavigator
 import com.github.zly2006.zhihu.navigation.zhihuQuestionFeedsUrl
-import com.github.zly2006.zhihu.viewmodel.FeedDisplayEnvironment
+import com.github.zly2006.zhihu.platform.SettingsStore
+import com.github.zly2006.zhihu.viewmodel.FeedDisplaySettings
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
@@ -37,8 +38,9 @@ import com.github.zly2006.zhihu.viewmodel.postSigned
 
 open class QuestionFeedViewModel(
     private val questionId: Long,
+    settings: SettingsStore,
     private val blockedUsers: BlockedUserDao,
-) : BaseFeedViewModel() {
+) : BaseFeedViewModel(settings) {
     var sortOrder by mutableStateOf("default")
         private set
 
@@ -51,7 +53,7 @@ open class QuestionFeedViewModel(
         }
     }
 
-    override fun createDisplayItem(environment: FeedDisplayEnvironment, feed: Feed): FeedDisplayItem {
+    override fun createDisplayItem(display: FeedDisplaySettings, feed: Feed): FeedDisplayItem {
         val target = feed.target
         if (target is Feed.AnswerTarget) {
             return FeedDisplayItem(
@@ -63,7 +65,7 @@ open class QuestionFeedViewModel(
                 title = "",
             )
         }
-        return super.createDisplayItem(environment, feed)
+        return super.createDisplayItem(display, feed)
     }
 
     fun createAnswerNavigatorFor(

@@ -172,7 +172,7 @@ fun SearchScreen(
     val userMessages = rememberUserMessageSink()
     val settings = koinInject<SettingsStore>()
     val blockedUsers = koinInject<ContentFilterDatabase>().blockedUserDao()
-    val viewModel = viewModel { SearchViewModel(search.query, blockedUsers, search.restrictedMemberHashId) }
+    val viewModel = viewModel { SearchViewModel(search.query, settings, blockedUsers, search.restrictedMemberHashId) }
     val readingQueueSourceId = buildString {
         append("search:")
         append(search.restrictedMemberHashId)

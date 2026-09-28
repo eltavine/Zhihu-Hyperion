@@ -106,7 +106,6 @@ import com.github.zly2006.zhihu.data.MobileNotificationMessageOverview
 import com.github.zly2006.zhihu.data.RecommendationMode
 import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.filter.RemoteHistorySync
-import com.github.zly2006.zhihu.filter.feedEnvironment
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
@@ -161,6 +160,7 @@ import com.github.zly2006.zhihu.viewmodel.QualityFilterMode
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedInteractionViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedViewModel
+import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
 import com.github.zly2006.zhihu.viewmodel.local.LocalHomeFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.za.AndroidHomeFeedViewModel
@@ -211,12 +211,9 @@ fun homeOnlineNotificationTag(uuid: String): String = "$HOME_ONLINE_NOTIFICATION
 
 fun homePinAnnouncementReadKey(pinId: Long): String = "$HOME_PIN_ANNOUNCEMENT_READ_KEY_PREFIX$pinId"
 
-// Pager can dispose this page while its feed ViewModels survive. Keep the header rows and
-// synchronization owner alive too, so restoring a saved list index does not shift the visible card.
-private class HomeScreenState(
-    settings: SettingsStore,
-) : ViewModel() {
-    val remoteHistory = RemoteHistorySync(settings)
+// Pager can dispose this page while its feed ViewModels survive. Keep the header rows alive too,
+// so restoring a saved list index does not shift the visible card.
+private class HomeScreenState : ViewModel() {
     val onlineNotifications = mutableStateOf(emptyList<OnlineHomeNotification>())
     val authorPinAnnouncements = mutableStateOf(emptyList<HomePinAnnouncement>())
     val dismissedUpdateVersion = mutableStateOf<String?>(null)
@@ -239,11 +236,11 @@ fun HomeScreen(
 ) {
     val readingPlayerOverlayPadding = LocalReadingPlayerOverlayPadding.current
     val navigator = LocalNavigator.current
-    val baseEnvironment = rememberPaginationEnvironment(allowGuestAccess = true)
+    val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = true)
     val settings = koinInject<SettingsStore>()
-    val homeState: HomeScreenState = viewModel { HomeScreenState(settings) }
-    val remoteHistory = homeState.remoteHistory
-    val paginationEnvironment = remember(baseEnvironment, remoteHistory) { remoteHistory.feedEnvironment(baseEnvironment) }
+    val homeState: HomeScreenState = viewModel { HomeScreenState() }
+    val remoteHistory = koinInject<RemoteHistorySync>()
+    val homeFeedFilter = koinInject<HomeFeedFilter>()
     val appPrivateDirectory = rememberAppPrivateDirectory()
     val notificationSettings = koinInject<NotificationSettingsStore>()
     val userMessages = rememberUserMessageSink()
@@ -295,10 +292,10 @@ fun HomeScreen(
     val isDebuggable = rememberHomeIsDebuggable()
     val isLiteVariant = rememberIsLiteVariant()
     val viewModel: BaseFeedViewModel = when (currentRecommendationMode) {
-        RecommendationMode.WEB -> viewModel { HomeFeedViewModel() }
-        RecommendationMode.ANDROID -> viewModel { AndroidHomeFeedViewModel() }
-        RecommendationMode.LOCAL -> viewModel { LocalHomeFeedViewModel() }
-        RecommendationMode.MIXED -> viewModel { MixedHomeFeedViewModel() }
+        RecommendationMode.WEB -> viewModel { HomeFeedViewModel(settings, homeFeedFilter) }
+        RecommendationMode.ANDROID -> viewModel { AndroidHomeFeedViewModel(settings, homeFeedFilter) }
+        RecommendationMode.LOCAL -> viewModel { LocalHomeFeedViewModel(settings) }
+        RecommendationMode.MIXED -> viewModel { MixedHomeFeedViewModel(settings, homeFeedFilter) }
     }
     val localHomeViewModel = viewModel as? LocalHomeFeedViewModel
     val readingQueueSourceId = "home:${currentRecommendationMode.name}"
@@ -377,7 +374,7 @@ fun HomeScreen(
                 settings.getBoolean("enableContentFilter", true) &&
                 !settings.getBoolean("reverseBlock", false)
             ) {
-                remoteHistory.start(homeState.viewModelScope, baseEnvironment)
+                remoteHistory.start(homeState.viewModelScope, paginationEnvironment)
             }
             if (!account.login && settings.getBoolean("loginForRecommendation", true)) {
                 requestLoginNavigation()

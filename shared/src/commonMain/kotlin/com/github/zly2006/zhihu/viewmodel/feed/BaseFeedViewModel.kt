@@ -27,8 +27,9 @@ import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.flattenFeeds
 import com.github.zly2006.zhihu.data.toDisplayItem
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageSink
-import com.github.zly2006.zhihu.viewmodel.FeedDisplayEnvironment
+import com.github.zly2006.zhihu.viewmodel.FeedDisplaySettings
 import com.github.zly2006.zhihu.viewmodel.HomeFeedFilterResult
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.PaginationViewModel
@@ -37,12 +38,15 @@ import com.github.zly2006.zhihu.viewmodel.filter.BlockedTopic
 import com.github.zly2006.zhihu.viewmodel.filter.ContentDetailProvider
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.getOrFetchContentDetail
+import com.github.zly2006.zhihu.viewmodel.toFeedDisplaySettings
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonArray
 import org.koin.mp.KoinPlatform
 import kotlin.reflect.typeOf
 
-abstract class BaseFeedViewModel : PaginationViewModel<Feed>(typeOf<Feed>()) {
+abstract class BaseFeedViewModel(
+    protected val settings: SettingsStore,
+) : PaginationViewModel<Feed>(typeOf<Feed>()) {
     var displayItems = mutableStateListOf<FeedDisplayItem>()
     internal var latestLoadedDisplayItems = mutableStateOf<List<FeedDisplayItem>>(emptyList())
     internal var completedPageCount by mutableIntStateOf(0)
@@ -51,7 +55,8 @@ abstract class BaseFeedViewModel : PaginationViewModel<Feed>(typeOf<Feed>()) {
 
     override suspend fun processResponse(environment: PaginationEnvironment, data: List<Feed>, rawData: JsonArray) {
         super.processResponse(environment, data, rawData)
-        val loadedItems = data.flattenFeeds().map { createDisplayItem(environment, it) }
+        val display = settings.toFeedDisplaySettings()
+        val loadedItems = data.flattenFeeds().map { createDisplayItem(display, it) }
         addDisplayItems(loadedItems)
         latestLoadedDisplayItems.value = loadedItems
     }
@@ -79,14 +84,11 @@ abstract class BaseFeedViewModel : PaginationViewModel<Feed>(typeOf<Feed>()) {
         isPullToRefresh = false
     }
 
-    open fun createDisplayItem(environment: FeedDisplayEnvironment, feed: Feed): FeedDisplayItem {
-        val settings = environment.feedDisplaySettings()
-        return feed.toDisplayItem(
-            enableQualityFilter = settings.qualityFilterMode != QualityFilterMode.OFF,
-            reverseBlock = settings.reverseBlock,
-            qualityFilterSettings = settings.qualityFilter,
-        )
-    }
+    open fun createDisplayItem(display: FeedDisplaySettings, feed: Feed): FeedDisplayItem = feed.toDisplayItem(
+        enableQualityFilter = display.qualityFilterMode != QualityFilterMode.OFF,
+        reverseBlock = display.reverseBlock,
+        qualityFilterSettings = display.qualityFilter,
+    )
 
     fun addDisplayItems(newItems: List<FeedDisplayItem>) {
         newItems.forEach {

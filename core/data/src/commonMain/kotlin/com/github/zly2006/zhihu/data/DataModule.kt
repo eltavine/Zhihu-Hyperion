@@ -18,7 +18,9 @@
 package com.github.zly2006.zhihu.data
 
 import com.github.zly2006.zhihu.filter.ContentOpenTracker
+import com.github.zly2006.zhihu.filter.RemoteHistorySync
 import com.github.zly2006.zhihu.util.AtomicTextFile
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import kotlinx.io.files.Path
 import org.koin.dsl.module
 
@@ -26,4 +28,5 @@ import org.koin.dsl.module
 fun dataModule(historyFile: Path) = module {
     single { HistoryStorage(AtomicTextFile(historyFile)) }
     single { ContentOpenTracker(get()) }
+    single { RemoteHistorySync(get(), get<ContentFilterDatabase>().contentOpenEventDao()) }
 }

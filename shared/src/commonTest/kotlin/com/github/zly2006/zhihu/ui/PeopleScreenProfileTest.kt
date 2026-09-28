@@ -21,6 +21,7 @@ import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.navigation.Person
+import com.github.zly2006.zhihu.platform.MapSettingsStore
 import com.github.zly2006.zhihu.util.TextDocumentStore
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.FakeBlockedQuestionAuthorDao
@@ -117,7 +118,7 @@ class PeopleScreenProfileTest {
                 ).asJsonObject(),
             ),
         )
-        val viewModel = PersonViewModel(person())
+        val viewModel = PersonViewModel(person(), MapSettingsStore())
 
         viewModel.load(environment, HistoryStorage(MemoryDocument()), FakeBlockedUserDao(), FakeBlockedQuestionAuthorDao())
 
@@ -139,7 +140,7 @@ class PeopleScreenProfileTest {
             baseProfile = people(isBlocking = true).asJsonObject(),
             detailResult = Result.failure(IllegalStateException("optional detail unavailable")),
         )
-        val viewModel = PersonViewModel(person())
+        val viewModel = PersonViewModel(person(), MapSettingsStore())
 
         viewModel.load(environment, HistoryStorage(MemoryDocument()), FakeBlockedUserDao(), FakeBlockedQuestionAuthorDao())
 

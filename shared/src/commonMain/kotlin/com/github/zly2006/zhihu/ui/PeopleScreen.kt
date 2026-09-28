@@ -102,6 +102,7 @@ import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Person
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
 import com.github.zly2006.zhihu.platform.rememberImagePreviewOpener
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
@@ -203,8 +204,9 @@ class PeopleArticlesViewModel(
 
 class PeopleActivitiesViewModel(
     val person: Person,
+    settings: SettingsStore,
     val sort: String = "created",
-) : BaseFeedViewModel() {
+) : BaseFeedViewModel(settings) {
     override val initialUrl: String
         get() = "https://www.zhihu.com/api/v3/moments/${person.userTokenOrId}/activities"
 }
@@ -333,6 +335,7 @@ class PeopleFollowingColumnsViewModel(
 
 class PersonViewModel(
     val person: Person,
+    settings: SettingsStore,
 ) : ViewModel() {
     var avatar by mutableStateOf("")
     var name by mutableStateOf(person.name)
@@ -353,7 +356,7 @@ class PersonViewModel(
     // 只实现已有数据类型的 ViewModel
     val answersFeedModel = PeopleAnswersViewModel(person)
     val articlesFeedModel = PeopleArticlesViewModel(person)
-    val activitiesFeedModel = PeopleActivitiesViewModel(person)
+    val activitiesFeedModel = PeopleActivitiesViewModel(person, settings)
     val collectionsFeedModel = PeopleCollectionsViewModel(person)
     val questionsFeedModel = PeopleQuestionsViewModel(person)
     val pinsFeedModel = PeoplePinsViewModel(person)
@@ -653,7 +656,8 @@ fun PeopleScreen(
     val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
     val history = koinInject<HistoryStorage>()
     val contentFilterDatabase = koinInject<ContentFilterDatabase>()
-    val viewModel = composeViewModel { PersonViewModel(person) }
+    val settings = koinInject<SettingsStore>()
+    val viewModel = composeViewModel { PersonViewModel(person, settings) }
     val coroutineScope = rememberCoroutineScope()
 
     val pagerState = rememberPagerState(
