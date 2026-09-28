@@ -26,7 +26,7 @@ import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.navigation.resolveContent
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.util.Log
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.ContentOpenEvent
 import com.github.zly2006.zhihu.viewmodel.filter.ContentOpenEventDao
@@ -61,7 +61,7 @@ class RemoteHistorySync(
     private val revision = MutableStateFlow(0)
     val importedRevision = revision.asStateFlow()
 
-    fun start(scope: CoroutineScope, environment: PaginationEnvironment): Job? {
+    fun start(scope: CoroutineScope, environment: ZhihuApiEnvironment): Job? {
         if (job?.isActive == true) return job
         val now = Clock.System.now().toEpochMilliseconds()
         if (now - settings.getLong(LAST_ATTEMPT_KEY, 0L) < 60_000L) return null
@@ -80,14 +80,6 @@ class RemoteHistorySync(
         }
         return job
     }
-
-    fun feedEnvironment(environment: PaginationEnvironment): PaginationEnvironment =
-        object : PaginationEnvironment by environment {
-            override suspend fun applyForegroundHomeFeedFilter(items: List<FeedDisplayItem>): List<FeedDisplayItem> {
-                awaitRecentPage()
-                return environment.applyForegroundHomeFeedFilter(items)
-            }
-        }
 
     // Recommendation requests run immediately. A slow history request must not hold the feed indefinitely.
     suspend fun awaitRecentPage() {
@@ -112,7 +104,7 @@ class RemoteHistorySync(
         }
     }
 
-    private suspend fun sync(environment: PaginationEnvironment) {
+    private suspend fun sync(environment: ZhihuApiEnvironment) {
         val boundary = settings.getLong(REMOTE_HISTORY_WATERMARK_KEY, 0L)
         var newest = boundary
         var previousReadTime = Long.MAX_VALUE

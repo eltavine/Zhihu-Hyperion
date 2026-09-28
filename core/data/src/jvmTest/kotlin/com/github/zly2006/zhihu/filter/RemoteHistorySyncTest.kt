@@ -23,7 +23,7 @@ import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.platform.MapSettingsStore
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -101,13 +101,13 @@ class RemoteHistorySyncTest {
             val job = fixture.start(this)!!
             assertSame(job, fixture.start(this))
             val card = FeedDisplayItem(title = "read", summary = null, details = "", feed = null, navDestinationJson = Article(id = 1L, type = ArticleType.Answer).toFeedDisplayItemNavDestinationJson())
-            val result = async { fixture.feedEnvironment.applyForegroundHomeFeedFilter(listOf(card)) }
+            val result = async { fixture.sync.awaitRecentPage() }
             runCurrent()
             advanceTimeBy(299)
             assertFalse(result.isCompleted)
             advanceTimeBy(1)
             runCurrent()
-            assertEquals(listOf(card), result.await())
+            result.await()
             assertEquals(1, fixture.requests.size)
             fixture.gate!!.complete(Unit)
             job.join()
@@ -142,7 +142,7 @@ class RemoteHistorySyncTest {
         var pages = emptyList<String>()
         var gate: CompletableDeferred<Unit>? = null
         private val client = HttpClient(MockEngine { respond("{}") })
-        private val environment = object : PaginationEnvironment {
+        private val environment = object : ZhihuApiEnvironment {
             override fun httpClient() = client
 
             override fun authenticatedCookies() = emptyMap<String, String>()
@@ -157,7 +157,6 @@ class RemoteHistorySyncTest {
             override suspend fun handleFetchFailure(tag: String?, error: Exception) = Unit
         }
         val sync = RemoteHistorySync(settings, dao)
-        val feedEnvironment = sync.feedEnvironment(environment)
 
         fun start(scope: CoroutineScope) = sync.start(scope, environment)
 

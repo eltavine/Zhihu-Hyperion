@@ -35,7 +35,7 @@ import org.koin.mp.KoinPlatform
 object AccountData {
     val json = ZhihuJson.json
 
-    internal val ANDROID_HEADERS = mapOf(
+    val ANDROID_HEADERS = mapOf(
         "x-api-version" to "3.1.8",
         "x-app-version" to "10.61.0",
         "x-app-za" to

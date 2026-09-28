@@ -34,6 +34,7 @@ class ModuleGraphConventionPlugin : Plugin<Project> {
                     ":core:platform -X> :(?!core:(common|model|network|account|settings)$).*",
                     ":core:notification -X> :(?!core:(common|model|network|settings|platform)$).*",
                     ":core:updater -X> :(?!core:(common|model|network|account|settings|platform)$).*",
+                    ":core:data -X> :(?!core:(common|model|navigation|network|account|database|settings|nlp)$).*",
                 )
             }
         }

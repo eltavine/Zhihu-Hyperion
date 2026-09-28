@@ -64,28 +64,6 @@ fun <T> answerNavigatorPageFromJson(
     )
 }
 
-fun zhihuQuestionFeedsUrl(
-    questionId: Long,
-    limit: Int,
-    order: String? = null,
-): String = zhihuQuestionFeedsUrl(questionId.toString(), limit, order)
-
-fun zhihuQuestionFeedsUrl(
-    questionId: String,
-    limit: Int,
-    order: String? = null,
-): String =
-    buildString {
-        append("https://www.zhihu.com/api/v4/questions/")
-        append(questionId)
-        append("/feeds?limit=")
-        append(limit)
-        if (order != null) {
-            append("&order=")
-            append(order)
-        }
-    }
-
 /**
  * 回答导航器：封装回答切换的来源、历史记录和预取逻辑。
  *

@@ -57,17 +57,17 @@ fun telemetry(context: Context, usage: String) {
         GlobalScope.launch {
             @OptIn(ExperimentalStdlibApi::class)
             runCatching {
+                val self = data.self!!
                 val hash = MessageDigest
                     .getInstance("MD5")
                     .apply {
-                        data.self!!
-                            .userType
+                        self.userType
                             .toByteArray()
                             .let(this::update)
-                        data.self.urlToken
+                        self.urlToken
                             ?.toByteArray()
                             ?.let(this::update)
-                    }.digest(data.self!!.id.toByteArray())
+                    }.digest(self.id.toByteArray())
                     .toHexString()
                 KoinPlatform
                     .getKoin()

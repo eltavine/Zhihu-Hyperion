@@ -918,3 +918,10 @@ public final class com/github/zly2006/zhihu/navigation/WritePin$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public final class com/github/zly2006/zhihu/navigation/ZhihuApiUrlsKt {
+	public static final fun zhihuQuestionFeedsUrl (JILjava/lang/String;)Ljava/lang/String;
+	public static final fun zhihuQuestionFeedsUrl (Ljava/lang/String;ILjava/lang/String;)Ljava/lang/String;
+	public static synthetic fun zhihuQuestionFeedsUrl$default (JILjava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public static synthetic fun zhihuQuestionFeedsUrl$default (Ljava/lang/String;ILjava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+}
+
