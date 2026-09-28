@@ -25,9 +25,9 @@ package com.github.zly2006.zhihu.platform
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
-import androidx.compose.ui.backhandler.LocalCompatNavigationEventDispatcherOwner
 import androidx.navigationevent.NavigationEventDispatcher
 import androidx.navigationevent.NavigationEventInput
+import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
 import platform.AppKit.NSEvent
 import platform.AppKit.NSResponder
 import platform.AppKit.NSWindow
@@ -79,7 +79,8 @@ private class MacosEscapeNavigationResponder(
  * ## 曾经失败的实现及其根因
  *
  * 第一版实现从应用内容根部新建了 `NavigationEventDispatcher` 和 owner，再用
- * `LocalCompatNavigationEventDispatcherOwner` 覆盖 Compose 窗口提供的 owner；同时给根 `Box`
+ * 当时的 `LocalCompatNavigationEventDispatcherOwner`（Compose 1.12 起为 `LocalNavigationEventDispatcherOwner`）
+ * 覆盖 Compose 窗口提供的 owner；同时给根 `Box`
  * 增加 `focusable`、`FocusRequester` 和 `onPreviewKeyEvent`，在 ESC KeyUp 时向新 dispatcher
  * 派发返回。这个方案有两个根本问题。
  *
@@ -108,7 +109,7 @@ private class MacosEscapeNavigationResponder(
  * `BackNavigationEventInput` 才把 ESC KeyDown 转换成返回，并派发到同一个窗口 dispatcher。项目在 JVM
  * source set 中只需使用官方 `ui-backhandler-desktop` 的 `BackHandler`，不能再添加 owner 或 ESC 输入源。
  *
- * Compose 1.11.1 的 Kotlin/Native macOS `ComposeWindow` 也已经创建
+ * Compose 1.11.1 起（1.12.1 复核仍然如此）的 Kotlin/Native macOS `ComposeWindow` 也已经创建
  * `DefaultArchitectureComponentsOwner`，并通过平台 CompositionLocal 向 Dialog、Popup 和应用内容提供
  * 同一个 dispatcher；缺少的只有窗口按键处理的最后一步。它的原生 `NSView.keyDown` 会先调用
  * `scene.sendKeyEvent`，若 Compose scene 返回未消费，才调用 `super.keyDown`。但与 JVM 不同，它没有在
@@ -134,7 +135,7 @@ private class MacosEscapeNavigationResponder(
  * 没有才在控件边界继续转发，不能为了省事恢复成抢占整个窗口的全局监听。
  *
  * responder 收到 ESC 后不直接调用页面回调，而是驱动一个标准 [NavigationEventInput]。该 input 注册在
- * Compose 窗口通过 [LocalCompatNavigationEventDispatcherOwner] 暴露的现有 dispatcher 上，所以 Dialog、
+ * Compose 窗口通过 [LocalNavigationEventDispatcherOwner] 暴露的现有 dispatcher 上，所以 Dialog、
  * Popup、页面 BackHandler、NavController 和主分页逻辑仍在同一注册表中按框架规则竞争。这里绝不能
  * `NavigationEventDispatcher()`，也绝不能再次提供新的 owner。长按 ESC 产生的 repeat 被忽略，避免一次
  * 按住按键连续弹完整个返回栈；每次独立 KeyDown 只完成一次返回。
@@ -170,7 +171,7 @@ fun MacosBackNavigationHost(
     window: NSWindow,
     content: @Composable () -> Unit,
 ) {
-    val dispatcherOwner = checkNotNull(LocalCompatNavigationEventDispatcherOwner.current) {
+    val dispatcherOwner = checkNotNull(LocalNavigationEventDispatcherOwner.current) {
         "Compose window navigation event dispatcher is unavailable"
     }
     val dispatcher = dispatcherOwner.navigationEventDispatcher

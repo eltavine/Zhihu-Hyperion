@@ -31,7 +31,7 @@ import kotlinx.coroutines.Dispatchers
 @Database(
     entities = [ContentViewRecord::class, BlockedKeyword::class, BlockedUser::class, BlockedQuestionAuthor::class, BlockedContentRecord::class, BlockedTopic::class, BlockedFeedRecord::class, ContentOpenEvent::class],
     version = 7,
-    exportSchema = false,
+    exportSchema = true,
 )
 @ConstructedBy(ContentFilterDatabaseConstructor::class)
 abstract class ContentFilterDatabase : RoomDatabase() {

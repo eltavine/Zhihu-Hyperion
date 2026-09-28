@@ -15,86 +15,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    kotlin("multiplatform")
-    kotlin("plugin.serialization")
-    id("com.android.kotlin.multiplatform.library")
-    id("com.google.devtools.ksp")
-    id("org.jlleitschuh.gradle.ktlint")
-}
-
-ktlint {
-    android.set(true)
-    outputToConsole.set(true)
-    enableExperimentalRules.set(true)
-    filter {
-        exclude("**/generated/**")
-        exclude("**/build/**")
-        exclude("build/generated/**")
-        exclude("**/build/generated/ksp/**")
-        exclude("**/ksp/**")
-        exclude { it.file.absolutePath.contains("/build/generated/") }
-    }
-}
-
-ksp {
-    arg("room.schemaLocation", "$projectDir/schemas")
-    arg("room.incremental", "true")
+    id("zhihu.kmp.library")
+    id("zhihu.room")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
-    compilerOptions {
-        freeCompilerArgs.add("-Xexpect-actual-classes")
-    }
-
-    androidLibrary {
+    android {
         namespace = "com.github.zly2006.zhihu.shared.localdb"
-        compileSdk = 37
-        minSdk = 27
-
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_17
-        }
     }
-    jvm {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_17
-        }
-    }
-
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64(),
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "SharedLocalDb"
-            isStatic = true
-        }
-    }
-    macosArm64()
 
     sourceSets {
         commonMain.dependencies {
-            api("androidx.room:room-runtime:2.8.4")
-            api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
-        }
-        commonTest.dependencies {
-            implementation(kotlin("test"))
+            api(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization.json)
         }
         jvmMain.dependencies {
-            implementation("androidx.sqlite:sqlite-bundled:2.6.2")
+            implementation(libs.androidx.sqlite.bundled)
         }
         nativeMain.dependencies {
-            implementation("androidx.sqlite:sqlite-bundled:2.6.2")
+            implementation(libs.androidx.sqlite.bundled)
         }
     }
-}
-
-dependencies {
-    add("kspAndroid", "androidx.room:room-compiler:2.8.4")
-    add("kspJvm", "androidx.room:room-compiler:2.8.4")
-    add("kspMacosArm64", "androidx.room:room-compiler:2.8.4")
 }

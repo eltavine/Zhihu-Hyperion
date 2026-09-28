@@ -1,68 +1,31 @@
+import com.github.zly2006.zhihu.buildlogic.alignComposeMaterial3
+import com.github.zly2006.zhihu.buildlogic.javafx
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 val appVersionName = property("app.versionName").toString()
 val desktopPackageVersion = if (appVersionName.count { it == '.' } >= 2) appVersionName else "$appVersionName.0"
 
 plugins {
-    kotlin("jvm")
-    id("org.jetbrains.compose")
-    kotlin("plugin.compose")
-    id("org.jlleitschuh.gradle.ktlint")
-}
-
-ktlint {
-    outputToConsole.set(true)
-    enableExperimentalRules.set(true)
-    filter {
-        exclude("**/generated/**")
-        exclude("**/build/**")
-    }
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.compose.multiplatform)
+    alias(libs.plugins.kotlin.compose)
+    id("zhihu.ktlint")
+    id("zhihu.module.graph")
 }
 
 kotlin {
     jvmToolchain(17)
-    compilerOptions {
-        jvmTarget = JvmTarget.JVM_17
-    }
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
-}
-
-// Force material3 to 1.10.0-alpha05，与 shared 模块保持一致。
-// 根因：shared 模块 commonMain 通过 material-kolor 的 strictly 约束解析到 1.10.0-alpha05，
-// 但平台配置和本模块如果没有 force，会各自解析到不同版本（1.9.0 或 1.11.0-alpha07），
-// 导致运行时类冲突或编译时 internal API 不可见。
-configurations.configureEach {
-    resolutionStrategy {
-        force("org.jetbrains.compose.material3:material3:1.10.0-alpha05")
-    }
-}
+alignComposeMaterial3()
 
 dependencies {
     implementation(projects.shared)
     implementation(compose.desktop.currentOs)
-    // JavaFX WebView 用于桌面端内嵌风控验证页面。
-    // JavaFX POM 使用 ${javafx.platform} classifier，Gradle 不会自动解析。
-    // 使用 resolutionStrategy 强制所有 JavaFX 模块使用平台 classifier。
-    val osName = System.getProperty("os.name").lowercase()
-    val osArch = System.getProperty("os.arch").lowercase()
-    val fxClassifier =
-        when {
-            osName.contains("mac") && (osArch == "aarch64" || osArch == "arm64") -> "mac-aarch64"
-            osName.contains("mac") -> "mac"
-            osName.contains("win") -> "win"
-            osName.contains("linux") && (osArch == "aarch64" || osArch == "arm64") -> "linux-aarch64"
-            else -> "linux"
-        }
-    val javafxModules = listOf("javafx-base", "javafx-controls", "javafx-graphics", "javafx-web", "javafx-swing", "javafx-media")
-    javafxModules.forEach { module ->
-        implementation("org.openjfx:$module:21.0.2:$fxClassifier")
+    // JavaFX WebView hosts the desktop risk-control verification page.
+    listOf("base", "controls", "graphics", "web", "swing", "media").forEach { module ->
+        implementation(javafx(module))
     }
 }
 

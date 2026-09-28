@@ -29,7 +29,7 @@ import kotlinx.coroutines.Dispatchers
 @Database(
     entities = [CrawlingTask::class, CrawlingResult::class, LocalFeed::class, UserBehavior::class],
     version = 5, // 增加版本号，因为添加了UserBehavior表
-    exportSchema = false,
+    exportSchema = true,
 )
 @TypeConverters(LocalDatabaseConverters::class)
 @ConstructedBy(LocalContentDatabaseConstructor::class)

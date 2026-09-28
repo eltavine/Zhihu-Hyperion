@@ -276,6 +276,8 @@ private fun SegmentActionSheet(
     onCommentClick: () -> Unit,
     onCopyClick: () -> Unit,
 ) {
+    // Keeps the legacy rule that drops PartiallyExpanded for short sheets; rememberBottomSheetState has no equivalent.
+    @Suppress("DEPRECATION")
     val sheetState = rememberModalBottomSheetState()
     val textScrollState = rememberScrollState()
     val overflowTolerance = with(LocalDensity.current) { 1.dp.roundToPx() }

@@ -25,9 +25,10 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheetProperties
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -96,8 +97,8 @@ fun CommentScreenComponent(
     ) {
         LazyListState()
     }
-    val rootSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val childSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val rootSheetState = rememberBottomSheetState(initialValue = SheetValue.Hidden, enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded))
+    val childSheetState = rememberBottomSheetState(initialValue = SheetValue.Hidden, enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded))
     val childTarget = activeChildComment?.clickTarget
     val childDraftKey = childTarget?.commentThreadKey()
     var childListResetToken by rememberSaveable(contentStateKey) { mutableIntStateOf(0) }
