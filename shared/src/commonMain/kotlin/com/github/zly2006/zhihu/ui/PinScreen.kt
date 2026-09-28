@@ -77,8 +77,10 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.fleeksoft.ksoup.Ksoup
 import com.github.zly2006.zhihu.data.DataHolder
+import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.decodePinContentDetail
 import com.github.zly2006.zhihu.data.officialBadge
+import com.github.zly2006.zhihu.filter.ContentOpenTracker
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.LocalNavigator
@@ -112,7 +114,6 @@ import com.github.zly2006.zhihu.ui.components.rememberShareActionExecutor
 import com.github.zly2006.zhihu.util.formatCompactCount
 import com.github.zly2006.zhihu.util.jsonObject
 import com.github.zly2006.zhihu.util.twoDigitString
-import com.github.zly2006.zhihu.viewmodel.ContentLoadEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.addReadHistory
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
@@ -180,15 +181,17 @@ private suspend fun submitPinPollVote(
 }
 
 private suspend fun loadPinDetail(
-    environment: ContentLoadEnvironment,
+    environment: ZhihuApiEnvironment,
+    history: HistoryStorage,
+    contentOpens: ContentOpenTracker,
     pin: Pin,
 ): DataHolder.Pin {
     environment.addReadHistory(pin.id.toString(), "pin")
     val jsonObject = environment.fetchJson("https://www.zhihu.com/api/v4/pins/${pin.id}?include=topics", "")
         ?: error("想法详情为空")
     val content = decodePinContentDetail(jsonObject)
-    environment.postHistoryDestination(pin.copy(authorName = content.author.name))
-    environment.recordContentOpenEvent(destination = pin)
+    history.add(pin.copy(authorName = content.author.name))
+    contentOpens.record(pin)
     return content
 }
 
@@ -214,6 +217,8 @@ fun PinScreen(
     val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
 
     val settings = koinInject<SettingsStore>()
+    val history = koinInject<HistoryStorage>()
+    val contentOpens = koinInject<ContentOpenTracker>()
     val readingPreferences = loadReadingPreferences(settings)
     val readingPlaybackSpeed = loadReadingPlaybackSpeed(settings)
     val readingPlayer = rememberReadingPlayerController()
@@ -232,7 +237,7 @@ fun PinScreen(
         errorMessage = null
         pinContent = null
         try {
-            val loadedPin = loadPinDetail(paginationEnvironment, pin)
+            val loadedPin = loadPinDetail(paginationEnvironment, history, contentOpens, pin)
             pinContent = loadedPin
             isLiked = loadedPin.virtuals.booleanCompat("isLiked", "is_liked")
             likeCount = loadedPin.likeCount

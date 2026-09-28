@@ -18,6 +18,7 @@
 package com.github.zly2006.zhihu
 
 import com.github.zly2006.zhihu.account.accountModule
+import com.github.zly2006.zhihu.data.dataModule
 import com.github.zly2006.zhihu.data.databaseModule
 import com.github.zly2006.zhihu.desktop.desktopZhihuDataFile
 import com.github.zly2006.zhihu.desktop.desktopZhihuLegacyAccountFile
@@ -32,6 +33,7 @@ import org.koin.dsl.module
 fun desktopZhihuModules(): List<Module> = listOf(
     accountModule(Path(desktopZhihuLegacyAccountFile().toString())),
     databaseModule(desktopContentFilterDatabaseFile(), desktopZhihuDataFile("local-content.db")),
+    dataModule(Path(desktopZhihuDataFile("history.json").path)),
     zhihuSharedModule,
     module {
         single { desktopSettingsStore(desktopZhihuDataFile("settings.properties")) }

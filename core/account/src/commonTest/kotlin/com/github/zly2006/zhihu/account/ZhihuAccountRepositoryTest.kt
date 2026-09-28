@@ -18,6 +18,8 @@
 package com.github.zly2006.zhihu.account
 
 import com.github.zly2006.zhihu.data.ZhihuJson
+import com.github.zly2006.zhihu.util.AtomicTextFile
+import com.github.zly2006.zhihu.util.TextDocumentStore
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.files.SystemTemporaryDirectory
@@ -139,7 +141,7 @@ class ZhihuAccountRepositoryTest {
     fun fileStoreCreatesParentAndReplacesContentWithoutLeavingTemporaryFile() {
         val directory = Path(SystemTemporaryDirectory, "zhihu-account-store-${Random.nextLong().toULong()}")
         val file = Path(directory, "account.json")
-        val store = FileZhihuAccountSessionStore(file)
+        val store = AtomicTextFile(file)
         try {
             assertNull(store.readText())
 
@@ -161,7 +163,7 @@ class ZhihuAccountRepositoryTest {
 
 private class InMemoryAccountSessionStore(
     var text: String? = null,
-) : ZhihuAccountSessionStore {
+) : TextDocumentStore {
     override fun readText(): String? = text
 
     override fun writeText(text: String) {

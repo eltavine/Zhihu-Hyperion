@@ -42,21 +42,16 @@ import com.github.zly2006.zhihu.data.AigcVoteVoter
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
-import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.QualityFilterSettings
 import com.github.zly2006.zhihu.data.ZhihuCookieStorage
 import com.github.zly2006.zhihu.data.ZhihuJson.json
 import com.github.zly2006.zhihu.data.asApiEnvironment
 import com.github.zly2006.zhihu.data.navDestination
 import com.github.zly2006.zhihu.data.target
-import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
-import com.github.zly2006.zhihu.filter.PendingContentOpen
-import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.navigation.requestLoginNavigation
 import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.androidSettingsStore
 import com.github.zly2006.zhihu.platform.androidUserMessageSink
-import com.github.zly2006.zhihu.ui.AndroidArticleNavigationHandoff
 import com.github.zly2006.zhihu.util.HttpStatusException
 import com.github.zly2006.zhihu.util.ResolvedCollectionHtmlExportItem
 import com.github.zly2006.zhihu.util.buildArticleExportFileName
@@ -87,14 +82,10 @@ import io.ktor.client.plugins.api.createClientPlugin
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.HttpCookies
-import io.ktor.client.request.setBody
-import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.util.appendAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -104,7 +95,6 @@ import java.io.File
 import java.util.UUID
 import com.github.zly2006.zhihu.navigation.Article as ArticleDestination
 import com.github.zly2006.zhihu.util.buildArticleExportHtml as buildAndroidArticleExportHtml
-import io.ktor.http.ContentType as KtorContentType
 
 interface AndroidContextPaginationEnvironment : PaginationEnvironment {
     val context: Context
@@ -259,12 +249,6 @@ open class SharedAndroidPaginationEnvironment(
         reverseBlock = settingsStore.getBoolean("reverseBlock", false),
     )
 
-    override fun localHistory(): List<NavDestination> = HistoryStorage(context).history
-
-    override suspend fun postHistoryDestination(destination: NavDestination) {
-        HistoryStorage(context).add(destination)
-    }
-
     override suspend fun isUserBlocked(userId: String): Boolean =
         contentFilterDatabase.let { database ->
             database.blockedUserDao().isUserBlocked(userId)
@@ -329,29 +313,6 @@ open class SharedAndroidPaginationEnvironment(
         database.blockedQuestionAuthorDao().deleteUserById(userId)
     }
 
-    override suspend fun recordContentOpenEvent(
-        destination: NavDestination,
-        questionId: Long?,
-        openFrom: String,
-    ) {
-        val resolvedOpenFrom = openFrom.ifBlank {
-            KoinPlatform.getKoin().get<PendingContentOpen>().consume(destination)
-        }
-        ContentOpenEventSupport.recordOpenEvent(
-            database = contentFilterDatabase,
-            destination = destination,
-            questionId = questionId,
-            openFrom = resolvedOpenFrom.ifBlank { "unknown" },
-        )
-    }
-
-    override suspend fun recordOpenEvent(
-        destination: ArticleDestination,
-        questionId: Long?,
-    ) {
-        recordContentOpenEvent(destination, questionId)
-    }
-
     override suspend fun applyForegroundHomeFeedFilter(items: List<FeedDisplayItem>): List<FeedDisplayItem> {
         val filterSettings = context.contentFilterSettings()
         val filterDatabase = contentFilterDatabase
@@ -403,19 +364,6 @@ open class SharedAndroidPaginationEnvironment(
             else -> return
         }
         ContentFilterManager(database.contentFilterDao()).recordContentInteraction(targetType, targetId)
-    }
-
-    override suspend fun clearAllHistory() {
-        HistoryStorage(context).clearAndSave()
-        postSigned("https://api.zhihu.com/read_history/batch_del") {
-            contentType(KtorContentType.Application.Json)
-            setBody(
-                buildJsonObject {
-                    put("pairs", JsonArray(emptyList()))
-                    put("clear", true)
-                }.toString(),
-            )
-        }
     }
 
     override fun localRecommendationEngine(): LocalRecommendationEngine = localRecommendationEngine

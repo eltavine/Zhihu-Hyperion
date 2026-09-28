@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
 import com.github.zly2006.zhihu.ui.components.FeedCard
 import com.github.zly2006.zhihu.ui.components.FeedPullToRefresh
@@ -32,12 +33,14 @@ import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.viewmodel.feed.HistoryViewModel
 import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import org.koin.compose.koinInject
 
 @Composable
 fun LegacyLocalHistoryScreen(
     innerPadding: PaddingValues,
 ) {
-    val viewModel: HistoryViewModel = viewModel { HistoryViewModel() }
+    val history = koinInject<HistoryStorage>()
+    val viewModel: HistoryViewModel = viewModel { HistoryViewModel(history) }
     val readingQueueSourceId = "history:local"
     RegisterReadingQueueSource(
         sourceId = readingQueueSourceId,

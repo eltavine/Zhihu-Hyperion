@@ -18,6 +18,7 @@
 package com.github.zly2006.zhihu
 
 import com.github.zly2006.zhihu.account.accountModule
+import com.github.zly2006.zhihu.data.dataModule
 import com.github.zly2006.zhihu.data.databaseModule
 import com.github.zly2006.zhihu.notification.nativeNotificationSettingsStore
 import com.github.zly2006.zhihu.platform.nativeAccountFilePath
@@ -31,6 +32,7 @@ import org.koin.dsl.module
 fun nativeZhihuModules(): List<Module> = listOf(
     accountModule(Path(nativeAccountFilePath())),
     databaseModule(nativeAppPrivateDirectoryPath()),
+    dataModule(Path("${nativeAppPrivateDirectoryPath()}/history.json")),
     zhihuSharedModule,
     module {
         single { nativeSettingsStore("settings.properties") }

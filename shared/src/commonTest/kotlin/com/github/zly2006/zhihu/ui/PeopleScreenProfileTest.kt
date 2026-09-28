@@ -18,8 +18,10 @@
 package com.github.zly2006.zhihu.ui
 
 import com.github.zly2006.zhihu.data.DataHolder
+import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.navigation.Person
+import com.github.zly2006.zhihu.util.TextDocumentStore
 import com.github.zly2006.zhihu.viewmodel.ProfileLoadEnvironment
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.test.runTest
@@ -115,7 +117,7 @@ class PeopleScreenProfileTest {
         )
         val viewModel = PersonViewModel(person())
 
-        viewModel.load(environment)
+        viewModel.load(environment, HistoryStorage(MemoryDocument()))
 
         assertTrue(viewModel.isBlocking)
         assertEquals("4.0k", viewModel.githubSocial?.starCount)
@@ -137,7 +139,7 @@ class PeopleScreenProfileTest {
         )
         val viewModel = PersonViewModel(person())
 
-        viewModel.load(environment)
+        viewModel.load(environment, HistoryStorage(MemoryDocument()))
 
         assertEquals("Profile User", viewModel.name)
         assertTrue(viewModel.isBlocking)
@@ -204,5 +206,19 @@ class PeopleScreenProfileTest {
             tag: String?,
             error: Exception,
         ) = Unit
+    }
+
+    private class MemoryDocument : TextDocumentStore {
+        private var text: String? = null
+
+        override fun readText() = text
+
+        override fun writeText(text: String) {
+            this.text = text
+        }
+
+        override fun delete() {
+            text = null
+        }
     }
 }

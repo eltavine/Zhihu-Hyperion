@@ -6,12 +6,6 @@
 // - Show declarations: true
 
 // Library unique name: <Zhihu.core:account>
-abstract interface com.github.zly2006.zhihu.account/ZhihuAccountSessionStore { // com.github.zly2006.zhihu.account/ZhihuAccountSessionStore|null[0]
-    abstract fun delete() // com.github.zly2006.zhihu.account/ZhihuAccountSessionStore.delete|delete(){}[0]
-    abstract fun readText(): kotlin/String? // com.github.zly2006.zhihu.account/ZhihuAccountSessionStore.readText|readText(){}[0]
-    abstract fun writeText(kotlin/String) // com.github.zly2006.zhihu.account/ZhihuAccountSessionStore.writeText|writeText(kotlin.String){}[0]
-}
-
 sealed interface com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult { // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult|null[0]
     final class CaptchaRequired : com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult { // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.CaptchaRequired|null[0]
         constructor <init>(kotlin/String?) // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.CaptchaRequired.<init>|<init>(kotlin.String?){}[0]
@@ -31,14 +25,6 @@ sealed interface com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult { // co
         final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.Sent.hashCode|hashCode(){}[0]
         final fun toString(): kotlin/String // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.Sent.toString|toString(){}[0]
     }
-}
-
-final class com.github.zly2006.zhihu.account/FileZhihuAccountSessionStore : com.github.zly2006.zhihu.account/ZhihuAccountSessionStore { // com.github.zly2006.zhihu.account/FileZhihuAccountSessionStore|null[0]
-    constructor <init>(kotlinx.io.files/Path) // com.github.zly2006.zhihu.account/FileZhihuAccountSessionStore.<init>|<init>(kotlinx.io.files.Path){}[0]
-
-    final fun delete() // com.github.zly2006.zhihu.account/FileZhihuAccountSessionStore.delete|delete(){}[0]
-    final fun readText(): kotlin/String? // com.github.zly2006.zhihu.account/FileZhihuAccountSessionStore.readText|readText(){}[0]
-    final fun writeText(kotlin/String) // com.github.zly2006.zhihu.account/FileZhihuAccountSessionStore.writeText|writeText(kotlin.String){}[0]
 }
 
 final class com.github.zly2006.zhihu.account/ZhihuAccountClient : kotlin/AutoCloseable { // com.github.zly2006.zhihu.account/ZhihuAccountClient|null[0]
@@ -90,7 +76,7 @@ final class com.github.zly2006.zhihu.account/ZhihuAccountProfileSnapshot { // co
 }
 
 final class com.github.zly2006.zhihu.account/ZhihuAccountRepository { // com.github.zly2006.zhihu.account/ZhihuAccountRepository|null[0]
-    constructor <init>(com.github.zly2006.zhihu.account/ZhihuAccountSessionStore, kotlinx.serialization.json/Json = ...) // com.github.zly2006.zhihu.account/ZhihuAccountRepository.<init>|<init>(com.github.zly2006.zhihu.account.ZhihuAccountSessionStore;kotlinx.serialization.json.Json){}[0]
+    constructor <init>(com.github.zly2006.zhihu.util/TextDocumentStore, kotlinx.serialization.json/Json = ...) // com.github.zly2006.zhihu.account/ZhihuAccountRepository.<init>|<init>(com.github.zly2006.zhihu.util.TextDocumentStore;kotlinx.serialization.json.Json){}[0]
 
     final fun clear() // com.github.zly2006.zhihu.account/ZhihuAccountRepository.clear|clear(){}[0]
     final fun load(): com.github.zly2006.zhihu.account/ZhihuAccountSession // com.github.zly2006.zhihu.account/ZhihuAccountRepository.load|load(){}[0]

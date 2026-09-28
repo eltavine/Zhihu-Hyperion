@@ -19,6 +19,7 @@ package com.github.zly2006.zhihu
 
 import android.content.Context
 import com.github.zly2006.zhihu.account.accountModule
+import com.github.zly2006.zhihu.data.dataModule
 import com.github.zly2006.zhihu.data.databaseModule
 import com.github.zly2006.zhihu.notification.AndroidNotificationSettingsStore
 import com.github.zly2006.zhihu.notification.NotificationSettingsStore
@@ -33,6 +34,7 @@ import java.io.File
 fun androidZhihuModules(context: Context): List<Module> = listOf(
     accountModule(Path(File(context.filesDir, "account.json").path)),
     databaseModule(context),
+    dataModule(Path(File(context.filesDir, "history.json").path)),
     zhihuSharedModule,
     module {
         single { AndroidArticleNavigationHandoff() }

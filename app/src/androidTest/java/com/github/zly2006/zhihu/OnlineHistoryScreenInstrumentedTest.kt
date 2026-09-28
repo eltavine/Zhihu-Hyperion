@@ -49,6 +49,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.mp.KoinPlatform
 
 @RunWith(AndroidJUnit4::class)
 class OnlineHistoryScreenInstrumentedTest {
@@ -145,7 +146,7 @@ class OnlineHistoryScreenInstrumentedTest {
 
             override suspend fun handleFetchFailure(tag: String?, error: Exception) = Unit
         }
-        val viewModel = OnlineHistoryViewModel()
+        val viewModel = OnlineHistoryViewModel(KoinPlatform.getKoin().get())
 
         composeRule.activity.runOnUiThread {
             viewModel.refresh(environment)

@@ -46,10 +46,9 @@ import coil3.disk.directory
 import coil3.memory.MemoryCache
 import coil3.request.crossfade
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
-import com.github.zly2006.zhihu.data.AccountData
 import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
-import com.github.zly2006.zhihu.filter.PendingContentOpen
+import com.github.zly2006.zhihu.filter.ContentOpenTracker
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.CollectionContent
@@ -97,10 +96,10 @@ import org.koin.android.ext.android.inject
 import java.util.concurrent.TimeUnit
 
 class MainActivity : ComponentActivity() {
-    lateinit var history: HistoryStorage
+    val history: HistoryStorage by inject()
     private val accountStore: ZhihuAccountStore by inject()
     private val articleNavigationHandoff: AndroidArticleNavigationHandoff by inject()
-    private val pendingContentOpen: PendingContentOpen by inject()
+    private val contentOpens: ContentOpenTracker by inject()
     val httpClient
         get() = accountStore.client.httpClient()
 
@@ -142,7 +141,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         clearShareImageCache(this)
         continuousUsageReminderManager = ContinuousUsageReminderManager(this)
-        history = HistoryStorage(this)
         AndroidThemeSettings.initialize(this)
 
         val settings = androidSettingsStore(this)
@@ -429,7 +427,7 @@ class MainActivity : ComponentActivity() {
         }
         articleNavigationHandoff.clearCommentUnless(route)
         preparePendingContentOpen(route, targetController)
-        history.add(route)
+        lifecycleScope.launch { history.add(route) }
         if (route is Video) {
             val current = runCatching {
                 targetController.currentBackStackEntry?.toRoute<Article>()
@@ -503,7 +501,7 @@ class MainActivity : ComponentActivity() {
             null
         }
             ?: ContentOpenEventSupport.inferOpenFrom(currentContentOpenSource(sourceController), target)
-        pendingContentOpen.prepare(target, openFrom)
+        contentOpens.prepare(target, openFrom)
     }
 
     private fun navigateToMainTabs() {

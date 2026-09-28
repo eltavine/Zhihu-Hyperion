@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for Android.
+ * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,20 +15,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.zly2006.zhihu.account
+package com.github.zly2006.zhihu.data
 
+import com.github.zly2006.zhihu.filter.ContentOpenTracker
 import com.github.zly2006.zhihu.util.AtomicTextFile
-import io.ktor.client.engine.HttpClientEngine
 import kotlinx.io.files.Path
 import org.koin.dsl.module
-import org.koin.dsl.onClose
 
-/**
- * 进程级账户所有权。组合根传入平台账户文件路径；所有账户相关的 HttpClient 共享同一个引擎，
- * 测试只需覆盖 [HttpClientEngine] 与 [ZhihuAccountStore] 两个绑定。
- */
-fun accountModule(accountFile: Path) = module {
-    single<HttpClientEngine> { accountHttpClientEngineFactory.create() } onClose { it?.close() }
-    single { ZhihuAccountRepository(AtomicTextFile(accountFile)) }
-    single { ZhihuAccountStore(get(), get()) } onClose { it?.close() }
+/** :core:data 的进程级单例；[historyFile] 由各平台组合根给出，沿用既有 history.json 位置。 */
+fun dataModule(historyFile: Path) = module {
+    single { HistoryStorage(AtomicTextFile(historyFile)) }
+    single { ContentOpenTracker(get()) }
 }

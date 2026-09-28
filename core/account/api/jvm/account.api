@@ -2,13 +2,6 @@ public final class com/github/zly2006/zhihu/account/AccountModuleKt {
 	public static final fun accountModule (Lkotlinx/io/files/Path;)Lorg/koin/core/module/Module;
 }
 
-public final class com/github/zly2006/zhihu/account/FileZhihuAccountSessionStore : com/github/zly2006/zhihu/account/ZhihuAccountSessionStore {
-	public fun <init> (Lkotlinx/io/files/Path;)V
-	public fun delete ()V
-	public fun readText ()Ljava/lang/String;
-	public fun writeText (Ljava/lang/String;)V
-}
-
 public final class com/github/zly2006/zhihu/account/QrLoginProtocolKt {
 	public static final field ZHIHU_DESKTOP_USER_AGENT Ljava/lang/String;
 	public static final field ZHIHU_HOME_URL Ljava/lang/String;
@@ -83,8 +76,8 @@ public final class com/github/zly2006/zhihu/account/ZhihuAccountProfileSnapshot$
 }
 
 public final class com/github/zly2006/zhihu/account/ZhihuAccountRepository {
-	public fun <init> (Lcom/github/zly2006/zhihu/account/ZhihuAccountSessionStore;Lkotlinx/serialization/json/Json;)V
-	public synthetic fun <init> (Lcom/github/zly2006/zhihu/account/ZhihuAccountSessionStore;Lkotlinx/serialization/json/Json;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lcom/github/zly2006/zhihu/util/TextDocumentStore;Lkotlinx/serialization/json/Json;)V
+	public synthetic fun <init> (Lcom/github/zly2006/zhihu/util/TextDocumentStore;Lkotlinx/serialization/json/Json;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun clear ()V
 	public final fun load ()Lcom/github/zly2006/zhihu/account/ZhihuAccountSession;
 	public final fun loadAccounts ()Lcom/github/zly2006/zhihu/account/ZhihuAccounts;
@@ -141,12 +134,6 @@ public final synthetic class com/github/zly2006/zhihu/account/ZhihuAccountSessio
 
 public final class com/github/zly2006/zhihu/account/ZhihuAccountSession$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
-}
-
-public abstract interface class com/github/zly2006/zhihu/account/ZhihuAccountSessionStore {
-	public abstract fun delete ()V
-	public abstract fun readText ()Ljava/lang/String;
-	public abstract fun writeText (Ljava/lang/String;)V
 }
 
 public final class com/github/zly2006/zhihu/account/ZhihuAccountStore : java/lang/AutoCloseable {

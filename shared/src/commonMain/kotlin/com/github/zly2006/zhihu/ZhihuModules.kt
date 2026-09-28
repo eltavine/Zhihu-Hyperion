@@ -17,12 +17,10 @@
 
 package com.github.zly2006.zhihu
 
-import com.github.zly2006.zhihu.filter.PendingContentOpen
 import com.github.zly2006.zhihu.reading.ReadingQueueSourceRegistry
 import org.koin.dsl.module
 
 /** 与平台无关的进程级绑定；各平台组合根把它和平台模块一起启动。 */
 val zhihuSharedModule = module {
     single { ReadingQueueSourceRegistry(get()) }
-    single { PendingContentOpen() }
 }

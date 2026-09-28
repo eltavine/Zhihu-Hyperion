@@ -17,6 +17,7 @@
 
 package com.github.zly2006.zhihu.account
 
+import com.github.zly2006.zhihu.util.TextDocumentStore
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -323,7 +324,7 @@ class ZhihuAccountClientTest {
 
 private class ClientInMemoryAccountSessionStore(
     var text: String? = null,
-) : ZhihuAccountSessionStore {
+) : TextDocumentStore {
     var writeCount: Int = 0
 
     override fun readText(): String? = text

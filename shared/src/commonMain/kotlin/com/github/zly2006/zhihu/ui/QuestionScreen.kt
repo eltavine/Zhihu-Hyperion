@@ -100,7 +100,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fleeksoft.ksoup.Ksoup
 import com.github.zly2006.zhihu.data.DataHolder
+import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.decodeQuestionContentDetail
+import com.github.zly2006.zhihu.filter.ContentOpenTracker
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.Topic
@@ -120,7 +122,7 @@ import com.github.zly2006.zhihu.ui.components.handleShareAction
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.ui.components.rememberShareActionExecutor
-import com.github.zly2006.zhihu.viewmodel.ContentLoadEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.addReadHistory
 import com.github.zly2006.zhihu.viewmodel.feed.QuestionFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
@@ -148,7 +150,9 @@ private val QUESTION_DETAIL_TOGGLE_ZONE_HEIGHT: Dp = 56.dp
 const val QUESTION_STATS_TAG = "question_stats"
 
 private suspend fun loadQuestion(
-    environment: ContentLoadEnvironment,
+    environment: ZhihuApiEnvironment,
+    history: HistoryStorage,
+    contentOpens: ContentOpenTracker,
     question: Question,
 ): DataHolder.Question? {
     environment.addReadHistory(question.questionId.toString(), "question")
@@ -158,8 +162,8 @@ private suspend fun loadQuestion(
         environment.fetchJson("https://www.zhihu.com/api/v4/questions/${question.questionId}", include)
             ?: return null
     val questionData = decodeQuestionContentDetail(jsonObject)
-    environment.postHistoryDestination(Question(question.questionId, questionData.title))
-    environment.recordContentOpenEvent(destination = question, questionId = question.questionId)
+    history.add(Question(question.questionId, questionData.title))
+    contentOpens.record(question, question.questionId)
     return questionData
 }
 
@@ -176,6 +180,8 @@ fun QuestionScreen(
 ) {
     val readingPlayerOverlayPadding = LocalReadingPlayerOverlayPadding.current
     val settings = koinInject<SettingsStore>()
+    val history = koinInject<HistoryStorage>()
+    val contentOpens = koinInject<ContentOpenTracker>()
     val executeShareAction = rememberShareActionExecutor()
     val openZhihuWebUrl = rememberZhihuWebUrlOpener()
     val navigator = LocalNavigator.current
@@ -224,7 +230,7 @@ fun QuestionScreen(
             launch { viewModel.refresh(paginationEnvironment) }
         }
         try {
-            val questionData = loadQuestion(paginationEnvironment, question)
+            val questionData = loadQuestion(paginationEnvironment, history, contentOpens, question)
             if (questionData != null) {
                 questionContent = questionData.detail
                 title = questionData.title

@@ -18,6 +18,7 @@
 package com.github.zly2006.zhihu.viewmodel.feed
 
 import com.github.zly2006.zhihu.data.FeedDisplayItem
+import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.Person
@@ -25,7 +26,9 @@ import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 
-class HistoryViewModel : BaseFeedViewModel() {
+class HistoryViewModel(
+    private val history: HistoryStorage,
+) : BaseFeedViewModel() {
     override val initialUrl: String
         get() = error("不需要URL")
 
@@ -39,7 +42,7 @@ class HistoryViewModel : BaseFeedViewModel() {
 
         displayItems.clear()
 
-        environment.localHistory().forEach { dest ->
+        history.history.forEach { dest ->
             val displayItem = when (dest) {
                 is Article -> {
                     FeedDisplayItem(

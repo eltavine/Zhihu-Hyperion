@@ -18,12 +18,15 @@
 package com.github.zly2006.zhihu.filter
 
 import com.github.zly2006.zhihu.navigation.NavDestination
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 
 /**
- * 导航到内容页前暂存打开来源，内容页记录打开事件时按内容身份取回一次。
+ * 内容打开事件的来源交接：导航前 [prepare] 暂存打开来源，内容页 [record] 时按内容身份取回一次并落库。
  * 页面级 environment 会反复重建，因此暂存状态由 Koin 持有的进程级单例承载。
  */
-class PendingContentOpen {
+class ContentOpenTracker(
+    private val database: ContentFilterDatabase,
+) {
     private var identity: TrackedContentIdentity? = null
     private var openFrom: String? = null
 
@@ -32,7 +35,14 @@ class PendingContentOpen {
         openFrom: String,
     ) {
         identity = ContentOpenEventSupport.toTrackedContentIdentity(destination)
-        this.openFrom = openFrom.takeIf { identity != null }
+        this.openFrom = openFrom.takeIf { identity != null && it.isNotBlank() }
+    }
+
+    suspend fun record(
+        destination: NavDestination,
+        questionId: Long? = null,
+    ) {
+        ContentOpenEventSupport.recordOpenEvent(database, destination, questionId, consume(destination))
     }
 
     fun consume(destination: NavDestination): String {

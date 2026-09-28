@@ -19,17 +19,10 @@ package com.github.zly2006.zhihu.viewmodel
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import com.github.zly2006.zhihu.account.NativeHistoryStorage
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.target
-import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
-import com.github.zly2006.zhihu.filter.ContentOpenFrom
-import com.github.zly2006.zhihu.filter.PendingContentOpen
-import com.github.zly2006.zhihu.filter.TrackedContentIdentity
-import com.github.zly2006.zhihu.navigation.Article
-import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.copyNativePlainText
@@ -50,15 +43,9 @@ import com.github.zly2006.zhihu.viewmodel.local.LocalContentDatabase
 import com.github.zly2006.zhihu.viewmodel.local.LocalRecommendationEngine
 import com.github.zly2006.zhihu.viewmodel.local.buildLocalRecommendationEngine
 import io.ktor.client.HttpClient
-import io.ktor.client.request.setBody
-import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
 import org.koin.mp.KoinPlatform
-import io.ktor.http.ContentType as KtorContentType
 
 @Composable
 actual fun rememberPaginationEnvironment(allowGuestAccess: Boolean): PaginationEnvironment =
@@ -71,7 +58,6 @@ internal class NativePaginationEnvironment(
     NotificationEnvironment {
     private val accountStore = KoinPlatform.getKoin().get<ZhihuAccountStore>()
     private val settingsStore: SettingsStore = KoinPlatform.getKoin().get()
-    private val historyStorage = NativeHistoryStorage()
     private val contentFilterDatabase: ContentFilterDatabase = KoinPlatform.getKoin().get()
     private val localRecommendationEngine by lazy {
         KoinPlatform.getKoin().getOrNull<LocalContentDatabase>()?.contentDao()?.let { dao ->
@@ -96,10 +82,6 @@ internal class NativePaginationEnvironment(
         qualityFilterMode = QualityFilterMode.OFF,
         reverseBlock = settingsStore.toFeedFilterSettings().reverseBlock,
     )
-
-    override fun localHistory(): List<NavDestination> = historyStorage.history
-
-    override suspend fun postHistoryDestination(destination: NavDestination) = historyStorage.add(destination)
 
     override fun setPlainTextClipboard(label: String, text: String) = copyNativePlainText(text)
 
@@ -157,23 +139,6 @@ internal class NativePaginationEnvironment(
         contentFilterDatabase.blockedQuestionAuthorDao().deleteUserById(userId)
     }
 
-    override suspend fun recordContentOpenEvent(
-        destination: NavDestination,
-        questionId: Long?,
-        openFrom: String,
-    ) {
-        val resolvedOpenFrom = openFrom.ifBlank { KoinPlatform.getKoin().get<PendingContentOpen>().consume(destination) }
-        ContentOpenEventSupport.recordOpenEvent(
-            database = contentFilterDatabase,
-            destination = destination,
-            questionId = questionId,
-            openFrom = resolvedOpenFrom.ifBlank { ContentOpenFrom.UNKNOWN },
-        )
-    }
-
-    override suspend fun recordOpenEvent(destination: Article, questionId: Long?) =
-        recordContentOpenEvent(destination, questionId)
-
     override suspend fun applyForegroundHomeFeedFilter(items: List<FeedDisplayItem>): List<FeedDisplayItem> {
         val settings = settingsStore.toFeedFilterSettings()
         return ForegroundReadFilterPipeline(
@@ -217,20 +182,6 @@ internal class NativePaginationEnvironment(
             else -> return
         }
         ContentFilterManager(contentFilterDatabase.contentFilterDao()).recordContentInteraction(targetType, targetId)
-    }
-
-    override suspend fun clearAllHistory() {
-        historyStorage.clearAndSave()
-        if (accountStore.session.cookies["d_c0"] == null) return
-        postSigned("https://api.zhihu.com/read_history/batch_del") {
-            contentType(KtorContentType.Application.Json)
-            setBody(
-                buildJsonObject {
-                    put("pairs", JsonArray(emptyList()))
-                    put("clear", true)
-                }.toString(),
-            )
-        }
     }
 
     override fun localRecommendationEngine(): LocalRecommendationEngine? = localRecommendationEngine

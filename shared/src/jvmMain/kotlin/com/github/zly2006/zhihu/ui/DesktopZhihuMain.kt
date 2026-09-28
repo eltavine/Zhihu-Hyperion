@@ -40,7 +40,7 @@ import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.fetchHighestQualityZhihuVideoUrl
 import com.github.zly2006.zhihu.desktop.openDesktopExternalUrl
 import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
-import com.github.zly2006.zhihu.filter.PendingContentOpen
+import com.github.zly2006.zhihu.filter.ContentOpenTracker
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
@@ -92,7 +92,7 @@ fun DesktopZhihuMain() {
     /** 主返回栈控制器，承载 MainTabs 主壳和单栏页面。 */
     val navController = rememberNavController()
     val accountStore = koinInject<ZhihuAccountStore>()
-    val pendingContentOpen = koinInject<PendingContentOpen>()
+    val contentOpens = koinInject<ContentOpenTracker>()
     val accounts by accountStore.accountsState.collectAsState()
     val accountSession = accounts.session
     val httpClient = remember(accountStore, accountSession) { accountStore.client.httpClient() }
@@ -190,7 +190,7 @@ fun DesktopZhihuMain() {
             }
 
             else -> {
-                pendingContentOpen.prepare(
+                contentOpens.prepare(
                     destination = route,
                     openFrom = if (
                         runCatching { navController.currentBackStackEntry?.toRoute<MainTabs>() }.getOrNull() != null

@@ -25,16 +25,10 @@ import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.navDestination
 import com.github.zly2006.zhihu.data.target
-import com.github.zly2006.zhihu.desktop.DesktopHistoryStorage
 import com.github.zly2006.zhihu.desktop.copyDesktopPlainText
 import com.github.zly2006.zhihu.desktop.desktopZhihuDataFile
 import com.github.zly2006.zhihu.desktop.desktopZhihuDownloadsDir
-import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
-import com.github.zly2006.zhihu.filter.ContentOpenFrom
-import com.github.zly2006.zhihu.filter.PendingContentOpen
-import com.github.zly2006.zhihu.filter.TrackedContentIdentity
 import com.github.zly2006.zhihu.navigation.Article
-import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.util.Log
@@ -55,15 +49,10 @@ import com.github.zly2006.zhihu.viewmodel.local.LocalContentDatabase
 import com.github.zly2006.zhihu.viewmodel.local.LocalRecommendationEngine
 import com.github.zly2006.zhihu.viewmodel.local.buildLocalRecommendationEngine
 import io.ktor.client.HttpClient
-import io.ktor.client.request.setBody
-import io.ktor.http.contentType
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
 import org.koin.mp.KoinPlatform
 import java.awt.image.BufferedImage
 import java.io.File
@@ -76,7 +65,6 @@ import javax.swing.JEditorPane
 import javax.swing.SwingUtilities
 import com.github.zly2006.zhihu.util.buildArticleExportHtml as buildSharedArticleExportHtml
 import com.github.zly2006.zhihu.util.buildOfflineArticleExportHtml as buildSharedOfflineArticleExportHtml
-import io.ktor.http.ContentType as KtorContentType
 
 class DesktopPaginationEnvironment(
     override val notificationSettingsStore: NotificationSettingsStore = KoinPlatform.getKoin().get(),
@@ -85,7 +73,6 @@ class DesktopPaginationEnvironment(
     NotificationEnvironment {
     private val store = KoinPlatform.getKoin().get<ZhihuAccountStore>()
     private val settingsStore: SettingsStore = KoinPlatform.getKoin().get()
-    private val historyStorage = DesktopHistoryStorage()
     private val contentFilterDb: ContentFilterDatabase = KoinPlatform.getKoin().get()
     private val localRecommendationEngine by lazy {
         buildLocalRecommendationEngine(KoinPlatform.getKoin().get<LocalContentDatabase>().contentDao(), this)
@@ -112,13 +99,6 @@ class DesktopPaginationEnvironment(
         qualityFilterMode = QualityFilterMode.OFF,
         reverseBlock = settingsStore.toFeedFilterSettings().reverseBlock,
     )
-
-    override fun localHistory(): List<NavDestination> =
-        historyStorage.history
-
-    override suspend fun postHistoryDestination(destination: NavDestination) {
-        historyStorage.add(destination)
-    }
 
     override fun setPlainTextClipboard(
         label: String,
@@ -182,29 +162,6 @@ class DesktopPaginationEnvironment(
         contentFilterDb.blockedQuestionAuthorDao().deleteUserById(userId)
     }
 
-    override suspend fun recordContentOpenEvent(
-        destination: NavDestination,
-        questionId: Long?,
-        openFrom: String,
-    ) {
-        val resolvedOpenFrom = openFrom.ifBlank {
-            KoinPlatform.getKoin().get<PendingContentOpen>().consume(destination)
-        }
-        ContentOpenEventSupport.recordOpenEvent(
-            database = contentFilterDb,
-            destination = destination,
-            questionId = questionId,
-            openFrom = resolvedOpenFrom.ifBlank { "unknown" },
-        )
-    }
-
-    override suspend fun recordOpenEvent(
-        destination: Article,
-        questionId: Long?,
-    ) {
-        recordContentOpenEvent(destination, questionId)
-    }
-
     override suspend fun applyForegroundHomeFeedFilter(items: List<FeedDisplayItem>): List<FeedDisplayItem> {
         val settings = settingsStore.toFeedFilterSettings()
         return ForegroundReadFilterPipeline(
@@ -248,20 +205,6 @@ class DesktopPaginationEnvironment(
             else -> return
         }
         ContentFilterManager(contentFilterDb.contentFilterDao()).recordContentInteraction(targetType, targetId)
-    }
-
-    override suspend fun clearAllHistory() {
-        historyStorage.clearAndSave()
-        if (store.session.cookies["d_c0"] == null) return
-        postSigned("https://api.zhihu.com/read_history/batch_del") {
-            contentType(KtorContentType.Application.Json)
-            setBody(
-                buildJsonObject {
-                    put("pairs", JsonArray(emptyList()))
-                    put("clear", true)
-                }.toString(),
-            )
-        }
     }
 
     override fun localRecommendationEngine(): LocalRecommendationEngine = localRecommendationEngine

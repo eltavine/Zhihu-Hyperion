@@ -38,11 +38,13 @@ import com.github.zly2006.zhihu.data.AigcVoteReadEvidence
 import com.github.zly2006.zhihu.data.Collection
 import com.github.zly2006.zhihu.data.CollectionResponse
 import com.github.zly2006.zhihu.data.DataHolder
+import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.OfficialBadge
 import com.github.zly2006.zhihu.data.VoteUpState
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.decodeZhihuCommentData
 import com.github.zly2006.zhihu.data.officialBadge
+import com.github.zly2006.zhihu.filter.ContentOpenTracker
 import com.github.zly2006.zhihu.markdown.htmlToMdAst
 import com.github.zly2006.zhihu.markdown.toMarkdown
 import com.github.zly2006.zhihu.navigation.Article
@@ -252,7 +254,11 @@ class ArticleViewModel(
     open class ArticlesSharedData : ArticleAnswerSwitchData()
 
     @OptIn(ExperimentalStdlibApi::class)
-    fun loadArticle(environment: ArticleLoadEnvironment) {
+    fun loadArticle(
+        environment: ArticleLoadEnvironment,
+        history: HistoryStorage,
+        contentOpens: ContentOpenTracker,
+    ) {
         if (httpClient == null) return
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
@@ -289,7 +295,7 @@ class ArticleViewModel(
                             endorsements = answer.endorsementItems
                             topics = emptyList()
 
-                            environment.postHistoryDestination(
+                            history.add(
                                 Article(
                                     id = answer.id,
                                     type = ArticleType.Answer,
@@ -300,7 +306,7 @@ class ArticleViewModel(
                                     excerpt = answer.excerpt,
                                 ),
                             )
-                            environment.recordOpenEvent(article, answer.question.id)
+                            contentOpens.record(article, answer.question.id)
                             withContext(Dispatchers.Main.immediate) {
                                 // 设置问题回答导航器（如果当前不是收藏夹导航器）
                                 if (sharedData.navigator !is CollectionAnswerNavigator) {
@@ -366,7 +372,7 @@ class ArticleViewModel(
                             ipInfo = article.ipInfo
                             topics = article.topics.orEmpty()
 
-                            environment.postHistoryDestination(
+                            history.add(
                                 Article(
                                     id = article.id,
                                     type = ArticleType.Article,
@@ -377,7 +383,7 @@ class ArticleViewModel(
                                     excerpt = article.excerpt,
                                 ),
                             )
-                            environment.recordOpenEvent(this@ArticleViewModel.article, null)
+                            contentOpens.record(this@ArticleViewModel.article)
                         } else {
                             content = "<h1>你似乎来到了没有知识存在的荒原</h1>"
                             Log.e("ArticleViewModel", "Article not found")

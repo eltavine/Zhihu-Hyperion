@@ -76,15 +76,15 @@ public final class com/github/zly2006/zhihu/data/ContentDetailCacheKt {
 	public static final fun zhihuContentDetailUrl (Lcom/github/zly2006/zhihu/navigation/NavDestination;)Ljava/lang/String;
 }
 
+public final class com/github/zly2006/zhihu/data/DataModuleKt {
+	public static final fun dataModule (Lkotlinx/io/files/Path;)Lorg/koin/core/module/Module;
+}
+
 public final class com/github/zly2006/zhihu/data/HistoryStorage {
-	public fun <init> (Landroid/content/Context;)V
-	public final fun add (Lcom/github/zly2006/zhihu/navigation/NavDestination;)V
-	public final fun clearAndSave ()V
-	public final fun getActivity ()Landroid/content/Context;
+	public fun <init> (Lcom/github/zly2006/zhihu/util/TextDocumentStore;)V
+	public final fun add (Lcom/github/zly2006/zhihu/navigation/NavDestination;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun clear (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getHistory ()Ljava/util/List;
-	public final fun load ()V
-	public final fun post (Lcom/github/zly2006/zhihu/navigation/NavDestination;)V
-	public final fun save ()V
 }
 
 public final class com/github/zly2006/zhihu/data/ZhihuDailyClientKt {
@@ -140,10 +140,12 @@ public final class com/github/zly2006/zhihu/filter/ContentOpenFrom {
 	public static final field UNKNOWN Ljava/lang/String;
 }
 
-public final class com/github/zly2006/zhihu/filter/PendingContentOpen {
-	public fun <init> ()V
+public final class com/github/zly2006/zhihu/filter/ContentOpenTracker {
+	public fun <init> (Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterDatabase;)V
 	public final fun consume (Lcom/github/zly2006/zhihu/navigation/NavDestination;)Ljava/lang/String;
 	public final fun prepare (Lcom/github/zly2006/zhihu/navigation/NavDestination;Ljava/lang/String;)V
+	public final fun record (Lcom/github/zly2006/zhihu/navigation/NavDestination;Ljava/lang/Long;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun record$default (Lcom/github/zly2006/zhihu/filter/ContentOpenTracker;Lcom/github/zly2006/zhihu/navigation/NavDestination;Ljava/lang/Long;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class com/github/zly2006/zhihu/filter/QuestionAnswerCandidatePartition {

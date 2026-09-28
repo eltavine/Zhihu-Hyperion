@@ -33,18 +33,14 @@ import com.github.zly2006.zhihu.data.OnlineHistoryDeletePair
 import com.github.zly2006.zhihu.data.QualityFilterSettings
 import com.github.zly2006.zhihu.data.ZhihuJson.decodeJson
 import com.github.zly2006.zhihu.data.ZhihuPaging
-import com.github.zly2006.zhihu.data.executeZhihuAuthenticatedRequest
-import com.github.zly2006.zhihu.data.fetchZhihuAuthenticatedJson
 import com.github.zly2006.zhihu.data.fetchZhihuContentDetail
 import com.github.zly2006.zhihu.data.getOrFetchContentDetail
 import com.github.zly2006.zhihu.navigation.AnswerNavigator
-import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.ui.ArticleAnswerSwitchState
 import com.github.zly2006.zhihu.ui.ArticleAnswerTransitionDirection
 import com.github.zly2006.zhihu.util.Log
-import com.github.zly2006.zhihu.util.ZhihuCredentialRefresher
 import com.github.zly2006.zhihu.util.signZhihuFetchRequest
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel.CachedAnswerContent
 import com.github.zly2006.zhihu.viewmodel.local.LocalRecommendationEngine
@@ -55,12 +51,8 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
-import io.ktor.http.HttpMethod
-import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
-import io.ktor.http.isSuccess
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Job
@@ -284,27 +276,28 @@ suspend fun ZhihuApiEnvironment.addReadHistory(
     }
 }
 
-internal suspend fun ZhihuApiEnvironment.deleteOnlineHistoryItem(item: OnlineHistoryDeletePair) {
-    val response = postSigned("https://api.zhihu.com/read_history/batch_del") {
-        contentType(ContentType.Application.Json)
-        setBody(
-            buildJsonObject {
-                put(
-                    "pairs",
-                    JsonArray(
-                        listOf(
-                            buildJsonObject {
-                                put("content_token", item.contentToken)
-                                put("content_type", item.contentType)
-                            },
-                        ),
-                    ),
-                )
-                put("clear", false)
-            }.toString(),
-        )
-    }
-    check(response.status.isSuccess()) { "删除在线历史记录失败: ${response.status}" }
+/** 删除在线浏览历史；[clear] 为 true 时服务端清空当前账号的全部记录，此时 [pairs] 为空。 */
+internal suspend fun ZhihuApiEnvironment.deleteOnlineHistory(
+    pairs: List<OnlineHistoryDeletePair>,
+    clear: Boolean,
+): HttpResponse = postSigned("https://api.zhihu.com/read_history/batch_del") {
+    contentType(ContentType.Application.Json)
+    setBody(
+        buildJsonObject {
+            put(
+                "pairs",
+                JsonArray(
+                    pairs.map { pair ->
+                        buildJsonObject {
+                            put("content_token", pair.contentToken)
+                            put("content_type", pair.contentType)
+                        }
+                    },
+                ),
+            )
+            put("clear", clear)
+        }.toString(),
+    )
 }
 
 suspend fun ZhihuApiEnvironment.postSigned(
@@ -344,29 +337,8 @@ interface FeedDisplayEnvironment {
     suspend fun applyBackgroundHomeFeedFilter(items: List<FeedDisplayItem>): List<FeedDisplayItem> = items
 }
 
-interface HistoryEnvironment {
-    fun localHistory(): List<NavDestination> = emptyList()
-
-    suspend fun clearAllHistory() = Unit
-
-    suspend fun postHistoryDestination(destination: NavDestination) = Unit
-}
-
 interface ContentInteractionEnvironment : ZhihuApiEnvironment {
     suspend fun recordContentInteraction(feed: Feed) = Unit
-}
-
-interface ContentOpenEnvironment {
-    suspend fun recordContentOpenEvent(
-        destination: NavDestination,
-        questionId: Long? = null,
-        openFrom: String = "",
-    ) = Unit
-
-    suspend fun recordOpenEvent(
-        destination: Article,
-        questionId: Long?,
-    ) = Unit
 }
 
 interface AigcVoteEnvironment {
@@ -465,8 +437,6 @@ interface ArticleExportContentEnvironment :
 
 interface ContentLoadEnvironment :
     ZhihuApiEnvironment,
-    HistoryEnvironment,
-    ContentOpenEnvironment,
     AigcVoteEnvironment
 
 interface ProfileLoadEnvironment :

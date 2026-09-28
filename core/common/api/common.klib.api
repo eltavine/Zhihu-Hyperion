@@ -6,6 +6,20 @@
 // - Show declarations: true
 
 // Library unique name: <Zhihu.core:common>
+abstract interface com.github.zly2006.zhihu.util/TextDocumentStore { // com.github.zly2006.zhihu.util/TextDocumentStore|null[0]
+    abstract fun delete() // com.github.zly2006.zhihu.util/TextDocumentStore.delete|delete(){}[0]
+    abstract fun readText(): kotlin/String? // com.github.zly2006.zhihu.util/TextDocumentStore.readText|readText(){}[0]
+    abstract fun writeText(kotlin/String) // com.github.zly2006.zhihu.util/TextDocumentStore.writeText|writeText(kotlin.String){}[0]
+}
+
+final class com.github.zly2006.zhihu.util/AtomicTextFile : com.github.zly2006.zhihu.util/TextDocumentStore { // com.github.zly2006.zhihu.util/AtomicTextFile|null[0]
+    constructor <init>(kotlinx.io.files/Path) // com.github.zly2006.zhihu.util/AtomicTextFile.<init>|<init>(kotlinx.io.files.Path){}[0]
+
+    final fun delete() // com.github.zly2006.zhihu.util/AtomicTextFile.delete|delete(){}[0]
+    final fun readText(): kotlin/String? // com.github.zly2006.zhihu.util/AtomicTextFile.readText|readText(){}[0]
+    final fun writeText(kotlin/String) // com.github.zly2006.zhihu.util/AtomicTextFile.writeText|writeText(kotlin.String){}[0]
+}
+
 final object com.github.zly2006.zhihu.util/Log { // com.github.zly2006.zhihu.util/Log|null[0]
     final fun d(kotlin/String, kotlin/String, kotlin/Throwable? = ...) // com.github.zly2006.zhihu.util/Log.d|d(kotlin.String;kotlin.String;kotlin.Throwable?){}[0]
     final fun e(kotlin/String, kotlin/String, kotlin/Throwable? = ...) // com.github.zly2006.zhihu.util/Log.e|e(kotlin.String;kotlin.String;kotlin.Throwable?){}[0]

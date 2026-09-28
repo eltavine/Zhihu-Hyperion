@@ -62,7 +62,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.zly2006.zhihu.filter.ContentOpenFrom
-import com.github.zly2006.zhihu.filter.PendingContentOpen
+import com.github.zly2006.zhihu.filter.ContentOpenTracker
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
@@ -86,7 +86,6 @@ import com.github.zly2006.zhihu.test.resetAppPreferences
 import com.github.zly2006.zhihu.test.setZhihuMainContent
 import com.github.zly2006.zhihu.theme.ThemeManager
 import com.github.zly2006.zhihu.theme.ZhihuTheme
-import com.github.zly2006.zhihu.ui.AndroidArticleNavigationHandoff
 import com.github.zly2006.zhihu.ui.AndroidZhihuMain
 import com.github.zly2006.zhihu.ui.FOLLOW_SCREEN_PAGER_TAG
 import com.github.zly2006.zhihu.ui.QUESTION_SCREEN_LIST_TAG
@@ -190,7 +189,7 @@ class ZhihuMainNavigationInstrumentedTest {
         var openFrom: String? = null
         composeRule.runOnIdle {
             composeRule.activity.navigate(article)
-            openFrom = KoinPlatform.getKoin().get<PendingContentOpen>().consume(article)
+            openFrom = KoinPlatform.getKoin().get<ContentOpenTracker>().consume(article)
         }
 
         assertEquals(ContentOpenFrom.HOME_FEED, openFrom)

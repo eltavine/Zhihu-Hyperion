@@ -89,6 +89,7 @@ import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.FollowedQuestion
 import com.github.zly2006.zhihu.data.FollowedTopic
+import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.OfficialBadge
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.officialBadge
@@ -128,10 +129,10 @@ import com.github.zly2006.zhihu.viewmodel.postSigned
 import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonPrimitive
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 import zhihu.shared.generated.resources.Res
 import zhihu.shared.generated.resources.ic_zh_plus_author_badge
 import kotlin.math.roundToInt
@@ -426,7 +427,10 @@ class PersonViewModel(
         }
     }
 
-    suspend fun load(environment: ProfileLoadEnvironment) {
+    suspend fun load(
+        environment: ProfileLoadEnvironment,
+        history: HistoryStorage,
+    ) {
         environment.addReadHistory(person.id, "profile")
 
         val profileUrl = "https://api.zhihu.com/people/${person.urlToken.takeIf(String::isNotBlank) ?: person.id}"
@@ -436,7 +440,7 @@ class PersonViewModel(
         val loadedPerson = ZhihuJson.decodeJson<DataHolder.People>(jojo)
         val urlToken = loadedPerson.urlToken
 
-        environment.postHistoryDestination(
+        history.add(
             Person(
                 id = loadedPerson.id,
                 name = loadedPerson.name,
@@ -638,6 +642,7 @@ fun PeopleScreen(
     val navigator = LocalNavigator.current
     val userMessages = rememberUserMessageSink()
     val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val history = koinInject<HistoryStorage>()
     val viewModel = composeViewModel { PersonViewModel(person) }
     val coroutineScope = rememberCoroutineScope()
 
@@ -676,7 +681,7 @@ fun PeopleScreen(
 
     LaunchedEffect(viewModel) {
         try {
-            viewModel.load(paginationEnvironment)
+            viewModel.load(paginationEnvironment, history)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {

@@ -104,7 +104,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil3.compose.AsyncImage
 import com.github.zly2006.zhihu.data.DataHolder
+import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.VoteUpState
+import com.github.zly2006.zhihu.filter.ContentOpenTracker
 import com.github.zly2006.zhihu.markdown.RenderMarkdown
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
@@ -201,6 +203,8 @@ fun ArticleScreen(
 
     val scrollState = rememberScrollState()
     val settings = koinInject<SettingsStore>()
+    val history = koinInject<HistoryStorage>()
+    val contentOpens = koinInject<ContentOpenTracker>()
     val isTitleAutoHide by rememberObservedSetting(settings, "titleAutoHide") { getBoolean("titleAutoHide", false) }
     val autoHideArticleBottomBar by rememberObservedSetting(settings, "autoHideArticleBottomBar") {
         getBoolean("autoHideArticleBottomBar", false)
@@ -410,7 +414,7 @@ fun ArticleScreen(
     )
     LaunchedEffect(article.id) {
         answerNavigationState.prepareArticle()
-        viewModel.loadArticle(environment)
+        viewModel.loadArticle(environment, history, contentOpens)
         viewModel.loadCollections(environment)
         viewModel.loadAigcFlagStatus(environment)
     }
