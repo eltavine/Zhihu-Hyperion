@@ -150,11 +150,12 @@ fun NotificationTimelineScreen(
                         InvitationAnswerItem(
                             notification = notification,
                             onQuestionClick = {
-                                notification.target?.id?.toLongOrNull()?.let { questionId ->
+                                val target = notification.target
+                                target?.id?.toLongOrNull()?.let { questionId ->
                                     navigator.onNavigate(
                                         Question(
                                             questionId = questionId,
-                                            title = notification.target.title.ifBlank {
+                                            title = target.title.ifBlank {
                                                 notification.targetSource?.text.orEmpty()
                                             },
                                         ),

@@ -56,8 +56,6 @@ import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import com.github.zly2006.zhihu.ui.FollowedQuestion as FollowedQuestionImpl
-import com.github.zly2006.zhihu.ui.FollowedTopic as FollowedTopicImpl
 
 const val ZHIHU_ME_URL = "https://www.zhihu.com/api/v4/me"
 
@@ -69,26 +67,6 @@ data class ZhihuAccountProfile(
     val userType: String = "",
     val avatarUrl: String? = null,
 )
-
-fun <T : HttpClientEngineConfig> HttpClientConfig<T>.installZhihuCommonClientConfig(
-    cookies: MutableMap<String, String>,
-    userAgent: String,
-    onCookieChanged: () -> Unit = {},
-    enableHttpCache: Boolean = false,
-) {
-    if (enableHttpCache) {
-        install(HttpCache)
-    }
-    install(HttpCookies) {
-        storage = ZhihuCookieStorage(cookies, onCookieChanged)
-    }
-    install(ContentNegotiation) {
-        json(ZhihuJson.json)
-    }
-    install(UserAgent) {
-        agent = userAgent
-    }
-}
 
 suspend fun fetchVerifiedZhihuAccount(client: HttpClient): JsonObject? {
     val response = client.get(ZHIHU_ME_URL)
@@ -120,49 +98,6 @@ suspend fun fetchVerifiedZhihuSession(
         self = account,
     )
 }
-
-private val feedNavigationJson = Json {
-    ignoreUnknownKeys = true
-}
-
-val FeedDisplayItem.navDestination: NavDestination?
-    get() = navDestinationJson
-        ?.let { runCatching { feedNavigationJson.decodeFromString<NavDestination>(it) }.getOrNull() }
-        ?: feed?.target?.navDestination
-
-fun NavDestination.toFeedDisplayItemNavDestinationJson(): String = feedNavigationJson.encodeToString<NavDestination>(this)
-
-val Feed.Target.navDestination: NavDestination?
-    get() = when (this) {
-        is Feed.AnswerTarget -> Article(
-            title = question.title,
-            type = ArticleType.Answer,
-            id = id,
-            authorName = author?.name ?: "loading...",
-            authorBio = author?.headline ?: "",
-            avatarSrc = author?.avatarUrl,
-            excerpt = excerpt,
-        )
-
-        is Feed.ArticleTarget -> Article(
-            title = title,
-            type = ArticleType.Article,
-            id = id,
-            authorName = author.name,
-            authorBio = author.headline,
-            avatarSrc = author.avatarUrl,
-            excerpt = excerpt,
-        )
-
-        is Feed.PinTarget -> Pin(id = id, authorName = author.name)
-
-        is Feed.QuestionTarget -> Question(
-            questionId = id,
-            title = title,
-        )
-
-        is Feed.VideoTarget -> null
-    }
 
 suspend fun fetchHighestQualityZhihuVideoUrl(
     httpClient: HttpClient,
@@ -217,46 +152,3 @@ fun selectHighestQualityZhihuVideoUrl(jsonResponse: JsonObject): String? {
         ?.jsonPrimitive
         ?.content
 }
-
-object ZhihuJson {
-    val json = Json {
-        ignoreUnknownKeys = true
-        isLenient = true
-        encodeDefaults = true
-    }
-
-    @Suppress("FunctionName")
-    fun snakeCaseToCamelCase(snakeCase: String): String = snakeCase
-        .split("_")
-        .joinToString("") { it.replaceFirstChar { char -> char.uppercase() } }
-        .replaceFirstChar { it.lowercase() }
-
-    fun snakeCaseToCamelCase(json: JsonElement): JsonElement = when (json) {
-        is JsonObject -> buildJsonObject {
-            for ((key, value) in json) {
-                // cookie/cookies 的子键是服务端签发的动态凭据名，不是模型字段，必须逐字保留。
-                put(
-                    snakeCaseToCamelCase(key),
-                    if (key == "cookie" || key == "cookies") value else snakeCaseToCamelCase(value),
-                )
-            }
-        }
-
-        is JsonArray -> buildJsonArray {
-            for (item in json) {
-                add(snakeCaseToCamelCase(item))
-            }
-        }
-
-        else -> json
-    }
-
-    inline fun <reified T> decodeJson(json: JsonElement): T =
-        this.json.decodeFromJsonElement(snakeCaseToCamelCase(json))
-
-    fun <T> decodeJson(serializer: KSerializer<T>, json: JsonElement): T =
-        this.json.decodeFromJsonElement(serializer, snakeCaseToCamelCase(json))
-}
-
-typealias FollowedQuestion = FollowedQuestionImpl
-typealias FollowedTopic = FollowedTopicImpl

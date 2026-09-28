@@ -142,8 +142,9 @@ fun FeedCard(
             onClick(clickedItem, destination)
         } else {
             destination?.let(navigator.onNavigate) ?: run {
-                if (clickedItem.content?.startsWith("http") == true) {
-                    uriHandler.openUri(clickedItem.content)
+                val content = clickedItem.content
+                if (content?.startsWith("http") == true) {
+                    uriHandler.openUri(content)
                 } else {
                     userMessages.showMessage("暂不支持打开该内容", UserMessageDuration.Short)
                 }

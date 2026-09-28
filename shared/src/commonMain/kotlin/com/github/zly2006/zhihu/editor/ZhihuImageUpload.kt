@@ -38,6 +38,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.kotlincrypto.macs.hmac.sha1.HmacSHA1
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.math.min
@@ -384,7 +385,6 @@ private data class ImageStatus(
 private const val OSS_USER_AGENT =
     "aliyun-sdk-js/6.8.0 Chrome 99.0.4844.84 on Windows 10 64-bit"
 
-private const val HMAC_SHA1_BLOCK_SIZE = 64
 private val RFC1123_DAY_NAMES = arrayOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
 private val RFC1123_MONTH_NAMES = arrayOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
@@ -559,85 +559,8 @@ private fun buildOssSignatureString(
 }
 
 @OptIn(ExperimentalEncodingApi::class)
-private fun hmacSha1Base64(secret: String, message: String): String {
-    val rawKey = secret.encodeToByteArray()
-    val key = if (rawKey.size > HMAC_SHA1_BLOCK_SIZE) sha1(rawKey) else rawKey
-    val keyBlock = ByteArray(HMAC_SHA1_BLOCK_SIZE)
-    key.copyInto(keyBlock)
-
-    val outerPad = ByteArray(HMAC_SHA1_BLOCK_SIZE)
-    val innerPad = ByteArray(HMAC_SHA1_BLOCK_SIZE)
-    for (index in keyBlock.indices) {
-        outerPad[index] = (keyBlock[index].toInt() xor 0x5c).toByte()
-        innerPad[index] = (keyBlock[index].toInt() xor 0x36).toByte()
-    }
-
-    return Base64.Default.encode(sha1(outerPad + sha1(innerPad + message.encodeToByteArray())))
-}
-
-private fun sha1(input: ByteArray): ByteArray {
-    val bitLength = input.size.toLong() * 8
-    val paddedLength = (((input.size + 8) / 64) + 1) * 64
-    val padded = ByteArray(paddedLength)
-    input.copyInto(padded)
-    padded[input.size] = 0x80.toByte()
-    for (index in 0 until 8) {
-        padded[paddedLength - 1 - index] = (bitLength ushr (index * 8)).toByte()
-    }
-
-    var h0 = 0x67452301
-    var h1 = 0xefcdab89.toInt()
-    var h2 = 0x98badcfe.toInt()
-    var h3 = 0x10325476
-    var h4 = 0xc3d2e1f0.toInt()
-    val words = IntArray(80)
-
-    var chunkOffset = 0
-    while (chunkOffset < padded.size) {
-        for (index in 0 until 16) {
-            words[index] = readUInt32BigEndian(padded, chunkOffset + index * 4)
-        }
-        for (index in 16 until 80) {
-            words[index] = (words[index - 3] xor words[index - 8] xor words[index - 14] xor words[index - 16]).rotateLeft(1)
-        }
-
-        var a = h0
-        var b = h1
-        var c = h2
-        var d = h3
-        var e = h4
-
-        for (index in 0 until 80) {
-            val (f, k) = when (index) {
-                in 0..19 -> ((b and c) or (b.inv() and d)) to 0x5a827999
-                in 20..39 -> (b xor c xor d) to 0x6ed9eba1
-                in 40..59 -> ((b and c) or (b and d) or (c and d)) to 0x8f1bbcdc.toInt()
-                else -> (b xor c xor d) to 0xca62c1d6.toInt()
-            }
-            val temp = a.rotateLeft(5) + f + e + k + words[index]
-            e = d
-            d = c
-            c = b.rotateLeft(30)
-            b = a
-            a = temp
-        }
-
-        h0 += a
-        h1 += b
-        h2 += c
-        h3 += d
-        h4 += e
-        chunkOffset += 64
-    }
-
-    return ByteArray(20).apply {
-        writeIntBigEndian(0, h0)
-        writeIntBigEndian(4, h1)
-        writeIntBigEndian(8, h2)
-        writeIntBigEndian(12, h3)
-        writeIntBigEndian(16, h4)
-    }
-}
+private fun hmacSha1Base64(secret: String, message: String): String =
+    Base64.Default.encode(HmacSHA1(secret.encodeToByteArray()).doFinal(message.encodeToByteArray()))
 
 private fun isJpegStartOfFrame(marker: Int): Boolean =
     marker in 0xc0..0xcf && marker != 0xc4 && marker != 0xc8 && marker != 0xcc
@@ -666,13 +589,6 @@ private fun readUInt32LittleEndian(bytes: ByteArray, offset: Int): Int =
         ((bytes[offset + 1].toInt() and 0xff) shl 8) or
         ((bytes[offset + 2].toInt() and 0xff) shl 16) or
         ((bytes[offset + 3].toInt() and 0xff) shl 24)
-
-private fun ByteArray.writeIntBigEndian(offset: Int, value: Int) {
-    this[offset] = (value ushr 24).toByte()
-    this[offset + 1] = (value ushr 16).toByte()
-    this[offset + 2] = (value ushr 8).toByte()
-    this[offset + 3] = value.toByte()
-}
 
 private fun ByteArray.hasAscii(offset: Int, value: String): Boolean {
     if (offset + value.length > size) return false

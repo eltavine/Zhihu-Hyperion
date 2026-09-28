@@ -42,6 +42,10 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            api(projects.core.common)
+            api(projects.core.model)
+            api(projects.core.navigation)
+            api(projects.core.network)
             api(projects.sharedLocalDb)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
@@ -65,6 +69,7 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.io.core)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlincrypto.hmac.sha1)
             implementation(libs.aboutlibraries.compose.m3)
         }
         commonTest.dependencies {

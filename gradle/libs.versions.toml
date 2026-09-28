@@ -53,7 +53,10 @@ hanlp = "portable-1.8.6"
 javafx = "21.0.12"
 jsoup = "1.23.2"
 junit4 = "4.13.2"
+kermit = "2.2.0"
 koin = "4.2.2"
+kotlincrypto-hash = "0.8.0"
+kotlincrypto-macs = "0.8.0"
 ksoup = "0.2.6"
 ktor = "3.6.0"
 material-kolor = "5.0.1"
@@ -132,6 +135,7 @@ ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-client-java = { module = "io.ktor:ktor-client-java", version.ref = "ktor" }
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
+ktor-http = { module = "io.ktor:ktor-http", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 # ---- Images ----
@@ -149,6 +153,10 @@ koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
 koin-core = { module = "io.insert-koin:koin-core" }
 koin-test = { module = "io.insert-koin:koin-test" }
 
+# ---- Crypto ----
+kotlincrypto-hash-md = { module = "org.kotlincrypto.hash:md", version.ref = "kotlincrypto-hash" }
+kotlincrypto-hmac-sha1 = { module = "org.kotlincrypto.macs:hmac-sha1", version.ref = "kotlincrypto-macs" }
+
 # ---- Misc third-party ----
 aboutlibraries-compose-m3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutlibraries" }
 hanlp = { module = "com.hankcs:hanlp", version.ref = "hanlp" }
@@ -160,6 +168,7 @@ javafx-swing = { module = "org.openjfx:javafx-swing", version.ref = "javafx" }
 javafx-web = { module = "org.openjfx:javafx-web", version.ref = "javafx" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 junit4 = { module = "junit:junit", version.ref = "junit4" }
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 ksoup = { module = "com.fleeksoft.ksoup:ksoup", version.ref = "ksoup" }
 material-kolor = { module = "com.materialkolor:material-kolor", version.ref = "material-kolor" }
 onnxruntime-android = { module = "com.microsoft.onnxruntime:onnxruntime-android", version.ref = "onnxruntime" }

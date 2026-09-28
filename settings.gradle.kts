@@ -67,6 +67,10 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "Zhihu"
 include(":app")
+include(":core:common")
+include(":core:model")
+include(":core:navigation")
+include(":core:network")
 include(":desktopApp")
 include(":macosApp")
 include(":macosUiDebug")

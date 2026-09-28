@@ -87,6 +87,8 @@ import coil3.compose.AsyncImage
 import com.fleeksoft.ksoup.Ksoup
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.FeedDisplayItem
+import com.github.zly2006.zhihu.data.FollowedQuestion
+import com.github.zly2006.zhihu.data.FollowedTopic
 import com.github.zly2006.zhihu.data.OfficialBadge
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.officialBadge
@@ -287,32 +289,6 @@ class PeopleFollowingCollectionsViewModel(
 
     override val include: String
         get() = "data[*].updated_time,answer_count,follower_count,creator"
-}
-
-@Serializable
-data class FollowedQuestion(
-    val id: String,
-    val type: String = "question",
-    val url: String = "",
-    val title: String = "",
-    val questionType: String = "",
-    val created: Long = 0L,
-    val updatedTime: Long = 0L,
-)
-
-@Serializable
-data class FollowedTopic(
-    val id: String = "",
-    val type: String = "topic",
-    val url: String = "",
-    val name: String = "",
-    val avatarUrl: String? = null,
-    val topicType: String? = null,
-    val topic: DataHolder.Topic? = null,
-) {
-    val displayId: String get() = topic?.id ?: id
-    val displayName: String get() = topic?.name ?: name
-    val displayAvatarUrl: String? get() = topic?.avatarUrl ?: avatarUrl
 }
 
 class PeopleFollowingQuestionsViewModel(

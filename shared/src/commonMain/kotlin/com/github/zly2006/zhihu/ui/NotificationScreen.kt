@@ -462,14 +462,15 @@ fun NotificationItemView(
                         )
                     }
                     val emojisUsed = remember { mutableSetOf<String>() }
-                    val displayText = if (notification.content?.subTitle == "喜欢了你的评论") {
+                    val content = notification.content
+                    val displayText = if (content?.subTitle == "喜欢了你的评论") {
                         buildAnnotatedString {
-                            append(Ksoup.parse(notification.content.subText).text())
+                            append(Ksoup.parse(content.subText).text())
                         }
-                    } else if (notification.content?.subTitle?.contains("评论了") == true) {
-                        val document = Ksoup.parseBodyFragment(notification.content.abstractText)
+                    } else if (content?.subTitle?.contains("评论了") == true) {
+                        val document = Ksoup.parseBodyFragment(content.abstractText)
                         val openExternalUrl = rememberExternalUrlOpener()
-                        val string = remember(notification.content.abstractText) {
+                        val string = remember(content.abstractText) {
                             emojisUsed.clear()
                             buildAnnotatedString {
                                 dfsSimple(
@@ -484,7 +485,7 @@ fun NotificationItemView(
                         string
                     } else {
                         buildAnnotatedString {
-                            append(Ksoup.parse(notification.content?.text.orEmpty()).text())
+                            append(Ksoup.parse(content?.text.orEmpty()).text())
                         }
                     }
 

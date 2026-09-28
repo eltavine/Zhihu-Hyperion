@@ -36,7 +36,6 @@ import kotlin.test.assertNull
 class ZhihuAccountTest {
     @BeforeTest
     fun resetAuthRefreshThrottle() {
-        resetZhihuAuthenticatedRequestRefreshThrottleForTesting()
     }
 
     @Test
