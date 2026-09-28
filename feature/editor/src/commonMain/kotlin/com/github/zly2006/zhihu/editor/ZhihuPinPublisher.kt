@@ -23,7 +23,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-internal fun buildPinContentPayload(
+fun buildPinContentPayload(
     title: String,
     html: String,
     textLength: Int,
@@ -68,7 +68,7 @@ internal fun buildPinContentPayload(
             ?.let(::PinContentTopic),
     )
 
-internal fun calculatePinHtmlTextLength(html: String): Int =
+fun calculatePinHtmlTextLength(html: String): Int =
     Ksoup
         .parseBodyFragment(html)
         .body()

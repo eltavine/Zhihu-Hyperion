@@ -23,8 +23,6 @@ import kotlinx.io.files.Path
 
 internal expect val platformBottomBarItemLimit: Int?
 
-expect val platformName: String
-
 expect val isJvm: Boolean
 
 expect val isNative: Boolean

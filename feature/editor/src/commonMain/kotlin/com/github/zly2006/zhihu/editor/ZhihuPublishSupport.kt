@@ -48,7 +48,7 @@ data class PublishCommentsPermission(
     val commentPermission: String = "all",
 )
 
-internal fun newPublishTraceId(): String =
+fun newPublishTraceId(): String =
     "${Clock.System.now().toEpochMilliseconds()},${randomUuidV4()}"
 
 private fun randomUuidV4(random: Random = Random.Default): String {

@@ -228,8 +228,6 @@ actual fun rememberIsLiteVariant(): Boolean = false
 
 internal actual val platformBottomBarItemLimit: Int? = null
 
-actual val platformName: String = "JVM"
-
 actual val isJvm: Boolean = true
 
 actual val isNative: Boolean = false

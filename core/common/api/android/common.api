@@ -1,3 +1,7 @@
+public final class com/github/zly2006/zhihu/platform/PlatformName_androidKt {
+	public static final fun getPlatformName ()Ljava/lang/String;
+}
+
 public final class com/github/zly2006/zhihu/util/DisplayFormatKt {
 	public static final fun formatCompactCount (I)Ljava/lang/String;
 	public static final fun formatDailyDate (Ljava/lang/String;)Ljava/lang/String;

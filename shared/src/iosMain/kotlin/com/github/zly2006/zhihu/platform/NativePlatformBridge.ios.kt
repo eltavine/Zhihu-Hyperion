@@ -31,8 +31,6 @@ import platform.UIKit.UIPasteboard
 
 internal actual val nativeIsDesktop: Boolean = false
 
-actual val platformName: String = "iOS"
-
 // iPhone tab bars show at most five items, the same limit as Android phones.
 internal actual val platformBottomBarItemLimit: Int? = 5
 

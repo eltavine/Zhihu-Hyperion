@@ -76,8 +76,6 @@ actual fun rememberWebViewUrlOpener(): WebViewUrlOpener {
 
 internal actual val platformBottomBarItemLimit: Int? = 5
 
-actual val platformName: String = "Android"
-
 actual val isJvm: Boolean = false
 
 actual val isNative: Boolean = false

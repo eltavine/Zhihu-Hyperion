@@ -32,7 +32,7 @@ class UnknownImageFormatException(
     message: String = "无法识别图片格式，已取消上传",
 ) : IllegalArgumentException(message)
 
-internal enum class ZhihuImageUploadSource(
+enum class ZhihuImageUploadSource(
     val apiValue: String,
 ) {
     Article("article"),

@@ -244,62 +244,6 @@ interface ArticleImageExportRenderer {
     fun recycleExportBitmap(bitmap: Any)
 }
 
-interface ZhihuApiEnvironment {
-    fun httpClient(): HttpClient
-
-    fun authenticatedCookies(): Map<String, String>
-
-    suspend fun <T> withAuthenticatedClient(
-        block: suspend (client: HttpClient, cookies: Map<String, String>) -> T,
-    ): T = block(httpClient(), authenticatedCookies())
-
-    suspend fun fetchJson(
-        url: String,
-        include: String,
-    ): JsonObject? = withAuthenticatedClient { client, cookies ->
-        fetchZhihuAuthenticatedJson(client, url) {
-            method = HttpMethod.Get
-            url {
-                protocol = URLProtocol.HTTPS
-                if (include.isNotEmpty()) {
-                    parameters["include"] = include
-                }
-            }
-            signZhihuFetchRequest(cookies)
-        }
-    }
-
-    suspend fun signedGetText(url: String): String = withAuthenticatedClient { client, cookies ->
-        executeZhihuAuthenticatedRequest(client, url) {
-            method = HttpMethod.Get
-            signZhihuFetchRequest(cookies)
-        }.bodyAsText()
-    }
-
-    suspend fun refreshToken() {
-        val client = httpClient()
-        ZhihuCredentialRefresher.refreshZhihuToken(
-            ZhihuCredentialRefresher.fetchRefreshToken(client),
-            client,
-        )
-    }
-
-    suspend fun handleFetchFailure(
-        tag: String?,
-        error: Exception,
-    )
-
-    fun xsrfToken(): String = ""
-
-    fun logDecodeFailure(
-        tag: String?,
-        item: JsonElement,
-        error: Exception,
-    ) {
-        Log.e(tag ?: "PaginationViewModel", "Failed to decode item: $item", error)
-    }
-}
-
 suspend fun ZhihuApiEnvironment.fetchContentDetail(destination: NavDestination): DataHolder.Content? =
     runCatching {
         fetchZhihuContentDetail(destination) { url, include ->

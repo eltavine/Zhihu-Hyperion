@@ -13,6 +13,9 @@ final object com.github.zly2006.zhihu.util/Log { // com.github.zly2006.zhihu.uti
     final fun w(kotlin/String, kotlin/String, kotlin/Throwable? = ...) // com.github.zly2006.zhihu.util/Log.w|w(kotlin.String;kotlin.String;kotlin.Throwable?){}[0]
 }
 
+final val com.github.zly2006.zhihu.platform/platformName // com.github.zly2006.zhihu.platform/platformName|{}platformName[0]
+    final fun <get-platformName>(): kotlin/String // com.github.zly2006.zhihu.platform/platformName.<get-platformName>|<get-platformName>(){}[0]
+
 final fun (kotlin/Int).com.github.zly2006.zhihu.util/twoDigitString(): kotlin/String // com.github.zly2006.zhihu.util/twoDigitString|twoDigitString@kotlin.Int(){}[0]
 final fun com.github.zly2006.zhihu.util/formatCompactCount(kotlin/Int): kotlin/String // com.github.zly2006.zhihu.util/formatCompactCount|formatCompactCount(kotlin.Int){}[0]
 final fun com.github.zly2006.zhihu.util/formatDailyDate(kotlin/String): kotlin/String // com.github.zly2006.zhihu.util/formatDailyDate|formatDailyDate(kotlin.String){}[0]

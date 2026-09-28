@@ -52,7 +52,7 @@ import kotlin.time.Clock
  * 2) PUT https://zhihu-pics-upload.zhimg.com/v2-{hash} 上传到 OSS（GIF 走分片上传）
  * 3) GET https://api.zhihu.com/images/{image_id} 轮询直到 status=success，拿到 original_src / watermark_src
  */
-internal suspend fun uploadZhihuImage(
+suspend fun uploadZhihuImage(
     environment: ZhihuApiEnvironment,
     bytes: ByteArray,
     mimeType: String?,

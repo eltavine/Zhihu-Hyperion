@@ -74,3 +74,24 @@ public final class com/github/zly2006/zhihu/util/ZseSigner {
 	public final fun encryptZseV4 (Ljava/lang/String;)Ljava/lang/String;
 }
 
+public abstract interface class com/github/zly2006/zhihu/viewmodel/ZhihuApiEnvironment {
+	public abstract fun authenticatedCookies ()Ljava/util/Map;
+	public fun fetchJson (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun handleFetchFailure (Ljava/lang/String;Ljava/lang/Exception;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun httpClient ()Lio/ktor/client/HttpClient;
+	public fun logDecodeFailure (Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Exception;)V
+	public fun refreshToken (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun signedGetText (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun withAuthenticatedClient (Lkotlin/jvm/functions/Function3;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun xsrfToken ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/ZhihuApiEnvironment$DefaultImpls {
+	public static fun fetchJson (Lcom/github/zly2006/zhihu/viewmodel/ZhihuApiEnvironment;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun logDecodeFailure (Lcom/github/zly2006/zhihu/viewmodel/ZhihuApiEnvironment;Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;Ljava/lang/Exception;)V
+	public static fun refreshToken (Lcom/github/zly2006/zhihu/viewmodel/ZhihuApiEnvironment;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun signedGetText (Lcom/github/zly2006/zhihu/viewmodel/ZhihuApiEnvironment;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun withAuthenticatedClient (Lcom/github/zly2006/zhihu/viewmodel/ZhihuApiEnvironment;Lkotlin/jvm/functions/Function3;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun xsrfToken (Lcom/github/zly2006/zhihu/viewmodel/ZhihuApiEnvironment;)Ljava/lang/String;
+}
+

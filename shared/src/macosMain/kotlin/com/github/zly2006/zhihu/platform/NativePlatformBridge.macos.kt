@@ -35,8 +35,6 @@ import platform.Foundation.NSURL
 
 internal actual val nativeIsDesktop: Boolean = true
 
-actual val platformName: String = "macOS"
-
 fun isMacosQuitOnWindowCloseEnabled(): Boolean =
     KoinPlatform.getKoin().get<SettingsStore>().getBoolean(MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY, false)
 

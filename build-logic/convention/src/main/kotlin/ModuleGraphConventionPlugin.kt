@@ -21,6 +21,8 @@ class ModuleGraphConventionPlugin : Plugin<Project> {
                     "$VENDORED -X> :(core:.*|feature:.*|shared|$APPLICATIONS)",
                     ":core:.* -X> :(feature:.*|shared|$APPLICATIONS)",
                     ":feature:.* -X> :(shared|$APPLICATIONS)",
+                    // Features are independent vertical slices; shared code between them belongs in :core.
+                    ":feature:.* -X> :feature:.*",
                     ":shared -X> :($APPLICATIONS)",
                     // Foundation layers of :core, bottom first.
                     ":core:common -X> :.*",
