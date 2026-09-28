@@ -33,6 +33,9 @@ internal actual val nativeIsDesktop: Boolean = false
 
 actual val platformName: String = "iOS"
 
+// iPhone tab bars show at most five items, the same limit as Android phones.
+internal actual val platformBottomBarItemLimit: Int? = 5
+
 actual val isAigcVoteSupported: Boolean = false
 
 @Composable
@@ -61,7 +64,7 @@ actual fun rememberImageGalleryOpener(): ImageGalleryOpener {
         object : ImageGalleryOpener {
             override fun invoke(urls: List<String>, initialIndex: Int) {
                 if (urls.isNotEmpty()) {
-                    urls[initialIndex.coerceIn(0, urls.lastIndex)].let(openExternalUrl)
+                    openExternalUrl(urls[initialIndex.coerceIn(0, urls.lastIndex)])
                 }
             }
         }
