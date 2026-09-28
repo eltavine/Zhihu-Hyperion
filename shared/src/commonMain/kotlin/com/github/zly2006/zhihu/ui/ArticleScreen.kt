@@ -156,6 +156,7 @@ import com.github.zly2006.zhihu.ui.subscreens.DUO3_TIQIAN_MARKDOWN_PREFERENCE_KE
 import com.github.zly2006.zhihu.ui.subscreens.PREF_PAGE_TURN_SWITCH_ANSWER
 import com.github.zly2006.zhihu.util.formatCompactCount
 import com.github.zly2006.zhihu.util.smoothGradient
+import com.github.zly2006.zhihu.viewmodel.AigcVoteService
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel
 import com.github.zly2006.zhihu.viewmodel.addReadHistory
 import com.github.zly2006.zhihu.viewmodel.formatArticleDateTime
@@ -205,6 +206,7 @@ fun ArticleScreen(
     val settings = koinInject<SettingsStore>()
     val history = koinInject<HistoryStorage>()
     val contentOpens = koinInject<ContentOpenTracker>()
+    val aigcVote = koinInject<AigcVoteService>()
     val isTitleAutoHide by rememberObservedSetting(settings, "titleAutoHide") { getBoolean("titleAutoHide", false) }
     val autoHideArticleBottomBar by rememberObservedSetting(settings, "autoHideArticleBottomBar") {
         getBoolean("autoHideArticleBottomBar", false)
@@ -398,7 +400,7 @@ fun ArticleScreen(
     LaunchedEffect(scrollState) {
         snapshotFlow { scrollState.value }.collectLatest { currentScroll ->
             viewModel.updateAigcReadProgress(currentScroll, effectiveScrollMaxValue)
-            viewModel.syncAigcReadEventIfEligible(environment)
+            viewModel.syncAigcReadEventIfEligible(aigcVote)
 
             if (viewModel.rememberedScrollYSync) {
                 viewModel.rememberedScrollY = currentScroll
@@ -416,7 +418,7 @@ fun ArticleScreen(
         answerNavigationState.prepareArticle()
         viewModel.loadArticle(environment, history, contentOpens)
         viewModel.loadCollections(environment)
-        viewModel.loadAigcFlagStatus(environment)
+        viewModel.loadAigcFlagStatus(aigcVote)
     }
 
     LaunchedEffect(article.type, article.id, viewModel.content) {
@@ -424,7 +426,7 @@ fun ArticleScreen(
             viewModel.updateAigcReadProgress(scrollState.value, latestEffectiveScrollMaxValue)
             delay(15_000)
             viewModel.updateAigcReadProgress(scrollState.value, latestEffectiveScrollMaxValue)
-            viewModel.syncAigcReadEventIfEligible(environment)
+            viewModel.syncAigcReadEventIfEligible(aigcVote)
         }
     }
     LaunchedEffect(scrollState, viewModel.content) {
@@ -1247,7 +1249,7 @@ fun ArticleScreen(
         },
         onAigcFlagRequest = {
             showAigcFlagSheet = true
-            viewModel.loadAigcFlagStatus(environment)
+            viewModel.loadAigcFlagStatus(aigcVote)
         },
         onExportRequest = { showExportDialog = true },
         onSetImmersiveDoubleTap = {
@@ -1285,7 +1287,7 @@ fun ArticleScreen(
         showDialog = showAigcFlagSheet,
         viewModel = viewModel,
         onDismissRequest = { showAigcFlagSheet = false },
-        onSubmitRequest = { viewModel.submitAigcFlag(environment) },
+        onSubmitRequest = { viewModel.submitAigcFlag(aigcVote) },
     )
 
     // 使用新的收藏夹对话框组件

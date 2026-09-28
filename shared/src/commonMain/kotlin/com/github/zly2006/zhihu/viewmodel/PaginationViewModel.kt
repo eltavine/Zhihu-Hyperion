@@ -24,7 +24,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.zly2006.zhihu.data.AigcVoteVoter
 import com.github.zly2006.zhihu.data.ContentDetailCache
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.FeedDisplayItem
@@ -329,18 +328,6 @@ interface MobileHomeFeedEnvironment : ZhihuApiEnvironment {
     }
 }
 
-interface AigcVoteEnvironment {
-    fun isAigcVoteEnabled(): Boolean = false
-
-    fun aigcVoteHttpClient(): HttpClient = error("AIGC 内容标记客户端不可用")
-
-    fun aigcVoteBaseUrl(): String = ""
-
-    fun aigcVoteClientId(): String = ""
-
-    fun aigcVoteVoter(): AigcVoteVoter? = null
-}
-
 interface LocalRecommendationEnvironment : ZhihuApiEnvironment {
     suspend fun handleLocalRecommendationFailure(error: Exception) {
         handleFetchFailure("LocalHomeFeedViewModel", error)
@@ -395,20 +382,11 @@ interface ArticleExportContentEnvironment :
     ArticleExportEnvironment,
     ZhihuApiEnvironment
 
-interface ContentLoadEnvironment :
-    ZhihuApiEnvironment,
-    AigcVoteEnvironment
-
-interface ArticleLoadEnvironment :
-    ZhihuApiEnvironment,
-    ContentLoadEnvironment
-
 interface PaginationEnvironment :
     ZhihuApiEnvironment,
     MobileHomeFeedEnvironment,
     LocalRecommendationEnvironment,
     ClipboardEnvironment,
-    ArticleLoadEnvironment,
     ArticleExportContentEnvironment
 
 data class FeedDisplaySettings(

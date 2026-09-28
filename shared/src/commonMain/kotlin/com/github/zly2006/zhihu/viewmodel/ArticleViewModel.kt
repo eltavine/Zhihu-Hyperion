@@ -255,7 +255,7 @@ class ArticleViewModel(
 
     @OptIn(ExperimentalStdlibApi::class)
     fun loadArticle(
-        environment: ArticleLoadEnvironment,
+        environment: ZhihuApiEnvironment,
         history: HistoryStorage,
         contentOpens: ContentOpenTracker,
     ) {
@@ -679,12 +679,12 @@ class ArticleViewModel(
 
     fun isAigcFlagEvidenceReady(): Boolean = currentAigcReadEvidence().isEligibleForCredit()
 
-    fun loadAigcFlagStatus(environment: AigcVoteEnvironment) {
-        aigcVoteAvailable = isAigcVoteSupported && environment.isAigcVoteEnabled()
-        val voter = environment.aigcVoteVoter()
+    fun loadAigcFlagStatus(aigcVote: AigcVoteService) {
+        aigcVoteAvailable = isAigcVoteSupported && aigcVote.isEnabled()
+        val voter = aigcVote.voter()
         aigcVoterName = voter?.name.orEmpty()
         if (!aigcVoteAvailable) return
-        val client = environment.aigcVoteHttpClient()
+        val client = aigcVote.httpClient
 
         viewModelScope.launch {
             aigcVoteLoading = true
@@ -692,10 +692,10 @@ class ArticleViewModel(
             try {
                 val response = client
                     .get(
-                        "${environment.aigcVoteBaseUrl().trimEnd('/')}/v1/contents/" +
+                        "${aigcVote.baseUrl().trimEnd('/')}/v1/contents/" +
                             "${aigcContentType()}/${article.id}/aigc-flag",
                     ) {
-                        parameter("client_id", environment.aigcVoteClientId())
+                        parameter("client_id", aigcVote.clientId())
                         voter?.let {
                             parameter("voter_id", it.id)
                             parameter("voter_name", it.name)
@@ -721,10 +721,10 @@ class ArticleViewModel(
         }
     }
 
-    fun syncAigcReadEventIfEligible(environment: AigcVoteEnvironment) {
-        aigcVoteAvailable = isAigcVoteSupported && environment.isAigcVoteEnabled()
+    fun syncAigcReadEventIfEligible(aigcVote: AigcVoteService) {
+        aigcVoteAvailable = isAigcVoteSupported && aigcVote.isEnabled()
         if (!aigcVoteAvailable || aigcReadSyncStarted || content.isBlank()) return
-        val client = environment.aigcVoteHttpClient()
+        val client = aigcVote.httpClient
 
         val evidence = currentAigcReadEvidence()
         val contentUpdatedAt = currentContentUpdatedAt()
@@ -743,9 +743,9 @@ class ArticleViewModel(
                     evidence = evidence,
                 )
                 val response = client
-                    .post("${environment.aigcVoteBaseUrl().trimEnd('/')}/v1/read-events:batch") {
+                    .post("${aigcVote.baseUrl().trimEnd('/')}/v1/read-events:batch") {
                         contentType(ContentType.Application.Json)
-                        setBody(AigcVoteReadEventsRequest(environment.aigcVoteClientId(), listOf(event.toRequestEvent())))
+                        setBody(AigcVoteReadEventsRequest(aigcVote.clientId(), listOf(event.toRequestEvent())))
                     }.body<AigcVoteReadEventsResponse>()
                 aigcVoteCredit = response.credit
                 aigcVoteProgress = response.progress
@@ -761,20 +761,20 @@ class ArticleViewModel(
         }
     }
 
-    fun submitAigcFlag(environment: AigcVoteEnvironment) {
-        aigcVoteAvailable = isAigcVoteSupported && environment.isAigcVoteEnabled()
+    fun submitAigcFlag(aigcVote: AigcVoteService) {
+        aigcVoteAvailable = isAigcVoteSupported && aigcVote.isEnabled()
         if (!aigcVoteAvailable) {
             aigcVoteError = "未配置 AIGC 投票服务"
             userMessages.showShortMessage(aigcVoteError!!)
             return
         }
-        val client = environment.aigcVoteHttpClient()
+        val client = aigcVote.httpClient
         if (content.isBlank()) {
             aigcVoteError = "正文尚未加载完成"
             userMessages.showShortMessage(aigcVoteError!!)
             return
         }
-        val voter = environment.aigcVoteVoter()
+        val voter = aigcVote.voter()
         aigcVoterName = voter?.name.orEmpty()
         if (voter == null) {
             aigcVoteError = "需要登录后才能记名投票"
@@ -808,13 +808,13 @@ class ArticleViewModel(
                 )
                 val response = client
                     .post(
-                        "${environment.aigcVoteBaseUrl().trimEnd('/')}/v1/contents/" +
+                        "${aigcVote.baseUrl().trimEnd('/')}/v1/contents/" +
                             "${submission.contentType}/${submission.contentId}/aigc-flag",
                     ) {
                         contentType(ContentType.Application.Json)
                         setBody(
                             AigcVoteFlagRequest(
-                                clientId = environment.aigcVoteClientId(),
+                                clientId = aigcVote.clientId(),
                                 voter = submission.voter,
                                 title = submission.title,
                                 authorHash = submission.authorHash,
