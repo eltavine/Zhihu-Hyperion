@@ -97,20 +97,38 @@ import com.github.zly2006.zhihu.navigation.OnlineHistory
 import com.github.zly2006.zhihu.navigation.TopLevelDestination
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isAnswerSwipeSupported
+import com.github.zly2006.zhihu.platform.isLegacyWebViewSupported
 import com.github.zly2006.zhihu.platform.isPageTurnSupported
 import com.github.zly2006.zhihu.platform.platformBottomBarItemLimit
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
+import com.github.zly2006.zhihu.theme.DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY
+import com.github.zly2006.zhihu.theme.DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY
+import com.github.zly2006.zhihu.theme.PREF_BLOCK_SPACING
+import com.github.zly2006.zhihu.theme.PREF_FONT_SIZE
+import com.github.zly2006.zhihu.theme.PREF_LINE_HEIGHT
 import com.github.zly2006.zhihu.theme.ThemeManager
 import com.github.zly2006.zhihu.theme.ThemeMode
-import com.github.zly2006.zhihu.ui.ANSWER_DOUBLE_TAP_ACTION_PREFERENCE_KEY
-import com.github.zly2006.zhihu.ui.ARTICLE_USE_WEBVIEW_PREFERENCE_KEY
-import com.github.zly2006.zhihu.ui.AnswerDoubleTapAction
+import com.github.zly2006.zhihu.ui.article.ANSWER_DOUBLE_TAP_ACTION_PREFERENCE_KEY
+import com.github.zly2006.zhihu.ui.article.ARTICLE_USE_WEBVIEW_PREFERENCE_KEY
+import com.github.zly2006.zhihu.ui.article.AnswerDoubleTapAction
 import com.github.zly2006.zhihu.ui.components.ANSWER_SWITCH_SENSITIVITY_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.components.ColorPickerDialog
 import com.github.zly2006.zhihu.ui.components.DEFAULT_ANSWER_SWITCH_SENSITIVITY
+import com.github.zly2006.zhihu.ui.components.DEFAULT_FAB_OPACITY
+import com.github.zly2006.zhihu.ui.components.DEFAULT_PAGE_TURN_PERCENT
+import com.github.zly2006.zhihu.ui.components.DEFAULT_PAGE_TURN_SWITCH_ANSWER
+import com.github.zly2006.zhihu.ui.components.DEFAULT_SHOW_CONTENT_END_MARKER
+import com.github.zly2006.zhihu.ui.components.DEFAULT_SHOW_PAGE_TURN_GUIDE
 import com.github.zly2006.zhihu.ui.components.DISABLE_BOTTOM_SHEET_ROUNDED_CORNERS_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.components.MAX_ANSWER_SWITCH_SENSITIVITY
 import com.github.zly2006.zhihu.ui.components.MIN_ANSWER_SWITCH_SENSITIVITY
+import com.github.zly2006.zhihu.ui.components.PREF_FAB_OPACITY
+import com.github.zly2006.zhihu.ui.components.PREF_PAGE_TURN_PERCENT
+import com.github.zly2006.zhihu.ui.components.PREF_PAGE_TURN_SWITCH_ANSWER
+import com.github.zly2006.zhihu.ui.components.PREF_SHOW_CONTENT_END_MARKER
+import com.github.zly2006.zhihu.ui.components.PREF_SHOW_PAGE_TURN_FAB
+import com.github.zly2006.zhihu.ui.components.PREF_SHOW_PAGE_TURN_GUIDE
+import com.github.zly2006.zhihu.ui.components.PREF_VOLUME_KEY_PAGE_TURN
 import com.github.zly2006.zhihu.ui.components.SettingItem
 import com.github.zly2006.zhihu.ui.components.SettingItemGroup
 import com.github.zly2006.zhihu.ui.components.SettingItemOverall
@@ -118,7 +136,6 @@ import com.github.zly2006.zhihu.ui.components.SettingItemWithSwitch
 import com.github.zly2006.zhihu.ui.components.normalizedAnswerSwitchSensitivity
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
-import com.github.zly2006.zhihu.ui.isLegacyWebViewSupported
 import kotlinx.coroutines.delay
 import org.koin.compose.koinInject
 import kotlin.math.abs
@@ -126,23 +143,6 @@ import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.milliseconds
 
 const val DUO3_CARD_LARGE_TITLE_PREFERENCE_KEY = "duo3_card_large_title"
-const val DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY = "duo3_tiqian_markdown"
-const val DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY = "duo3_tiqian_math_font"
-const val PREF_FONT_SIZE = "contentFontSize"
-const val PREF_LINE_HEIGHT = "contentLineHeight"
-const val PREF_BLOCK_SPACING = "contentBlockSpacing"
-const val PREF_FAB_OPACITY = "fabOpacity"
-const val DEFAULT_FAB_OPACITY = 100
-const val PREF_PAGE_TURN_PERCENT = "pageTurnPercent"
-const val DEFAULT_PAGE_TURN_PERCENT = 90
-const val PREF_PAGE_TURN_SWITCH_ANSWER = "pageTurnSwitchAnswer"
-const val DEFAULT_PAGE_TURN_SWITCH_ANSWER = true
-const val PREF_SHOW_PAGE_TURN_FAB = "showPageTurnFab"
-const val PREF_SHOW_PAGE_TURN_GUIDE = "showPageTurnGuide"
-const val DEFAULT_SHOW_PAGE_TURN_GUIDE = false
-const val PREF_SHOW_CONTENT_END_MARKER = "showContentEndMarker"
-const val DEFAULT_SHOW_CONTENT_END_MARKER = false
-const val PREF_VOLUME_KEY_PAGE_TURN = "volumeKeyPageTurn"
 const val APPEARANCE_SETTINGS_SCROLL_TAG = "appearanceSettings.scroll"
 const val APPEARANCE_SETTINGS_START_DESTINATION_TAG = "appearanceSettings.startDestination"
 const val APPEARANCE_SETTINGS_ANSWER_DOUBLE_TAP_TAG = "appearanceSettings.answerDoubleTap"

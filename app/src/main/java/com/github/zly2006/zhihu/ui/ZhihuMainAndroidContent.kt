@@ -35,8 +35,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.github.zly2006.zhihu.MainActivity
 import com.github.zly2006.zhihu.platform.androidUserMessageSink
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerSwitchState
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerTransitionDirection
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel
-import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
+import org.koin.compose.koinInject
 
 /**
  * Android 平台的 Zhihu++ 主界面入口。
@@ -47,6 +49,7 @@ import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 @Composable
 fun AndroidZhihuMain(navController: NavHostController) {
     val activity = LocalActivity.current as MainActivity
+    val answerSwitchState = koinInject<ArticleAnswerSwitchState>()
     val isTablet = LocalConfiguration.current.smallestScreenWidthDp >= 600
     ZhihuMain(
         navController = navController,
@@ -60,7 +63,7 @@ fun AndroidZhihuMain(navController: NavHostController) {
         preferenceState = rememberAndroidZhihuMainPreferenceState(),
         isDarkTheme = com.github.zly2006.zhihu.theme.ThemeManager.isDarkTheme,
         articleEnterTransition = {
-            when (sharedArticleAnswerSwitchState.answerTransitionDirection) {
+            when (answerSwitchState.answerTransitionDirection) {
                 ArticleAnswerTransitionDirection.VERTICAL_NEXT -> {
                     slideInVertically(tween(300)) { it } + fadeIn(tween(300))
                 }
@@ -83,7 +86,7 @@ fun AndroidZhihuMain(navController: NavHostController) {
             }
         },
         articleExitTransition = {
-            when (sharedArticleAnswerSwitchState.answerTransitionDirection) {
+            when (answerSwitchState.answerTransitionDirection) {
                 ArticleAnswerTransitionDirection.VERTICAL_NEXT -> {
                     slideOutVertically(tween(300)) { -it } + fadeOut(tween(300))
                 }

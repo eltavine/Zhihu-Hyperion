@@ -28,12 +28,12 @@ import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.nlp.KeywordWithWeight
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.util.Log
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedKeyword
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedQuestionAuthor
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUser
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.KeywordType
-import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.intOrNull
@@ -57,7 +57,7 @@ fun FeedAuthorBlockConfirmDialog(
     val coroutineScope = rememberCoroutineScope()
     val userMessages = rememberUserMessageSink()
     val database = koinInject<ContentFilterDatabase>()
-    val environment = rememberZhihuApiEnvironment(allowGuestAccess = false)
+    val environment = koinInject<ZhihuApiEnvironment>()
     var questionAuthorStats by remember(request) { mutableStateOf<QuestionAuthorActivityStats?>(null) }
     var isQuestionAuthorStatsLoading by remember(request) {
         mutableStateOf(request?.type == FeedAuthorBlockType.QUESTION_AUTHOR)

@@ -25,11 +25,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
+import com.github.zly2006.zhihu.data.FeedDisplaySettings
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.sourceLabel
 import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.platform.SettingsStore
-import com.github.zly2006.zhihu.viewmodel.FeedDisplaySettings
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable

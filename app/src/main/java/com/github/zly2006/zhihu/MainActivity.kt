@@ -49,6 +49,7 @@ import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
 import com.github.zly2006.zhihu.filter.ContentOpenTracker
+import com.github.zly2006.zhihu.navigation.AndroidArticleNavigationHandoff
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.CollectionContent
@@ -69,14 +70,13 @@ import com.github.zly2006.zhihu.platform.androidUserMessageSink
 import com.github.zly2006.zhihu.reading.ContentReadingService
 import com.github.zly2006.zhihu.theme.AndroidThemeSettings
 import com.github.zly2006.zhihu.theme.ZhihuTheme
-import com.github.zly2006.zhihu.ui.AndroidArticleNavigationHandoff
 import com.github.zly2006.zhihu.ui.AndroidZhihuMain
 import com.github.zly2006.zhihu.ui.components.LocalPageTurnDispatcher
+import com.github.zly2006.zhihu.ui.components.PREF_VOLUME_KEY_PAGE_TURN
 import com.github.zly2006.zhihu.ui.components.PageTurnCommand
 import com.github.zly2006.zhihu.ui.components.PageTurnDispatcher
 import com.github.zly2006.zhihu.ui.components.PageTurnFab
 import com.github.zly2006.zhihu.ui.components.getHighestQualityVideoUrl
-import com.github.zly2006.zhihu.ui.subscreens.PREF_VOLUME_KEY_PAGE_TURN
 import com.github.zly2006.zhihu.updater.UpdateManager
 import com.github.zly2006.zhihu.util.ContinuousUsageReminderManager
 import com.github.zly2006.zhihu.util.EmojiManager

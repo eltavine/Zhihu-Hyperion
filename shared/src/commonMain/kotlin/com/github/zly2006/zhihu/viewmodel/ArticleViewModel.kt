@@ -49,9 +49,6 @@ import com.github.zly2006.zhihu.markdown.htmlToMdAst
 import com.github.zly2006.zhihu.markdown.toMarkdown
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
-import com.github.zly2006.zhihu.navigation.CollectionAnswerNavigator
-import com.github.zly2006.zhihu.navigation.PaginationInfoNavigator
-import com.github.zly2006.zhihu.navigation.QuestionAnswerNavigator
 import com.github.zly2006.zhihu.platform.PlainTextClipboard
 import com.github.zly2006.zhihu.platform.UserMessageSink
 import com.github.zly2006.zhihu.platform.isAigcVoteSupported
@@ -252,20 +249,19 @@ class ArticleViewModel(
         get() = collections.any { it.isFavorited }
 
     // todo: replace this with sqlite
-    open class ArticlesSharedData : ArticleAnswerSwitchData()
-
     @OptIn(ExperimentalStdlibApi::class)
     fun loadArticle(
         environment: ZhihuApiEnvironment,
         history: HistoryStorage,
         contentOpens: ContentOpenTracker,
+        answerSwitchState: ArticleAnswerSwitchState,
     ) {
         if (httpClient == null) return
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
                 try {
                     if (article.type == ArticleType.Answer) {
-                        val sharedData = sharedArticleAnswerSwitchState
+                        val sharedData = answerSwitchState
                         val answer = environment.fetchContentDetail(article) as? DataHolder.Answer
                         if (answer != null) {
                             exportSourceContent = answer

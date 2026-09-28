@@ -17,11 +17,48 @@ public final class com/github/zly2006/zhihu/data/DataModuleKt {
 	public static final fun dataModule (Lkotlinx/io/files/Path;)Lorg/koin/core/module/Module;
 }
 
+public final class com/github/zly2006/zhihu/data/FeedDisplaySettings {
+	public fun <init> ()V
+	public fun <init> (Lcom/github/zly2006/zhihu/data/QualityFilterMode;Lcom/github/zly2006/zhihu/data/QualityFilterSettings;Z)V
+	public synthetic fun <init> (Lcom/github/zly2006/zhihu/data/QualityFilterMode;Lcom/github/zly2006/zhihu/data/QualityFilterSettings;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/github/zly2006/zhihu/data/QualityFilterMode;
+	public final fun component2 ()Lcom/github/zly2006/zhihu/data/QualityFilterSettings;
+	public final fun component3 ()Z
+	public final fun copy (Lcom/github/zly2006/zhihu/data/QualityFilterMode;Lcom/github/zly2006/zhihu/data/QualityFilterSettings;Z)Lcom/github/zly2006/zhihu/data/FeedDisplaySettings;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/data/FeedDisplaySettings;Lcom/github/zly2006/zhihu/data/QualityFilterMode;Lcom/github/zly2006/zhihu/data/QualityFilterSettings;ZILjava/lang/Object;)Lcom/github/zly2006/zhihu/data/FeedDisplaySettings;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getQualityFilter ()Lcom/github/zly2006/zhihu/data/QualityFilterSettings;
+	public final fun getQualityFilterMode ()Lcom/github/zly2006/zhihu/data/QualityFilterMode;
+	public final fun getReverseBlock ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/data/FeedDisplaySettingsKt {
+	public static final field ANSWER_VOTEUP_THRESHOLD_PREFERENCE_KEY Ljava/lang/String;
+	public static final field ARTICLE_FOLLOWERS_THRESHOLD_PREFERENCE_KEY Ljava/lang/String;
+	public static final field ARTICLE_VOTEUP_THRESHOLD_PREFERENCE_KEY Ljava/lang/String;
+	public static final field QUALITY_FILTER_MODE_PREFERENCE_KEY Ljava/lang/String;
+	public static final field QUESTION_ANSWER_THRESHOLD_PREFERENCE_KEY Ljava/lang/String;
+	public static final field QUESTION_FOLLOWERS_THRESHOLD_PREFERENCE_KEY Ljava/lang/String;
+	public static final field VIDEO_FOLLOWERS_THRESHOLD_PREFERENCE_KEY Ljava/lang/String;
+	public static final field VIDEO_VOTE_THRESHOLD_PREFERENCE_KEY Ljava/lang/String;
+}
+
 public final class com/github/zly2006/zhihu/data/HistoryStorage {
 	public fun <init> (Lcom/github/zly2006/zhihu/util/TextDocumentStore;)V
 	public final fun add (Lcom/github/zly2006/zhihu/navigation/NavDestination;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun clear (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getHistory ()Ljava/util/List;
+}
+
+public final class com/github/zly2006/zhihu/data/QualityFilterMode : java/lang/Enum {
+	public static final field HIDE Lcom/github/zly2006/zhihu/data/QualityFilterMode;
+	public static final field OFF Lcom/github/zly2006/zhihu/data/QualityFilterMode;
+	public static final field RULES Lcom/github/zly2006/zhihu/data/QualityFilterMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/zly2006/zhihu/data/QualityFilterMode;
+	public static fun values ()[Lcom/github/zly2006/zhihu/data/QualityFilterMode;
 }
 
 public final class com/github/zly2006/zhihu/data/ZhihuDailyClientKt {

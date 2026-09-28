@@ -76,8 +76,9 @@ import com.github.zly2006.zhihu.ui.subscreens.navDestinationFromName
 import com.github.zly2006.zhihu.ui.subscreens.normalizeBottomBarSelection
 import com.github.zly2006.zhihu.ui.subscreens.resolveValidStartDestinationKey
 import com.github.zly2006.zhihu.util.signZhihuFetchRequest
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerSwitchState
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerTransitionDirection
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel
-import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -94,6 +95,7 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
     val navController = rememberNavController()
     val accountStore = koinInject<ZhihuAccountStore>()
     val contentOpens = koinInject<ContentOpenTracker>()
+    val answerSwitchState = koinInject<ArticleAnswerSwitchState>()
     val accounts by accountStore.accountsState.collectAsState()
     val accountSession = accounts.session
     val httpClient = remember(accountStore, accountSession) { accountStore.client.httpClient() }
@@ -230,7 +232,7 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
             showHomeTopActions = windowChrome == null,
             onCurrentMainTabDestinationChange = { currentMainTabDestination = it },
             articleEnterTransition = {
-                when (sharedArticleAnswerSwitchState.answerTransitionDirection) {
+                when (answerSwitchState.answerTransitionDirection) {
                     ArticleAnswerTransitionDirection.VERTICAL_NEXT -> {
                         slideInVertically(tween(300)) { it } + fadeIn(tween(300))
                     }
@@ -253,7 +255,7 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
                 }
             },
             articleExitTransition = {
-                when (sharedArticleAnswerSwitchState.answerTransitionDirection) {
+                when (answerSwitchState.answerTransitionDirection) {
                     ArticleAnswerTransitionDirection.VERTICAL_NEXT -> {
                         slideOutVertically(tween(300)) { -it } + fadeOut(tween(300))
                     }

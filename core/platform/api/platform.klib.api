@@ -74,6 +74,8 @@ final val com.github.zly2006.zhihu.platform/isFeedQualityFilterSupported // com.
     final fun <get-isFeedQualityFilterSupported>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isFeedQualityFilterSupported.<get-isFeedQualityFilterSupported>|<get-isFeedQualityFilterSupported>(){}[0]
 final val com.github.zly2006.zhihu.platform/isJvm // com.github.zly2006.zhihu.platform/isJvm|{}isJvm[0]
     final fun <get-isJvm>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isJvm.<get-isJvm>|<get-isJvm>(){}[0]
+final val com.github.zly2006.zhihu.platform/isLegacyWebViewSupported // com.github.zly2006.zhihu.platform/isLegacyWebViewSupported|{}isLegacyWebViewSupported[0]
+    final fun <get-isLegacyWebViewSupported>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isLegacyWebViewSupported.<get-isLegacyWebViewSupported>|<get-isLegacyWebViewSupported>(){}[0]
 final val com.github.zly2006.zhihu.platform/isNative // com.github.zly2006.zhihu.platform/isNative|{}isNative[0]
     final fun <get-isNative>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isNative.<get-isNative>|<get-isNative>(){}[0]
 final val com.github.zly2006.zhihu.platform/isPageTurnSupported // com.github.zly2006.zhihu.platform/isPageTurnSupported|{}isPageTurnSupported[0]

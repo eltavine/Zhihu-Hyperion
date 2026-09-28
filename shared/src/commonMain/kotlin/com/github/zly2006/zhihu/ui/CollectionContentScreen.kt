@@ -59,7 +59,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
-import com.github.zly2006.zhihu.navigation.CollectionAnswerNavigator
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.platform.PlatformBackHandler
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
@@ -68,13 +67,15 @@ import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerSwitchState
+import com.github.zly2006.zhihu.viewmodel.CollectionAnswerNavigator
 import com.github.zly2006.zhihu.viewmodel.CollectionContentViewModel
 import com.github.zly2006.zhihu.viewmodel.CollectionHtmlExportDialogState
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.formatArticleDateTime
 import com.github.zly2006.zhihu.viewmodel.rememberContentExporter
 import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
-import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -200,7 +201,7 @@ internal fun CollectionContentBody(
     displayItems: List<FeedDisplayItem> = viewModel.displayItems,
 ) {
     val navigator = LocalNavigator.current
-    val sharedData = sharedArticleAnswerSwitchState
+    val sharedData = koinInject<ArticleAnswerSwitchState>()
     val readingQueueSourceId = "collection:$collectionId:contents"
     RegisterReadingQueueSource(
         sourceId = readingQueueSourceId,

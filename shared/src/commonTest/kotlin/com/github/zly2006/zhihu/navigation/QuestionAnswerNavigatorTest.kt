@@ -17,6 +17,7 @@
 
 package com.github.zly2006.zhihu.navigation
 
+import com.github.zly2006.zhihu.viewmodel.QuestionAnswerNavigator
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.CompletableDeferred

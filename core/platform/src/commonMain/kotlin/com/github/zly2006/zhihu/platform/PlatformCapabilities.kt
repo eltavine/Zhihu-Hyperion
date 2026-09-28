@@ -32,6 +32,9 @@ expect val isAigcVoteSupported: Boolean
 /** 信息流按赞数、关注数等规则标记或隐藏低质量内容；未支持的平台忽略质量屏蔽设置。 */
 expect val isFeedQualityFilterSupported: Boolean
 
+/** 旧版 WebView 正文渲染；只有 Android 提供，其他平台始终使用 Compose Markdown。 */
+expect val isLegacyWebViewSupported: Boolean
+
 expect val isBlocklistNlpSupported: Boolean
 
 expect val isSentenceSimilaritySupported: Boolean

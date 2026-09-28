@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.zly2006.zhihu.navigation
+package com.github.zly2006.zhihu.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -29,12 +29,12 @@ import com.github.zly2006.zhihu.data.navDestination
 import com.github.zly2006.zhihu.data.officialBadge
 import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
+import com.github.zly2006.zhihu.navigation.Article
+import com.github.zly2006.zhihu.navigation.ArticleType
+import com.github.zly2006.zhihu.navigation.zhihuQuestionFeedsUrl
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel.CachedAnswerContent
-import com.github.zly2006.zhihu.viewmodel.CollectionItem
-import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.ContentType
-import com.github.zly2006.zhihu.viewmodel.getOrFetchContentDetail
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.JsonElement

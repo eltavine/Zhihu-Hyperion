@@ -72,11 +72,11 @@ import com.github.zly2006.zhihu.platform.isSentenceSimilaritySupported
 import com.github.zly2006.zhihu.platform.rememberIsLiteVariant
 import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
-import com.github.zly2006.zhihu.ui.HOME_PIN_ANNOUNCEMENT_READ_KEY_PREFIX
-import com.github.zly2006.zhihu.ui.TtsState
+import com.github.zly2006.zhihu.reading.TtsState
 import com.github.zly2006.zhihu.ui.components.SettingItemOverall
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
+import com.github.zly2006.zhihu.viewmodel.feed.HOME_PIN_ANNOUNCEMENT_READ_KEY_PREFIX
 import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject

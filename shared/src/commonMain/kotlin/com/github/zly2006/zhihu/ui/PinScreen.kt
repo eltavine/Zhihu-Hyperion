@@ -101,7 +101,6 @@ import com.github.zly2006.zhihu.reading.loadReadingPreferences
 import com.github.zly2006.zhihu.reading.rememberReadingPlayerController
 import com.github.zly2006.zhihu.reading.toReadingQueueItem
 import com.github.zly2006.zhihu.ui.components.AuthorBadge
-import com.github.zly2006.zhihu.ui.components.CommentScreenComponent
 import com.github.zly2006.zhihu.ui.components.ContentEndMarker
 import com.github.zly2006.zhihu.ui.components.PageTurnTarget
 import com.github.zly2006.zhihu.ui.components.ShareDialog

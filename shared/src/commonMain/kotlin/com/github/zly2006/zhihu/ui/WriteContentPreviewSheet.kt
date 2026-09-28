@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.zly2006.zhihu.ui.components
+package com.github.zly2006.zhihu.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,9 +41,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.github.zly2006.zhihu.markdown.RenderMarkdown
 import com.github.zly2006.zhihu.markdown.RenderMarkdownText
-import com.github.zly2006.zhihu.ui.ZhihuHtmlWebViewContent
-import com.github.zly2006.zhihu.ui.isLegacyWebViewSupported
-import com.github.zly2006.zhihu.ui.questionSelectionWorkaround
+import com.github.zly2006.zhihu.platform.isLegacyWebViewSupported
+import com.github.zly2006.zhihu.ui.components.MyModalBottomSheet
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -34,7 +34,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -58,8 +57,6 @@ internal const val DEFAULT_LIST_PANE_RATIO = 1f / 3f
 internal val MIN_LIST_PANE_WIDTH = 320.dp
 internal val MIN_DETAIL_PANE_WIDTH = 480.dp
 internal val LIST_DETAIL_DIVIDER_WIDTH = 16.dp
-
-internal val LocalSelectedContentDestination = compositionLocalOf<NavDestination?> { null }
 
 internal fun NavDestination.isDetailPaneDestination(): Boolean = when (this) {
     is Article, is Pin -> true

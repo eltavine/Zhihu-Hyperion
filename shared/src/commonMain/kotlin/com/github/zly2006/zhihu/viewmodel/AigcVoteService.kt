@@ -23,6 +23,8 @@ import com.github.zly2006.zhihu.data.AigcVoteVoter
 import com.github.zly2006.zhihu.data.Person
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.platform.SettingsStore
+import com.github.zly2006.zhihu.util.AIGC_VOTE_SERVER_URL_KEY
+import com.github.zly2006.zhihu.util.DEFAULT_AIGC_VOTE_SERVER_URL
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -30,9 +32,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-internal const val AIGC_VOTE_SERVER_URL_KEY = "aigcVoteServerUrl"
 private const val AIGC_VOTE_CLIENT_ID_KEY = "aigcVoteClientId"
-private const val DEFAULT_AIGC_VOTE_SERVER_URL = "https://aigc-vote.ai.fintechedu.cn"
 
 /**
  * 自建 AIGC 标记服务的连接：服务地址、匿名客户端 ID、当前投票人与共享 HttpClient。

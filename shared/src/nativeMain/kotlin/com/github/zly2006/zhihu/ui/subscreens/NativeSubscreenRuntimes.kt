@@ -26,8 +26,8 @@ import com.github.zly2006.zhihu.platform.nativeBundledResourcePath
 import com.github.zly2006.zhihu.platform.nativeIsDesktop
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
-import com.github.zly2006.zhihu.ui.NativeArticleSpeechController
-import com.github.zly2006.zhihu.ui.TtsState
+import com.github.zly2006.zhihu.reading.NativeArticleSpeechController
+import com.github.zly2006.zhihu.reading.TtsState
 import com.github.zly2006.zhihu.updater.SemanticVersion
 import com.github.zly2006.zhihu.updater.extractGithubReleaseNotes
 import com.github.zly2006.zhihu.updater.fetchLatestZhihuRelease

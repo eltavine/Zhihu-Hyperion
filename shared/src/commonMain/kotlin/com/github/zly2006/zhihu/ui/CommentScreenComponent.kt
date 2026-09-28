@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.zly2006.zhihu.ui.components
+package com.github.zly2006.zhihu.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -52,9 +52,7 @@ import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.theme.Typography
-import com.github.zly2006.zhihu.ui.CommentScreen
-import com.github.zly2006.zhihu.ui.commentThreadKey
-import com.github.zly2006.zhihu.ui.consumePendingCommentId
+import com.github.zly2006.zhihu.ui.components.MyModalBottomSheet
 import com.github.zly2006.zhihu.viewmodel.CommentItem
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString

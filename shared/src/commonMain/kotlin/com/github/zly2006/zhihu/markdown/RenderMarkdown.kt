@@ -68,16 +68,10 @@ import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
 import com.github.zly2006.zhihu.platform.rememberImageGalleryOpener
 import com.github.zly2006.zhihu.platform.rememberImageSaver
 import com.github.zly2006.zhihu.platform.rememberImageSharer
-import com.github.zly2006.zhihu.ui.components.CommentScreenComponent
-import com.github.zly2006.zhihu.ui.components.LocalSegmentActionSheetHost
-import com.github.zly2006.zhihu.ui.components.LocalSegmentCommentHost
-import com.github.zly2006.zhihu.ui.components.SegmentActionSheet
-import com.github.zly2006.zhihu.ui.components.SegmentActionSheetState
-import com.github.zly2006.zhihu.ui.components.SegmentHighlightInteractionHost
-import com.github.zly2006.zhihu.ui.subscreens.DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY
-import com.github.zly2006.zhihu.ui.subscreens.PREF_BLOCK_SPACING
-import com.github.zly2006.zhihu.ui.subscreens.PREF_FONT_SIZE
-import com.github.zly2006.zhihu.ui.subscreens.PREF_LINE_HEIGHT
+import com.github.zly2006.zhihu.theme.DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY
+import com.github.zly2006.zhihu.theme.PREF_BLOCK_SPACING
+import com.github.zly2006.zhihu.theme.PREF_FONT_SIZE
+import com.github.zly2006.zhihu.theme.PREF_LINE_HEIGHT
 import com.hrm.markdown.parser.ast.Document
 import com.hrm.markdown.renderer.Markdown
 import com.hrm.markdown.renderer.MarkdownImageData
@@ -324,10 +318,12 @@ private fun RenderMarkdownDocument(
     val lineHeight = settings.getInt(PREF_LINE_HEIGHT, 160)
     val blockSpacing = settings.getInt(PREF_BLOCK_SPACING, 100)
     var segmentCommentTarget by remember { mutableStateOf<SegmentCommentHolder?>(null) }
+    var lastSegmentCommentTarget by remember { mutableStateOf<SegmentCommentHolder?>(null) }
     var segmentActionSheetState by remember { mutableStateOf<SegmentActionSheetState?>(null) }
     CompositionLocalProvider(
         LocalSegmentCommentHost provides { target ->
             segmentCommentTarget = target
+            lastSegmentCommentTarget = target
         },
         LocalSegmentActionSheetHost provides { state -> segmentActionSheetState = state },
     ) {
@@ -391,11 +387,9 @@ private fun RenderMarkdownDocument(
             }
         }
     }
-    CommentScreenComponent(
-        showComments = segmentCommentTarget != null,
-        onDismiss = { segmentCommentTarget = null },
-        content = segmentCommentTarget ?: SegmentCommentHolder("dummy", "dummy", "dummy", "", "", 0, 0),
-    )
+    lastSegmentCommentTarget?.let { target ->
+        LocalSegmentCommentSheet.current(segmentCommentTarget != null, { segmentCommentTarget = null }, target)
+    }
     segmentActionSheetState?.let { state ->
         SegmentActionSheet(state)
     }

@@ -15,12 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.zly2006.zhihu.ui
+package com.github.zly2006.zhihu.util
 
-internal expect object NativeArticleSpeechController {
-    val currentState: TtsState
-
-    fun startSpeaking(text: String): Boolean
-
-    fun stopSpeaking()
-}
+// 自建 AIGC 标记服务：标记请求与崩溃上报共用同一服务地址。
+internal const val AIGC_VOTE_SERVER_URL_KEY = "aigcVoteServerUrl"
+internal const val DEFAULT_AIGC_VOTE_SERVER_URL = "https://aigc-vote.ai.fintechedu.cn"

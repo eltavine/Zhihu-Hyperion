@@ -118,10 +118,18 @@ import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isAnswerSwipeSupported
 import com.github.zly2006.zhihu.platform.isArticleHtmlExportSupported
 import com.github.zly2006.zhihu.platform.isArticleImageExportSupported
+import com.github.zly2006.zhihu.platform.isLegacyWebViewSupported
 import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
-import com.github.zly2006.zhihu.ui.AnswerDoubleTapAction
+import com.github.zly2006.zhihu.reading.TtsState
+import com.github.zly2006.zhihu.reading.rememberArticleSpeechToggler
+import com.github.zly2006.zhihu.reading.rememberArticleTtsState
+import com.github.zly2006.zhihu.theme.DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY
+import com.github.zly2006.zhihu.ui.article.ANSWER_DOUBLE_TAP_ACTION_PREFERENCE_KEY
+import com.github.zly2006.zhihu.ui.article.ARTICLE_USE_WEBVIEW_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.article.AigcFlagSheet
+import com.github.zly2006.zhihu.ui.article.AnswerDoubleTapAction
+import com.github.zly2006.zhihu.ui.article.AnswerEndorsementChip
 import com.github.zly2006.zhihu.ui.article.ArticleActionsMenu
 import com.github.zly2006.zhihu.ui.article.ArticleSummarySheet
 import com.github.zly2006.zhihu.ui.article.ArticleVideoAttachmentContent
@@ -139,31 +147,30 @@ import com.github.zly2006.zhihu.ui.components.AnswerHorizontalOverscroll
 import com.github.zly2006.zhihu.ui.components.AnswerVerticalOverscroll
 import com.github.zly2006.zhihu.ui.components.AuthorBadge
 import com.github.zly2006.zhihu.ui.components.CollectionDialogComponent
-import com.github.zly2006.zhihu.ui.components.CommentScreenComponent
 import com.github.zly2006.zhihu.ui.components.ContentEndMarker
 import com.github.zly2006.zhihu.ui.components.DEFAULT_ANSWER_SWITCH_SENSITIVITY
+import com.github.zly2006.zhihu.ui.components.DEFAULT_PAGE_TURN_SWITCH_ANSWER
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
 import com.github.zly2006.zhihu.ui.components.ExportDialogComponent
 import com.github.zly2006.zhihu.ui.components.MyModalBottomSheet
+import com.github.zly2006.zhihu.ui.components.PREF_PAGE_TURN_SWITCH_ANSWER
 import com.github.zly2006.zhihu.ui.components.VerticalReadingProgressBar
 import com.github.zly2006.zhihu.ui.components.VotersSheet
 import com.github.zly2006.zhihu.ui.components.ZhihuTwoRowsTopAppBar
 import com.github.zly2006.zhihu.ui.components.normalizedAnswerSwitchSensitivity
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
+import com.github.zly2006.zhihu.ui.components.rememberObservedSetting
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.ui.components.rememberPreferCollapsedExitUntilCollapsedScrollBehavior
-import com.github.zly2006.zhihu.ui.subscreens.DEFAULT_PAGE_TURN_SWITCH_ANSWER
-import com.github.zly2006.zhihu.ui.subscreens.DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY
-import com.github.zly2006.zhihu.ui.subscreens.PREF_PAGE_TURN_SWITCH_ANSWER
 import com.github.zly2006.zhihu.util.formatCompactCount
 import com.github.zly2006.zhihu.util.smoothGradient
 import com.github.zly2006.zhihu.viewmodel.AigcVoteService
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerSwitchState
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel
 import com.github.zly2006.zhihu.viewmodel.addReadHistory
 import com.github.zly2006.zhihu.viewmodel.formatArticleDateTime
 import com.github.zly2006.zhihu.viewmodel.rememberContentExporter
 import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
-import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 import com.materialkolor.ktx.harmonize
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -287,7 +294,8 @@ fun ArticleScreen(
                 .coerceAtLeast(0f)
         },
     )
-    val sharedData = sharedArticleAnswerSwitchState.takeIf { article.type == ArticleType.Answer }
+    val answerSwitchState = koinInject<ArticleAnswerSwitchState>()
+    val sharedData = answerSwitchState.takeIf { article.type == ArticleType.Answer }
     var isImmersiveMode by remember(sharedData) {
         mutableStateOf(sharedData?.isImmersiveMode ?: false)
     }
@@ -420,7 +428,7 @@ fun ArticleScreen(
     )
     LaunchedEffect(article.id) {
         answerNavigationState.prepareArticle()
-        viewModel.loadArticle(environment, history, contentOpens)
+        viewModel.loadArticle(environment, history, contentOpens, answerSwitchState)
         viewModel.loadCollections(environment)
         viewModel.loadAigcFlagStatus(aigcVote)
     }

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.zly2006.zhihu.ui.components
+package com.github.zly2006.zhihu.markdown
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -57,12 +57,12 @@ import androidx.compose.ui.unit.sp
 import com.github.zly2006.zhihu.data.SegmentInfoMeta
 import com.github.zly2006.zhihu.navigation.SegmentCommentHolder
 import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
+import com.github.zly2006.zhihu.ui.components.MyModalBottomSheet
 import com.github.zly2006.zhihu.util.SegmentHighlightSpan
 import com.github.zly2006.zhihu.util.json
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
 import com.github.zly2006.zhihu.viewmodel.postSigned
-import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import com.hrm.markdown.parser.ast.ContainerNode
 import com.hrm.markdown.parser.ast.Document
 import com.hrm.markdown.parser.ast.Node
@@ -78,6 +78,7 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
+import org.koin.compose.koinInject
 import kotlin.math.roundToInt
 
 /**
@@ -102,6 +103,12 @@ internal data class SegmentActionSheetState(
 internal val LocalSegmentActionSheetHost = staticCompositionLocalOf<(SegmentActionSheetState?) -> Unit> {
     error("LocalSegmentActionSheetHost is not provided")
 }
+
+/** 段评的评论弹层由应用根部提供，渲染层不依赖评论页面；只在用户打开过段评后才调用。 */
+internal val LocalSegmentCommentSheet =
+    staticCompositionLocalOf<@Composable (showComments: Boolean, onDismiss: () -> Unit, content: SegmentCommentHolder) -> Unit> {
+        error("LocalSegmentCommentSheet is not provided")
+    }
 
 fun buildSegmentUnlikeBody(highlight: SegmentHighlightSpan): String = buildJsonObject {
     put("seg_ids", highlight.meta.segIds.joinToString(","))
@@ -163,7 +170,7 @@ internal fun SegmentHighlightInteractionHost(
     document: Document,
     content: @Composable () -> Unit,
 ) {
-    val environment = rememberZhihuApiEnvironment(allowGuestAccess = false)
+    val environment = koinInject<ZhihuApiEnvironment>()
     val copyPlainText = rememberPlainTextClipboard()
     val coroutineScope = rememberCoroutineScope()
     val metaStates = remember { mutableStateMapOf<String, SegmentInfoMeta>() }

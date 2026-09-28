@@ -20,6 +20,7 @@ package com.github.zly2006.zhihu
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.reading.ReadingQueueSourceRegistry
 import com.github.zly2006.zhihu.viewmodel.AigcVoteService
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerSwitchState
 import com.github.zly2006.zhihu.viewmodel.ZhihuGuestClient
 import org.koin.dsl.module
 import org.koin.dsl.onClose
@@ -27,6 +28,7 @@ import org.koin.dsl.onClose
 /** 与平台无关的进程级绑定；各平台组合根把它和平台模块一起启动。 */
 val zhihuSharedModule = module {
     single { ReadingQueueSourceRegistry(get()) }
+    single { ArticleAnswerSwitchState() }
     single { AigcVoteService(get(), get(), get()) } onClose { it?.close() }
     single { ZhihuGuestClient(get(), get<ZhihuAccountStore>().session.userAgent) } onClose { it?.close() }
 }

@@ -111,9 +111,7 @@ import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.platform.rememberZhihuWebUrlOpener
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
-import com.github.zly2006.zhihu.ui.components.CommentScreenComponent
 import com.github.zly2006.zhihu.ui.components.FeedCard
-import com.github.zly2006.zhihu.ui.components.FeedPullToRefresh
 import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.ui.components.ShareDialog
@@ -122,12 +120,12 @@ import com.github.zly2006.zhihu.ui.components.handleShareAction
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.ui.components.rememberShareActionExecutor
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerSwitchState
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.addReadHistory
 import com.github.zly2006.zhihu.viewmodel.feed.QuestionFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
-import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import kotlin.math.roundToInt
@@ -196,7 +194,7 @@ fun QuestionScreen(
         items = viewModel.displayItems,
     )
     val paginationEnvironment = rememberZhihuApiEnvironment(allowGuestAccess = false)
-    val answerSwitchState = sharedArticleAnswerSwitchState
+    val answerSwitchState = koinInject<ArticleAnswerSwitchState>()
     val listState = rememberLazyListState()
     var questionContent by remember(question.questionId) { mutableStateOf("") }
     var answerCount by remember(question.questionId) { mutableIntStateOf(0) }

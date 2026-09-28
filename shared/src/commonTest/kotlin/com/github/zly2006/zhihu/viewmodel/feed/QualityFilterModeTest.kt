@@ -19,11 +19,11 @@ package com.github.zly2006.zhihu.viewmodel.feed
 
 import com.github.zly2006.zhihu.data.CommonFeed
 import com.github.zly2006.zhihu.data.Feed
+import com.github.zly2006.zhihu.data.FeedDisplaySettings
 import com.github.zly2006.zhihu.data.Person
+import com.github.zly2006.zhihu.data.QualityFilterMode
 import com.github.zly2006.zhihu.data.QualityFilterSettings
 import com.github.zly2006.zhihu.platform.MapSettingsStore
-import com.github.zly2006.zhihu.viewmodel.FeedDisplaySettings
-import com.github.zly2006.zhihu.viewmodel.QualityFilterMode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

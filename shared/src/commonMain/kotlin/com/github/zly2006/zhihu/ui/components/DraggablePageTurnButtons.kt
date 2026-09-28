@@ -80,16 +80,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isPageTurnSupported
-import com.github.zly2006.zhihu.ui.rememberObservedSetting
-import com.github.zly2006.zhihu.ui.subscreens.DEFAULT_FAB_OPACITY
-import com.github.zly2006.zhihu.ui.subscreens.DEFAULT_PAGE_TURN_PERCENT
-import com.github.zly2006.zhihu.ui.subscreens.DEFAULT_SHOW_CONTENT_END_MARKER
-import com.github.zly2006.zhihu.ui.subscreens.DEFAULT_SHOW_PAGE_TURN_GUIDE
-import com.github.zly2006.zhihu.ui.subscreens.PREF_FAB_OPACITY
-import com.github.zly2006.zhihu.ui.subscreens.PREF_PAGE_TURN_PERCENT
-import com.github.zly2006.zhihu.ui.subscreens.PREF_SHOW_CONTENT_END_MARKER
-import com.github.zly2006.zhihu.ui.subscreens.PREF_SHOW_PAGE_TURN_FAB
-import com.github.zly2006.zhihu.ui.subscreens.PREF_SHOW_PAGE_TURN_GUIDE
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
 import org.koin.compose.koinInject

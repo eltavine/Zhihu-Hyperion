@@ -49,6 +49,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -71,6 +72,7 @@ import coil3.compose.AsyncImage
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
+import com.github.zly2006.zhihu.data.QUALITY_FILTER_MODE_PREFERENCE_KEY
 import com.github.zly2006.zhihu.data.navDestination
 import com.github.zly2006.zhihu.data.officialBadge
 import com.github.zly2006.zhihu.data.sourceLabel
@@ -83,11 +85,9 @@ import com.github.zly2006.zhihu.navigation.withReadingQueueSource
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageDuration
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
-import com.github.zly2006.zhihu.ui.LocalSelectedContentDestination
-import com.github.zly2006.zhihu.ui.subscreens.PREF_FONT_SIZE
-import com.github.zly2006.zhihu.ui.subscreens.PREF_LINE_HEIGHT
+import com.github.zly2006.zhihu.theme.PREF_FONT_SIZE
+import com.github.zly2006.zhihu.theme.PREF_LINE_HEIGHT
 import com.github.zly2006.zhihu.util.parseEmphasizedHtmlTextWithTheme
-import com.github.zly2006.zhihu.viewmodel.QUALITY_FILTER_MODE_PREFERENCE_KEY
 import org.koin.compose.koinInject
 
 /**
@@ -660,3 +660,5 @@ private fun FeedCardSourceLabel(sourceLabel: String?) {
         modifier = Modifier.padding(bottom = 6.dp),
     )
 }
+
+internal val LocalSelectedContentDestination = compositionLocalOf<NavDestination?> { null }

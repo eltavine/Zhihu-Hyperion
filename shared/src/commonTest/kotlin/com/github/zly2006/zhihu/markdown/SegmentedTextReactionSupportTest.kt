@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.zly2006.zhihu.ui.components
+package com.github.zly2006.zhihu.markdown
 
 import com.github.zly2006.zhihu.data.SegmentInfoMeta
 import com.github.zly2006.zhihu.util.SegmentHighlightSpan

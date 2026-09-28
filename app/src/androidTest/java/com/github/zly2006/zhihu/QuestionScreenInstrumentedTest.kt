@@ -52,11 +52,11 @@ import com.github.zly2006.zhihu.ui.QUESTION_SORT_DEFAULT_TAG
 import com.github.zly2006.zhihu.ui.QUESTION_SORT_UPDATED_TAG
 import com.github.zly2006.zhihu.ui.QUESTION_WRITE_ANSWER_BUTTON_TAG
 import com.github.zly2006.zhihu.ui.QuestionScreen
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerSwitchState
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.QuestionFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUser
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
-import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 import io.ktor.http.HttpMethod
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
@@ -151,7 +151,7 @@ class QuestionScreenInstrumentedTest {
             listOf(Article(type = ArticleType.Answer, id = 7003L)),
             navigator.destinations,
         )
-        val pendingNavigator = sharedArticleAnswerSwitchState.pendingNavigator
+        val pendingNavigator = KoinPlatform.getKoin().get<ArticleAnswerSwitchState>().pendingNavigator
         assertEquals(7002L, pendingNavigator?.previousAnswerPreview?.article?.id)
         assertEquals(7004L, runBlocking { pendingNavigator?.loadNext()?.id })
     }

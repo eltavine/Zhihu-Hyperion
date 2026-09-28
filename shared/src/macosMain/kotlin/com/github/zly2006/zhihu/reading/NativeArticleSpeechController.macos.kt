@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.zly2006.zhihu.ui
+package com.github.zly2006.zhihu.reading
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

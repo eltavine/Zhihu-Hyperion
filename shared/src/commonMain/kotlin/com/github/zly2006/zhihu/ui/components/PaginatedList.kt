@@ -34,6 +34,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -42,11 +43,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.github.zly2006.zhihu.platform.SettingsStore
-import com.github.zly2006.zhihu.ui.rememberObservedSetting
-import com.github.zly2006.zhihu.ui.subscreens.DEFAULT_SHOW_CONTENT_END_MARKER
-import com.github.zly2006.zhihu.ui.subscreens.PREF_SHOW_CONTENT_END_MARKER
 import kotlinx.coroutines.delay
 import org.koin.compose.koinInject
+
+/** 下拉刷新进行中为 true，此时列表底部不再重复显示加载指示器。 */
+val LocalPullToRefreshInProgress = compositionLocalOf { false }
 
 val ProgressIndicatorFooter: @Composable (LazyListState) -> Unit = { state ->
     Box(
@@ -55,7 +56,7 @@ val ProgressIndicatorFooter: @Composable (LazyListState) -> Unit = { state ->
             .padding(16.dp),
         contentAlignment = Alignment.Center,
     ) {
-        if (LocalPullToRefreshViewModel.current?.isPullToRefresh != true) {
+        if (!LocalPullToRefreshInProgress.current) {
             CircularProgressIndicator()
         }
     }

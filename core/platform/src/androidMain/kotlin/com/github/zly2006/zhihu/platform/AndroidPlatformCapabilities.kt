@@ -82,6 +82,8 @@ actual val isAigcVoteSupported: Boolean = true
 
 actual val isFeedQualityFilterSupported: Boolean = true
 
+actual val isLegacyWebViewSupported: Boolean = true
+
 actual val isBlocklistNlpSupported: Boolean = true
 
 actual val isSentenceSimilaritySupported: Boolean = true

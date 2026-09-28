@@ -60,6 +60,17 @@ final object com.github.zly2006.zhihu.theme/ThemeManager { // com.github.zly2006
     final fun snapshot(): com.github.zly2006.zhihu.theme/ThemeSnapshot // com.github.zly2006.zhihu.theme/ThemeManager.snapshot|snapshot(){}[0]
 }
 
+final const val com.github.zly2006.zhihu.theme/DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY // com.github.zly2006.zhihu.theme/DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY|{}DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY[0]
+    final fun <get-DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY>(): kotlin/String // com.github.zly2006.zhihu.theme/DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY.<get-DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY>|<get-DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY>(){}[0]
+final const val com.github.zly2006.zhihu.theme/DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY // com.github.zly2006.zhihu.theme/DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY|{}DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY[0]
+    final fun <get-DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY>(): kotlin/String // com.github.zly2006.zhihu.theme/DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY.<get-DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY>|<get-DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY>(){}[0]
+final const val com.github.zly2006.zhihu.theme/PREF_BLOCK_SPACING // com.github.zly2006.zhihu.theme/PREF_BLOCK_SPACING|{}PREF_BLOCK_SPACING[0]
+    final fun <get-PREF_BLOCK_SPACING>(): kotlin/String // com.github.zly2006.zhihu.theme/PREF_BLOCK_SPACING.<get-PREF_BLOCK_SPACING>|<get-PREF_BLOCK_SPACING>(){}[0]
+final const val com.github.zly2006.zhihu.theme/PREF_FONT_SIZE // com.github.zly2006.zhihu.theme/PREF_FONT_SIZE|{}PREF_FONT_SIZE[0]
+    final fun <get-PREF_FONT_SIZE>(): kotlin/String // com.github.zly2006.zhihu.theme/PREF_FONT_SIZE.<get-PREF_FONT_SIZE>|<get-PREF_FONT_SIZE>(){}[0]
+final const val com.github.zly2006.zhihu.theme/PREF_LINE_HEIGHT // com.github.zly2006.zhihu.theme/PREF_LINE_HEIGHT|{}PREF_LINE_HEIGHT[0]
+    final fun <get-PREF_LINE_HEIGHT>(): kotlin/String // com.github.zly2006.zhihu.theme/PREF_LINE_HEIGHT.<get-PREF_LINE_HEIGHT>|<get-PREF_LINE_HEIGHT>(){}[0]
+
 final val com.github.zly2006.zhihu.theme/Pink40 // com.github.zly2006.zhihu.theme/Pink40|{}Pink40[0]
     final fun <get-Pink40>(): androidx.compose.ui.graphics/Color // com.github.zly2006.zhihu.theme/Pink40.<get-Pink40>|<get-Pink40>(){}[0]
 final val com.github.zly2006.zhihu.theme/Pink80 // com.github.zly2006.zhihu.theme/Pink80|{}Pink80[0]

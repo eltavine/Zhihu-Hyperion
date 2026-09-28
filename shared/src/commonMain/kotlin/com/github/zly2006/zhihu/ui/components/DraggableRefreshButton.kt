@@ -44,8 +44,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.github.zly2006.zhihu.platform.SettingsStore
-import com.github.zly2006.zhihu.ui.subscreens.DEFAULT_FAB_OPACITY
-import com.github.zly2006.zhihu.ui.subscreens.PREF_FAB_OPACITY
 import org.koin.compose.koinInject
 import kotlin.math.roundToInt
 

@@ -19,6 +19,7 @@ package com.github.zly2006.zhihu.navigation
 
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.ZhihuJson
+import com.github.zly2006.zhihu.viewmodel.CollectionAnswerNavigator
 import com.github.zly2006.zhihu.viewmodel.CollectionItem
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import io.ktor.client.HttpClient

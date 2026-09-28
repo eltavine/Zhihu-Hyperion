@@ -27,14 +27,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
 import androidx.navigation.toRoute
-import com.github.zly2006.zhihu.navigation.AnswerNavigator
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.Navigator
 import com.github.zly2006.zhihu.navigation.withReadingQueueSource
-import com.github.zly2006.zhihu.ui.ArticleAnswerSwitchState
-import com.github.zly2006.zhihu.ui.ArticleAnswerTransitionDirection
 import com.github.zly2006.zhihu.ui.hasRoute
+import com.github.zly2006.zhihu.viewmodel.AnswerNavigator
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerSwitchState
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerTransitionDirection
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -91,13 +91,11 @@ internal class ArticleAnswerNavigationState(
         val previous = answerNavigator.goToPrevious()
         if (previous != null) {
             state.pendingInitialContent = previous
-            state.promoteForNavigation(state.answerTransitionDirection)
             navigate(previous.article)
             return
         }
 
         state.pendingInitialContent = answerNavigator.previousAnswerPreview
-        state.promoteForNavigation(state.answerTransitionDirection)
         coroutineScope.launch {
             val loaded = answerNavigator.loadPrevious() ?: return@launch
             state.pendingInitialContent = loaded
@@ -120,13 +118,11 @@ internal class ArticleAnswerNavigationState(
         val historyNext = answerNavigator.goToNext()
         if (historyNext != null) {
             state.pendingInitialContent = historyNext
-            state.promoteForNavigation(state.answerTransitionDirection)
             navigate(historyNext.article)
             return
         }
 
         state.pendingInitialContent = answerNavigator.nextAnswer
-        state.promoteForNavigation(state.answerTransitionDirection)
         navigatingToNextAnswer = true
         coroutineScope.launch {
             try {

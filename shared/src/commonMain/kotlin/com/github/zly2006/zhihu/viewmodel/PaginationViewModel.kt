@@ -23,28 +23,30 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.zly2006.zhihu.data.ANSWER_VOTEUP_THRESHOLD_PREFERENCE_KEY
+import com.github.zly2006.zhihu.data.ARTICLE_FOLLOWERS_THRESHOLD_PREFERENCE_KEY
+import com.github.zly2006.zhihu.data.ARTICLE_VOTEUP_THRESHOLD_PREFERENCE_KEY
 import com.github.zly2006.zhihu.data.ContentDetailCache
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.FeedDisplayItem
+import com.github.zly2006.zhihu.data.FeedDisplaySettings
 import com.github.zly2006.zhihu.data.OnlineHistoryDeletePair
+import com.github.zly2006.zhihu.data.QUALITY_FILTER_MODE_PREFERENCE_KEY
+import com.github.zly2006.zhihu.data.QUESTION_ANSWER_THRESHOLD_PREFERENCE_KEY
+import com.github.zly2006.zhihu.data.QUESTION_FOLLOWERS_THRESHOLD_PREFERENCE_KEY
+import com.github.zly2006.zhihu.data.QualityFilterMode
 import com.github.zly2006.zhihu.data.QualityFilterSettings
+import com.github.zly2006.zhihu.data.VIDEO_FOLLOWERS_THRESHOLD_PREFERENCE_KEY
+import com.github.zly2006.zhihu.data.VIDEO_VOTE_THRESHOLD_PREFERENCE_KEY
 import com.github.zly2006.zhihu.data.ZhihuJson.decodeJson
 import com.github.zly2006.zhihu.data.ZhihuPaging
 import com.github.zly2006.zhihu.data.fetchZhihuContentDetail
 import com.github.zly2006.zhihu.data.getOrFetchContentDetail
-import com.github.zly2006.zhihu.navigation.AnswerNavigator
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isFeedQualityFilterSupported
-import com.github.zly2006.zhihu.ui.ArticleAnswerSwitchState
-import com.github.zly2006.zhihu.ui.ArticleAnswerTransitionDirection
 import com.github.zly2006.zhihu.util.Log
-import com.github.zly2006.zhihu.util.signZhihuFetchRequest
-import com.github.zly2006.zhihu.viewmodel.ArticleViewModel.CachedAnswerContent
 import io.ktor.client.call.NoTransformationFoundException
-import io.ktor.client.request.HttpRequestBuilder
-import io.ktor.client.request.delete
-import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
@@ -179,47 +181,6 @@ abstract class PaginationViewModel<T : Any>(
     }
 }
 
-open class ArticleAnswerSwitchData :
-    ViewModel(),
-    ArticleAnswerSwitchState {
-    /** 活跃的导航器：管理来源、历史记录和预取 */
-    override var navigator: AnswerNavigator? by mutableStateOf(null)
-
-    /**
-     * 导航前由来源界面设置（如 CollectionContentScreen）。
-     * [reset] 时会将其应用到 [navigator]。
-     */
-    override var pendingNavigator: AnswerNavigator? = null
-
-    // 用于消除切换闪动：导航前设置，新页面用它初始化
-    override var pendingInitialContent: CachedAnswerContent? = null
-
-    // 标记是否从回答切换导航进入（避免被 LaunchedEffect 重置方向后误判）
-    @kotlin.concurrent.Volatile
-    override var navigatingFromAnswerSwitch = false
-
-    // 由 DisposableEffect.onDispose 消费，不受 LaunchedEffect 时序影响
-    override var answerSwitchDisposeInProgress = false
-
-    // 导航动画方向
-    override var answerTransitionDirection = ArticleAnswerTransitionDirection.DEFAULT
-
-    // 沉浸式阅读模式
-    override var isImmersiveMode by mutableStateOf(false)
-
-    override fun reset() {
-        navigator = pendingNavigator
-        pendingNavigator = null
-        pendingInitialContent = null
-        navigatingFromAnswerSwitch = false
-        isImmersiveMode = false
-    }
-
-    override fun promoteForNavigation(direction: ArticleAnswerTransitionDirection) = Unit
-}
-
-val sharedArticleAnswerSwitchState = ArticleAnswerSwitchData()
-
 interface PreparedArticleExportContent
 
 interface ArticleImageExportRenderer {
@@ -295,47 +256,6 @@ internal suspend fun ZhihuApiEnvironment.deleteOnlineHistory(
         }.toString(),
     )
 }
-
-suspend fun ZhihuApiEnvironment.postSigned(
-    url: String,
-    block: HttpRequestBuilder.() -> Unit = {},
-): HttpResponse = withAuthenticatedClient { client, cookies ->
-    client.post(url) {
-        block()
-        signZhihuFetchRequest(cookies)
-    }
-}
-
-suspend fun ZhihuApiEnvironment.deleteSigned(
-    url: String,
-    block: HttpRequestBuilder.() -> Unit = {},
-): HttpResponse = withAuthenticatedClient { client, cookies ->
-    client.delete(url) {
-        block()
-        signZhihuFetchRequest(cookies)
-    }
-}
-
-data class FeedDisplaySettings(
-    val qualityFilterMode: QualityFilterMode = QualityFilterMode.RULES,
-    val qualityFilter: QualityFilterSettings = QualityFilterSettings(),
-    val reverseBlock: Boolean = false,
-)
-
-enum class QualityFilterMode {
-    OFF,
-    RULES,
-    HIDE,
-}
-
-const val QUALITY_FILTER_MODE_PREFERENCE_KEY = "qualityFilterMode"
-const val ANSWER_VOTEUP_THRESHOLD_PREFERENCE_KEY = "answerVoteupThreshold"
-const val ARTICLE_VOTEUP_THRESHOLD_PREFERENCE_KEY = "articleVoteupThreshold"
-const val ARTICLE_FOLLOWERS_THRESHOLD_PREFERENCE_KEY = "articleFollowersThreshold"
-const val VIDEO_VOTE_THRESHOLD_PREFERENCE_KEY = "videoVoteThreshold"
-const val VIDEO_FOLLOWERS_THRESHOLD_PREFERENCE_KEY = "videoFollowersThreshold"
-const val QUESTION_ANSWER_THRESHOLD_PREFERENCE_KEY = "questionAnswerThreshold"
-const val QUESTION_FOLLOWERS_THRESHOLD_PREFERENCE_KEY = "questionFollowersThreshold"
 
 /** 列表卡片的质量屏蔽与反向屏蔽展示方式；未支持质量屏蔽的平台始终按关闭处理。 */
 fun SettingsStore.toFeedDisplaySettings(): FeedDisplaySettings = FeedDisplaySettings(

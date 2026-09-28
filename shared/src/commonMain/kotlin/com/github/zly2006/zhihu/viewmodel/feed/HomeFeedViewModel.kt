@@ -21,6 +21,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
+import com.github.zly2006.zhihu.data.QualityFilterMode
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.flattenFeeds
 import com.github.zly2006.zhihu.data.navDestination
@@ -30,7 +31,6 @@ import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.viewmodel.HomeFeedFilterResult
-import com.github.zly2006.zhihu.viewmodel.QualityFilterMode
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.ContentDetailProvider
 import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter

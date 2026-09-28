@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import com.github.zly2006.zhihu.platform.androidUserMessageSink
 import com.github.zly2006.zhihu.platform.rememberIsLiteVariant
 import com.github.zly2006.zhihu.reading.AndroidReadingPlayerBridge
-import com.github.zly2006.zhihu.ui.rememberArticleTtsState
+import com.github.zly2006.zhihu.reading.rememberArticleTtsState
 import com.github.zly2006.zhihu.updater.UpdateManager
 import com.github.zly2006.zhihu.updater.UpdateManager.UpdateState
 import com.github.zly2006.zhihu.util.ContinuousUsageReminderManager

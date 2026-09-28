@@ -18,33 +18,16 @@
 package com.github.zly2006.zhihu.ui.components
 
 import android.content.ClipData
-import android.content.Context
 import android.content.Intent
-import android.graphics.Color.BLACK
-import android.os.Bundle
-import android.view.ViewGroup
-import android.view.Window
-import androidx.activity.ComponentDialog
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.graphics.drawable.toDrawable
-import androidx.core.net.toUri
+import com.github.zly2006.zhihu.navigation.AndroidArticleNavigationHandoff
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.nlp.KeywordAnalyzerCore
 import com.github.zly2006.zhihu.nlp.KeywordWithWeight
 import com.github.zly2006.zhihu.platform.androidUserMessageSink
-import com.github.zly2006.zhihu.ui.AndroidArticleNavigationHandoff
 import com.github.zly2006.zhihu.util.clipboardManager
-import com.github.zly2006.zhihu.util.luoTianYiUrlLauncher
-import me.saket.telephoto.zoomable.coil3.ZoomableAsyncImage
-import me.saket.telephoto.zoomable.rememberZoomableImageState
-import me.saket.telephoto.zoomable.rememberZoomableState
 import org.koin.compose.koinInject
 import org.koin.mp.KoinPlatform
 

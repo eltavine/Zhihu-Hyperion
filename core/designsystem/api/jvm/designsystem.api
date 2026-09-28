@@ -7,6 +7,14 @@ public final class com/github/zly2006/zhihu/theme/ColorKt {
 	public static final fun getPurpleGrey80 ()J
 }
 
+public final class com/github/zly2006/zhihu/theme/ContentTypographyPreferencesKt {
+	public static final field DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY Ljava/lang/String;
+	public static final field DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY Ljava/lang/String;
+	public static final field PREF_BLOCK_SPACING Ljava/lang/String;
+	public static final field PREF_FONT_SIZE Ljava/lang/String;
+	public static final field PREF_LINE_HEIGHT Ljava/lang/String;
+}
+
 public final class com/github/zly2006/zhihu/theme/PlatformTheme_jvmKt {
 	public static final fun PlatformSystemBarEffect (ZLandroidx/compose/runtime/Composer;I)V
 	public static final fun currentSystemInDarkTheme (Landroidx/compose/runtime/Composer;I)Z

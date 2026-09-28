@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.zly2006.zhihu.ui.components
+package com.github.zly2006.zhihu.ui
 
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,19 +28,15 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.ui.components.LocalPullToRefreshInProgress
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.launch
-
-val LocalPullToRefreshViewModel = compositionLocalOf<BaseFeedViewModel?> {
-    null
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,7 +84,7 @@ fun FeedPullToRefresh(
         state = state,
         modifier = Modifier.fillMaxSize(),
     ) {
-        CompositionLocalProvider(LocalPullToRefreshViewModel provides viewModel) {
+        CompositionLocalProvider(LocalPullToRefreshInProgress provides viewModel.isPullToRefresh) {
             content()
         }
     }

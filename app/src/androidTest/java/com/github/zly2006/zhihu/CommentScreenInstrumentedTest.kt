@@ -43,6 +43,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.zly2006.zhihu.data.CommentSortOrder
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.ZhihuJson
+import com.github.zly2006.zhihu.navigation.AndroidArticleNavigationHandoff
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.CommentHolder
@@ -59,14 +60,13 @@ import com.github.zly2006.zhihu.test.mockRootComments
 import com.github.zly2006.zhihu.test.resetAppPreferences
 import com.github.zly2006.zhihu.test.seedViewModel
 import com.github.zly2006.zhihu.test.setScreenContent
-import com.github.zly2006.zhihu.ui.AndroidArticleNavigationHandoff
 import com.github.zly2006.zhihu.ui.COMMENT_EMOJI_BUTTON_TAG
 import com.github.zly2006.zhihu.ui.COMMENT_EMOJI_ITEM_TAG_PREFIX
 import com.github.zly2006.zhihu.ui.COMMENT_EMOJI_PICKER_TAG
 import com.github.zly2006.zhihu.ui.COMMENT_INPUT_TAG
 import com.github.zly2006.zhihu.ui.COMMENT_SCREEN_LIST_TAG
 import com.github.zly2006.zhihu.ui.CommentScreen
-import com.github.zly2006.zhihu.ui.components.CommentScreenComponent
+import com.github.zly2006.zhihu.ui.CommentScreenComponent
 import com.github.zly2006.zhihu.viewmodel.CommentItem
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.comment.BaseCommentViewModel

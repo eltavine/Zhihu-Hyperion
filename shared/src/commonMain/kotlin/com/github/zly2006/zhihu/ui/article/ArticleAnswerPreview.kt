@@ -57,7 +57,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.github.zly2006.zhihu.markdown.RenderMarkdown
-import com.github.zly2006.zhihu.ui.AnswerEndorsementChip
 import com.github.zly2006.zhihu.ui.components.AuthorBadge
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel.CachedAnswerContent
 import org.jetbrains.compose.resources.painterResource

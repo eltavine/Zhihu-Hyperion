@@ -35,7 +35,7 @@ import com.github.zly2006.zhihu.test.resetAppPreferences
 import com.github.zly2006.zhihu.test.setScreenContent
 import com.github.zly2006.zhihu.ui.COMMENT_INPUT_TAG
 import com.github.zly2006.zhihu.ui.COMMENT_SCREEN_LIST_TAG
-import com.github.zly2006.zhihu.ui.components.CommentScreenComponent
+import com.github.zly2006.zhihu.ui.CommentScreenComponent
 import io.ktor.http.HttpMethod
 import kotlinx.serialization.encodeToString
 import org.junit.After

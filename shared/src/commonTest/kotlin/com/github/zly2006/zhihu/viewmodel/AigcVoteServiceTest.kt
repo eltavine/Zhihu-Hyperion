@@ -20,6 +20,7 @@ package com.github.zly2006.zhihu.viewmodel
 import com.github.zly2006.zhihu.account.ZhihuAccountRepository
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.platform.MapSettingsStore
+import com.github.zly2006.zhihu.util.AIGC_VOTE_SERVER_URL_KEY
 import com.github.zly2006.zhihu.util.TextDocumentStore
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond

@@ -41,6 +41,8 @@ actual val isAigcVoteSupported: Boolean = false
 
 actual val isFeedQualityFilterSupported: Boolean = false
 
+actual val isLegacyWebViewSupported: Boolean = false
+
 @Composable
 @OptIn(ExperimentalForeignApi::class)
 actual fun rememberExternalUrlOpener(): ExternalUrlOpener = remember {

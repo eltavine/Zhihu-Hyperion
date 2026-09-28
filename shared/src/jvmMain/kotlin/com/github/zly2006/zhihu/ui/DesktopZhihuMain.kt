@@ -74,8 +74,9 @@ import com.github.zly2006.zhihu.ui.subscreens.navDestinationFromName
 import com.github.zly2006.zhihu.ui.subscreens.normalizeBottomBarSelection
 import com.github.zly2006.zhihu.ui.subscreens.resolveValidStartDestinationKey
 import com.github.zly2006.zhihu.util.signZhihuFetchRequest
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerSwitchState
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerTransitionDirection
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel
-import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -93,6 +94,7 @@ fun DesktopZhihuMain() {
     val navController = rememberNavController()
     val accountStore = koinInject<ZhihuAccountStore>()
     val contentOpens = koinInject<ContentOpenTracker>()
+    val answerSwitchState = koinInject<ArticleAnswerSwitchState>()
     val accounts by accountStore.accountsState.collectAsState()
     val accountSession = accounts.session
     val httpClient = remember(accountStore, accountSession) { accountStore.client.httpClient() }
@@ -221,7 +223,7 @@ fun DesktopZhihuMain() {
         preferenceState = rememberDesktopZhihuMainPreferenceState(),
         isDarkTheme = ThemeManager.isDarkTheme(),
         articleEnterTransition = {
-            when (sharedArticleAnswerSwitchState.answerTransitionDirection) {
+            when (answerSwitchState.answerTransitionDirection) {
                 ArticleAnswerTransitionDirection.VERTICAL_NEXT -> {
                     slideInVertically(tween(300)) { it } + fadeIn(tween(300))
                 }
@@ -244,7 +246,7 @@ fun DesktopZhihuMain() {
             }
         },
         articleExitTransition = {
-            when (sharedArticleAnswerSwitchState.answerTransitionDirection) {
+            when (answerSwitchState.answerTransitionDirection) {
                 ArticleAnswerTransitionDirection.VERTICAL_NEXT -> {
                     slideOutVertically(tween(300)) { -it } + fadeOut(tween(300))
                 }

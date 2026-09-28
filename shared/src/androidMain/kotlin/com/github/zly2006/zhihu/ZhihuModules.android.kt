@@ -21,11 +21,11 @@ import android.content.Context
 import com.github.zly2006.zhihu.account.accountModule
 import com.github.zly2006.zhihu.data.dataModule
 import com.github.zly2006.zhihu.data.databaseModule
+import com.github.zly2006.zhihu.navigation.AndroidArticleNavigationHandoff
 import com.github.zly2006.zhihu.notification.AndroidNotificationSettingsStore
 import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.androidSettingsStore
 import com.github.zly2006.zhihu.platform.androidUserMessageSink
-import com.github.zly2006.zhihu.ui.AndroidArticleNavigationHandoff
 import com.github.zly2006.zhihu.viewmodel.AndroidMobileClientProvider
 import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
 import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter

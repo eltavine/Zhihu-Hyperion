@@ -109,6 +109,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.github.zly2006.zhihu.account.LoginScreen
 import com.github.zly2006.zhihu.filter.ContentOpenFrom
+import com.github.zly2006.zhihu.markdown.LocalSegmentCommentSheet
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
@@ -133,6 +134,7 @@ import com.github.zly2006.zhihu.navigation.Person
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.Search
+import com.github.zly2006.zhihu.navigation.SegmentCommentHolder
 import com.github.zly2006.zhihu.navigation.SentenceSimilarityTest
 import com.github.zly2006.zhihu.navigation.TopLevelDestination
 import com.github.zly2006.zhihu.navigation.Topic
@@ -143,12 +145,13 @@ import com.github.zly2006.zhihu.navigation.loginNavigationRequestFlow
 import com.github.zly2006.zhihu.platform.PlatformBackHandler
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.platformName
+import com.github.zly2006.zhihu.reading.CompactReadingPlayerButton
+import com.github.zly2006.zhihu.reading.ReadingPlayerBar
+import com.github.zly2006.zhihu.reading.ReadingQueueSheet
 import com.github.zly2006.zhihu.reading.rememberReadingPlayerController
 import com.github.zly2006.zhihu.reading.saveReadingPlaybackSpeed
-import com.github.zly2006.zhihu.ui.components.CompactReadingPlayerButton
+import com.github.zly2006.zhihu.ui.components.LocalSelectedContentDestination
 import com.github.zly2006.zhihu.ui.components.NoOpPagerNestedScrollConnection
-import com.github.zly2006.zhihu.ui.components.ReadingPlayerBar
-import com.github.zly2006.zhihu.ui.components.ReadingQueueSheet
 import com.github.zly2006.zhihu.ui.subscreens.AppearanceSettingsScreen
 import com.github.zly2006.zhihu.ui.subscreens.BlockedFeedHistoryScreen
 import com.github.zly2006.zhihu.ui.subscreens.ColorSchemeScreen
@@ -515,6 +518,7 @@ fun ZhihuMain(
         CompositionLocalProvider(
             LocalLifecycleOwner provides detailLifecycleOwner,
             LocalArticleNavController provides detailNavController,
+            LocalSegmentCommentSheet provides SegmentCommentSheet,
             LocalNavigator provides Navigator(
                 onNavigate = { destination ->
                     if (
@@ -652,6 +656,7 @@ fun ZhihuMain(
                     CompositionLocalProvider(
                         LocalLifecycleOwner provides listLifecycleOwner,
                         LocalArticleNavController provides navController,
+                        LocalSegmentCommentSheet provides SegmentCommentSheet,
                         LocalNavigator provides Navigator(
                             onNavigate = { destination ->
                                 if (
@@ -1149,4 +1154,8 @@ private fun NavGraphBuilder.accountSettings(
     composable<Account.DeveloperSettings.ColorScheme> {
         ColorSchemeScreen()
     }
+}
+
+private val SegmentCommentSheet: @Composable (Boolean, () -> Unit, SegmentCommentHolder) -> Unit = { showComments, onDismiss, content ->
+    CommentScreenComponent(showComments = showComments, onDismiss = onDismiss, content = content)
 }

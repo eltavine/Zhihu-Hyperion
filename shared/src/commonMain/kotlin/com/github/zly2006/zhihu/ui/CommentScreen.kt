@@ -153,13 +153,13 @@ import com.github.zly2006.zhihu.platform.rememberImageSharer
 import com.github.zly2006.zhihu.reading.ReadingCommentOrder
 import com.github.zly2006.zhihu.reading.loadReadingPreferences
 import com.github.zly2006.zhihu.reading.saveReadingPreferences
+import com.github.zly2006.zhihu.theme.PREF_FONT_SIZE
+import com.github.zly2006.zhihu.theme.PREF_LINE_HEIGHT
 import com.github.zly2006.zhihu.ui.components.PageTurnFab
 import com.github.zly2006.zhihu.ui.components.pageTurnContentEndMarker
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.ui.components.replaceSelection
-import com.github.zly2006.zhihu.ui.subscreens.PREF_FONT_SIZE
-import com.github.zly2006.zhihu.ui.subscreens.PREF_LINE_HEIGHT
 import com.github.zly2006.zhihu.util.twoDigitString
 import com.github.zly2006.zhihu.viewmodel.CommentItem
 import com.github.zly2006.zhihu.viewmodel.comment.BaseCommentViewModel

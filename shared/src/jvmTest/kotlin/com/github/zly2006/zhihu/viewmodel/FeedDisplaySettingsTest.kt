@@ -17,6 +17,8 @@
 
 package com.github.zly2006.zhihu.viewmodel
 
+import com.github.zly2006.zhihu.data.QUALITY_FILTER_MODE_PREFERENCE_KEY
+import com.github.zly2006.zhihu.data.QualityFilterMode
 import com.github.zly2006.zhihu.platform.MapSettingsStore
 import kotlin.test.Test
 import kotlin.test.assertEquals

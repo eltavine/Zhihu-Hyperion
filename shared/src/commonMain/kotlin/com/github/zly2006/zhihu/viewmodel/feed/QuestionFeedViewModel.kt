@@ -22,14 +22,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
+import com.github.zly2006.zhihu.data.FeedDisplaySettings
 import com.github.zly2006.zhihu.data.navDestination
 import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
-import com.github.zly2006.zhihu.navigation.QuestionAnswerNavigator
 import com.github.zly2006.zhihu.navigation.zhihuQuestionFeedsUrl
 import com.github.zly2006.zhihu.platform.SettingsStore
-import com.github.zly2006.zhihu.viewmodel.FeedDisplaySettings
+import com.github.zly2006.zhihu.viewmodel.QuestionAnswerNavigator
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao

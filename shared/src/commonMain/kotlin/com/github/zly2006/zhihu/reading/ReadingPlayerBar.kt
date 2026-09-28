@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.zly2006.zhihu.ui.components
+package com.github.zly2006.zhihu.reading
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -77,9 +77,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.github.zly2006.zhihu.platform.exportTestTagsForUiAutomation
-import com.github.zly2006.zhihu.reading.ReadingPlaybackStatus
-import com.github.zly2006.zhihu.reading.ReadingPlayerState
-import com.github.zly2006.zhihu.reading.ReadingQueueItem
+import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
+import com.github.zly2006.zhihu.ui.components.MyModalBottomSheet
 import kotlin.math.abs
 import kotlin.math.roundToInt
 

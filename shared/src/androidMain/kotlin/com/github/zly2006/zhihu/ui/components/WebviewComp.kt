@@ -69,9 +69,9 @@ import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.navigation.Video
 import com.github.zly2006.zhihu.navigation.resolveContent
 import com.github.zly2006.zhihu.platform.androidSettingsStore
+import com.github.zly2006.zhihu.theme.PREF_FONT_SIZE
+import com.github.zly2006.zhihu.theme.PREF_LINE_HEIGHT
 import com.github.zly2006.zhihu.theme.ThemeManager
-import com.github.zly2006.zhihu.ui.subscreens.PREF_FONT_SIZE
-import com.github.zly2006.zhihu.ui.subscreens.PREF_LINE_HEIGHT
 import com.github.zly2006.zhihu.util.blacklist
 import com.github.zly2006.zhihu.util.extractImageUrl
 import com.github.zly2006.zhihu.util.luoTianYiUrlLauncher

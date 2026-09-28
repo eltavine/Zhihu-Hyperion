@@ -22,8 +22,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -33,21 +31,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.fleeksoft.ksoup.Ksoup
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.markdown.RenderMarkdown
-import com.github.zly2006.zhihu.navigation.AnswerNavigator
 import com.github.zly2006.zhihu.navigation.Article
-import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.TopLevelDestination
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageSink
-import com.github.zly2006.zhihu.ui.subscreens.DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY
-import com.github.zly2006.zhihu.viewmodel.ArticleViewModel.CachedAnswerContent
+import com.github.zly2006.zhihu.platform.isLegacyWebViewSupported
+import com.github.zly2006.zhihu.theme.DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY
+import com.github.zly2006.zhihu.ui.article.ARTICLE_USE_WEBVIEW_PREFERENCE_KEY
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.getOrFetchContentDetail
 import kotlinx.serialization.json.JsonObject
@@ -138,26 +134,8 @@ fun PinHtmlContent(html: String) {
     }
 }
 
-expect val isLegacyWebViewSupported: Boolean
-
 @Composable
 expect fun ZhihuHtmlWebViewContent(html: String)
-
-@Composable
-internal fun <T> rememberObservedSetting(
-    settings: SettingsStore,
-    key: String,
-    read: SettingsStore.() -> T,
-): MutableState<T> {
-    val state = remember(settings, key) { mutableStateOf(settings.read()) }
-    DisposableEffect(settings, key, state) {
-        val subscription = settings.observeKeyChanges { changedKey ->
-            if (changedKey == key) state.value = settings.read()
-        }
-        onDispose(subscription::close)
-    }
-    return state
-}
 
 @Composable
 expect fun consumePendingCommentId(content: NavDestination): String?
@@ -212,105 +190,6 @@ expect fun QuestionDetailWebViewContent(
     questionId: Long,
     html: String,
 )
-
-@Composable
-expect fun rememberArticleTtsState(): TtsState
-
-interface ArticleSpeechToggler {
-    operator fun invoke(title: String, content: String)
-}
-
-@Composable
-expect fun rememberArticleSpeechToggler(): ArticleSpeechToggler
-
-interface ArticleBrowserOpener {
-    operator fun invoke(article: Article)
-}
-
-@Composable
-expect fun rememberArticleBrowserOpener(): ArticleBrowserOpener
-
-fun articleActionText(
-    article: Article,
-    questionId: Long,
-    title: String,
-    authorName: String,
-): String =
-    when (article.type) {
-        ArticleType.Answer -> {
-            "https://www.zhihu.com/question/$questionId/answer/${article.id}\n【$title - $authorName 的回答】"
-        }
-
-        ArticleType.Article -> {
-            "https://zhuanlan.zhihu.com/p/${article.id}\n【$title - $authorName 的文章】"
-        }
-    }
-
-fun articleWebUrl(article: Article): String =
-    when (article.type) {
-        ArticleType.Answer -> "https://www.zhihu.com/answer/${article.id}"
-        ArticleType.Article -> "https://zhuanlan.zhihu.com/p/${article.id}"
-    }
-
-fun articleSpeechText(
-    title: String,
-    content: String,
-    maxContentLength: Int = 50_000,
-): String =
-    buildString {
-        append(title)
-        append("。")
-        if (content.isNotEmpty()) {
-            val contentToProcess =
-                if (content.length > maxContentLength) {
-                    content.substring(0, maxContentLength) + "..."
-                } else {
-                    content
-                }
-            append(Ksoup.parse(contentToProcess).text())
-        }
-    }
-
-/**
- * 同一问题下不同回答之间导航时使用的共享状态。
- *
- * 手势处理器会在导航前更新这里的状态，让平台适配层选择正确的入场/出场转场方向，并避免 route 切换时丢失待交接的
- * navigator 或内容。它不能放在单个文章 composable 内，因为离开页和进入页都需要通过它协调。
- */
-interface ArticleAnswerSwitchState {
-    var navigator: AnswerNavigator?
-    var pendingNavigator: AnswerNavigator?
-    var pendingInitialContent: CachedAnswerContent?
-    var navigatingFromAnswerSwitch: Boolean
-    var answerSwitchDisposeInProgress: Boolean
-    var answerTransitionDirection: ArticleAnswerTransitionDirection
-    var isImmersiveMode: Boolean
-
-    fun reset()
-
-    fun promoteForNavigation(direction: ArticleAnswerTransitionDirection)
-}
-
-enum class ArticleAnswerTransitionDirection {
-    DEFAULT,
-    VERTICAL_NEXT,
-    VERTICAL_PREVIOUS,
-    HORIZONTAL_NEXT,
-    HORIZONTAL_PREVIOUS,
-}
-
-enum class TtsState(
-    val isSpeaking: Boolean = false,
-) {
-    Uninitialized,
-    Initializing,
-    Ready,
-    Error,
-    LoadingText,
-    Speaking(true),
-    Paused,
-    SwitchingChunk(true),
-}
 
 /**
  * 影响应用主壳形态的不可变设置快照。
