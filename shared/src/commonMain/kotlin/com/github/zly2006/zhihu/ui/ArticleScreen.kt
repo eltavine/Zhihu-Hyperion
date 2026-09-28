@@ -104,7 +104,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil3.compose.AsyncImage
 import com.github.zly2006.zhihu.data.DataHolder
+import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.VoteUpState
+import com.github.zly2006.zhihu.filter.ContentOpenTracker
 import com.github.zly2006.zhihu.markdown.RenderMarkdown
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
@@ -112,13 +114,22 @@ import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.Topic
 import com.github.zly2006.zhihu.platform.PlatformBackHandler
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isAnswerSwipeSupported
 import com.github.zly2006.zhihu.platform.isArticleHtmlExportSupported
 import com.github.zly2006.zhihu.platform.isArticleImageExportSupported
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
+import com.github.zly2006.zhihu.platform.isLegacyWebViewSupported
+import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
-import com.github.zly2006.zhihu.ui.AnswerDoubleTapAction
+import com.github.zly2006.zhihu.reading.TtsState
+import com.github.zly2006.zhihu.reading.rememberArticleSpeechToggler
+import com.github.zly2006.zhihu.reading.rememberArticleTtsState
+import com.github.zly2006.zhihu.theme.DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY
+import com.github.zly2006.zhihu.ui.article.ANSWER_DOUBLE_TAP_ACTION_PREFERENCE_KEY
+import com.github.zly2006.zhihu.ui.article.ARTICLE_USE_WEBVIEW_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.article.AigcFlagSheet
+import com.github.zly2006.zhihu.ui.article.AnswerDoubleTapAction
+import com.github.zly2006.zhihu.ui.article.AnswerEndorsementChip
 import com.github.zly2006.zhihu.ui.article.ArticleActionsMenu
 import com.github.zly2006.zhihu.ui.article.ArticleSummarySheet
 import com.github.zly2006.zhihu.ui.article.ArticleVideoAttachmentContent
@@ -133,36 +144,39 @@ import com.github.zly2006.zhihu.ui.article.voteUpNeutralContent
 import com.github.zly2006.zhihu.ui.article.voteUpNeutralContentDuo3
 import com.github.zly2006.zhihu.ui.components.ANSWER_SWITCH_SENSITIVITY_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.components.AnswerHorizontalOverscroll
+import com.github.zly2006.zhihu.ui.components.AnswerPreview
 import com.github.zly2006.zhihu.ui.components.AnswerVerticalOverscroll
 import com.github.zly2006.zhihu.ui.components.AuthorBadge
 import com.github.zly2006.zhihu.ui.components.CollectionDialogComponent
-import com.github.zly2006.zhihu.ui.components.CommentScreenComponent
 import com.github.zly2006.zhihu.ui.components.ContentEndMarker
 import com.github.zly2006.zhihu.ui.components.DEFAULT_ANSWER_SWITCH_SENSITIVITY
+import com.github.zly2006.zhihu.ui.components.DEFAULT_PAGE_TURN_SWITCH_ANSWER
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
 import com.github.zly2006.zhihu.ui.components.ExportDialogComponent
 import com.github.zly2006.zhihu.ui.components.MyModalBottomSheet
+import com.github.zly2006.zhihu.ui.components.PREF_PAGE_TURN_SWITCH_ANSWER
 import com.github.zly2006.zhihu.ui.components.VerticalReadingProgressBar
 import com.github.zly2006.zhihu.ui.components.VotersSheet
 import com.github.zly2006.zhihu.ui.components.ZhihuTwoRowsTopAppBar
 import com.github.zly2006.zhihu.ui.components.normalizedAnswerSwitchSensitivity
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
+import com.github.zly2006.zhihu.ui.components.rememberObservedSetting
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.ui.components.rememberPreferCollapsedExitUntilCollapsedScrollBehavior
-import com.github.zly2006.zhihu.ui.subscreens.DEFAULT_PAGE_TURN_SWITCH_ANSWER
-import com.github.zly2006.zhihu.ui.subscreens.DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY
-import com.github.zly2006.zhihu.ui.subscreens.PREF_PAGE_TURN_SWITCH_ANSWER
 import com.github.zly2006.zhihu.util.formatCompactCount
 import com.github.zly2006.zhihu.util.smoothGradient
+import com.github.zly2006.zhihu.viewmodel.AigcVoteService
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerSwitchState
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel
 import com.github.zly2006.zhihu.viewmodel.addReadHistory
 import com.github.zly2006.zhihu.viewmodel.formatArticleDateTime
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
-import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
+import com.github.zly2006.zhihu.viewmodel.rememberContentExporter
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import com.materialkolor.ktx.harmonize
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 import zhihu.shared.generated.resources.Res
 import zhihu.shared.generated.resources.ic_vote_down_24dp
 import zhihu.shared.generated.resources.ic_vote_up_24dp
@@ -193,13 +207,18 @@ fun ArticleScreen(
     val navigator = LocalNavigator.current
     val readingPlayerOverlayPadding = LocalReadingPlayerOverlayPadding.current
     val readingPlayerOverlayOffsetState = LocalReadingPlayerOverlayOffsetState.current
-    val environment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = false)
     val articleNavController = LocalArticleNavController.current
     val backStackEntry by articleNavController?.currentBackStackEntryAsState()
         ?: remember { mutableStateOf(null) }
 
     val scrollState = rememberScrollState()
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
+    val history = koinInject<HistoryStorage>()
+    val contentOpens = koinInject<ContentOpenTracker>()
+    val aigcVote = koinInject<AigcVoteService>()
+    val clipboard = rememberPlainTextClipboard()
+    val exporter = rememberContentExporter()
     val isTitleAutoHide by rememberObservedSetting(settings, "titleAutoHide") { getBoolean("titleAutoHide", false) }
     val autoHideArticleBottomBar by rememberObservedSetting(settings, "autoHideArticleBottomBar") {
         getBoolean("autoHideArticleBottomBar", false)
@@ -276,7 +295,8 @@ fun ArticleScreen(
                 .coerceAtLeast(0f)
         },
     )
-    val sharedData = sharedArticleAnswerSwitchState.takeIf { article.type == ArticleType.Answer }
+    val answerSwitchState = koinInject<ArticleAnswerSwitchState>()
+    val sharedData = answerSwitchState.takeIf { article.type == ArticleType.Answer }
     var isImmersiveMode by remember(sharedData) {
         mutableStateOf(sharedData?.isImmersiveMode ?: false)
     }
@@ -349,13 +369,23 @@ fun ArticleScreen(
 
     fun performAnswerDoubleTapAction(action: AnswerDoubleTapAction) {
         when (action) {
-            AnswerDoubleTapAction.None -> Unit
-            AnswerDoubleTapAction.Ask -> showDoubleTapActionDialog = true
-            AnswerDoubleTapAction.VoteUp -> upVoteFromDoubleTap()
+            AnswerDoubleTapAction.None -> {
+                Unit
+            }
+
+            AnswerDoubleTapAction.Ask -> {
+                showDoubleTapActionDialog = true
+            }
+
+            AnswerDoubleTapAction.VoteUp -> {
+                upVoteFromDoubleTap()
+            }
+
             AnswerDoubleTapAction.OpenComments -> {
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                 showComments = true
             }
+
             AnswerDoubleTapAction.ToggleImmersive -> {
                 isImmersiveMode = !isImmersiveMode
             }
@@ -383,7 +413,7 @@ fun ArticleScreen(
     LaunchedEffect(scrollState) {
         snapshotFlow { scrollState.value }.collectLatest { currentScroll ->
             viewModel.updateAigcReadProgress(currentScroll, effectiveScrollMaxValue)
-            viewModel.syncAigcReadEventIfEligible(environment)
+            viewModel.syncAigcReadEventIfEligible(aigcVote)
 
             if (viewModel.rememberedScrollYSync) {
                 viewModel.rememberedScrollY = currentScroll
@@ -399,9 +429,9 @@ fun ArticleScreen(
     )
     LaunchedEffect(article.id) {
         answerNavigationState.prepareArticle()
-        viewModel.loadArticle(environment)
+        viewModel.loadArticle(environment, history, contentOpens, answerSwitchState)
         viewModel.loadCollections(environment)
-        viewModel.loadAigcFlagStatus(environment)
+        viewModel.loadAigcFlagStatus(aigcVote)
     }
 
     LaunchedEffect(article.type, article.id, viewModel.content) {
@@ -409,7 +439,7 @@ fun ArticleScreen(
             viewModel.updateAigcReadProgress(scrollState.value, latestEffectiveScrollMaxValue)
             delay(15_000)
             viewModel.updateAigcReadProgress(scrollState.value, latestEffectiveScrollMaxValue)
-            viewModel.syncAigcReadEventIfEligible(environment)
+            viewModel.syncAigcReadEventIfEligible(aigcVote)
         }
     }
     LaunchedEffect(scrollState, viewModel.content) {
@@ -1135,8 +1165,8 @@ fun ArticleScreen(
         // 根据模式渲染
         if (article.type == ArticleType.Answer && answerSwitchMode == "vertical") {
             AnswerVerticalOverscroll(
-                previousAnswer = nav?.previousAnswer,
-                nextAnswer = nav?.nextAnswer,
+                previousAnswer = nav?.previousAnswer?.let { AnswerPreview(it.authorName, it.title, it.authorAvatarUrl, it.sourceLabel) },
+                nextAnswer = nav?.nextAnswer?.let { AnswerPreview(it.authorName, it.title, it.authorAvatarUrl, it.sourceLabel) },
                 onNavigatePrevious = answerNavigationState::navigateToPrevious,
                 onNavigateNext = answerNavigationState::navigateToNext,
                 isAtTop = { scrollState.value == 0 },
@@ -1232,7 +1262,7 @@ fun ArticleScreen(
         },
         onAigcFlagRequest = {
             showAigcFlagSheet = true
-            viewModel.loadAigcFlagStatus(environment)
+            viewModel.loadAigcFlagStatus(aigcVote)
         },
         onExportRequest = { showExportDialog = true },
         onSetImmersiveDoubleTap = {
@@ -1270,7 +1300,7 @@ fun ArticleScreen(
         showDialog = showAigcFlagSheet,
         viewModel = viewModel,
         onDismissRequest = { showAigcFlagSheet = false },
-        onSubmitRequest = { viewModel.submitAigcFlag(environment) },
+        onSubmitRequest = { viewModel.submitAigcFlag(aigcVote) },
     )
 
     // 使用新的收藏夹对话框组件
@@ -1382,16 +1412,16 @@ fun ArticleScreen(
         isImageExportSupported = isArticleImageExportSupported,
         onDismiss = { showExportDialog = false },
         onExportHtml = { includeAppAttribution, onComplete ->
-            viewModel.exportToHtml(environment, includeAppAttribution, onComplete)
+            viewModel.exportToHtml(environment, exporter, includeAppAttribution, onComplete)
         },
         onExportImage = { includeAppAttribution, onComplete ->
-            viewModel.exportToImage(environment, includeAppAttribution, onComplete)
+            viewModel.exportToImage(environment, exporter, includeAppAttribution, onComplete)
         },
         onExportMarkdown = {
-            viewModel.exportToClipboard(environment)
+            viewModel.exportToClipboard(clipboard)
         },
         onExportImageWithComments = { commentCount, includeAppAttribution, onComplete ->
-            viewModel.exportToImageWithComments(environment, commentCount, includeAppAttribution, onComplete)
+            viewModel.exportToImageWithComments(environment, exporter, commentCount, includeAppAttribution, onComplete)
         },
     )
 }

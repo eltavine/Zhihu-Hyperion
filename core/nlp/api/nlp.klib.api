@@ -1,0 +1,163 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, macosArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <Zhihu.core:nlp>
+abstract fun interface com.github.zly2006.zhihu.nlp/KeywordWeightExtractor { // com.github.zly2006.zhihu.nlp/KeywordWeightExtractor|null[0]
+    abstract suspend fun extractKeywordsWithWeight(kotlin/String, kotlin/Int): kotlin.collections/List<com.github.zly2006.zhihu.nlp/KeywordWithWeight> // com.github.zly2006.zhihu.nlp/KeywordWeightExtractor.extractKeywordsWithWeight|extractKeywordsWithWeight(kotlin.String;kotlin.Int){}[0]
+}
+
+final class com.github.zly2006.zhihu.nlp/KeywordSelectionDebug { // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug|null[0]
+    constructor <init>(kotlin/Int, kotlin/String, kotlin/Double, kotlin/Double, kotlin/Double) // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.<init>|<init>(kotlin.Int;kotlin.String;kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+
+    final val candidate // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.candidate|{}candidate[0]
+        final fun <get-candidate>(): kotlin/String // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.candidate.<get-candidate>|<get-candidate>(){}[0]
+    final val iteration // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.iteration|{}iteration[0]
+        final fun <get-iteration>(): kotlin/Int // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.iteration.<get-iteration>|<get-iteration>(){}[0]
+    final val redundancy // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.redundancy|{}redundancy[0]
+        final fun <get-redundancy>(): kotlin/Double // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.redundancy.<get-redundancy>|<get-redundancy>(){}[0]
+    final val relevance // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.relevance|{}relevance[0]
+        final fun <get-relevance>(): kotlin/Double // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.relevance.<get-relevance>|<get-relevance>(){}[0]
+    final val score // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.score|{}score[0]
+        final fun <get-score>(): kotlin/Double // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.score.<get-score>|<get-score>(){}[0]
+
+    final fun component1(): kotlin/Int // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.component2|component2(){}[0]
+    final fun component3(): kotlin/Double // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.component3|component3(){}[0]
+    final fun component4(): kotlin/Double // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.component4|component4(){}[0]
+    final fun component5(): kotlin/Double // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.component5|component5(){}[0]
+    final fun copy(kotlin/Int = ..., kotlin/String = ..., kotlin/Double = ..., kotlin/Double = ..., kotlin/Double = ...): com.github.zly2006.zhihu.nlp/KeywordSelectionDebug // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.copy|copy(kotlin.Int;kotlin.String;kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.nlp/KeywordSelectionDebug.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.nlp/KeywordWithWeight { // com.github.zly2006.zhihu.nlp/KeywordWithWeight|null[0]
+    constructor <init>(kotlin/String, kotlin/Double) // com.github.zly2006.zhihu.nlp/KeywordWithWeight.<init>|<init>(kotlin.String;kotlin.Double){}[0]
+
+    final val keyword // com.github.zly2006.zhihu.nlp/KeywordWithWeight.keyword|{}keyword[0]
+        final fun <get-keyword>(): kotlin/String // com.github.zly2006.zhihu.nlp/KeywordWithWeight.keyword.<get-keyword>|<get-keyword>(){}[0]
+    final val weight // com.github.zly2006.zhihu.nlp/KeywordWithWeight.weight|{}weight[0]
+        final fun <get-weight>(): kotlin/Double // com.github.zly2006.zhihu.nlp/KeywordWithWeight.weight.<get-weight>|<get-weight>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.nlp/KeywordWithWeight.component1|component1(){}[0]
+    final fun component2(): kotlin/Double // com.github.zly2006.zhihu.nlp/KeywordWithWeight.component2|component2(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/Double = ...): com.github.zly2006.zhihu.nlp/KeywordWithWeight // com.github.zly2006.zhihu.nlp/KeywordWithWeight.copy|copy(kotlin.String;kotlin.Double){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.nlp/KeywordWithWeight.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.nlp/KeywordWithWeight.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.nlp/KeywordWithWeight.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.nlp/NlpDebugTrace { // com.github.zly2006.zhihu.nlp/NlpDebugTrace|null[0]
+    constructor <init>(kotlin/String, kotlin.collections/List<kotlin/String> = ..., kotlin.collections/List<com.github.zly2006.zhihu.nlp/SegmentDebugInfo> = ..., kotlin.collections/MutableList<com.github.zly2006.zhihu.nlp/KeywordSelectionDebug> = ..., kotlin.collections/MutableList<com.github.zly2006.zhihu.nlp/KeywordWithWeight> = ...) // com.github.zly2006.zhihu.nlp/NlpDebugTrace.<init>|<init>(kotlin.String;kotlin.collections.List<kotlin.String>;kotlin.collections.List<com.github.zly2006.zhihu.nlp.SegmentDebugInfo>;kotlin.collections.MutableList<com.github.zly2006.zhihu.nlp.KeywordSelectionDebug>;kotlin.collections.MutableList<com.github.zly2006.zhihu.nlp.KeywordWithWeight>){}[0]
+
+    final val candidateKeywords // com.github.zly2006.zhihu.nlp/NlpDebugTrace.candidateKeywords|{}candidateKeywords[0]
+        final fun <get-candidateKeywords>(): kotlin.collections/List<kotlin/String> // com.github.zly2006.zhihu.nlp/NlpDebugTrace.candidateKeywords.<get-candidateKeywords>|<get-candidateKeywords>(){}[0]
+    final val mmrIterations // com.github.zly2006.zhihu.nlp/NlpDebugTrace.mmrIterations|{}mmrIterations[0]
+        final fun <get-mmrIterations>(): kotlin.collections/MutableList<com.github.zly2006.zhihu.nlp/KeywordSelectionDebug> // com.github.zly2006.zhihu.nlp/NlpDebugTrace.mmrIterations.<get-mmrIterations>|<get-mmrIterations>(){}[0]
+    final val normalizedText // com.github.zly2006.zhihu.nlp/NlpDebugTrace.normalizedText|{}normalizedText[0]
+        final fun <get-normalizedText>(): kotlin/String // com.github.zly2006.zhihu.nlp/NlpDebugTrace.normalizedText.<get-normalizedText>|<get-normalizedText>(){}[0]
+    final val segments // com.github.zly2006.zhihu.nlp/NlpDebugTrace.segments|{}segments[0]
+        final fun <get-segments>(): kotlin.collections/List<com.github.zly2006.zhihu.nlp/SegmentDebugInfo> // com.github.zly2006.zhihu.nlp/NlpDebugTrace.segments.<get-segments>|<get-segments>(){}[0]
+    final val selectedKeywords // com.github.zly2006.zhihu.nlp/NlpDebugTrace.selectedKeywords|{}selectedKeywords[0]
+        final fun <get-selectedKeywords>(): kotlin.collections/MutableList<com.github.zly2006.zhihu.nlp/KeywordWithWeight> // com.github.zly2006.zhihu.nlp/NlpDebugTrace.selectedKeywords.<get-selectedKeywords>|<get-selectedKeywords>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.nlp/NlpDebugTrace.component1|component1(){}[0]
+    final fun component2(): kotlin.collections/List<kotlin/String> // com.github.zly2006.zhihu.nlp/NlpDebugTrace.component2|component2(){}[0]
+    final fun component3(): kotlin.collections/List<com.github.zly2006.zhihu.nlp/SegmentDebugInfo> // com.github.zly2006.zhihu.nlp/NlpDebugTrace.component3|component3(){}[0]
+    final fun component4(): kotlin.collections/MutableList<com.github.zly2006.zhihu.nlp/KeywordSelectionDebug> // com.github.zly2006.zhihu.nlp/NlpDebugTrace.component4|component4(){}[0]
+    final fun component5(): kotlin.collections/MutableList<com.github.zly2006.zhihu.nlp/KeywordWithWeight> // com.github.zly2006.zhihu.nlp/NlpDebugTrace.component5|component5(){}[0]
+    final fun copy(kotlin/String = ..., kotlin.collections/List<kotlin/String> = ..., kotlin.collections/List<com.github.zly2006.zhihu.nlp/SegmentDebugInfo> = ..., kotlin.collections/MutableList<com.github.zly2006.zhihu.nlp/KeywordSelectionDebug> = ..., kotlin.collections/MutableList<com.github.zly2006.zhihu.nlp/KeywordWithWeight> = ...): com.github.zly2006.zhihu.nlp/NlpDebugTrace // com.github.zly2006.zhihu.nlp/NlpDebugTrace.copy|copy(kotlin.String;kotlin.collections.List<kotlin.String>;kotlin.collections.List<com.github.zly2006.zhihu.nlp.SegmentDebugInfo>;kotlin.collections.MutableList<com.github.zly2006.zhihu.nlp.KeywordSelectionDebug>;kotlin.collections.MutableList<com.github.zly2006.zhihu.nlp.KeywordWithWeight>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.nlp/NlpDebugTrace.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.nlp/NlpDebugTrace.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.nlp/NlpDebugTrace.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.nlp/PhraseMatchResult { // com.github.zly2006.zhihu.nlp/PhraseMatchResult|null[0]
+    constructor <init>(kotlin/String, kotlin/String, kotlin.collections/List<kotlin/String>, kotlin/Int?, kotlin/Double, kotlin.collections/List<com.github.zly2006.zhihu.nlp/SegmentMatchDebug>) // com.github.zly2006.zhihu.nlp/PhraseMatchResult.<init>|<init>(kotlin.String;kotlin.String;kotlin.collections.List<kotlin.String>;kotlin.Int?;kotlin.Double;kotlin.collections.List<com.github.zly2006.zhihu.nlp.SegmentMatchDebug>){}[0]
+
+    final val bestScore // com.github.zly2006.zhihu.nlp/PhraseMatchResult.bestScore|{}bestScore[0]
+        final fun <get-bestScore>(): kotlin/Double // com.github.zly2006.zhihu.nlp/PhraseMatchResult.bestScore.<get-bestScore>|<get-bestScore>(){}[0]
+    final val keywords // com.github.zly2006.zhihu.nlp/PhraseMatchResult.keywords|{}keywords[0]
+        final fun <get-keywords>(): kotlin.collections/List<kotlin/String> // com.github.zly2006.zhihu.nlp/PhraseMatchResult.keywords.<get-keywords>|<get-keywords>(){}[0]
+    final val normalizedPhrase // com.github.zly2006.zhihu.nlp/PhraseMatchResult.normalizedPhrase|{}normalizedPhrase[0]
+        final fun <get-normalizedPhrase>(): kotlin/String // com.github.zly2006.zhihu.nlp/PhraseMatchResult.normalizedPhrase.<get-normalizedPhrase>|<get-normalizedPhrase>(){}[0]
+    final val phrase // com.github.zly2006.zhihu.nlp/PhraseMatchResult.phrase|{}phrase[0]
+        final fun <get-phrase>(): kotlin/String // com.github.zly2006.zhihu.nlp/PhraseMatchResult.phrase.<get-phrase>|<get-phrase>(){}[0]
+    final val phraseEmbeddingDim // com.github.zly2006.zhihu.nlp/PhraseMatchResult.phraseEmbeddingDim|{}phraseEmbeddingDim[0]
+        final fun <get-phraseEmbeddingDim>(): kotlin/Int? // com.github.zly2006.zhihu.nlp/PhraseMatchResult.phraseEmbeddingDim.<get-phraseEmbeddingDim>|<get-phraseEmbeddingDim>(){}[0]
+    final val segmentDebug // com.github.zly2006.zhihu.nlp/PhraseMatchResult.segmentDebug|{}segmentDebug[0]
+        final fun <get-segmentDebug>(): kotlin.collections/List<com.github.zly2006.zhihu.nlp/SegmentMatchDebug> // com.github.zly2006.zhihu.nlp/PhraseMatchResult.segmentDebug.<get-segmentDebug>|<get-segmentDebug>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.nlp/PhraseMatchResult.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.nlp/PhraseMatchResult.component2|component2(){}[0]
+    final fun component3(): kotlin.collections/List<kotlin/String> // com.github.zly2006.zhihu.nlp/PhraseMatchResult.component3|component3(){}[0]
+    final fun component4(): kotlin/Int? // com.github.zly2006.zhihu.nlp/PhraseMatchResult.component4|component4(){}[0]
+    final fun component5(): kotlin/Double // com.github.zly2006.zhihu.nlp/PhraseMatchResult.component5|component5(){}[0]
+    final fun component6(): kotlin.collections/List<com.github.zly2006.zhihu.nlp/SegmentMatchDebug> // com.github.zly2006.zhihu.nlp/PhraseMatchResult.component6|component6(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin.collections/List<kotlin/String> = ..., kotlin/Int? = ..., kotlin/Double = ..., kotlin.collections/List<com.github.zly2006.zhihu.nlp/SegmentMatchDebug> = ...): com.github.zly2006.zhihu.nlp/PhraseMatchResult // com.github.zly2006.zhihu.nlp/PhraseMatchResult.copy|copy(kotlin.String;kotlin.String;kotlin.collections.List<kotlin.String>;kotlin.Int?;kotlin.Double;kotlin.collections.List<com.github.zly2006.zhihu.nlp.SegmentMatchDebug>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.nlp/PhraseMatchResult.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.nlp/PhraseMatchResult.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.nlp/PhraseMatchResult.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.nlp/SegmentDebugInfo { // com.github.zly2006.zhihu.nlp/SegmentDebugInfo|null[0]
+    constructor <init>(kotlin/Int, kotlin/String, kotlin/Int, kotlin/Int?, kotlin/String) // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.<init>|<init>(kotlin.Int;kotlin.String;kotlin.Int;kotlin.Int?;kotlin.String){}[0]
+
+    final val embeddingDim // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.embeddingDim|{}embeddingDim[0]
+        final fun <get-embeddingDim>(): kotlin/Int? // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.embeddingDim.<get-embeddingDim>|<get-embeddingDim>(){}[0]
+    final val embeddingPreview // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.embeddingPreview|{}embeddingPreview[0]
+        final fun <get-embeddingPreview>(): kotlin/String // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.embeddingPreview.<get-embeddingPreview>|<get-embeddingPreview>(){}[0]
+    final val index // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.index|{}index[0]
+        final fun <get-index>(): kotlin/Int // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.index.<get-index>|<get-index>(){}[0]
+    final val length // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.length|{}length[0]
+        final fun <get-length>(): kotlin/Int // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.length.<get-length>|<get-length>(){}[0]
+    final val text // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.text|{}text[0]
+        final fun <get-text>(): kotlin/String // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.text.<get-text>|<get-text>(){}[0]
+
+    final fun component1(): kotlin/Int // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.component2|component2(){}[0]
+    final fun component3(): kotlin/Int // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.component3|component3(){}[0]
+    final fun component4(): kotlin/Int? // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.component4|component4(){}[0]
+    final fun component5(): kotlin/String // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.component5|component5(){}[0]
+    final fun copy(kotlin/Int = ..., kotlin/String = ..., kotlin/Int = ..., kotlin/Int? = ..., kotlin/String = ...): com.github.zly2006.zhihu.nlp/SegmentDebugInfo // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.copy|copy(kotlin.Int;kotlin.String;kotlin.Int;kotlin.Int?;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.nlp/SegmentDebugInfo.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.nlp/SegmentMatchDebug { // com.github.zly2006.zhihu.nlp/SegmentMatchDebug|null[0]
+    constructor <init>(kotlin/Int, kotlin/String, kotlin/Int, kotlin/Int?, kotlin/Double?) // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.<init>|<init>(kotlin.Int;kotlin.String;kotlin.Int;kotlin.Int?;kotlin.Double?){}[0]
+
+    final val embeddingDim // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.embeddingDim|{}embeddingDim[0]
+        final fun <get-embeddingDim>(): kotlin/Int? // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.embeddingDim.<get-embeddingDim>|<get-embeddingDim>(){}[0]
+    final val index // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.index|{}index[0]
+        final fun <get-index>(): kotlin/Int // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.index.<get-index>|<get-index>(){}[0]
+    final val score // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.score|{}score[0]
+        final fun <get-score>(): kotlin/Double? // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.score.<get-score>|<get-score>(){}[0]
+    final val segmentLength // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.segmentLength|{}segmentLength[0]
+        final fun <get-segmentLength>(): kotlin/Int // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.segmentLength.<get-segmentLength>|<get-segmentLength>(){}[0]
+    final val segmentTextPreview // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.segmentTextPreview|{}segmentTextPreview[0]
+        final fun <get-segmentTextPreview>(): kotlin/String // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.segmentTextPreview.<get-segmentTextPreview>|<get-segmentTextPreview>(){}[0]
+
+    final fun component1(): kotlin/Int // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.component2|component2(){}[0]
+    final fun component3(): kotlin/Int // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.component3|component3(){}[0]
+    final fun component4(): kotlin/Int? // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.component4|component4(){}[0]
+    final fun component5(): kotlin/Double? // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.component5|component5(){}[0]
+    final fun copy(kotlin/Int = ..., kotlin/String = ..., kotlin/Int = ..., kotlin/Int? = ..., kotlin/Double? = ...): com.github.zly2006.zhihu.nlp/SegmentMatchDebug // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.copy|copy(kotlin.Int;kotlin.String;kotlin.Int;kotlin.Int?;kotlin.Double?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.nlp/SegmentMatchDebug.toString|toString(){}[0]
+}
+
+final object com.github.zly2006.zhihu.nlp/KeywordAnalyzerCore { // com.github.zly2006.zhihu.nlp/KeywordAnalyzerCore|null[0]
+    final fun buildWeightedText(kotlin/String, kotlin/String?, kotlin/String?): kotlin/String // com.github.zly2006.zhihu.nlp/KeywordAnalyzerCore.buildWeightedText|buildWeightedText(kotlin.String;kotlin.String?;kotlin.String?){}[0]
+    final fun isNumberOnly(kotlin/String): kotlin/Boolean // com.github.zly2006.zhihu.nlp/KeywordAnalyzerCore.isNumberOnly|isNumberOnly(kotlin.String){}[0]
+    final fun isStopWord(kotlin/String): kotlin/Boolean // com.github.zly2006.zhihu.nlp/KeywordAnalyzerCore.isStopWord|isStopWord(kotlin.String){}[0]
+    final fun processKeywordsWithWeight(kotlin.collections/List<com.github.zly2006.zhihu.nlp/KeywordWithWeight>, kotlin/Int): kotlin.collections/List<com.github.zly2006.zhihu.nlp/KeywordWithWeight> // com.github.zly2006.zhihu.nlp/KeywordAnalyzerCore.processKeywordsWithWeight|processKeywordsWithWeight(kotlin.collections.List<com.github.zly2006.zhihu.nlp.KeywordWithWeight>;kotlin.Int){}[0]
+    final suspend fun extractFromFeedWithWeight(kotlin/String, kotlin/String? = ..., kotlin/String? = ..., kotlin/Int = ..., com.github.zly2006.zhihu.nlp/KeywordWeightExtractor): kotlin.collections/List<com.github.zly2006.zhihu.nlp/KeywordWithWeight> // com.github.zly2006.zhihu.nlp/KeywordAnalyzerCore.extractFromFeedWithWeight|extractFromFeedWithWeight(kotlin.String;kotlin.String?;kotlin.String?;kotlin.Int;com.github.zly2006.zhihu.nlp.KeywordWeightExtractor){}[0]
+}

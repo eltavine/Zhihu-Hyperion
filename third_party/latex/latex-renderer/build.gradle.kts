@@ -30,10 +30,10 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "com.hrm.latex.renderer"
-        compileSdk = 37
-        minSdk = 27
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
         compilerOptions.jvmTarget = JvmTarget.JVM_17
         androidResources.enable = true
     }
@@ -47,19 +47,19 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(project(":latex-parser"))
-            implementation("org.jetbrains.compose.runtime:runtime:1.11.1")
-            implementation("org.jetbrains.compose.foundation:foundation:1.11.1")
-            implementation("org.jetbrains.compose.material3:material3:1.9.0")
-            implementation("org.jetbrains.compose.ui:ui:1.11.1")
-            implementation("org.jetbrains.compose.components:components-resources:1.11.1")
-            implementation("org.jetbrains.compose.ui:ui-tooling-preview:1.11.1")
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.components.resources)
+            implementation(libs.compose.ui.tooling.preview)
+            implementation(libs.kotlinx.coroutines.core)
         }
         androidMain.dependencies {
-            implementation("androidx.graphics:graphics-path:1.0.1")
+            implementation(libs.androidx.graphics.path)
         }
         jvmMain.dependencies {
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.11.0")
+            implementation(libs.kotlinx.coroutines.swing)
         }
     }
 }

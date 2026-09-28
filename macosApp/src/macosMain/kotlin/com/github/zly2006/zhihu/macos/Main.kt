@@ -20,11 +20,13 @@
 package com.github.zly2006.zhihu.macos
 
 import androidx.compose.ui.window.Window
+import com.github.zly2006.zhihu.nativeZhihuModules
 import com.github.zly2006.zhihu.platform.MacosBackNavigationHost
 import com.github.zly2006.zhihu.platform.isMacosQuitOnWindowCloseEnabled
 import com.github.zly2006.zhihu.theme.ZhihuTheme
 import com.github.zly2006.zhihu.ui.MacosZhihuMain
 import kotlinx.cinterop.autoreleasepool
+import org.koin.core.context.startKoin
 import platform.AppKit.NSApplication
 import platform.AppKit.NSApplicationActivationPolicy
 import platform.AppKit.NSApplicationDelegateProtocol
@@ -45,6 +47,7 @@ fun main() {
         }
     }
 
+    startKoin { modules(nativeZhihuModules()) }
     autoreleasepool {
         val application = NSApplication.sharedApplication()
         application.setActivationPolicy(NSApplicationActivationPolicy.NSApplicationActivationPolicyRegular)

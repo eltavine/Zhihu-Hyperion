@@ -95,7 +95,6 @@ import com.github.zly2006.zhihu.navigation.Search
 import com.github.zly2006.zhihu.navigation.Topic
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageDuration
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
 import com.github.zly2006.zhihu.ui.components.AuthorBadge
@@ -104,13 +103,12 @@ import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockConfirmDialog
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockRequest
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockType
 import com.github.zly2006.zhihu.ui.components.FeedCard
-import com.github.zly2006.zhihu.ui.components.FeedPullToRefresh
 import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.util.parseEmphasizedHtmlTextWithTheme
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.SearchContentType
 import com.github.zly2006.zhihu.viewmodel.feed.SearchEntity
 import com.github.zly2006.zhihu.viewmodel.feed.SearchSortOption
@@ -120,7 +118,8 @@ import com.github.zly2006.zhihu.viewmodel.feed.SearchTimeRange
 import com.github.zly2006.zhihu.viewmodel.feed.SearchViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.ZHIHU_HOT_SEARCH_URL
 import com.github.zly2006.zhihu.viewmodel.feed.fetchSearchSuggest
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
@@ -131,6 +130,7 @@ import kotlinx.coroutines.yield
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.JsonArray
+import org.koin.compose.koinInject
 
 @Serializable
 private data class HotSearchItem(
@@ -169,8 +169,9 @@ fun SearchScreen(
 ) {
     val navigator = LocalNavigator.current
     val userMessages = rememberUserMessageSink()
-    val settings = rememberSettingsStore()
-    val viewModel = viewModel { SearchViewModel(search.query, search.restrictedMemberHashId) }
+    val settings = koinInject<SettingsStore>()
+    val blockedUsers = koinInject<ContentFilterDatabase>().blockedUserDao()
+    val viewModel = viewModel { SearchViewModel(search.query, settings, blockedUsers, search.restrictedMemberHashId) }
     val readingQueueSourceId = buildString {
         append("search:")
         append(search.restrictedMemberHashId)
@@ -189,7 +190,7 @@ fun SearchScreen(
         sourceId = readingQueueSourceId,
         items = viewModel.displayItems,
     )
-    val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val paginationEnvironment = rememberZhihuApiEnvironment(allowGuestAccess = false)
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val searchInputFocusRequester = remember { FocusRequester() }
@@ -503,7 +504,7 @@ fun SearchScreen(
                         }
                     }
                 } else if (
-                    showSearchHistory.value && searchHistoryItems.isNotEmpty() || showHotSearch.value && hotSearchItems.isNotEmpty()
+                    (showSearchHistory.value && searchHistoryItems.isNotEmpty()) || (showHotSearch.value && hotSearchItems.isNotEmpty())
                 ) {
                     val shouldShowHistory = showSearchHistory.value && searchHistoryItems.isNotEmpty()
                     val shouldShowHotSearch = showHotSearch.value && hotSearchItems.isNotEmpty()
@@ -735,6 +736,7 @@ fun SearchScreen(
                                     ) { Text(if (result.isFollowing) "已关注" else "关注") }
                                 }
                             }
+
                             is SearchEntity.Person -> {
                                 val person = result.person
                                 val plainName = person.name.replace("<em>", "").replace("</em>", "")
@@ -742,7 +744,10 @@ fun SearchScreen(
                                     navigator.onNavigate(Person(person.id, person.urlToken.orEmpty(), plainName))
                                 }
                             }
-                            is SearchEntity.Content -> Unit
+
+                            is SearchEntity.Content -> {
+                                Unit
+                            }
                         }
                     }
                     item {
@@ -755,7 +760,10 @@ fun SearchScreen(
                                     Text("加载失败：${viewModel.errorMessage}，点击重试")
                                 }
                             }
-                            !viewModel.isEnd -> ProgressIndicatorFooter(resultListState)
+
+                            !viewModel.isEnd -> {
+                                ProgressIndicatorFooter(resultListState)
+                            }
                         }
                     }
                 }
@@ -815,6 +823,7 @@ fun SearchScreen(
                                     )
                                 },
                             )
+
                             is SearchEntity.Person -> PersonSearchResultRow(result.person) {
                                 val person = result.person
                                 navigator.onNavigate(
@@ -825,6 +834,7 @@ fun SearchScreen(
                                     ),
                                 )
                             }
+
                             is SearchEntity.Topic -> Unit
                         }
                     }
@@ -916,7 +926,7 @@ private fun SearchFilterMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     viewModel: SearchViewModel,
-    paginationEnvironment: PaginationEnvironment,
+    paginationEnvironment: ZhihuApiEnvironment,
 ) {
     DropdownMenu(
         expanded = expanded,

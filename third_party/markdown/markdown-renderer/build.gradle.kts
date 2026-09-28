@@ -22,6 +22,7 @@
 
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     kotlin("multiplatform")
@@ -31,10 +32,10 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "com.hrm.markdown.renderer"
-        compileSdk = 37
-        minSdk = 27
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
         compilerOptions {
             jvmTarget = JvmTarget.JVM_17
@@ -58,16 +59,21 @@ kotlin {
             isStatic = true
         }
     }
-    macosArm64 {
+    macosArm64()
+    // Kotlin/Native only resolves the foundation internals used by the selection code through friend modules;
+    // INVISIBLE_REFERENCE suppression alone leaves unresolved IR that cannot be serialized into a klib.
+    targets.withType<KotlinNativeTarget>().configureEach {
+        val klibConfiguration = "${name}CompileKlibraries"
+        val foundationModule = "foundation-${name.lowercase()}"
         val foundationFriendModule = providers.provider {
             configurations
-                .getByName("macosArm64CompileKlibraries")
+                .getByName(klibConfiguration)
                 .incoming
                 .artifactView {
                     componentFilter { identifier ->
                         identifier is ModuleComponentIdentifier &&
                             identifier.group == "org.jetbrains.compose.foundation" &&
-                            identifier.module == "foundation-macosarm64"
+                            identifier.module == foundationModule
                     }
                 }.files
                 .singleFile
@@ -88,11 +94,11 @@ kotlin {
             api(project(":markdown-parser"))
             api(project(":markdown-runtime"))
 
-            implementation("org.jetbrains.compose.runtime:runtime:1.11.1")
-            implementation("org.jetbrains.compose.foundation:foundation:1.11.1")
-            implementation("org.jetbrains.compose.material3:material3:1.10.0-alpha05")
-            implementation("org.jetbrains.compose.ui:ui:1.11.1")
-            implementation("org.jetbrains.compose.components:components-resources:1.11.1")
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.components.resources)
 
             implementation(project(":latex-base"))
             implementation(project(":latex-parser"))
@@ -100,39 +106,48 @@ kotlin {
             implementation(project(":codehighlight-parser"))
             implementation(project(":codehighlight-render"))
 
-            implementation("io.coil-kt.coil3:coil-compose:3.5.0")
-            implementation("io.coil-kt.coil3:coil-network-ktor3:3.5.0")
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor3)
         }
-        val persistentSelectionMain by creating {
+        val persistentSelectionMain = create("persistentSelectionMain") {
             dependsOn(commonMain.get())
             kotlin.srcDir("src/androidAndJvmMain/kotlin")
+        }
+        // Compose foundation's internal selection API differs between AndroidX (androidMain) and the
+        // JetBrains fork used on desktop, macOS and iOS (skikoMain); see selection/SelectableCompat.kt.
+        val skikoMain = create("skikoMain") {
+            dependsOn(commonMain.get())
+        }
+        nativeMain {
+            dependsOn(skikoMain)
         }
         androidMain {
             dependsOn(persistentSelectionMain)
             dependencies {
-                implementation("io.ktor:ktor-client-android:3.5.0")
+                implementation(libs.ktor.client.android)
             }
         }
         iosMain.dependencies {
-            implementation("io.ktor:ktor-client-darwin:3.5.0")
+            implementation(libs.ktor.client.darwin)
         }
         macosMain.dependencies {
-            implementation("io.ktor:ktor-client-darwin:3.5.0")
+            implementation(libs.ktor.client.darwin)
         }
         macosMain {
             dependsOn(persistentSelectionMain)
         }
         jvmMain {
             dependsOn(persistentSelectionMain)
+            dependsOn(skikoMain)
             dependencies {
-                implementation("io.ktor:ktor-client-java:3.5.0")
+                implementation(libs.ktor.client.java)
             }
         }
         jvmTest.dependencies {
             implementation(kotlin("test"))
             implementation(compose.desktop.currentOs)
-            implementation("org.jetbrains.compose.ui:ui-test:1.11.1")
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
+            implementation(libs.compose.ui.test)
+            implementation(libs.kotlinx.serialization.json)
         }
     }
 }

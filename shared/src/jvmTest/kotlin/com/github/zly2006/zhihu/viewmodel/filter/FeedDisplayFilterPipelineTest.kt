@@ -282,17 +282,23 @@ class FeedDisplayFilterPipelineTest {
             .pipeline(
                 detailProvider = ContentDetailProvider { destination ->
                     when (destination) {
-                        is Article -> answer(
-                            id = destination.id,
-                            questionId = 20,
-                            questionTitle = "loading...",
-                            questionAuthor = author(id = "blocked-asker", name = "Blocked Asker"),
-                        )
+                        is Article -> {
+                            answer(
+                                id = destination.id,
+                                questionId = 20,
+                                questionTitle = "loading...",
+                                questionAuthor = author(id = "blocked-asker", name = "Blocked Asker"),
+                            )
+                        }
+
                         is Question -> {
                             questionFetchCount++
                             null
                         }
-                        else -> null
+
+                        else -> {
+                            null
+                        }
                     }
                 },
             ).filter(listOf(answerItem(questionId = 20, questionTitle = "loading...")))
@@ -322,12 +328,18 @@ class FeedDisplayFilterPipelineTest {
             .pipeline(
                 detailProvider = ContentDetailProvider { destination ->
                     when (destination) {
-                        is Article -> answer(id = destination.id, questionId = 20, questionTitle = "loading...")
+                        is Article -> {
+                            answer(id = destination.id, questionId = 20, questionTitle = "loading...")
+                        }
+
                         is Question -> {
                             fetchCount++
                             question(id = 20, title = "loading...", authorId = "blocked-asker", authorName = "Blocked Asker")
                         }
-                        else -> null
+
+                        else -> {
+                            null
+                        }
                     }
                 },
             ).filter(
@@ -364,12 +376,18 @@ class FeedDisplayFilterPipelineTest {
             .pipeline(
                 detailProvider = ContentDetailProvider { destination ->
                     when (destination) {
-                        is Article -> answer(id = destination.id, questionId = 20, questionTitle = "loading...")
+                        is Article -> {
+                            answer(id = destination.id, questionId = 20, questionTitle = "loading...")
+                        }
+
                         is Question -> {
                             questionFetchCount++
                             null
                         }
-                        else -> null
+
+                        else -> {
+                            null
+                        }
                     }
                 },
             ).filter(listOf(answerItem(questionId = 20, questionTitle = "loading...")))

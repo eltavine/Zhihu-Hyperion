@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
+import com.github.zly2006.zhihu.data.CommentSortOrder
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.navigation.Article
@@ -33,8 +34,8 @@ import com.github.zly2006.zhihu.navigation.SegmentCommentHolder
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.jsonObject
 import com.github.zly2006.zhihu.viewmodel.CommentItem
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
+import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
 import com.github.zly2006.zhihu.viewmodel.postSigned
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -48,8 +49,9 @@ import kotlinx.serialization.json.put
 
 class RootCommentViewModel(
     content: NavDestination,
+    blockedUsers: BlockedUserDao,
     private val initialCommentId: String? = null,
-) : BaseCommentViewModel(content) {
+) : BaseCommentViewModel(content, blockedUsers) {
     private var initialCommentLoaded = false
     var initialChildComment by mutableStateOf<DataHolder.Comment?>(null)
         private set
@@ -81,7 +83,9 @@ class RootCommentViewModel(
                     "https://www.zhihu.com/api/v4/comment_v5/${normalizedContentType}s/$contentId/segment/comment"
                 }
 
-                else -> ""
+                else -> {
+                    ""
+                }
             }
 
         val NavDestination.rootCommentUrl: String
@@ -105,7 +109,9 @@ class RootCommentViewModel(
                     "https://www.zhihu.com/api/v4/comment_v5/${normalizedContentType}s/$contentId/segment/root_comment?segment_id=$segmentId&limit=20&offset="
                 }
 
-                else -> ""
+                else -> {
+                    ""
+                }
             }
 
         private val SegmentCommentHolder.normalizedContentType: String
@@ -124,7 +130,7 @@ class RootCommentViewModel(
             return "$baseUrl${separator}order_by=$orderParam"
         }
 
-    override suspend fun fetchFeeds(environment: PaginationEnvironment) {
+    override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) {
         if (!initialCommentLoaded && initialCommentId != null) {
             initialCommentLoaded = true
             try {

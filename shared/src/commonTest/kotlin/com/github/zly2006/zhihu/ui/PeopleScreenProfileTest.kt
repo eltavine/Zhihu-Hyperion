@@ -18,9 +18,14 @@
 package com.github.zly2006.zhihu.ui
 
 import com.github.zly2006.zhihu.data.DataHolder
+import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.navigation.Person
-import com.github.zly2006.zhihu.viewmodel.ProfileLoadEnvironment
+import com.github.zly2006.zhihu.platform.MapSettingsStore
+import com.github.zly2006.zhihu.util.TextDocumentStore
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
+import com.github.zly2006.zhihu.viewmodel.filter.FakeBlockedQuestionAuthorDao
+import com.github.zly2006.zhihu.viewmodel.filter.FakeBlockedUserDao
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.JsonObject
@@ -113,9 +118,9 @@ class PeopleScreenProfileTest {
                 ).asJsonObject(),
             ),
         )
-        val viewModel = PersonViewModel(person())
+        val viewModel = PersonViewModel(person(), MapSettingsStore())
 
-        viewModel.load(environment)
+        viewModel.load(environment, HistoryStorage(MemoryDocument()), FakeBlockedUserDao(), FakeBlockedQuestionAuthorDao())
 
         assertTrue(viewModel.isBlocking)
         assertEquals("4.0k", viewModel.githubSocial?.starCount)
@@ -135,9 +140,9 @@ class PeopleScreenProfileTest {
             baseProfile = people(isBlocking = true).asJsonObject(),
             detailResult = Result.failure(IllegalStateException("optional detail unavailable")),
         )
-        val viewModel = PersonViewModel(person())
+        val viewModel = PersonViewModel(person(), MapSettingsStore())
 
-        viewModel.load(environment)
+        viewModel.load(environment, HistoryStorage(MemoryDocument()), FakeBlockedUserDao(), FakeBlockedQuestionAuthorDao())
 
         assertEquals("Profile User", viewModel.name)
         assertTrue(viewModel.isBlocking)
@@ -181,7 +186,7 @@ class PeopleScreenProfileTest {
     private class RecordingProfileEnvironment(
         private val baseProfile: JsonObject,
         private val detailResult: Result<JsonObject?>,
-    ) : ProfileLoadEnvironment {
+    ) : ZhihuApiEnvironment {
         val requests = mutableListOf<Pair<String, String>>()
 
         override fun httpClient(): HttpClient = error("The test overrides fetchJson")
@@ -204,5 +209,19 @@ class PeopleScreenProfileTest {
             tag: String?,
             error: Exception,
         ) = Unit
+    }
+
+    private class MemoryDocument : TextDocumentStore {
+        private var text: String? = null
+
+        override fun readText() = text
+
+        override fun writeText(text: String) {
+            this.text = text
+        }
+
+        override fun delete() {
+            text = null
+        }
     }
 }

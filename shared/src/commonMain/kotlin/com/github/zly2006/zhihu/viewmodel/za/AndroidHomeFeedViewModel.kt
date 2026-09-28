@@ -29,14 +29,20 @@ import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.resolveContent
+import com.github.zly2006.zhihu.platform.SettingsStore
+import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.jsonObject
-import com.github.zly2006.zhihu.viewmodel.ContentInteractionEnvironment
 import com.github.zly2006.zhihu.viewmodel.HomeFeedFilterResult
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedInteractionViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.replaceHomeFeedItemsWithFilteredResult
+import com.github.zly2006.zhihu.viewmodel.filter.ContentDetailProvider
+import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
+import com.github.zly2006.zhihu.viewmodel.getOrFetchContentDetail
 import com.github.zly2006.zhihu.viewmodel.postSigned
+import com.github.zly2006.zhihu.viewmodel.toFeedDisplaySettings
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.get
@@ -57,17 +63,21 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-class AndroidHomeFeedViewModel :
-    BaseFeedViewModel(),
+class AndroidHomeFeedViewModel(
+    settings: SettingsStore,
+    private val filter: HomeFeedFilter,
+    private val mobileClient: MobileClientProvider,
+) : BaseFeedViewModel(settings),
     HomeFeedInteractionViewModel {
     override val initialUrl: String
         get() = "https://api.zhihu.com/topstory/recommend"
 
-    public override suspend fun fetchFeeds(environment: PaginationEnvironment) {
+    public override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) {
         try {
-            val response = environment.mobileHomeFeedHttpClient().get(lastPaging?.next ?: initialUrl)
-            if (response.status.isSuccess()) {
-                val jojo = response.jsonObject()
+            val jojo = mobileClient.withClient { client ->
+                client.get(lastPaging?.next ?: initialUrl).takeIf { it.status.isSuccess() }?.jsonObject()
+            }
+            if (jojo != null) {
                 val data = jojo["data"]?.jsonArray ?: throw IllegalStateException("No data found in response")
 
                 // 收集所有待显示的项目
@@ -85,15 +95,15 @@ class AndroidHomeFeedViewModel :
                     }
 
                 // 前台先做本地已读过滤，再立即展示
-                val reverseBlock = environment.feedDisplaySettings().reverseBlock
-                val foregroundItems = environment.applyForegroundHomeFeedFilter(itemsToDisplay)
+                val reverseBlock = settings.toFeedDisplaySettings().reverseBlock
+                val foregroundItems = filter.foreground(itemsToDisplay)
                 if (!reverseBlock) {
                     withContext(Dispatchers.Main) {
                         addDisplayItems(foregroundItems)
                     }
                 }
 
-                val filteredItems = environment.applyBackgroundHomeFeedFilter(foregroundItems)
+                val filteredItems = filter.background(foregroundItems, ContentDetailProvider(environment::getOrFetchContentDetail))
                 if (reverseBlock) {
                     addDisplayItems(filteredItems)
                 }
@@ -118,7 +128,8 @@ class AndroidHomeFeedViewModel :
             }
         } catch (e: Exception) {
             if (e !is CancellationException) {
-                environment.handleMobileHomeFeedFailure(e)
+                Log.e("AndroidHomeFeedViewModel", "Failed to fetch feeds", e)
+                environment.showFailureMessage("安卓端推荐加载失败: ${e.message}")
             }
             throw e
         } finally {
@@ -126,11 +137,11 @@ class AndroidHomeFeedViewModel :
         }
     }
 
-    override suspend fun recordContentInteraction(environment: ContentInteractionEnvironment, feed: Feed) {
+    override suspend fun recordContentInteraction(environment: ZhihuApiEnvironment, feed: Feed) {
         // Android 版本暂不记录交互
     }
 
-    override fun onUiContentClick(environment: ContentInteractionEnvironment, feed: Feed, item: FeedDisplayItem) {
+    override fun onUiContentClick(environment: ZhihuApiEnvironment, feed: Feed, item: FeedDisplayItem) {
         viewModelScope.launch(Dispatchers.Default) {
             if (environment.authenticatedCookies()["d_c0"] != null) {
                 val payloadItem = when (val target = feed.target) {

@@ -77,9 +77,9 @@ import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.markdown.RenderImage
 import com.github.zly2006.zhihu.markdown.RenderMarkdown
 import com.github.zly2006.zhihu.markdown.RenderMarkdownText
-import com.github.zly2006.zhihu.navigation.AnswerNavigator
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
+import com.github.zly2006.zhihu.platform.PREFERENCE_NAME
 import com.github.zly2006.zhihu.reading.AndroidReadingPlayerBridge
 import com.github.zly2006.zhihu.reading.ContentReadingService
 import com.github.zly2006.zhihu.reading.ReadingContentType
@@ -90,19 +90,19 @@ import com.github.zly2006.zhihu.reading.ReadingQueueSourceRegistry
 import com.github.zly2006.zhihu.test.MainActivityComposeRule
 import com.github.zly2006.zhihu.test.resetAppPreferences
 import com.github.zly2006.zhihu.test.setScreenContent
-import com.github.zly2006.zhihu.ui.ARTICLE_USE_WEBVIEW_PREFERENCE_KEY
-import com.github.zly2006.zhihu.ui.AnswerDoubleTapAction
 import com.github.zly2006.zhihu.ui.ArticleScreen
-import com.github.zly2006.zhihu.ui.PREFERENCE_NAME
+import com.github.zly2006.zhihu.ui.article.ARTICLE_USE_WEBVIEW_PREFERENCE_KEY
+import com.github.zly2006.zhihu.ui.article.AnswerDoubleTapAction
 import com.github.zly2006.zhihu.ui.article.ArticleActionsMenu
 import com.github.zly2006.zhihu.ui.components.LocalPageTurnDispatcher
+import com.github.zly2006.zhihu.ui.components.PREF_SHOW_PAGE_TURN_FAB
 import com.github.zly2006.zhihu.ui.components.PageTurnCommand
 import com.github.zly2006.zhihu.ui.components.PageTurnDispatcher
 import com.github.zly2006.zhihu.ui.components.PageTurnFab
-import com.github.zly2006.zhihu.ui.subscreens.PREF_SHOW_PAGE_TURN_FAB
+import com.github.zly2006.zhihu.viewmodel.AnswerNavigator
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerSwitchState
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
-import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 import com.hrm.markdown.renderer.MarkdownImageData
 import io.ktor.client.HttpClient
 import org.junit.After
@@ -112,6 +112,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.mp.KoinPlatform
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
@@ -125,7 +126,7 @@ class ArticleScreenInstrumentedTest {
     @Before
     fun setUp() {
         AndroidReadingPlayerBridge.publish(ReadingPlayerState())
-        sharedArticleAnswerSwitchState.reset()
+        KoinPlatform.getKoin().get<ArticleAnswerSwitchState>().reset()
         composeRule.resetAppPreferences()
         composeRule.activity
             .getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
@@ -146,11 +147,12 @@ class ArticleScreenInstrumentedTest {
     fun tearDown() {
         composeRule.activity.stopService(Intent(composeRule.activity, ContentReadingService::class.java))
         AndroidReadingPlayerBridge.publish(ReadingPlayerState())
-        ReadingQueueSourceRegistry.register(FULL_ORIGIN_SOURCE_ID, emptyList())
-        ReadingQueueSourceRegistry.register(PARTIAL_ORIGIN_SOURCE_ID, emptyList())
+        val readingQueueSources = KoinPlatform.getKoin().get<ReadingQueueSourceRegistry>()
+        readingQueueSources.register(FULL_ORIGIN_SOURCE_ID, emptyList())
+        readingQueueSources.register(PARTIAL_ORIGIN_SOURCE_ID, emptyList())
         composeRule.runOnIdle {
-            sharedArticleAnswerSwitchState.navigator = null
-            sharedArticleAnswerSwitchState.pendingNavigator = null
+            KoinPlatform.getKoin().get<ArticleAnswerSwitchState>().navigator = null
+            KoinPlatform.getKoin().get<ArticleAnswerSwitchState>().pendingNavigator = null
         }
     }
 
@@ -1452,7 +1454,7 @@ class ArticleScreenInstrumentedTest {
             }
         }
         composeRule.activity.runOnUiThread {
-            sharedArticleAnswerSwitchState.pendingNavigator = sharedNavigator
+            KoinPlatform.getKoin().get<ArticleAnswerSwitchState>().pendingNavigator = sharedNavigator
         }
         composeRule.setScreenContent {
             Scaffold(
@@ -1492,7 +1494,7 @@ class ArticleScreenInstrumentedTest {
             commentCount = 3,
         )
         composeRule.activity.runOnUiThread {
-            sharedArticleAnswerSwitchState.pendingNavigator = object : AnswerNavigator(
+            KoinPlatform.getKoin().get<ArticleAnswerSwitchState>().pendingNavigator = object : AnswerNavigator(
                 sourceName = "此问题",
                 environment = NO_OP_API_ENVIRONMENT,
             ) {

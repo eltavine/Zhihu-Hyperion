@@ -1,0 +1,927 @@
+public final class com/github/zly2006/zhihu/data/FeedNavigationKt {
+	public static final fun getNavDestination (Lcom/github/zly2006/zhihu/data/Feed$Target;)Lcom/github/zly2006/zhihu/navigation/NavDestination;
+	public static final fun getNavDestination (Lcom/github/zly2006/zhihu/data/FeedDisplayItem;)Lcom/github/zly2006/zhihu/navigation/NavDestination;
+	public static final fun toFeedDisplayItemNavDestinationJson (Lcom/github/zly2006/zhihu/navigation/NavDestination;)Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Account : com/github/zly2006/zhihu/navigation/TopLevelDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Account;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Account$AppearanceSettings : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/Account$AppearanceSettings$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/Account$AppearanceSettings;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/Account$AppearanceSettings;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/Account$AppearanceSettings;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getSetting ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/Account$AppearanceSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Account$AppearanceSettings$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/Account$AppearanceSettings;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/Account$AppearanceSettings;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Account$AppearanceSettings$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Account$DeveloperSettings : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Account$DeveloperSettings;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Account$DeveloperSettings$ColorScheme : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Account$DeveloperSettings$ColorScheme;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Account$IdentityManagement : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Account$IdentityManagement;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Account$OpenSourceLicenses : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Account$OpenSourceLicenses;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Account$ReadingSettings : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Account$ReadingSettings;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Account$RecommendSettings : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/Account$RecommendSettings$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/Account$RecommendSettings;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/Account$RecommendSettings;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/Account$RecommendSettings;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getSetting ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/Account$RecommendSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Account$RecommendSettings$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/Account$RecommendSettings;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/Account$RecommendSettings;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Account$RecommendSettings$BlockedFeedHistory : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Account$RecommendSettings$BlockedFeedHistory;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Account$RecommendSettings$Blocklist : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Account$RecommendSettings$Blocklist;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Account$RecommendSettings$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Account$SettingsSearch : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Account$SettingsSearch;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Account$SystemAndUpdateSettings : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/Account$SystemAndUpdateSettings$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/Account$SystemAndUpdateSettings;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/Account$SystemAndUpdateSettings;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/Account$SystemAndUpdateSettings;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getSetting ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/Account$SystemAndUpdateSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Account$SystemAndUpdateSettings$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/Account$SystemAndUpdateSettings;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/Account$SystemAndUpdateSettings;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Account$SystemAndUpdateSettings$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Article : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/Article$Companion;
+	public fun <init> (Ljava/lang/String;Lcom/github/zly2006/zhihu/navigation/ArticleType;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/github/zly2006/zhihu/navigation/ArticleType;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lcom/github/zly2006/zhihu/navigation/ArticleType;
+	public final fun component3 ()J
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Lcom/github/zly2006/zhihu/navigation/ArticleType;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/Article;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/Article;Ljava/lang/String;Lcom/github/zly2006/zhihu/navigation/ArticleType;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/Article;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAuthorBio ()Ljava/lang/String;
+	public final fun getAuthorName ()Ljava/lang/String;
+	public final fun getAvatarSrc ()Ljava/lang/String;
+	public final fun getExcerpt ()Ljava/lang/String;
+	public final fun getId ()J
+	public final fun getReadingQueueSourceId ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public final fun getType ()Lcom/github/zly2006/zhihu/navigation/ArticleType;
+	public fun hashCode ()I
+	public final fun setAuthorBio (Ljava/lang/String;)V
+	public final fun setAuthorName (Ljava/lang/String;)V
+	public final fun setAvatarSrc (Ljava/lang/String;)V
+	public final fun setExcerpt (Ljava/lang/String;)V
+	public final fun setTitle (Ljava/lang/String;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/Article$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Article$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/Article;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/Article;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Article$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/ArticleType : java/lang/Enum {
+	public static final field Answer Lcom/github/zly2006/zhihu/navigation/ArticleType;
+	public static final field Article Lcom/github/zly2006/zhihu/navigation/ArticleType;
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/ArticleType$Companion;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public fun toString ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/ArticleType;
+	public static fun values ()[Lcom/github/zly2006/zhihu/navigation/ArticleType;
+}
+
+public final class com/github/zly2006/zhihu/navigation/ArticleType$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/ArticleTypeNavType : androidx/navigation/NavType {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/ArticleTypeNavType;
+	public fun get (Landroidx/savedstate/SavedState;Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/ArticleType;
+	public synthetic fun get (Landroidx/savedstate/SavedState;Ljava/lang/String;)Ljava/lang/Object;
+	public fun parseValue (Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/ArticleType;
+	public synthetic fun parseValue (Ljava/lang/String;)Ljava/lang/Object;
+	public fun put (Landroidx/savedstate/SavedState;Ljava/lang/String;Lcom/github/zly2006/zhihu/navigation/ArticleType;)V
+	public synthetic fun put (Landroidx/savedstate/SavedState;Ljava/lang/String;Ljava/lang/Object;)V
+	public fun serializeAsValue (Lcom/github/zly2006/zhihu/navigation/ArticleType;)Ljava/lang/String;
+	public synthetic fun serializeAsValue (Ljava/lang/Object;)Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/CollectionContent : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/CollectionContent$Companion;
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/CollectionContent;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/CollectionContent;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/CollectionContent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCollectionId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/CollectionContent$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/CollectionContent$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/CollectionContent;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/CollectionContent;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/CollectionContent$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Collections : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/Collections$Companion;
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/Collections;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/Collections;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/Collections;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getUserToken ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/Collections$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Collections$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/Collections;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/Collections;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Collections$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/CommentHolder : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/CommentHolder$Companion;
+	public fun <init> (Ljava/lang/String;Lcom/github/zly2006/zhihu/navigation/NavDestination;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lcom/github/zly2006/zhihu/navigation/NavDestination;
+	public final fun copy (Ljava/lang/String;Lcom/github/zly2006/zhihu/navigation/NavDestination;)Lcom/github/zly2006/zhihu/navigation/CommentHolder;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/CommentHolder;Ljava/lang/String;Lcom/github/zly2006/zhihu/navigation/NavDestination;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/CommentHolder;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getArticle ()Lcom/github/zly2006/zhihu/navigation/NavDestination;
+	public final fun getCommentId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/CommentHolder$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/CommentHolder$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/CommentHolder;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/CommentHolder;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/CommentHolder$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Daily : com/github/zly2006/zhihu/navigation/TopLevelDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Daily;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/EmptyDetail : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/EmptyDetail;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Follow : com/github/zly2006/zhihu/navigation/TopLevelDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Follow;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/History : com/github/zly2006/zhihu/navigation/NavDestination, com/github/zly2006/zhihu/navigation/TopLevelDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/History;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Home : com/github/zly2006/zhihu/navigation/TopLevelDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Home;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/HotList : com/github/zly2006/zhihu/navigation/TopLevelDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/HotList;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/LocalNavigatorKt {
+	public static final fun getLocalNavigator ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Login : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Login;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/MainTabs : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/MainTabs;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/MyCollections : com/github/zly2006/zhihu/navigation/TopLevelDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/MyCollections;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/NavDestination$Companion;
+}
+
+public final class com/github/zly2006/zhihu/navigation/NavDestination$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/NavDestinationKt {
+	public static final fun resolveContent (Lio/ktor/http/Url;)Lcom/github/zly2006/zhihu/navigation/NavDestination;
+	public static final fun resolveContent (Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/NavDestination;
+	public static final fun withReadingQueueSource (Lcom/github/zly2006/zhihu/navigation/NavDestination;Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/NavDestination;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Navigator {
+	public static final field $stable I
+	public fun <init> (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lkotlin/jvm/functions/Function1;
+	public final fun component2 ()Lkotlin/jvm/functions/Function0;
+	public final fun component3 ()Lkotlin/jvm/functions/Function1;
+	public final fun copy (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)Lcom/github/zly2006/zhihu/navigation/Navigator;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/Navigator;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/Navigator;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getOnNavigate ()Lkotlin/jvm/functions/Function1;
+	public final fun getOnNavigateBack ()Lkotlin/jvm/functions/Function0;
+	public final fun getOnNavigateTopLevel ()Lkotlin/jvm/functions/Function1;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Notification : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Notification;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Notification$Entry : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/Notification$Entry$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/Notification$Entry;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/Notification$Entry;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/Notification$Entry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEntryName ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/Notification$Entry$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Notification$Entry$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/Notification$Entry;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/Notification$Entry;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Notification$Entry$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Notification$Invitations : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Notification$Invitations;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Notification$Message : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/Notification$Message$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/Notification$Message;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/Notification$Message;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/Notification$Message;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAvatarUrl ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getPeerId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/Notification$Message$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Notification$Message$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/Notification$Message;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/Notification$Message;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Notification$Message$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Notification$NotificationSettings : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/Notification$NotificationSettings$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/Notification$NotificationSettings;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/Notification$NotificationSettings;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/Notification$NotificationSettings;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getSetting ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/Notification$NotificationSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Notification$NotificationSettings$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/Notification$NotificationSettings;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/Notification$NotificationSettings;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Notification$NotificationSettings$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/OnlineHistory : com/github/zly2006/zhihu/navigation/TopLevelDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/OnlineHistory;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Person : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/Person$Companion;
+	public static final field EMPTY_ID Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/Person;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/Person;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/Person;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getJumpTo ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getUrlToken ()Ljava/lang/String;
+	public final fun getUserTokenOrId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun setId (Ljava/lang/String;)V
+	public final fun setUrlToken (Ljava/lang/String;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/Person$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Person$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/Person;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/Person;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Person$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Pin : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/Pin$Companion;
+	public fun <init> (JLjava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (JLjava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (JLjava/lang/String;Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/Pin;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/Pin;JLjava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/Pin;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAuthorName ()Ljava/lang/String;
+	public final fun getId ()J
+	public final fun getReadingQueueSourceId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/Pin$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Pin$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/Pin;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/Pin;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Pin$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Question : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/Question$Companion;
+	public fun <init> (JLjava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (JLjava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (JLjava/lang/String;Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/Question;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/Question;JLjava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/Question;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getQuestionId ()J
+	public final fun getReadingQueueSourceId ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/Question$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Question$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/Question;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/Question;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Question$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Search : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/Search$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/Search;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/Search;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/Search;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getQuery ()Ljava/lang/String;
+	public final fun getRestrictedMemberHashId ()Ljava/lang/String;
+	public final fun getRestrictedMemberName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isRestrictedToMember ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/Search$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Search$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/Search;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/Search;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Search$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/SegmentCommentHolder : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/SegmentCommentHolder$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()I
+	public final fun component7 ()I
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)Lcom/github/zly2006/zhihu/navigation/SegmentCommentHolder;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/SegmentCommentHolder;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/SegmentCommentHolder;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContentId ()Ljava/lang/String;
+	public final fun getContentType ()Ljava/lang/String;
+	public final fun getEndOffset ()I
+	public final fun getParagraphId ()Ljava/lang/String;
+	public final fun getSegmentContent ()Ljava/lang/String;
+	public final fun getSegmentId ()Ljava/lang/String;
+	public final fun getStartOffset ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/SegmentCommentHolder$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/SegmentCommentHolder$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/SegmentCommentHolder;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/SegmentCommentHolder;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/SegmentCommentHolder$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/SentenceSimilarityTest : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/SentenceSimilarityTest;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/github/zly2006/zhihu/navigation/TopLevelDestination {
+	public abstract fun getName ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Topic : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/Topic$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/Topic;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/Topic;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/Topic;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getSection ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/Topic$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Topic$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/Topic;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/Topic;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Topic$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Video : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/Video$Companion;
+	public fun <init> (J)V
+	public final fun component1 ()J
+	public final fun copy (J)Lcom/github/zly2006/zhihu/navigation/Video;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/Video;JILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/Video;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/Video$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Video$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/Video;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/Video;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/Video$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/WriteAnswer : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/WriteAnswer$Companion;
+	public fun <init> (JLjava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (JLjava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (JLjava/lang/String;Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/WriteAnswer;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/WriteAnswer;JLjava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/WriteAnswer;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getQuestionDetail ()Ljava/lang/String;
+	public final fun getQuestionId ()J
+	public final fun getQuestionTitle ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/WriteAnswer$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/WriteAnswer$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/WriteAnswer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/WriteAnswer;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/WriteAnswer$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/WritePin : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field Companion Lcom/github/zly2006/zhihu/navigation/WritePin$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/github/zly2006/zhihu/navigation/WritePin;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/navigation/WritePin;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/navigation/WritePin;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPublishTopicId ()Ljava/lang/String;
+	public final fun getTopicName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/navigation/WritePin$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/WritePin$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/navigation/WritePin;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/navigation/WritePin;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/WritePin$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/navigation/ZhihuApiUrlsKt {
+	public static final fun zhihuQuestionFeedsUrl (JILjava/lang/String;)Ljava/lang/String;
+	public static final fun zhihuQuestionFeedsUrl (Ljava/lang/String;ILjava/lang/String;)Ljava/lang/String;
+	public static synthetic fun zhihuQuestionFeedsUrl$default (JILjava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public static synthetic fun zhihuQuestionFeedsUrl$default (Ljava/lang/String;ILjava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+}
+

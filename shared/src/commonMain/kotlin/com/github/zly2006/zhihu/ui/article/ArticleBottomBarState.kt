@@ -141,12 +141,21 @@ internal fun rememberBottomBarAvoidingBringIntoViewSpec(
                 val effectiveContainerTop = density.run { 110.dp.toPx() }
                 val trailingEdge = offset + size
                 return when {
-                    offset >= effectiveContainerTop && trailingEdge <= effectiveContainerSize -> 0f
-                    offset < effectiveContainerTop && trailingEdge > effectiveContainerSize -> 0f
+                    offset >= effectiveContainerTop && trailingEdge <= effectiveContainerSize -> {
+                        0f
+                    }
+
+                    offset < effectiveContainerTop && trailingEdge > effectiveContainerSize -> {
+                        0f
+                    }
+
                     abs(offset) < abs(trailingEdge + effectiveContainerTop - effectiveContainerSize) -> {
                         offset - effectiveContainerTop
                     }
-                    else -> trailingEdge + effectiveContainerTop - effectiveContainerSize
+
+                    else -> {
+                        trailingEdge + effectiveContainerTop - effectiveContainerSize
+                    }
                 }
             }
         }

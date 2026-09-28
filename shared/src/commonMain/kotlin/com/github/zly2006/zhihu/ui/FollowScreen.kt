@@ -77,29 +77,27 @@ import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Person
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageDuration
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
-import com.github.zly2006.zhihu.ui.TopLevelReselectAction
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockConfirmDialog
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockRequest
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockType
 import com.github.zly2006.zhihu.ui.components.FeedCard
-import com.github.zly2006.zhihu.ui.components.FeedPullToRefresh
 import com.github.zly2006.zhihu.ui.components.NoOpPagerNestedScrollConnection
 import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberNestedHorizontalPagerConnection
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
-import com.github.zly2006.zhihu.ui.topLevelReselectAction
 import com.github.zly2006.zhihu.viewmodel.feed.FollowRecommendViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.FollowViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.RecentMomentsViewModel
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 class FollowScreenData : ViewModel() {
     var selectedTabIndex by mutableIntStateOf(0)
@@ -268,7 +266,7 @@ private fun FollowTabRow(
 fun FollowingUsersRow() {
     val navigator = LocalNavigator.current
     val viewModel: RecentMomentsViewModel = viewModel { RecentMomentsViewModel() }
-    val environment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = false)
 
     LaunchedEffect(Unit) {
         viewModel.load(environment)
@@ -289,6 +287,7 @@ fun FollowingUsersRow() {
                 )
             }
         }
+
         viewModel.users.isNotEmpty() -> {
             LazyRow(
                 modifier = Modifier.testTag(FOLLOWING_USERS_ROW_TAG),
@@ -347,7 +346,8 @@ fun FollowRecommendScreen(
     scrollToTopTrigger: Int = 0,
     isActive: Boolean = true,
 ) {
-    val viewModel: FollowRecommendViewModel = viewModel { FollowRecommendViewModel() }
+    val settings = koinInject<SettingsStore>()
+    val viewModel: FollowRecommendViewModel = viewModel { FollowRecommendViewModel(settings) }
     val readingQueueSourceId = "follow:recommend"
     if (isActive) {
         RegisterReadingQueueSource(
@@ -355,8 +355,7 @@ fun FollowRecommendScreen(
             items = viewModel.displayItems,
         )
     }
-    val environment = rememberPaginationEnvironment(allowGuestAccess = viewModel.allowGuestAccess)
-    val settings = rememberSettingsStore()
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = viewModel.allowGuestAccess)
     val userMessages = rememberUserMessageSink()
     val showRefreshFab = remember { settings.getBoolean("showRefreshFab", true) }
     val listState = rememberLazyListState()
@@ -369,8 +368,14 @@ fun FollowRecommendScreen(
         )
         if (isActive) {
             when (action) {
-                TopLevelReselectAction.Refresh -> viewModel.refresh(environment)
-                TopLevelReselectAction.ScrollToTop -> listState.animateScrollToItem(0)
+                TopLevelReselectAction.Refresh -> {
+                    viewModel.refresh(environment)
+                }
+
+                TopLevelReselectAction.ScrollToTop -> {
+                    listState.animateScrollToItem(0)
+                }
+
                 null -> {}
             }
         }
@@ -501,7 +506,8 @@ fun FollowDynamicScreen(
     scrollToTopTrigger: Int = 0,
     isActive: Boolean = true,
 ) {
-    val viewModel: FollowViewModel = viewModel { FollowViewModel() }
+    val settings = koinInject<SettingsStore>()
+    val viewModel: FollowViewModel = viewModel { FollowViewModel(settings) }
     val readingQueueSourceId = "follow:dynamic"
     if (isActive) {
         RegisterReadingQueueSource(
@@ -509,8 +515,7 @@ fun FollowDynamicScreen(
             items = viewModel.displayItems,
         )
     }
-    val environment = rememberPaginationEnvironment(allowGuestAccess = viewModel.allowGuestAccess)
-    val settings = rememberSettingsStore()
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = viewModel.allowGuestAccess)
     val userMessages = rememberUserMessageSink()
     val showRefreshFab = remember { settings.getBoolean("showRefreshFab", true) }
     val listState = rememberLazyListState()
@@ -523,8 +528,14 @@ fun FollowDynamicScreen(
         )
         if (isActive) {
             when (action) {
-                TopLevelReselectAction.Refresh -> viewModel.refresh(environment)
-                TopLevelReselectAction.ScrollToTop -> listState.animateScrollToItem(0)
+                TopLevelReselectAction.Refresh -> {
+                    viewModel.refresh(environment)
+                }
+
+                TopLevelReselectAction.ScrollToTop -> {
+                    listState.animateScrollToItem(0)
+                }
+
                 null -> {}
             }
         }

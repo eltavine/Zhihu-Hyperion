@@ -24,7 +24,6 @@
 package com.github.zly2006.zhihu.macos.debug
 
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.backhandler.LocalCompatNavigationEventDispatcherOwner
 import androidx.compose.ui.graphics.asSkiaBitmap
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.toPixelMap
@@ -52,9 +51,11 @@ import androidx.compose.ui.test.swipeUp
 import androidx.navigationevent.DirectNavigationEventInput
 import androidx.navigationevent.NavigationEventDispatcher
 import androidx.navigationevent.NavigationEventDispatcherOwner
+import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
 import com.github.zly2006.zhihu.account.LoginScreen
 import com.github.zly2006.zhihu.data.BACKGROUND_UI_DEBUG_DATA_HOME_ENV
 import com.github.zly2006.zhihu.data.macosBackgroundUiDebugDataDirectoryPath
+import com.github.zly2006.zhihu.nativeZhihuModules
 import com.github.zly2006.zhihu.platform.MacosUserMessageHost
 import com.github.zly2006.zhihu.platform.UserMessageDuration
 import com.github.zly2006.zhihu.platform.showMacosUserMessage
@@ -78,6 +79,7 @@ import kotlinx.serialization.json.put
 import org.jetbrains.skia.EncodedImageFormat
 import org.jetbrains.skia.Image
 import org.jetbrains.skia.impl.use
+import org.koin.core.context.startKoin
 import platform.Foundation.NSBundle
 import platform.Foundation.NSData
 import platform.Foundation.NSFileManager
@@ -140,6 +142,7 @@ fun main(args: Array<String>) {
         check(macosBackgroundUiDebugDataDirectoryPath() == isolatedDataHome) {
             "Background UI debugger did not activate isolated data storage"
         }
+        startKoin { modules(nativeZhihuModules()) }
         fflush(null)
         val protocolDescriptor = dup(STDOUT_FILENO)
         check(protocolDescriptor >= 0) { "Cannot duplicate stdout for the UI debug protocol" }
@@ -154,7 +157,7 @@ fun main(args: Array<String>) {
             uiTest.runTest {
                 setContent {
                     val navigationEventDispatcherOwner =
-                        checkNotNull(LocalCompatNavigationEventDispatcherOwner.current) {
+                        checkNotNull(LocalNavigationEventDispatcherOwner.current) {
                             "Compose navigation event dispatcher is unavailable"
                         }
                     SideEffect {
@@ -236,7 +239,7 @@ private fun SkikoComposeUiTest.execute(
     backController: BackgroundBackController,
 ): JsonElement =
     when (command.requiredString("op")) {
-        "state" ->
+        "state" -> {
             buildJsonObject {
                 put("protocol", PROTOCOL)
                 put("root", rootName)
@@ -248,7 +251,9 @@ private fun SkikoComposeUiTest.execute(
                 put("surfaceWidth", 1280)
                 put("surfaceHeight", 900)
             }
-        "dump" ->
+        }
+
+        "dump" -> {
             JsonPrimitive(
                 if ("selector" in command) {
                     interaction(command).printToString(command.integer("maxDepth", 40))
@@ -257,27 +262,34 @@ private fun SkikoComposeUiTest.execute(
                         .printToString(command.integer("maxDepth", 40))
                 },
             )
-        "list_clickables" ->
+        }
+
+        "list_clickables" -> {
             JsonPrimitive(
                 onAllNodes(
                     hasClickAction(),
                     useUnmergedTree = command.boolean("useUnmergedTree", true),
                 ).printToString(command.integer("maxDepth", 2)),
             )
+        }
+
         "click" -> {
             interaction(command).performSemanticsAction(SemanticsActions.OnClick)
             JsonNull
         }
+
         "dismiss" -> {
             interaction(command).performSemanticsAction(SemanticsActions.Dismiss)
             JsonNull
         }
+
         "input" -> {
             val target = interaction(command)
             if (command.boolean("clear", true)) target.performTextClearance()
             target.performTextInput(command.requiredString("text"))
             JsonNull
         }
+
         "scroll" -> {
             val direction = command.requiredString("direction")
             interaction(command).performTouchInput {
@@ -291,6 +303,7 @@ private fun SkikoComposeUiTest.execute(
             }
             JsonNull
         }
+
         "key" -> {
             val key = when (command.requiredString("key")) {
                 "escape" -> Key.Escape
@@ -318,11 +331,13 @@ private fun SkikoComposeUiTest.execute(
             }
             JsonNull
         }
+
         "back" -> {
             backController.back()
             waitForIdle()
             JsonNull
         }
+
         "show_message" -> {
             val duration = when (command["duration"]?.jsonPrimitive?.contentOrNull ?: "short") {
                 "short" -> UserMessageDuration.Short
@@ -333,6 +348,7 @@ private fun SkikoComposeUiTest.execute(
             waitForIdle()
             JsonNull
         }
+
         "wait" -> {
             val selector = command.selector()
             val exists = command.boolean("exists", true)
@@ -347,6 +363,7 @@ private fun SkikoComposeUiTest.execute(
             }
             JsonNull
         }
+
         "wait_clickables" -> {
             val minimumCount = command.integer("minimumCount", 1)
             val useUnmergedTree = command.boolean("useUnmergedTree", true)
@@ -365,6 +382,7 @@ private fun SkikoComposeUiTest.execute(
                     .size,
             )
         }
+
         "advance" -> {
             val milliseconds = command.long("milliseconds", 100L)
             require(milliseconds in 0L..60_000L) { "milliseconds must be between 0 and 60000" }
@@ -372,9 +390,18 @@ private fun SkikoComposeUiTest.execute(
             waitForIdle()
             JsonNull
         }
-        "screenshot" -> captureScreenshot(command.requiredString("file"))
-        "quit" -> JsonNull
-        else -> error("Unsupported operation: ${command.requiredString("op")}")
+
+        "screenshot" -> {
+            captureScreenshot(command.requiredString("file"))
+        }
+
+        "quit" -> {
+            JsonNull
+        }
+
+        else -> {
+            error("Unsupported operation: ${command.requiredString("op")}")
+        }
     }
 
 private class BackgroundBackController {

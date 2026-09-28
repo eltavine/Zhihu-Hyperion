@@ -29,6 +29,7 @@ import androidx.compose.ui.test.onRoot
 import androidx.core.content.edit
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.zly2006.zhihu.data.MOBILE_NOTIFICATION_MESSAGE_URL
+import com.github.zly2006.zhihu.platform.PREFERENCE_NAME
 import com.github.zly2006.zhihu.test.MainActivityComposeRule
 import com.github.zly2006.zhihu.test.ZhihuMockApi
 import com.github.zly2006.zhihu.test.resetAppPreferences
@@ -36,7 +37,6 @@ import com.github.zly2006.zhihu.test.setScreenContent
 import com.github.zly2006.zhihu.ui.HOME_NOTIFICATION_BADGE_TAG
 import com.github.zly2006.zhihu.ui.HOME_NOTIFICATION_BUTTON_CONTENT_TAG
 import com.github.zly2006.zhihu.ui.HomeScreen
-import com.github.zly2006.zhihu.ui.PREFERENCE_NAME
 import io.ktor.http.HttpMethod
 import org.junit.Assert.assertTrue
 import org.junit.Before

@@ -80,7 +80,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.github.zly2006.zhihu.account.rememberZhihuAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.Collections
 import com.github.zly2006.zhihu.navigation.LocalNavigator
@@ -88,9 +88,9 @@ import com.github.zly2006.zhihu.navigation.Notification
 import com.github.zly2006.zhihu.navigation.OnlineHistory
 import com.github.zly2006.zhihu.navigation.Person
 import com.github.zly2006.zhihu.navigation.requestLoginNavigation
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.platformBottomBarItemLimit
 import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.platform.rememberSystemUrlOpener
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.reading.isReadingPlayerSupported
@@ -107,6 +107,7 @@ import com.github.zly2006.zhihu.ui.subscreens.shouldShowAccountHistoryShortcut
 import com.github.zly2006.zhihu.util.Log
 import kotlinx.coroutines.CancellationException
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 import zhihu.shared.generated.resources.Res
 import zhihu.shared.generated.resources.ic_github_24dp
 import zhihu.shared.generated.resources.ic_launcher_foreground
@@ -150,10 +151,10 @@ fun AccountSettingScreen(
     isActive: Boolean = true,
 ) {
     val navigator = LocalNavigator.current
-    val accountStore = rememberZhihuAccountStore()
+    val accountStore = koinInject<ZhihuAccountStore>()
     val accountState = rememberAccountSettingsAccountState()
     val requestLogin = ::requestLoginNavigation
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val copyPlainText = rememberPlainTextClipboard()
     val openSystemUrl = rememberSystemUrlOpener()
     val userMessages = rememberUserMessageSink()

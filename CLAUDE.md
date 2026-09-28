@@ -254,13 +254,37 @@ Compose 页面需要在进入前台时刷新数据，应优先让协程直接跟
 
 **重要**: 修改后必须先构建验证，再格式化，最后提交。
 
+提交前按改动范围补充以下检查（CI 的 PR 任务会运行同样的命令）：
+
+```bash
+./gradlew jvmUnitTests       # shared 与全部 :core/:feature 模块的 JVM 测试，加上 app 单元测试
+./gradlew checkKotlinAbi     # core 模块公开 API 与已提交 dump 一致；有意修改 API 时先运行 updateKotlinAbi 并提交 dump
+./gradlew :app:assertModuleGraph :desktopApp:assertModuleGraph :macosApp:assertModuleGraph :macosUiDebug:assertModuleGraph
+```
+
 ## 项目结构
 
-- **app**: 主应用（Jetpack Compose UI）
+- **依赖与构建逻辑**：所有版本集中在 `gradle/libs.versions.toml`；模块通过 `build-logic` 的约定插件（`zhihu.kmp.library`、`zhihu.kmp.compose`、`zhihu.android.application`、`zhihu.macos.app`、`zhihu.room`、`zhihu.aboutlibraries`、`zhihu.module.graph`、`zhihu.ktlint`）获得统一配置，不要在模块脚本里重复写 SDK、JVM target 或版本号。
+- **core 层**（只能依赖更底层的 core 模块，由 `zhihu.module.graph` 在 CI 中强制）：
+    - `:core:common`：日志（Kermit）与基础格式化工具
+    - `:core:model`：知乎数据模型与 `ZhihuJson`
+    - `:core:navigation`：`NavDestination` 路由模型
+    - `:core:network`：Ktor 通用配置、签名、鉴权刷新
+    - `:core:account`：账户 store、会话文件存储、手机号与二维码登录协议，以及 `accountModule`
+    - `:core:database`：Room 数据库、DAO 与各平台 `databaseModule`；schema 提交在 `core/database/schemas`
+- **shared**：应用外壳与各页面 UI、ViewModel；每个平台在 `ZhihuModules.*.kt` 汇总本平台的 Koin 模块。
+- **app**: Android 应用（Jetpack Compose UI），`ZhihuKoinInitializer` 是 Android 组合根
     - `src/main`: 共享代码
     - `src/full`: Full variant（含 NLP）
     - `src/lite`: Lite variant（轻量级）
+- **desktopApp / macosApp / macosUiDebug**：桌面 JVM、macOS 原生应用与后台 UI 调试器，各自在 `main()` 中启动 Koin。
 - **Module**: `sentence_embeddings`（Rust tokenizer，仅 full variant）
+
+### 依赖注入
+
+- 进程级依赖（账户 store、共享 HTTP 引擎、数据库、设置存储、跨页面暂存状态）只由 Koin 持有；不要新增顶层可变单例或 `*ForTesting` 钩子。
+- Compose 代码用 `koinInject<T>()`；Android 框架类用 `by inject()`；其他非 Compose 代码用 `KoinPlatform.getKoin().get<T>()`。
+- 测试替身从测试组合根注入：单元测试直接通过构造参数传入依赖；instrumented 测试通过 Koin 覆盖绑定（参考 `ZhihuMockApi`）。
 
 ### Build Variants
 - **lite**: 轻量版 (~4MB)，无 ML 功能，包名 `com.github.zly2006.zhplus.lite`
@@ -275,7 +299,7 @@ Compose 页面需要在进入前台时刷新数据，应优先让协程直接跟
 - 不要手动转换或在 data class 中使用 snake_case
 
 ### HTTP 客户端
-- 业务请求使用当前账户 store 持有的客户端；Compose 代码通过公共账户 store，Android 非 Compose 入口通过 Android 组合根获取同一实例
+- 业务请求使用 Koin 中 `ZhihuAccountStore` 当前持有的客户端；需要额外请求头的客户端基于 Koin 提供的同一个 `HttpClientEngine` 创建，用完即关闭
 - Web API 需要 `signFetchRequest(context)` 用于 zse96 v2 签名
 - Android API 使用 `AccountData.ANDROID_HEADERS` 和 `ANDROID_USER_AGENT`
 

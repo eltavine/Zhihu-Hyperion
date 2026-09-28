@@ -19,6 +19,7 @@ package com.github.zly2006.zhihu.viewmodel.feed
 
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.FeedDisplayItem
+import com.github.zly2006.zhihu.platform.MapSettingsStore
 import com.github.zly2006.zhihu.viewmodel.filter.extractTopicIds
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -80,7 +81,7 @@ class PinTopicBlockingTest {
         userType = "people",
     )
 
-    private class TestFeedViewModel : BaseFeedViewModel() {
+    private class TestFeedViewModel : BaseFeedViewModel(MapSettingsStore()) {
         override val initialUrl: String = "https://api.zhihu.com/topstory/recommend"
     }
 }

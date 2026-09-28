@@ -39,24 +39,30 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextRange
 import com.hrm.markdown.renderer.selection.DocumentOrderedSelectable
+import com.hrm.markdown.renderer.selection.appendSelectableInfoCompat
 import kotlin.math.min
 
-/** A selectable whose linear order is supplied by its document model rather than its layout. */
-internal interface MarkdownSelectable : Selectable, DocumentOrderedSelectable {
-    override val selectableId: Long
-    override fun appendSelectableInfoToBuilder(builder: SelectionLayoutBuilder)
-    override fun getSelectAllSelection(): Selection?
-    override fun getHandlePosition(selection: Selection, isStartHandle: Boolean): Offset
-    override fun getLayoutCoordinates(): LayoutCoordinates?
-    override fun textLayoutResult(): TextLayoutResult?
-    override fun getText(): AnnotatedString
-    override fun getBoundingBox(offset: Int): Rect
-    override fun getLineLeft(offset: Int): Float
-    override fun getLineRight(offset: Int): Float
-    override fun getCenterYForOffset(offset: Int): Float
-    override fun getRangeOfLineContaining(offset: Int): TextRange
-    override fun getLastVisibleOffset(): Int
-    override fun getLineHeight(offset: Int): Float
+/**
+ * A selectable whose linear order is supplied by its document model rather than its layout.
+ *
+ * Deliberately not a foundation [Selectable]: that internal interface has platform-specific signatures, while this
+ * one is only consumed by [MarkdownSelectionManager] and stays identical on every platform.
+ */
+internal interface MarkdownSelectable : DocumentOrderedSelectable {
+    val selectableId: Long
+    fun appendSelectableInfoToBuilder(builder: SelectionLayoutBuilder, isLast: Boolean)
+    fun getSelectAllSelection(): Selection?
+    fun getHandlePosition(selection: Selection, isStartHandle: Boolean): Offset
+    fun getLayoutCoordinates(): LayoutCoordinates?
+    fun textLayoutResult(): TextLayoutResult?
+    fun getText(): AnnotatedString
+    fun getBoundingBox(offset: Int): Rect
+    fun getLineLeft(offset: Int): Float
+    fun getLineRight(offset: Int): Float
+    fun getCenterYForOffset(offset: Int): Float
+    fun getRangeOfLineContaining(offset: Int): TextRange
+    fun getLastVisibleOffset(): Int
+    fun getLineHeight(offset: Int): Float
 }
 
 private class MarkdownSelectableAdapter(
@@ -67,8 +73,8 @@ private class MarkdownSelectableAdapter(
         get() = orderedSelectable.documentOrder
     override val selectableId: Long
         get() = selectable.selectableId
-    override fun appendSelectableInfoToBuilder(builder: SelectionLayoutBuilder) =
-        selectable.appendSelectableInfoToBuilder(builder)
+    override fun appendSelectableInfoToBuilder(builder: SelectionLayoutBuilder, isLast: Boolean) =
+        selectable.appendSelectableInfoCompat(builder, isLast)
     override fun getSelectAllSelection(): Selection? = selectable.getSelectAllSelection()
     override fun getHandlePosition(selection: Selection, isStartHandle: Boolean): Offset =
         selectable.getHandlePosition(selection, isStartHandle)

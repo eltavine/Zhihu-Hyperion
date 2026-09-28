@@ -17,37 +17,45 @@
 
 package com.github.zly2006.zhihu.viewmodel.local
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
-import com.github.zly2006.zhihu.viewmodel.ContentInteractionEnvironment
-import com.github.zly2006.zhihu.viewmodel.LocalRecommendationEnvironment
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.platform.SettingsStore
+import com.github.zly2006.zhihu.util.Log
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedInteractionViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class LocalHomeFeedViewModel :
-    BaseFeedViewModel(),
+/** [recommendationEngine] 在首次加载时才解析，数据库初始化失败会走下方的兜底内容与错误提示。 */
+class LocalHomeFeedViewModel(
+    settings: SettingsStore,
+    private val recommendationEngine: Lazy<LocalRecommendationEngine>,
+) : BaseFeedViewModel(settings),
     HomeFeedInteractionViewModel {
-    private lateinit var recommendationEngine: LocalRecommendationEngine
     private val recommendationResults = mutableMapOf<String, CrawlingResult>()
+
+    /** Room 生成代码缺失时本地推荐无法工作，首页据此提示用户重启或清除数据。 */
+    var showDatabaseError by mutableStateOf(false)
 
     override val initialUrl: String
         get() = error("LocalHomeFeedViewModel should not be used directly. Use LocalFeedViewModel instead.")
 
-    override fun loadMore(environment: PaginationEnvironment) {
+    override fun loadMore(environment: ZhihuApiEnvironment) {
         if (displayItems.isEmpty()) {
             super.loadMore(environment)
         }
     }
 
-    override suspend fun fetchFeeds(environment: PaginationEnvironment) {
+    override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) {
         try {
-            val engine = ensureEngine(environment)
+            val engine = recommendationEngine.value.also { it.initialize() }
             val recommendations = engine.generateRecommendations(20)
             recommendationResults.clear()
 
@@ -70,9 +78,9 @@ class LocalHomeFeedViewModel :
                 latestLoadedDisplayItems.value = loadedItems
             }
         } catch (e: Exception) {
-            environment.handleLocalRecommendationFailure(e)
+            Log.e("LocalHomeFeedViewModel", "Error fetching local feeds", e)
             if (e.message?.contains("does not exist. Is Room annotation processor correctly configured?") == true) {
-                environment.showLocalRecommendationDatabaseError()
+                showDatabaseError = true
             }
             generateFallbackContent()
         } finally {
@@ -82,21 +90,12 @@ class LocalHomeFeedViewModel :
 
     fun onLocalItemOpened(item: FeedDisplayItem) {
         val result = recommendationResults[item.stableKey] ?: return
-        if (!::recommendationEngine.isInitialized) {
+        if (!recommendationEngine.isInitialized()) {
             return
         }
         viewModelScope.launch(Dispatchers.Default) {
-            recommendationEngine.recordContentOpened(result.contentId, result.reason)
+            recommendationEngine.value.recordContentOpened(result.contentId, result.reason)
         }
-    }
-
-    private suspend fun ensureEngine(environment: LocalRecommendationEnvironment): LocalRecommendationEngine {
-        if (!::recommendationEngine.isInitialized) {
-            recommendationEngine = environment.localRecommendationEngine()
-                ?: error("LocalRecommendationEngine is required for local home feed")
-        }
-        recommendationEngine.initialize()
-        return recommendationEngine
     }
 
     private suspend fun generateFallbackContent() {
@@ -127,9 +126,9 @@ class LocalHomeFeedViewModel :
     }
 
     override suspend fun recordContentInteraction(
-        environment: ContentInteractionEnvironment,
+        environment: ZhihuApiEnvironment,
         feed: Feed,
     ) = Unit
 
-    override fun onUiContentClick(environment: ContentInteractionEnvironment, feed: Feed, item: FeedDisplayItem) = Unit
+    override fun onUiContentClick(environment: ZhihuApiEnvironment, feed: Feed, item: FeedDisplayItem) = Unit
 }

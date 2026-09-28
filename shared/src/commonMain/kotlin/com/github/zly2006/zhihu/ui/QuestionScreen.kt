@@ -100,18 +100,18 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fleeksoft.ksoup.Ksoup
 import com.github.zly2006.zhihu.data.DataHolder
+import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.decodeQuestionContentDetail
+import com.github.zly2006.zhihu.filter.ContentOpenTracker
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.Topic
 import com.github.zly2006.zhihu.navigation.WriteAnswer
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.platform.rememberZhihuWebUrlOpener
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
-import com.github.zly2006.zhihu.ui.components.CommentScreenComponent
 import com.github.zly2006.zhihu.ui.components.FeedCard
-import com.github.zly2006.zhihu.ui.components.FeedPullToRefresh
 import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.ui.components.ShareDialog
@@ -120,12 +120,14 @@ import com.github.zly2006.zhihu.ui.components.handleShareAction
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.ui.components.rememberShareActionExecutor
-import com.github.zly2006.zhihu.viewmodel.ContentLoadEnvironment
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerSwitchState
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.addReadHistory
 import com.github.zly2006.zhihu.viewmodel.feed.QuestionFeedViewModel
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
-import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import kotlin.math.roundToInt
 
 const val QUESTION_SCREEN_LIST_TAG = "question_screen_list"
@@ -147,7 +149,9 @@ private val QUESTION_DETAIL_TOGGLE_ZONE_HEIGHT: Dp = 56.dp
 const val QUESTION_STATS_TAG = "question_stats"
 
 private suspend fun loadQuestion(
-    environment: ContentLoadEnvironment,
+    environment: ZhihuApiEnvironment,
+    history: HistoryStorage,
+    contentOpens: ContentOpenTracker,
     question: Question,
 ): DataHolder.Question? {
     environment.addReadHistory(question.questionId.toString(), "question")
@@ -157,8 +161,8 @@ private suspend fun loadQuestion(
         environment.fetchJson("https://www.zhihu.com/api/v4/questions/${question.questionId}", include)
             ?: return null
     val questionData = decodeQuestionContentDetail(jsonObject)
-    environment.postHistoryDestination(Question(question.questionId, questionData.title))
-    environment.recordContentOpenEvent(destination = question, questionId = question.questionId)
+    history.add(Question(question.questionId, questionData.title))
+    contentOpens.record(question, question.questionId)
     return questionData
 }
 
@@ -174,20 +178,23 @@ fun QuestionScreen(
     question: Question,
 ) {
     val readingPlayerOverlayPadding = LocalReadingPlayerOverlayPadding.current
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
+    val history = koinInject<HistoryStorage>()
+    val contentOpens = koinInject<ContentOpenTracker>()
+    val blockedUsers = koinInject<ContentFilterDatabase>().blockedUserDao()
     val executeShareAction = rememberShareActionExecutor()
     val openZhihuWebUrl = rememberZhihuWebUrlOpener()
     val navigator = LocalNavigator.current
     val viewModel: QuestionFeedViewModel = viewModel(key = "question_${question.questionId}") {
-        QuestionFeedViewModel(question.questionId)
+        QuestionFeedViewModel(question.questionId, settings, blockedUsers)
     }
     val answerReadingQueueSourceId = "question:${question.questionId}:answers:${viewModel.sortOrder}"
     RegisterReadingQueueSource(
         sourceId = answerReadingQueueSourceId,
         items = viewModel.displayItems,
     )
-    val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
-    val answerSwitchState = sharedArticleAnswerSwitchState
+    val paginationEnvironment = rememberZhihuApiEnvironment(allowGuestAccess = false)
+    val answerSwitchState = koinInject<ArticleAnswerSwitchState>()
     val listState = rememberLazyListState()
     var questionContent by remember(question.questionId) { mutableStateOf("") }
     var answerCount by remember(question.questionId) { mutableIntStateOf(0) }
@@ -223,7 +230,7 @@ fun QuestionScreen(
             launch { viewModel.refresh(paginationEnvironment) }
         }
         try {
-            val questionData = loadQuestion(paginationEnvironment, question)
+            val questionData = loadQuestion(paginationEnvironment, history, contentOpens, question)
             if (questionData != null) {
                 questionContent = questionData.detail
                 title = questionData.title

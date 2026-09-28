@@ -18,29 +18,19 @@
 package com.github.zly2006.zhihu.util
 
 import android.content.Context
-import android.net.Uri
-import androidx.browser.customtabs.CustomTabColorSchemeParams
-import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.net.toUri
-import com.github.zly2006.zhihu.account.androidZhihuAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.AccountData
 import com.github.zly2006.zhihu.platform.androidSettingsStore
-import com.github.zly2006.zhihu.util.signZhihuFetchRequest
-import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
-import io.ktor.http.Url
 import io.ktor.http.contentType
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.koin.mp.KoinPlatform
 import java.security.MessageDigest
-
-fun HttpRequestBuilder.signFetchRequest() {
-    signZhihuFetchRequest(AccountData.data.cookies)
-}
 
 @OptIn(DelicateCoroutinesApi::class)
 fun telemetry(context: Context, usage: String) {
@@ -48,7 +38,7 @@ fun telemetry(context: Context, usage: String) {
         "Usage must be either 'start' or 'login', but was '$usage'."
     }
     val settings = androidSettingsStore(context)
-    val data = AccountData.loadData(context)
+    val data = AccountData.data
     if (settings.getBoolean("allowTelemetry", true)) {
         val versionName = runCatching {
             context.packageManager.getPackageInfo(context.packageName, 0).versionName
@@ -56,19 +46,21 @@ fun telemetry(context: Context, usage: String) {
         GlobalScope.launch {
             @OptIn(ExperimentalStdlibApi::class)
             runCatching {
+                val self = data.self!!
                 val hash = MessageDigest
                     .getInstance("MD5")
                     .apply {
-                        data.self!!
-                            .userType
+                        self.userType
                             .toByteArray()
                             .let(this::update)
-                        data.self.urlToken
+                        self.urlToken
                             ?.toByteArray()
                             ?.let(this::update)
-                    }.digest(data.self!!.id.toByteArray())
+                    }.digest(self.id.toByteArray())
                     .toHexString()
-                androidZhihuAccountStore(context)
+                KoinPlatform
+                    .getKoin()
+                    .get<ZhihuAccountStore>()
                     .client
                     .httpClient()
                     .post("https://redenmc.com/api/zhihu/usage?client_hash=$hash&usage=$usage") {
@@ -82,28 +74,3 @@ fun telemetry(context: Context, usage: String) {
         }
     }
 }
-
-/**
- * 洛天依主题浏览器打开
- */
-fun luoTianYiUrlLauncher(context: Context, uri: Uri) {
-    if (uri.host == "link.zhihu.com") {
-        Url(uri.toString()).parameters["target"]?.let {
-            luoTianYiUrlLauncher(context, it.toUri())
-            return
-        }
-    }
-    val color = androidSettingsStore(context).getInt("luotianyi_color", 0xff_66CCFF.toInt())
-    val intent = CustomTabsIntent
-        .Builder()
-        .setDefaultColorSchemeParams(
-            CustomTabColorSchemeParams
-                .Builder()
-                .setToolbarColor(color)
-                .build(),
-        ).build()
-    intent.launchUrl(context, uri)
-}
-
-val Context.clipboardManager
-    get() = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager

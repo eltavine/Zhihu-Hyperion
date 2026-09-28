@@ -63,17 +63,20 @@ import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.WriteAnswer
 import com.github.zly2006.zhihu.navigation.resolveContent
-import com.github.zly2006.zhihu.notification.rememberNotificationSettingsStore
+import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
+import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
 import com.github.zly2006.zhihu.viewmodel.MobileNotificationCategory
 import com.github.zly2006.zhihu.viewmodel.NotificationTimelineViewModel
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
+import org.koin.compose.koinInject
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
@@ -85,11 +88,12 @@ fun NotificationTimelineScreen(
     title: String,
 ) {
     val navigator = LocalNavigator.current
-    val settingsStore = rememberNotificationSettingsStore()
-    val environment = rememberNotificationEnvironment(settingsStore)
+    val settingsStore = koinInject<NotificationSettingsStore>()
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = false)
+    val mobileClient = koinInject<MobileClientProvider>()
     val userMessages = rememberUserMessageSink()
     val viewModel = viewModel(key = "notification_timeline_$entryName") {
-        NotificationTimelineViewModel(entryName)
+        NotificationTimelineViewModel(entryName, mobileClient, settingsStore)
     }
     val invitations = entryName == INVITATION_ENTRY_NAME
     val listState = rememberLazyListState()
@@ -146,42 +150,45 @@ fun NotificationTimelineScreen(
                         )
                     }
 
-                    invitations -> InvitationAnswerItem(
-                        notification = notification,
-                        onQuestionClick = {
-                            notification.target?.id?.toLongOrNull()?.let { questionId ->
-                                navigator.onNavigate(
-                                    Question(
-                                        questionId = questionId,
-                                        title = notification.target.title.ifBlank {
-                                            notification.targetSource?.text.orEmpty()
-                                        },
-                                    ),
-                                )
-                            } ?: userMessages.showMessage("无法打开这个问题")
-                        },
-                        onAnswerClick = {
-                            val target = notification.target
-                            val destination = target
-                                ?.myAnswerUrl
-                                ?.takeIf { it.isNotBlank() }
-                                ?.let(::resolveContent)
-                            if (destination != null) {
-                                navigator.onNavigate(destination)
-                            } else {
+                    invitations -> {
+                        InvitationAnswerItem(
+                            notification = notification,
+                            onQuestionClick = {
+                                val target = notification.target
                                 target?.id?.toLongOrNull()?.let { questionId ->
                                     navigator.onNavigate(
-                                        WriteAnswer(
+                                        Question(
                                             questionId = questionId,
-                                            questionTitle = target.title.ifBlank {
+                                            title = target.title.ifBlank {
                                                 notification.targetSource?.text.orEmpty()
                                             },
                                         ),
                                     )
-                                } ?: userMessages.showMessage("无法回答这个问题")
-                            }
-                        },
-                    )
+                                } ?: userMessages.showMessage("无法打开这个问题")
+                            },
+                            onAnswerClick = {
+                                val target = notification.target
+                                val destination = target
+                                    ?.myAnswerUrl
+                                    ?.takeIf { it.isNotBlank() }
+                                    ?.let(::resolveContent)
+                                if (destination != null) {
+                                    navigator.onNavigate(destination)
+                                } else {
+                                    target?.id?.toLongOrNull()?.let { questionId ->
+                                        navigator.onNavigate(
+                                            WriteAnswer(
+                                                questionId = questionId,
+                                                questionTitle = target.title.ifBlank {
+                                                    notification.targetSource?.text.orEmpty()
+                                                },
+                                            ),
+                                        )
+                                    } ?: userMessages.showMessage("无法回答这个问题")
+                                }
+                            },
+                        )
+                    }
 
                     viewModel.shouldShowNotification(settingsStore, notification) -> {
                         NotificationItemView(

@@ -1,0 +1,80 @@
+# Weekly dependency updates. Every version lives in gradle/libs.versions.toml, so each update is a
+# one-line catalog change validated by the PR checks. Libraries that must move together are grouped.
+version: 2
+updates:
+  - package-ecosystem: gradle
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      kotlin-toolchain:
+        # The Compose compiler ships with Kotlin, and KSP/Room processors must match the Kotlin compiler.
+        patterns:
+          - "org.jetbrains.kotlin*"
+          - "com.google.devtools.ksp*"
+      compose-multiplatform:
+        patterns:
+          - "org.jetbrains.compose*"
+          - "org.jetbrains.androidx*"
+          - "androidx.compose*"
+          - "com.materialkolor*"
+      android-gradle-plugin:
+        patterns:
+          - "com.android*"
+      androidx:
+        patterns:
+          - "androidx.*"
+      kotlinx:
+        patterns:
+          - "org.jetbrains.kotlinx*"
+      ktor:
+        patterns:
+          - "io.ktor*"
+      coil:
+        patterns:
+          - "io.coil-kt*"
+      koin:
+        patterns:
+          - "io.insert-koin*"
+    ignore:
+      # The desktop runtime is linked from JDK 17 and JavaFX 22+ requires a newer JDK; stay on the 21 LTS line.
+      - dependency-name: "org.openjfx:*"
+        update-types:
+          - version-update:semver-major
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  - package-ecosystem: cargo
+    directories:
+      - "/aigc-vote-server"
+      - "/apk-recompress"
+      - "/rs-hf-tokenizer"
+      - "/rs-zse-sign"
+    schedule:
+      interval: weekly
+    groups:
+      cargo:
+        patterns:
+          - "*"
+
+  - package-ecosystem: docker
+    directory: "/aigc-vote-server"
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: npm
+    directory: "/tools/katex-ast-oracle"
+    schedule:
+      interval: weekly
+    groups:
+      npm:
+        patterns:
+          - "*"

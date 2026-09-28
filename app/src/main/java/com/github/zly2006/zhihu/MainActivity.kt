@@ -45,9 +45,11 @@ import coil3.disk.DiskCache
 import coil3.disk.directory
 import coil3.memory.MemoryCache
 import coil3.request.crossfade
-import com.github.zly2006.zhihu.data.AccountData
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
+import com.github.zly2006.zhihu.filter.ContentOpenTracker
+import com.github.zly2006.zhihu.navigation.AndroidArticleNavigationHandoff
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.CollectionContent
@@ -62,23 +64,19 @@ import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.TopLevelDestination
 import com.github.zly2006.zhihu.navigation.Video
 import com.github.zly2006.zhihu.navigation.resolveContent
-import com.github.zly2006.zhihu.nlp.KeywordWeightExtractor
-import com.github.zly2006.zhihu.nlp.NLPService
-import com.github.zly2006.zhihu.nlp.NlpServiceKeywordSemanticMatcher
 import com.github.zly2006.zhihu.nlp.SentenceEmbeddingManager
 import com.github.zly2006.zhihu.platform.androidSettingsStore
 import com.github.zly2006.zhihu.platform.androidUserMessageSink
 import com.github.zly2006.zhihu.reading.ContentReadingService
 import com.github.zly2006.zhihu.theme.AndroidThemeSettings
 import com.github.zly2006.zhihu.theme.ZhihuTheme
-import com.github.zly2006.zhihu.ui.AndroidArticleNavigationHandoff
 import com.github.zly2006.zhihu.ui.AndroidZhihuMain
 import com.github.zly2006.zhihu.ui.components.LocalPageTurnDispatcher
+import com.github.zly2006.zhihu.ui.components.PREF_VOLUME_KEY_PAGE_TURN
 import com.github.zly2006.zhihu.ui.components.PageTurnCommand
 import com.github.zly2006.zhihu.ui.components.PageTurnDispatcher
 import com.github.zly2006.zhihu.ui.components.PageTurnFab
 import com.github.zly2006.zhihu.ui.components.getHighestQualityVideoUrl
-import com.github.zly2006.zhihu.ui.subscreens.PREF_VOLUME_KEY_PAGE_TURN
 import com.github.zly2006.zhihu.updater.UpdateManager
 import com.github.zly2006.zhihu.util.ContinuousUsageReminderManager
 import com.github.zly2006.zhihu.util.EmojiManager
@@ -89,23 +87,21 @@ import com.github.zly2006.zhihu.util.clearShareImageCache
 import com.github.zly2006.zhihu.util.clipboardManager
 import com.github.zly2006.zhihu.util.enableEdgeToEdgeCompat
 import com.github.zly2006.zhihu.util.telemetry
-import com.github.zly2006.zhihu.viewmodel.filter.androidKeywordSemanticMatcher
-import com.github.zly2006.zhihu.viewmodel.filter.androidKeywordWeightExtractor
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import java.util.concurrent.TimeUnit
 
 class MainActivity : ComponentActivity() {
-    lateinit var history: HistoryStorage
+    val history: HistoryStorage by inject()
+    private val accountStore: ZhihuAccountStore by inject()
+    private val articleNavigationHandoff: AndroidArticleNavigationHandoff by inject()
+    private val contentOpens: ContentOpenTracker by inject()
     val httpClient
-        get() = com.github.zly2006.zhihu.account
-            .androidZhihuAccountStore(this)
-            .client
-            .httpClient()
+        get() = accountStore.client.httpClient()
 
     /** 主返回栈控制器，承载 MainTabs 主壳和单栏页面。 */
     lateinit var navController: NavHostController
@@ -145,14 +141,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         clearShareImageCache(this)
         continuousUsageReminderManager = ContinuousUsageReminderManager(this)
-        history = HistoryStorage(this)
-        AccountData.loadData(this)
         AndroidThemeSettings.initialize(this)
-        androidKeywordSemanticMatcher = NlpServiceKeywordSemanticMatcher
-        androidKeywordWeightExtractor = KeywordWeightExtractor { text, topN ->
-            NLPService.extractKeywordsWithWeight(text, topN)
-        }
-        getContentFilterDatabase(this)
 
         val settings = androidSettingsStore(this)
         val lastLaunchTimestamp = settings.getLong(KEY_LAST_LAUNCH_TIMESTAMP, 0L)
@@ -277,21 +266,33 @@ class MainActivity : ComponentActivity() {
     private var pageTurnLongPressConsumed = false
 
     private fun pageTurnCommand(keyCode: Int): PageTurnCommand? = when (keyCode) {
-        KeyEvent.KEYCODE_PAGE_DOWN -> PageTurnCommand.PageDown
-        KeyEvent.KEYCODE_PAGE_UP -> PageTurnCommand.PageUp
-        KeyEvent.KEYCODE_VOLUME_DOWN ->
+        KeyEvent.KEYCODE_PAGE_DOWN -> {
+            PageTurnCommand.PageDown
+        }
+
+        KeyEvent.KEYCODE_PAGE_UP -> {
+            PageTurnCommand.PageUp
+        }
+
+        KeyEvent.KEYCODE_VOLUME_DOWN -> {
             if (androidSettingsStore(this).getBoolean(PREF_VOLUME_KEY_PAGE_TURN, false)) {
                 PageTurnCommand.PageDown
             } else {
                 null
             }
-        KeyEvent.KEYCODE_VOLUME_UP ->
+        }
+
+        KeyEvent.KEYCODE_VOLUME_UP -> {
             if (androidSettingsStore(this).getBoolean(PREF_VOLUME_KEY_PAGE_TURN, false)) {
                 PageTurnCommand.PageUp
             } else {
                 null
             }
-        else -> null
+        }
+
+        else -> {
+            null
+        }
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
@@ -311,19 +312,27 @@ class MainActivity : ComponentActivity() {
                             },
                         )
                     }
+
                     event.repeatCount == 0 -> {
                         pageTurnLongPressConsumed = false
                         true
                     }
-                    else -> true
+
+                    else -> {
+                        true
+                    }
                 }
             }
+
             KeyEvent.ACTION_UP -> {
                 val consumed = pageTurnLongPressConsumed || pageTurnDispatcher.dispatch(command)
                 pageTurnLongPressConsumed = false
                 consumed
             }
-            else -> super.dispatchKeyEvent(event)
+
+            else -> {
+                super.dispatchKeyEvent(event)
+            }
         }
     }
 
@@ -339,8 +348,8 @@ class MainActivity : ComponentActivity() {
                         val destination = regex.findAll(text).firstNotNullOfOrNull {
                             resolveContent(it.value)
                         }
-                        if (destination != null && destination != AndroidArticleNavigationHandoff.clipboardDestination) {
-                            AndroidArticleNavigationHandoff.markClipboardDestination(destination)
+                        if (destination != null && destination != articleNavigationHandoff.clipboardDestination) {
+                            articleNavigationHandoff.markClipboardDestination(destination)
                             navigate(destination, popup = true)
                         }
                     }
@@ -366,8 +375,8 @@ class MainActivity : ComponentActivity() {
         Log.i(TAG, "Intent data: $data")
         val destination = resolveContent(data.toString())
         if (destination != null) {
-            if (forceNavigation || destination != AndroidArticleNavigationHandoff.clipboardDestination) {
-                AndroidArticleNavigationHandoff.markClipboardDestination(destination)
+            if (forceNavigation || destination != articleNavigationHandoff.clipboardDestination) {
+                articleNavigationHandoff.markClipboardDestination(destination)
                 navigate(destination, popup = true)
             }
         } else {
@@ -412,13 +421,13 @@ class MainActivity : ComponentActivity() {
         popup: Boolean,
     ) {
         if (route is CommentHolder) {
-            AndroidArticleNavigationHandoff.prepareComment(route)
+            articleNavigationHandoff.prepareComment(route)
             navigate(route.article, targetController, popup)
             return
         }
-        AndroidArticleNavigationHandoff.clearCommentUnless(route)
+        articleNavigationHandoff.clearCommentUnless(route)
         preparePendingContentOpen(route, targetController)
-        history.add(route)
+        lifecycleScope.launch { history.add(route) }
         if (route is Video) {
             val current = runCatching {
                 targetController.currentBackStackEntry?.toRoute<Article>()
@@ -436,10 +445,14 @@ class MainActivity : ComponentActivity() {
                         ArticleType.Article -> "article"
                     }
                 }
+
                 is Question -> {
                     current.questionId.toString() to "question"
                 }
-                else -> error("Unsupported content type for video: $current")
+
+                else -> {
+                    error("Unsupported content type for video: $current")
+                }
             }
             CoroutineScope(Dispatchers.Main).launch {
                 val videoUrl = getHighestQualityVideoUrl(this@MainActivity, httpClient, route.id.toString(), contentId, contentType)
@@ -488,7 +501,7 @@ class MainActivity : ComponentActivity() {
             null
         }
             ?: ContentOpenEventSupport.inferOpenFrom(currentContentOpenSource(sourceController), target)
-        AndroidArticleNavigationHandoff.prepareContentOpen(target, openFrom)
+        contentOpens.prepare(target, openFrom)
     }
 
     private fun navigateToMainTabs() {

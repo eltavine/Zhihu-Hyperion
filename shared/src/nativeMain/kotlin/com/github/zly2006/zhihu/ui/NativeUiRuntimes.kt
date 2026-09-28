@@ -31,7 +31,6 @@ import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.unit.em
 import com.github.zly2006.zhihu.navigation.Article
-import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageSink
 import com.github.zly2006.zhihu.platform.nativeAppPrivateDirectoryPath
 import com.github.zly2006.zhihu.platform.nativeAppVersionName
@@ -39,12 +38,8 @@ import com.github.zly2006.zhihu.platform.nativeBundledResourcePath
 import com.github.zly2006.zhihu.platform.nativeChooseBlocklistImportFilePath
 import com.github.zly2006.zhihu.platform.nativeIsDesktop
 import com.github.zly2006.zhihu.platform.platformName
-import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
-import com.github.zly2006.zhihu.platform.rememberUserMessageSink
-import com.github.zly2006.zhihu.viewmodel.NativePaginationEnvironment
-import com.github.zly2006.zhihu.viewmodel.NotificationEnvironment
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.encodeBlocklistBackup
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.importBlocklistBackupFromJsonText
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ByteVar
@@ -52,67 +47,15 @@ import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.readBytes
 import kotlinx.cinterop.reinterpret
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import org.koin.compose.koinInject
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSString
 import platform.Foundation.NSUTF8StringEncoding
 import platform.Foundation.create
 import platform.Foundation.dataUsingEncoding
 import org.jetbrains.skia.Image as SkiaImage
-
-@Composable
-actual fun rememberArticleTtsState(): TtsState = NativeArticleSpeechController.currentState
-
-@Composable
-actual fun rememberArticleSpeechToggler(): ArticleSpeechToggler {
-    val userMessages = rememberUserMessageSink()
-    val coroutineScope = rememberCoroutineScope()
-    val ttsState = NativeArticleSpeechController.currentState
-    return remember(userMessages, coroutineScope, ttsState) {
-        object : ArticleSpeechToggler {
-            override fun invoke(title: String, content: String) {
-                if (ttsState.isSpeaking) {
-                    NativeArticleSpeechController.stopSpeaking()
-                } else if (ttsState !in listOf(TtsState.Error, TtsState.Uninitialized, TtsState.Initializing)) {
-                    coroutineScope.launch {
-                        try {
-                            val textToRead = withContext(Dispatchers.Default) {
-                                articleSpeechText(title, content)
-                            }
-                            if (textToRead.isNotBlank()) {
-                                if (NativeArticleSpeechController.startSpeaking(textToRead)) {
-                                    userMessages.showMessage("开始朗读：$title")
-                                } else {
-                                    userMessages.showMessage("朗读启动失败")
-                                }
-                            }
-                        } catch (e: Exception) {
-                            userMessages.showMessage("朗读失败：${e.message}")
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-actual fun rememberArticleBrowserOpener(): ArticleBrowserOpener {
-    val openExternalUrl = rememberExternalUrlOpener()
-    return remember(openExternalUrl) {
-        object : ArticleBrowserOpener {
-            override fun invoke(article: Article) = openExternalUrl(articleWebUrl(article))
-        }
-    }
-}
-
-@Composable
-actual fun rememberNotificationEnvironment(
-    settingsStore: NotificationSettingsStore,
-): NotificationEnvironment = remember(settingsStore) { NativePaginationEnvironment(notificationSettingsStore = settingsStore) }
 
 @Composable
 actual fun consumePendingCommentId(content: com.github.zly2006.zhihu.navigation.NavDestination): String? = null
@@ -203,14 +146,12 @@ actual fun rememberAppVersionInfo(): String = nativeAppVersionName
 @Composable
 actual fun ZhihuHtmlWebViewContent(html: String): Unit = error("$platformName 暂不支持 HTML WebView 渲染")
 
-actual val isLegacyWebViewSupported: Boolean = false
-
 @Composable
 actual fun rememberBlocklistRuleImporter(
     userMessages: UserMessageSink,
     onImported: (String) -> Unit,
 ): BlocklistRuleImporter {
-    val database = remember { getContentFilterDatabase() }
+    val database = koinInject<ContentFilterDatabase>()
     val coroutineScope = rememberCoroutineScope()
     val currentOnImported by rememberUpdatedState(onImported)
     return remember(database, coroutineScope, userMessages) {
@@ -245,7 +186,7 @@ actual fun rememberBlocklistRuleImporter(
 @Composable
 @OptIn(BetaInteropApi::class, ExperimentalForeignApi::class)
 actual fun rememberBlocklistRuleExporter(): BlocklistRuleExporter {
-    val database = remember { getContentFilterDatabase() }
+    val database = koinInject<ContentFilterDatabase>()
     return remember(database) {
         object : BlocklistRuleExporter {
             override suspend fun invoke(): String {

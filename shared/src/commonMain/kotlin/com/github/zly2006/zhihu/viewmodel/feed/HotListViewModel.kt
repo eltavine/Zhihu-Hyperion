@@ -19,9 +19,12 @@ package com.github.zly2006.zhihu.viewmodel.feed
 
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
-import com.github.zly2006.zhihu.viewmodel.FeedDisplayEnvironment
+import com.github.zly2006.zhihu.data.FeedDisplaySettings
+import com.github.zly2006.zhihu.platform.SettingsStore
 
-class HotListViewModel : BaseFeedViewModel() {
+class HotListViewModel(
+    settings: SettingsStore,
+) : BaseFeedViewModel(settings) {
     override val initialUrl: String
         get() = "https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total?limit=50&mobile=true"
 
@@ -29,7 +32,7 @@ class HotListViewModel : BaseFeedViewModel() {
         allowGuestAccess = true
     }
 
-    override fun createDisplayItem(environment: FeedDisplayEnvironment, feed: Feed): FeedDisplayItem = super.createDisplayItem(environment, feed).copy(
+    override fun createDisplayItem(display: FeedDisplaySettings, feed: Feed): FeedDisplayItem = super.createDisplayItem(display, feed).copy(
         authorName = null,
         avatarSrc = null,
     )

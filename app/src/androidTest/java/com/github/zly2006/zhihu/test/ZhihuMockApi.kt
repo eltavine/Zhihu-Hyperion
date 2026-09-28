@@ -17,9 +17,9 @@
 
 package com.github.zly2006.zhihu.test
 
-import com.github.zly2006.zhihu.account.accountHttpClientEngineForTesting
-import com.github.zly2006.zhihu.account.replaceAndroidZhihuAccountStoreForTesting
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.notification.ZHIHU_PLUS_PLUS_HOME_NOTIFICATIONS_URL
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope
 import io.ktor.client.engine.mock.respond
@@ -31,6 +31,9 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import io.ktor.utils.io.ByteReadChannel
+import org.koin.dsl.module
+import org.koin.dsl.onClose
+import org.koin.mp.KoinPlatform
 import java.util.concurrent.CopyOnWriteArrayList
 
 object ZhihuMockApi {
@@ -47,20 +50,36 @@ object ZhihuMockApi {
     private val routes = CopyOnWriteArrayList<Route>()
     private val requests = CopyOnWriteArrayList<RecordedRequest>()
     private var enabled = true
+    private var productionEngine: HttpClientEngine? = null
 
     fun install(enabled: Boolean = true) {
         this.enabled = enabled
         if (!enabled) {
-            replaceAndroidZhihuAccountStoreForTesting(null)
-            accountHttpClientEngineForTesting = null
+            productionEngine?.let(::bindAccountEngine)
+            productionEngine = null
             routes.clear()
             requests.clear()
             return
         }
-        if (accountHttpClientEngineForTesting == null) {
-            replaceAndroidZhihuAccountStoreForTesting(null)
-            accountHttpClientEngineForTesting = mockEngine()
+        if (productionEngine == null) {
+            productionEngine = KoinPlatform.getKoin().get()
+            bindAccountEngine(mockEngine())
         }
+    }
+
+    /** 覆盖进程内的账户引擎并以它重建账户 store；Koin 覆盖定义时不会关闭被替换的引擎，恢复时可复用。 */
+    private fun bindAccountEngine(engine: HttpClientEngine) {
+        val koin = KoinPlatform.getKoin()
+        koin.get<ZhihuAccountStore>().close()
+        koin.loadModules(
+            listOf(
+                module {
+                    single { engine }
+                    single { ZhihuAccountStore(get(), engine) } onClose { it?.close() }
+                },
+            ),
+            allowOverride = true,
+        )
     }
 
     fun isEnabled(): Boolean = enabled

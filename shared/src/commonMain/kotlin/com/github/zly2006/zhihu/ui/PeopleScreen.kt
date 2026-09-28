@@ -19,7 +19,6 @@ package com.github.zly2006.zhihu.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -87,6 +86,9 @@ import coil3.compose.AsyncImage
 import com.fleeksoft.ksoup.Ksoup
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.FeedDisplayItem
+import com.github.zly2006.zhihu.data.FollowedQuestion
+import com.github.zly2006.zhihu.data.FollowedTopic
+import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.OfficialBadge
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.officialBadge
@@ -99,6 +101,7 @@ import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Person
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
 import com.github.zly2006.zhihu.platform.rememberImagePreviewOpener
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
@@ -114,24 +117,23 @@ import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.jsonObject
 import com.github.zly2006.zhihu.util.raiseForStatus
-import com.github.zly2006.zhihu.viewmodel.ContentBlocklistEnvironment
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.PaginationViewModel
-import com.github.zly2006.zhihu.viewmodel.ProfileLoadEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.addReadHistory
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
+import com.github.zly2006.zhihu.viewmodel.filter.BlockedQuestionAuthor
+import com.github.zly2006.zhihu.viewmodel.filter.BlockedQuestionAuthorDao
+import com.github.zly2006.zhihu.viewmodel.filter.BlockedUser
+import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.postSigned
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonPrimitive
-import org.jetbrains.compose.resources.painterResource
-import zhihu.shared.generated.resources.Res
-import zhihu.shared.generated.resources.ic_zh_plus_author_badge
+import org.koin.compose.koinInject
 import kotlin.math.roundToInt
 import kotlin.reflect.typeOf
 import androidx.lifecycle.viewmodel.compose.viewModel as composeViewModel
@@ -159,7 +161,7 @@ class PeopleAnswersViewModel(
         return true
     }
 
-    fun changeSortBy(newSort: String, environment: PaginationEnvironment) {
+    fun changeSortBy(newSort: String, environment: ZhihuApiEnvironment) {
         if (updateSortBy(newSort)) {
             refresh(environment)
         }
@@ -188,7 +190,7 @@ class PeopleArticlesViewModel(
         return true
     }
 
-    fun changeSortBy(newSort: String, environment: PaginationEnvironment) {
+    fun changeSortBy(newSort: String, environment: ZhihuApiEnvironment) {
         if (updateSortBy(newSort)) {
             refresh(environment)
         }
@@ -197,8 +199,9 @@ class PeopleArticlesViewModel(
 
 class PeopleActivitiesViewModel(
     val person: Person,
+    settings: SettingsStore,
     val sort: String = "created",
-) : BaseFeedViewModel() {
+) : BaseFeedViewModel(settings) {
     override val initialUrl: String
         get() = "https://www.zhihu.com/api/v3/moments/${person.userTokenOrId}/activities"
 }
@@ -289,32 +292,6 @@ class PeopleFollowingCollectionsViewModel(
         get() = "data[*].updated_time,answer_count,follower_count,creator"
 }
 
-@Serializable
-data class FollowedQuestion(
-    val id: String,
-    val type: String = "question",
-    val url: String = "",
-    val title: String = "",
-    val questionType: String = "",
-    val created: Long = 0L,
-    val updatedTime: Long = 0L,
-)
-
-@Serializable
-data class FollowedTopic(
-    val id: String = "",
-    val type: String = "topic",
-    val url: String = "",
-    val name: String = "",
-    val avatarUrl: String? = null,
-    val topicType: String? = null,
-    val topic: DataHolder.Topic? = null,
-) {
-    val displayId: String get() = topic?.id ?: id
-    val displayName: String get() = topic?.name ?: name
-    val displayAvatarUrl: String? get() = topic?.avatarUrl ?: avatarUrl
-}
-
 class PeopleFollowingQuestionsViewModel(
     val person: Person,
 ) : PaginationViewModel<FollowedQuestion>(
@@ -353,6 +330,7 @@ class PeopleFollowingColumnsViewModel(
 
 class PersonViewModel(
     val person: Person,
+    settings: SettingsStore,
 ) : ViewModel() {
     var avatar by mutableStateOf("")
     var name by mutableStateOf(person.name)
@@ -373,7 +351,7 @@ class PersonViewModel(
     // 只实现已有数据类型的 ViewModel
     val answersFeedModel = PeopleAnswersViewModel(person)
     val articlesFeedModel = PeopleArticlesViewModel(person)
-    val activitiesFeedModel = PeopleActivitiesViewModel(person)
+    val activitiesFeedModel = PeopleActivitiesViewModel(person, settings)
     val collectionsFeedModel = PeopleCollectionsViewModel(person)
     val questionsFeedModel = PeopleQuestionsViewModel(person)
     val pinsFeedModel = PeoplePinsViewModel(person)
@@ -420,37 +398,46 @@ class PersonViewModel(
         isBlocking = newBlockingState
     }
 
-    suspend fun toggleRecommendationBlock(environment: ContentBlocklistEnvironment) {
+    suspend fun toggleRecommendationBlock(blockedUsers: BlockedUserDao) {
         if (isBlockedInRecommendations) {
-            environment.removeBlockedUser(person.id)
+            blockedUsers.deleteUserById(person.id)
             isBlockedInRecommendations = false
         } else {
-            environment.addBlockedUser(
-                userId = person.id,
-                userName = name,
-                urlToken = person.urlToken,
-                avatarUrl = avatar,
+            blockedUsers.insertUser(
+                BlockedUser(
+                    userId = person.id,
+                    userName = name,
+                    urlToken = person.urlToken,
+                    avatarUrl = avatar,
+                ),
             )
             isBlockedInRecommendations = true
         }
     }
 
-    suspend fun toggleQuestionAuthorBlock(environment: ContentBlocklistEnvironment) {
+    suspend fun toggleQuestionAuthorBlock(blockedQuestionAuthors: BlockedQuestionAuthorDao) {
         if (isBlockedAsQuestionAuthor) {
-            environment.removeBlockedQuestionAuthor(person.id)
+            blockedQuestionAuthors.deleteUserById(person.id)
             isBlockedAsQuestionAuthor = false
         } else {
-            environment.addBlockedQuestionAuthor(
-                userId = person.id,
-                userName = name,
-                urlToken = person.urlToken,
-                avatarUrl = avatar,
+            blockedQuestionAuthors.insertUser(
+                BlockedQuestionAuthor(
+                    userId = person.id,
+                    userName = name,
+                    urlToken = person.urlToken,
+                    avatarUrl = avatar,
+                ),
             )
             isBlockedAsQuestionAuthor = true
         }
     }
 
-    suspend fun load(environment: ProfileLoadEnvironment) {
+    suspend fun load(
+        environment: ZhihuApiEnvironment,
+        history: HistoryStorage,
+        blockedUsers: BlockedUserDao,
+        blockedQuestionAuthors: BlockedQuestionAuthorDao,
+    ) {
         environment.addReadHistory(person.id, "profile")
 
         val profileUrl = "https://api.zhihu.com/people/${person.urlToken.takeIf(String::isNotBlank) ?: person.id}"
@@ -460,7 +447,7 @@ class PersonViewModel(
         val loadedPerson = ZhihuJson.decodeJson<DataHolder.People>(jojo)
         val urlToken = loadedPerson.urlToken
 
-        environment.postHistoryDestination(
+        history.add(
             Person(
                 id = loadedPerson.id,
                 name = loadedPerson.name,
@@ -479,8 +466,8 @@ class PersonViewModel(
         this.articleCount = loadedPerson.articlesCount
         this.isFollowing = loadedPerson.isFollowing
         this.isBlocking = loadedPerson.isBlocking
-        this.isBlockedInRecommendations = environment.isUserBlocked(loadedPerson.id)
-        this.isBlockedAsQuestionAuthor = environment.isQuestionAuthorBlocked(loadedPerson.id)
+        this.isBlockedInRecommendations = blockedUsers.isUserBlocked(loadedPerson.id)
+        this.isBlockedAsQuestionAuthor = blockedQuestionAuthors.isUserBlocked(loadedPerson.id)
         this.memberHashId = loadedPerson.id
         this.person.id = loadedPerson.id
         if (urlToken != null) {
@@ -661,8 +648,11 @@ fun PeopleScreen(
 ) {
     val navigator = LocalNavigator.current
     val userMessages = rememberUserMessageSink()
-    val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
-    val viewModel = composeViewModel { PersonViewModel(person) }
+    val paginationEnvironment = rememberZhihuApiEnvironment(allowGuestAccess = false)
+    val history = koinInject<HistoryStorage>()
+    val contentFilterDatabase = koinInject<ContentFilterDatabase>()
+    val settings = koinInject<SettingsStore>()
+    val viewModel = composeViewModel { PersonViewModel(person, settings) }
     val coroutineScope = rememberCoroutineScope()
 
     val pagerState = rememberPagerState(
@@ -681,14 +671,17 @@ fun PeopleScreen(
             sourceId = requireNotNull(readingQueueSourceId),
             items = viewModel.answersFeedModel.allData.map(DataHolder.Answer::toPeopleAnswerDisplayItem),
         )
+
         1 -> RegisterReadingQueueSource(
             sourceId = requireNotNull(readingQueueSourceId),
             items = viewModel.articlesFeedModel.allData.map(DataHolder.Article::toPeopleArticleDisplayItem),
         )
+
         2 -> RegisterReadingQueueSource(
             sourceId = requireNotNull(readingQueueSourceId),
             items = viewModel.activitiesFeedModel.displayItems,
         )
+
         5 -> RegisterReadingQueueSource(
             sourceId = requireNotNull(readingQueueSourceId),
             items = viewModel.pinsFeedModel.allData.mapNotNull(DataHolder.Pin::toPeoplePinDisplayItem),
@@ -697,7 +690,7 @@ fun PeopleScreen(
 
     LaunchedEffect(viewModel) {
         try {
-            viewModel.load(paginationEnvironment)
+            viewModel.load(paginationEnvironment, history, contentFilterDatabase.blockedUserDao(), contentFilterDatabase.blockedQuestionAuthorDao())
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -772,7 +765,7 @@ fun PeopleScreen(
                             onRecommendationBlockToggle = {
                                 coroutineScope.launch {
                                     try {
-                                        viewModel.toggleRecommendationBlock(paginationEnvironment)
+                                        viewModel.toggleRecommendationBlock(contentFilterDatabase.blockedUserDao())
                                         userMessages.showShortMessage(if (viewModel.isBlockedInRecommendations) "已屏蔽推荐" else "已取消屏蔽推荐")
                                     } catch (e: Exception) {
                                         userMessages.showShortMessage("操作失败: ${e.message}")
@@ -782,7 +775,7 @@ fun PeopleScreen(
                             onQuestionAuthorBlockToggle = {
                                 coroutineScope.launch {
                                     try {
-                                        viewModel.toggleQuestionAuthorBlock(paginationEnvironment)
+                                        viewModel.toggleQuestionAuthorBlock(contentFilterDatabase.blockedQuestionAuthorDao())
                                         userMessages.showShortMessage(if (viewModel.isBlockedAsQuestionAuthor) "已屏蔽其提问" else "已取消屏蔽其提问")
                                     } catch (e: Exception) {
                                         userMessages.showShortMessage("操作失败: ${e.message}")
@@ -1421,13 +1414,19 @@ private fun FollowedTopicListItem(topic: FollowedTopic) {
 }
 
 private fun DataHolder.Column.webUrl(): String = when {
-    url.contains("/api/v4/columns/") ->
+    url.contains("/api/v4/columns/") -> {
         url
             .replace("http://", "https://")
             .replace("/api/v4/columns/", "/column/")
+    }
 
-    url.startsWith("http") && !url.contains("/api/") -> url.replace("http://", "https://")
-    else -> "https://www.zhihu.com/column/$id"
+    url.startsWith("http") && !url.contains("/api/") -> {
+        url.replace("http://", "https://")
+    }
+
+    else -> {
+        "https://www.zhihu.com/column/$id"
+    }
 }
 
 @Composable
@@ -1544,25 +1543,7 @@ private fun OfficialBadgeDetails(
                 modifier = Modifier.padding(top = 2.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                if (badge.iconUrl.isNotBlank()) {
-                    if (badge.iconUrl == DataHolder.ZH_PLUS_AUTHOR_BADGE_ICON) {
-                        Image(
-                            painter = painterResource(Res.drawable.ic_zh_plus_author_badge),
-                            contentDescription = badge.description,
-                            modifier = Modifier
-                                .padding(end = 6.dp)
-                                .size(18.dp),
-                        )
-                    } else {
-                        AsyncImage(
-                            model = badge.iconUrl,
-                            contentDescription = badge.description,
-                            modifier = Modifier
-                                .padding(end = 6.dp)
-                                .size(18.dp),
-                        )
-                    }
-                }
+                AuthorBadge(badge, modifier = Modifier.padding(end = 6.dp))
                 Text(
                     text = "${badge.peopleDetailTitle}: ${badge.description}",
                     style = MaterialTheme.typography.bodySmall,

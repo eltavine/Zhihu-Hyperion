@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
 }
 
 // Used in GitHub CI to pass the path of the installed Android NDK
@@ -7,7 +7,7 @@ val envAndroidNDKPath = System.getenv("ANDROID_NDK_HOME")
 
 android {
     namespace = "com.ml.shubham0204.sentence_embeddings"
-    compileSdk = 37
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     // Declare the ndkVersion to avoid 'NDK not installed' errors from rust-android-plugin
     // see: https://github.com/mozilla/rust-android-gradle/issues/29#issuecomment-593501017
@@ -156,7 +156,7 @@ tasks.matching { it.name.startsWith("preBuild") }.configureEach {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.19.0")
-    implementation("androidx.appcompat:appcompat:1.7.1")
-    implementation("com.microsoft.onnxruntime:onnxruntime-android:1.26.0")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.onnxruntime.android)
 }

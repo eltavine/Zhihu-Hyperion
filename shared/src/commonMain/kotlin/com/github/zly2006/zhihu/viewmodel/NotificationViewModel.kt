@@ -55,14 +55,6 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.reflect.typeOf
 
-interface NotificationSettingsEnvironment {
-    val notificationSettingsStore: NotificationSettingsStore
-}
-
-interface NotificationEnvironment :
-    PaginationEnvironment,
-    NotificationSettingsEnvironment
-
 enum class MobileNotificationCategory(
     val entryName: String,
     val detailTitle: String,
@@ -77,8 +69,9 @@ enum class MobileNotificationCategory(
         get() = "$MOBILE_NOTIFICATION_TIMELINE_URL/$entryName/actions/readall"
 }
 
-class NotificationViewModel :
-    PaginationViewModel<MobileNotificationTimelineItem>(
+class NotificationViewModel(
+    private val mobileClient: MobileClientProvider,
+) : PaginationViewModel<MobileNotificationTimelineItem>(
         dataType = typeOf<MobileNotificationTimelineItem>(),
     ) {
     override val initialUrl = "$MOBILE_NOTIFICATION_MESSAGE_URL?limit=20"
@@ -100,7 +93,7 @@ class NotificationViewModel :
         }
     }
 
-    override fun refresh(environment: PaginationEnvironment) {
+    override fun refresh(environment: ZhihuApiEnvironment) {
         if (isLoading) return
         errorMessage = null
         lastPaging = null
@@ -108,13 +101,12 @@ class NotificationViewModel :
         loadMore(environment)
     }
 
-    override suspend fun fetchFeeds(environment: PaginationEnvironment) {
+    override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) {
         try {
             val url = lastPaging?.next ?: initialUrl
-            val json = environment
-                .mobileHomeFeedHttpClient()
-                .get(url.replace("http://", "https://"))
-                .jsonObject()
+            val json = mobileClient.withClient { client ->
+                client.get(url.replace("http://", "https://")).jsonObject()
+            }
             val page = ZhihuJson.decodeJson<MobileNotificationMessageOverview>(json)
             val rawData = json["data"]?.jsonArray ?: JsonArray(emptyList())
 
@@ -160,16 +152,13 @@ class NotificationViewModel :
         }
     }
 
-    suspend fun markCategoryAsRead(
-        category: MobileNotificationCategory,
-        environment: MobileHomeFeedEnvironment,
-    ): Boolean {
+    suspend fun markCategoryAsRead(category: MobileNotificationCategory): Boolean {
         if ((categoryUnreadCounts[category] ?: 0) <= 0) return true
 
         return try {
-            val response = environment.mobileHomeFeedHttpClient().post(category.readAllUrl)
-            if (!response.status.isSuccess()) {
-                Log.e("NotificationViewModel", "Failed to mark ${category.entryName} notifications as read: ${response.status}")
+            val status = mobileClient.withClient { client -> client.post(category.readAllUrl).status }
+            if (!status.isSuccess()) {
+                Log.e("NotificationViewModel", "Failed to mark ${category.entryName} notifications as read: $status")
                 false
             } else {
                 categoryUnreadCounts[category] = 0
@@ -183,10 +172,10 @@ class NotificationViewModel :
         }
     }
 
-    suspend fun markAllAsRead(environment: MobileHomeFeedEnvironment): Boolean {
+    suspend fun markAllAsRead(): Boolean {
         var succeeded = true
         MobileNotificationCategory.entries.forEach { category ->
-            if (!markCategoryAsRead(category, environment)) {
+            if (!markCategoryAsRead(category)) {
                 succeeded = false
             }
         }
@@ -196,6 +185,8 @@ class NotificationViewModel :
 
 class NotificationTimelineViewModel(
     val entryName: String,
+    private val mobileClient: MobileClientProvider,
+    private val notificationSettings: NotificationSettingsStore,
 ) : PaginationViewModel<MobileNotificationTimelineItem>(
         dataType = typeOf<MobileNotificationTimelineItem>(),
     ) {
@@ -212,15 +203,12 @@ class NotificationTimelineViewModel(
     val readAllUrl: String
         get() = "$MOBILE_NOTIFICATION_TIMELINE_URL/$entryName/actions/readall"
 
-    override suspend fun fetchFeeds(environment: PaginationEnvironment) {
+    override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) {
         try {
-            val notificationEnvironment = environment as? NotificationEnvironment
-                ?: error("NotificationSettingsStore is required for notification pagination")
             val url = lastPaging?.next ?: initialUrl
-            val json = environment
-                .mobileHomeFeedHttpClient()
-                .get(url.replace("http://", "https://"))
-                .jsonObject()
+            val json = mobileClient.withClient { client ->
+                client.get(url.replace("http://", "https://")).jsonObject()
+            }
             val rawData = json["data"]?.jsonArray ?: JsonArray(emptyList())
             val data = rawData.mapNotNull {
                 try {
@@ -243,8 +231,8 @@ class NotificationTimelineViewModel(
                 ?.let { ZhihuJson.decodeJson<ZhihuPaging>(it) }
                 ?: ZhihuPaging(isEnd = true, next = "")
 
-            if (!markedAsRead && notificationEnvironment.notificationSettingsStore.getAutoMarkAsReadEnabled()) {
-                markedAsRead = markAsRead(environment)
+            if (!markedAsRead && notificationSettings.getAutoMarkAsReadEnabled()) {
+                markedAsRead = markAsRead()
             }
         } catch (e: Exception) {
             if (e is CancellationException) throw e
@@ -266,10 +254,10 @@ class NotificationTimelineViewModel(
         return type == null || settingsStore.getDisplayInAppEnabled(type)
     }
 
-    suspend fun markAsRead(environment: MobileHomeFeedEnvironment): Boolean = try {
-        val response = environment.mobileHomeFeedHttpClient().post(readAllUrl)
-        if (!response.status.isSuccess()) {
-            Log.e("NotificationTimelineViewModel", "Failed to mark $entryName notifications as read: ${response.status}")
+    suspend fun markAsRead(): Boolean = try {
+        val status = mobileClient.withClient { client -> client.post(readAllUrl).status }
+        if (!status.isSuccess()) {
+            Log.e("NotificationTimelineViewModel", "Failed to mark $entryName notifications as read: $status")
             false
         } else {
             true
@@ -283,6 +271,7 @@ class NotificationTimelineViewModel(
 
 class PrivateMessageViewModel(
     private val peerId: String,
+    private val mobileClient: MobileClientProvider,
 ) : PaginationViewModel<ZhihuPrivateMessage>(
         dataType = typeOf<ZhihuPrivateMessage>(),
     ) {
@@ -295,48 +284,47 @@ class PrivateMessageViewModel(
     var isSending by mutableStateOf(false)
         private set
 
-    suspend fun sendMessage(
-        content: String,
-        environment: MobileHomeFeedEnvironment,
-    ): Boolean {
+    suspend fun sendMessage(content: String): Boolean {
         if (content.isBlank() || isSending) return false
 
         isSending = true
         errorMessage = null
         return try {
-            val response = environment.mobileHomeFeedHttpClient().post(MOBILE_PRIVATE_MESSAGE_URL) {
-                contentType(ContentType.Application.FormUrlEncoded)
-                header("X-Zse-93", "101_1_1.0")
-                val form = Parameters
-                    .build {
-                        append("receiver_id", peerId)
-                        append("content", content)
-                        append("content_type", "0")
-                        append("source_type", "message_list")
-                    }.formUrlEncode()
-                setBody(ZhihuMessageBodyEncryptor.encrypt(form))
-            }
-            if (!response.status.isSuccess()) {
-                val responseText = response.bodyAsText()
-                errorMessage = runCatching {
-                    ZhihuJson.json
-                        .parseToJsonElement(responseText)
-                        .jsonObject["error"]
-                        ?.jsonObject
-                        ?.get("message")
-                        ?.jsonPrimitive
-                        ?.content
-                }.getOrNull() ?: "发送失败（${response.status.value}）"
-                Log.e("PrivateMessageViewModel", "Failed to send private message: ${response.status}, $errorMessage")
-                false
-            } else {
-                val message = ZhihuJson.decodeJson<ZhihuPrivateMessage>(
-                    ZhihuJson.json.parseToJsonElement(response.bodyAsText()),
-                )
-                if (allData.none { it.stableId == message.stableId }) {
-                    allData.add(0, message)
+            mobileClient.withClient { client ->
+                val response = client.post(MOBILE_PRIVATE_MESSAGE_URL) {
+                    contentType(ContentType.Application.FormUrlEncoded)
+                    header("X-Zse-93", "101_1_1.0")
+                    val form = Parameters
+                        .build {
+                            append("receiver_id", peerId)
+                            append("content", content)
+                            append("content_type", "0")
+                            append("source_type", "message_list")
+                        }.formUrlEncode()
+                    setBody(ZhihuMessageBodyEncryptor.encrypt(form))
                 }
-                true
+                if (!response.status.isSuccess()) {
+                    val responseText = response.bodyAsText()
+                    errorMessage = runCatching {
+                        ZhihuJson.json
+                            .parseToJsonElement(responseText)
+                            .jsonObject["error"]
+                            ?.jsonObject
+                            ?.get("message")
+                            ?.jsonPrimitive
+                            ?.content
+                    }.getOrNull() ?: "发送失败（${response.status.value}）"
+                    Log.e("PrivateMessageViewModel", "Failed to send private message: ${response.status}, $errorMessage")
+                    false
+                } else {
+                    val message = ZhihuJson.decodeJson<ZhihuPrivateMessage>(
+                        ZhihuJson.json.parseToJsonElement(response.bodyAsText()),
+                    )
+                    if (allData.none { it.stableId == message.stableId }) {
+                        allData.add(0, message)
+                    }
+                    true
+                }
             }
         } catch (e: Exception) {
             if (e is CancellationException) throw e
@@ -348,42 +336,43 @@ class PrivateMessageViewModel(
         }
     }
 
-    override suspend fun fetchFeeds(environment: PaginationEnvironment) {
+    override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) {
         try {
-            coroutineScope {
-                val client = environment.mobileHomeFeedHttpClient()
-                val peerRequest = if (peer == null) {
-                    async {
+            mobileClient.withClient { client ->
+                coroutineScope {
+                    val peerRequest = if (peer == null) {
+                        async {
+                            client
+                                .get("$MOBILE_PRIVATE_MESSAGE_USER_URL/$peerId")
+                                .jsonObject()
+                        }
+                    } else {
+                        null
+                    }
+                    val pageRequest = async {
                         client
-                            .get("$MOBILE_PRIVATE_MESSAGE_USER_URL/$peerId")
+                            .get((lastPaging?.next ?: initialUrl).replace("http://", "https://"))
                             .jsonObject()
                     }
-                } else {
-                    null
-                }
-                val pageRequest = async {
-                    client
-                        .get((lastPaging?.next ?: initialUrl).replace("http://", "https://"))
-                        .jsonObject()
-                }
 
-                val json = pageRequest.await()
-                val page = ZhihuJson.decodeJson<ZhihuPrivateMessagePage>(json)
-                val rawData = json["data"]?.jsonArray ?: JsonArray(emptyList())
-                val existingIds = allData.mapTo(mutableSetOf()) { it.stableId }
-                processResponse(
-                    environment,
-                    page.data.filter { existingIds.add(it.stableId) },
-                    rawData,
-                )
-                lastPaging = page.paging
+                    val json = pageRequest.await()
+                    val page = ZhihuJson.decodeJson<ZhihuPrivateMessagePage>(json)
+                    val rawData = json["data"]?.jsonArray ?: JsonArray(emptyList())
+                    val existingIds = allData.mapTo(mutableSetOf()) { it.stableId }
+                    processResponse(
+                        environment,
+                        page.data.filter { existingIds.add(it.stableId) },
+                        rawData,
+                    )
+                    lastPaging = page.paging
 
-                peerRequest?.let { request ->
-                    runCatching {
-                        peer = ZhihuJson.decodeJson<MobileNotificationAuthor>(request.await())
-                    }.onFailure { error ->
-                        if (error is CancellationException) throw error
-                        Log.e("PrivateMessageViewModel", "Failed to load private-message peer", error)
+                    peerRequest?.let { request ->
+                        runCatching {
+                            peer = ZhihuJson.decodeJson<MobileNotificationAuthor>(request.await())
+                        }.onFailure { error ->
+                            if (error is CancellationException) throw error
+                            Log.e("PrivateMessageViewModel", "Failed to load private-message peer", error)
+                        }
                     }
                 }
             }

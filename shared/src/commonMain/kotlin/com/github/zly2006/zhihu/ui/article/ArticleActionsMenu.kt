@@ -42,9 +42,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -55,26 +56,24 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.reading.ReadingContentType
 import com.github.zly2006.zhihu.reading.ReadingQueueItem
 import com.github.zly2006.zhihu.reading.ReadingQueueSourceRegistry
 import com.github.zly2006.zhihu.reading.ReadingStartRequest
+import com.github.zly2006.zhihu.reading.TtsState
+import com.github.zly2006.zhihu.reading.articleSpeechText
 import com.github.zly2006.zhihu.reading.hasReadableFields
 import com.github.zly2006.zhihu.reading.isReadingPlayerSupported
 import com.github.zly2006.zhihu.reading.loadReadingPlaybackSpeed
 import com.github.zly2006.zhihu.reading.loadReadingPreferences
+import com.github.zly2006.zhihu.reading.rememberArticleSpeechToggler
+import com.github.zly2006.zhihu.reading.rememberArticleTtsState
 import com.github.zly2006.zhihu.reading.rememberReadingPlayerController
 import com.github.zly2006.zhihu.theme.ThemeManager
-import com.github.zly2006.zhihu.ui.TtsState
-import com.github.zly2006.zhihu.ui.articleActionText
-import com.github.zly2006.zhihu.ui.articleSpeechText
 import com.github.zly2006.zhihu.ui.components.MyModalBottomSheet
 import com.github.zly2006.zhihu.ui.components.ShareAction
 import com.github.zly2006.zhihu.ui.components.rememberShareActionExecutor
-import com.github.zly2006.zhihu.ui.rememberArticleBrowserOpener
-import com.github.zly2006.zhihu.ui.rememberArticleSpeechToggler
-import com.github.zly2006.zhihu.ui.rememberArticleTtsState
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel
 import com.materialkolor.ktx.harmonize
@@ -82,6 +81,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.compose.koinInject
 
 private val VoteUpNeutralContent = Color(0xFF3671EE)
 private val VoteUpNeutralContentDark = Color(0xFF628DF7)
@@ -125,10 +125,11 @@ fun ArticleActionsMenu(
     val toggleSpeech = rememberArticleSpeechToggler()
     val readingPlayer = rememberReadingPlayerController()
     val readingPlayerState by readingPlayer.state
-    val readingSettings = rememberSettingsStore()
+    val readingSettings = koinInject<SettingsStore>()
     val openArticleInBrowser = rememberArticleBrowserOpener()
     val executeShareAction = rememberShareActionExecutor()
     val coroutineScope = rememberCoroutineScope()
+    val readingQueueSources = koinInject<ReadingQueueSourceRegistry>()
     val readingItem = ReadingQueueItem(
         contentType = when (article.type) {
             ArticleType.Answer -> ReadingContentType.Answer
@@ -147,7 +148,7 @@ fun ArticleActionsMenu(
     val readingPreferences = loadReadingPreferences(readingSettings)
     val readingPlaybackSpeed = loadReadingPlaybackSpeed(readingSettings)
     val hasReadingSession = readingPlayerState.hasSession
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val sheetState = rememberBottomSheetState(initialValue = SheetValue.Hidden, enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded))
 
     @Composable
     fun MenuActionButton(
@@ -260,7 +261,7 @@ fun ArticleActionsMenu(
                             // Home feed mixes unrelated content; the question navigator owns answer order.
                             val useQuestionAnswerOrder = article.type == ArticleType.Answer &&
                                 article.readingQueueSourceId?.startsWith("home:") == true
-                            val originQueue = ReadingQueueSourceRegistry.queueStartingAt(
+                            val originQueue = readingQueueSources.queueStartingAt(
                                 current = readingItem,
                                 sourceId = article.readingQueueSourceId.takeUnless { useQuestionAnswerOrder },
                                 limit = readingPreferences.queueLimit,
@@ -300,7 +301,7 @@ fun ArticleActionsMenu(
                                     Log.w("ArticleActionsMenu", "Failed to load the remaining reading queue", error)
                                     emptyList()
                                 }
-                                ReadingQueueSourceRegistry.queueStartingAt(
+                                readingQueueSources.queueStartingAt(
                                     current = readingItem,
                                     sourceId = article.readingQueueSourceId.takeUnless { useQuestionAnswerOrder },
                                     limit = readingPreferences.queueLimit,

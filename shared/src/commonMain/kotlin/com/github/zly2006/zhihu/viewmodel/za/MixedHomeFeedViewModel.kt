@@ -19,20 +19,25 @@ package com.github.zly2006.zhihu.viewmodel.za
 
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
-import com.github.zly2006.zhihu.viewmodel.ContentInteractionEnvironment
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.platform.SettingsStore
+import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedInteractionViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedViewModel
+import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
 
-class MixedHomeFeedViewModel :
-    BaseFeedViewModel(),
+class MixedHomeFeedViewModel(
+    settings: SettingsStore,
+    filter: HomeFeedFilter,
+    mobileClient: MobileClientProvider,
+) : BaseFeedViewModel(settings),
     HomeFeedInteractionViewModel {
-    val android = AndroidHomeFeedViewModel()
-    val web = HomeFeedViewModel()
+    val android = AndroidHomeFeedViewModel(settings, filter, mobileClient)
+    val web = HomeFeedViewModel(settings, filter)
     override val initialUrl: String
         get() = "https://api.zhihu.com/topstory/recommend"
 
@@ -43,7 +48,7 @@ class MixedHomeFeedViewModel :
         web.latestLoadedDisplayItems = this.latestLoadedDisplayItems
     }
 
-    override suspend fun fetchFeeds(environment: PaginationEnvironment) {
+    override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) {
         coroutineScope {
             listOf(
                 async { android.fetchFeeds(environment) },
@@ -53,11 +58,11 @@ class MixedHomeFeedViewModel :
         isLoading = false
     }
 
-    override suspend fun recordContentInteraction(environment: ContentInteractionEnvironment, feed: Feed) {
+    override suspend fun recordContentInteraction(environment: ZhihuApiEnvironment, feed: Feed) {
         web.recordContentInteraction(environment, feed)
     }
 
-    override fun onUiContentClick(environment: ContentInteractionEnvironment, feed: Feed, item: FeedDisplayItem) {
+    override fun onUiContentClick(environment: ZhihuApiEnvironment, feed: Feed, item: FeedDisplayItem) {
         web.onUiContentClick(environment, feed, item)
     }
 }

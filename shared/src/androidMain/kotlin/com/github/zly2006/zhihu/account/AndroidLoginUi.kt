@@ -47,6 +47,8 @@ import com.github.zly2006.zhihu.ui.components.setupUpWebviewClient
 import com.github.zly2006.zhihu.util.telemetry
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
+import org.koin.mp.KoinPlatform
 import java.util.TimeZone
 
 actual val supportedLoginMethods: List<LoginMethod> = listOf(
@@ -59,8 +61,8 @@ actual val isLoginRiskControlSupported: Boolean = true
 
 @Composable
 actual fun rememberLoginHttpClient(cookies: MutableMap<String, String>): HttpClient {
-    val context = LocalContext.current
-    val httpClient = remember(context) { androidZhihuAccountStore(context).client.temporaryHttpClient(cookies) }
+    val accountStore = koinInject<ZhihuAccountStore>()
+    val httpClient = remember(accountStore) { accountStore.client.temporaryHttpClient(cookies) }
     DisposableEffect(httpClient) {
         onDispose(httpClient::close)
     }
@@ -68,7 +70,7 @@ actual fun rememberLoginHttpClient(cookies: MutableMap<String, String>): HttpCli
 }
 
 actual val phoneLoginDeviceInfo: ZhihuPhoneLoginDeviceInfo
-    get() = currentAndroidApplicationContext().phoneLoginDeviceInfo()
+    get() = KoinPlatform.getKoin().get<Context>().phoneLoginDeviceInfo()
 
 actual fun decodePhoneLoginCaptchaImage(content: String) = runCatching {
     val encoded = content.substringAfter("base64,", content)
@@ -79,7 +81,7 @@ actual fun decodePhoneLoginCaptchaImage(content: String) = runCatching {
 @Composable
 actual fun QrLoginPane(onLoginSuccess: (String) -> Unit) {
     val context = LocalContext.current
-    val accountStore = rememberZhihuAccountStore()
+    val accountStore = koinInject<ZhihuAccountStore>()
     SharedQrLoginPane(
         onLoginSuccess = { cookies ->
             if (accountStore.login(cookies.toMutableMap())) {
@@ -97,7 +99,7 @@ actual fun QrLoginPane(onLoginSuccess: (String) -> Unit) {
 @Composable
 actual fun WebLoginPane(onLoginSuccess: (String) -> Unit) {
     val context = LocalContext.current
-    val accountStore = rememberZhihuAccountStore()
+    val accountStore = koinInject<ZhihuAccountStore>()
     val scope = rememberCoroutineScope()
     var isVerifying by remember { mutableStateOf(false) }
 

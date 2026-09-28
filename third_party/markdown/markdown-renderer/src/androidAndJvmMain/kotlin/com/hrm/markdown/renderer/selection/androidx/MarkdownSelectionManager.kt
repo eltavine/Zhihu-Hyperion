@@ -578,7 +578,7 @@ internal class MarkdownSelectionManager(private val selectionRegistrar: Markdown
         val newSelection =
             selectionRegistrar.sort().fastFold(null) {
                 mergedSelection: Selection?,
-                selectable: Selectable ->
+                selectable: MarkdownSelectable ->
                 val selection =
                     if (selectable.selectableId == selectableId) selectable.getSelectAllSelection()
                     else null
@@ -1146,6 +1146,7 @@ internal class MarkdownSelectionManager(private val selectionRegistrar: Markdown
 
         // if previous handle is null, then treat this as a new selection.
         val previousSelection = if (previousHandlePosition.isUnspecified) null else selection
+        val previousLayout = if (previousHandlePosition.isUnspecified) null else previousSelectionLayout
         val builder =
             SelectionLayoutBuilder(
                 currentPosition = position,
@@ -1153,10 +1154,13 @@ internal class MarkdownSelectionManager(private val selectionRegistrar: Markdown
                 containerCoordinates = containerCoordinates,
                 isStartHandle = isStartHandle,
                 previousSelection = previousSelection,
+                previousLayout = previousLayout,
                 selectableIdOrderingComparator = selectableIdOrderingComparator,
             )
 
-        sortedSelectables.fastForEach { it.appendSelectableInfoToBuilder(builder) }
+        sortedSelectables.fastForEachIndexed { index, selectable ->
+            selectable.appendSelectableInfoToBuilder(builder, isLast = index == sortedSelectables.lastIndex)
+        }
 
         return builder.build()
     }
@@ -1256,7 +1260,7 @@ private fun <T> List<T>.firstAndLast(): List<T> =
  */
 @VisibleForTesting
 internal fun getMarkdownSelectedRegionRect(
-    selectableSubSelectionPairs: List<Pair<Selectable, Selection>>,
+    selectableSubSelectionPairs: List<Pair<MarkdownSelectable, Selection>>,
     containerCoordinates: LayoutCoordinates,
 ): Rect {
     if (selectableSubSelectionPairs.isEmpty()) return invertedInfiniteRect

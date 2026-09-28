@@ -21,6 +21,7 @@ import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
+import com.github.zly2006.zhihu.viewmodel.filter.FakeBlockedUserDao
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import kotlinx.coroutines.test.runTest
@@ -38,7 +39,7 @@ class RootCommentAnchorTest {
             requests = requests,
         )
 
-        val anchor = RootCommentViewModel(article).resolveCommentAnchor("root", environment)
+        val anchor = RootCommentViewModel(article, FakeBlockedUserDao()).resolveCommentAnchor("root", environment)
 
         assertEquals(listOf("root"), requests)
         assertEquals("root", anchor.target.id)
@@ -56,7 +57,7 @@ class RootCommentAnchorTest {
             requests = requests,
         )
 
-        val anchor = RootCommentViewModel(article).resolveCommentAnchor("reply", environment)
+        val anchor = RootCommentViewModel(article, FakeBlockedUserDao()).resolveCommentAnchor("reply", environment)
 
         assertEquals(listOf("reply", "root"), requests)
         assertEquals("reply", anchor.target.id)

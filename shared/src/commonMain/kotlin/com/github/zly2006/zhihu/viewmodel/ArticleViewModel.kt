@@ -38,18 +38,18 @@ import com.github.zly2006.zhihu.data.AigcVoteReadEvidence
 import com.github.zly2006.zhihu.data.Collection
 import com.github.zly2006.zhihu.data.CollectionResponse
 import com.github.zly2006.zhihu.data.DataHolder
+import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.OfficialBadge
 import com.github.zly2006.zhihu.data.VoteUpState
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.decodeZhihuCommentData
 import com.github.zly2006.zhihu.data.officialBadge
+import com.github.zly2006.zhihu.filter.ContentOpenTracker
 import com.github.zly2006.zhihu.markdown.htmlToMdAst
 import com.github.zly2006.zhihu.markdown.toMarkdown
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
-import com.github.zly2006.zhihu.navigation.CollectionAnswerNavigator
-import com.github.zly2006.zhihu.navigation.PaginationInfoNavigator
-import com.github.zly2006.zhihu.navigation.QuestionAnswerNavigator
+import com.github.zly2006.zhihu.platform.PlainTextClipboard
 import com.github.zly2006.zhihu.platform.UserMessageSink
 import com.github.zly2006.zhihu.platform.isAigcVoteSupported
 import com.github.zly2006.zhihu.util.ArticleExportComment
@@ -249,16 +249,19 @@ class ArticleViewModel(
         get() = collections.any { it.isFavorited }
 
     // todo: replace this with sqlite
-    open class ArticlesSharedData : ArticleAnswerSwitchData()
-
     @OptIn(ExperimentalStdlibApi::class)
-    fun loadArticle(environment: ArticleLoadEnvironment) {
+    fun loadArticle(
+        environment: ZhihuApiEnvironment,
+        history: HistoryStorage,
+        contentOpens: ContentOpenTracker,
+        answerSwitchState: ArticleAnswerSwitchState,
+    ) {
         if (httpClient == null) return
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
                 try {
                     if (article.type == ArticleType.Answer) {
-                        val sharedData = sharedArticleAnswerSwitchState
+                        val sharedData = answerSwitchState
                         val answer = environment.fetchContentDetail(article) as? DataHolder.Answer
                         if (answer != null) {
                             exportSourceContent = answer
@@ -289,7 +292,7 @@ class ArticleViewModel(
                             endorsements = answer.endorsementItems
                             topics = emptyList()
 
-                            environment.postHistoryDestination(
+                            history.add(
                                 Article(
                                     id = answer.id,
                                     type = ArticleType.Answer,
@@ -300,7 +303,7 @@ class ArticleViewModel(
                                     excerpt = answer.excerpt,
                                 ),
                             )
-                            environment.recordOpenEvent(article, answer.question.id)
+                            contentOpens.record(article, answer.question.id)
                             withContext(Dispatchers.Main.immediate) {
                                 // 设置问题回答导航器（如果当前不是收藏夹导航器）
                                 if (sharedData.navigator !is CollectionAnswerNavigator) {
@@ -366,7 +369,7 @@ class ArticleViewModel(
                             ipInfo = article.ipInfo
                             topics = article.topics.orEmpty()
 
-                            environment.postHistoryDestination(
+                            history.add(
                                 Article(
                                     id = article.id,
                                     type = ArticleType.Article,
@@ -377,7 +380,7 @@ class ArticleViewModel(
                                     excerpt = article.excerpt,
                                 ),
                             )
-                            environment.recordOpenEvent(this@ArticleViewModel.article, null)
+                            contentOpens.record(this@ArticleViewModel.article)
                         } else {
                             content = "<h1>你似乎来到了没有知识存在的荒原</h1>"
                             Log.e("ArticleViewModel", "Article not found")
@@ -475,12 +478,19 @@ class ArticleViewModel(
                                 answer.summary
                             }
                         }
+
                         "error" -> {
                             val message = decodeZhidaStreamErrorMessage(payload.data) ?: "总结失败"
                             throw IllegalStateException(message)
                         }
-                        "end" -> streamEnded = true
-                        else -> Unit
+
+                        "end" -> {
+                            streamEnded = true
+                        }
+
+                        else -> {
+                            Unit
+                        }
                     }
                 }
 
@@ -498,15 +508,23 @@ class ArticleViewModel(
                         line.startsWith("event:") -> {
                             frameEvent = line.substringAfter("event:").trim()
                         }
+
                         line.startsWith("data:") -> {
                             frameDataLines += line.substringAfter("data:")
                         }
+
                         line.isBlank() -> {
                             flushFrame()
                             frameEvent = null
                         }
-                        line.startsWith(":") -> Unit
-                        else -> Unit
+
+                        line.startsWith(":") -> {
+                            Unit
+                        }
+
+                        else -> {
+                            Unit
+                        }
                     }
                 }
 
@@ -566,9 +584,12 @@ class ArticleViewModel(
                                 val indexB = collectionOrder.indexOf(b.id)
                                 when {
                                     indexA == -1 && indexB == -1 -> 0
+
                                     // 把新的放前面
                                     indexA == -1 -> -1
+
                                     indexB == -1 -> 1
+
                                     else -> indexA.compareTo(indexB)
                                 }
                             },
@@ -655,12 +676,12 @@ class ArticleViewModel(
 
     fun isAigcFlagEvidenceReady(): Boolean = currentAigcReadEvidence().isEligibleForCredit()
 
-    fun loadAigcFlagStatus(environment: AigcVoteEnvironment) {
-        aigcVoteAvailable = isAigcVoteSupported && environment.isAigcVoteEnabled()
-        val voter = environment.aigcVoteVoter()
+    fun loadAigcFlagStatus(aigcVote: AigcVoteService) {
+        aigcVoteAvailable = isAigcVoteSupported && aigcVote.isEnabled()
+        val voter = aigcVote.voter()
         aigcVoterName = voter?.name.orEmpty()
         if (!aigcVoteAvailable) return
-        val client = environment.aigcVoteHttpClient()
+        val client = aigcVote.httpClient
 
         viewModelScope.launch {
             aigcVoteLoading = true
@@ -668,10 +689,10 @@ class ArticleViewModel(
             try {
                 val response = client
                     .get(
-                        "${environment.aigcVoteBaseUrl().trimEnd('/')}/v1/contents/" +
+                        "${aigcVote.baseUrl().trimEnd('/')}/v1/contents/" +
                             "${aigcContentType()}/${article.id}/aigc-flag",
                     ) {
-                        parameter("client_id", environment.aigcVoteClientId())
+                        parameter("client_id", aigcVote.clientId())
                         voter?.let {
                             parameter("voter_id", it.id)
                             parameter("voter_name", it.name)
@@ -697,10 +718,10 @@ class ArticleViewModel(
         }
     }
 
-    fun syncAigcReadEventIfEligible(environment: AigcVoteEnvironment) {
-        aigcVoteAvailable = isAigcVoteSupported && environment.isAigcVoteEnabled()
+    fun syncAigcReadEventIfEligible(aigcVote: AigcVoteService) {
+        aigcVoteAvailable = isAigcVoteSupported && aigcVote.isEnabled()
         if (!aigcVoteAvailable || aigcReadSyncStarted || content.isBlank()) return
-        val client = environment.aigcVoteHttpClient()
+        val client = aigcVote.httpClient
 
         val evidence = currentAigcReadEvidence()
         val contentUpdatedAt = currentContentUpdatedAt()
@@ -719,9 +740,9 @@ class ArticleViewModel(
                     evidence = evidence,
                 )
                 val response = client
-                    .post("${environment.aigcVoteBaseUrl().trimEnd('/')}/v1/read-events:batch") {
+                    .post("${aigcVote.baseUrl().trimEnd('/')}/v1/read-events:batch") {
                         contentType(ContentType.Application.Json)
-                        setBody(AigcVoteReadEventsRequest(environment.aigcVoteClientId(), listOf(event.toRequestEvent())))
+                        setBody(AigcVoteReadEventsRequest(aigcVote.clientId(), listOf(event.toRequestEvent())))
                     }.body<AigcVoteReadEventsResponse>()
                 aigcVoteCredit = response.credit
                 aigcVoteProgress = response.progress
@@ -737,20 +758,20 @@ class ArticleViewModel(
         }
     }
 
-    fun submitAigcFlag(environment: AigcVoteEnvironment) {
-        aigcVoteAvailable = isAigcVoteSupported && environment.isAigcVoteEnabled()
+    fun submitAigcFlag(aigcVote: AigcVoteService) {
+        aigcVoteAvailable = isAigcVoteSupported && aigcVote.isEnabled()
         if (!aigcVoteAvailable) {
             aigcVoteError = "未配置 AIGC 投票服务"
             userMessages.showShortMessage(aigcVoteError!!)
             return
         }
-        val client = environment.aigcVoteHttpClient()
+        val client = aigcVote.httpClient
         if (content.isBlank()) {
             aigcVoteError = "正文尚未加载完成"
             userMessages.showShortMessage(aigcVoteError!!)
             return
         }
-        val voter = environment.aigcVoteVoter()
+        val voter = aigcVote.voter()
         aigcVoterName = voter?.name.orEmpty()
         if (voter == null) {
             aigcVoteError = "需要登录后才能记名投票"
@@ -784,13 +805,13 @@ class ArticleViewModel(
                 )
                 val response = client
                     .post(
-                        "${environment.aigcVoteBaseUrl().trimEnd('/')}/v1/contents/" +
+                        "${aigcVote.baseUrl().trimEnd('/')}/v1/contents/" +
                             "${submission.contentType}/${submission.contentId}/aigc-flag",
                     ) {
                         contentType(ContentType.Application.Json)
                         setBody(
                             AigcVoteFlagRequest(
-                                clientId = environment.aigcVoteClientId(),
+                                clientId = aigcVote.clientId(),
                                 voter = submission.voter,
                                 title = submission.title,
                                 authorHash = submission.authorHash,
@@ -889,12 +910,14 @@ class ArticleViewModel(
 
     // 导出为图片 - 使用WebView渲染
     suspend fun exportToImage(
-        environment: ArticleExportContentEnvironment,
+        environment: ZhihuApiEnvironment,
+        exporter: ArticleExporter,
         includeAppAttribution: Boolean,
         onComplete: (Boolean) -> Unit,
     ) {
         exportToImageInternal(
             environment = environment,
+            exporter = exporter,
             includeComments = false,
             commentCount = 0,
             includeAppAttribution = includeAppAttribution,
@@ -905,13 +928,15 @@ class ArticleViewModel(
 
     // 导出为带评论的图片 - 使用WebView渲染
     suspend fun exportToImageWithComments(
-        environment: ArticleExportContentEnvironment,
+        environment: ZhihuApiEnvironment,
+        exporter: ArticleExporter,
         commentCount: Int,
         includeAppAttribution: Boolean,
         onComplete: (Boolean) -> Unit,
     ) {
         exportToImageInternal(
             environment = environment,
+            exporter = exporter,
             includeComments = true,
             commentCount = commentCount,
             includeAppAttribution = includeAppAttribution,
@@ -921,7 +946,8 @@ class ArticleViewModel(
     }
 
     suspend fun exportToHtml(
-        environment: ArticleExportContentEnvironment,
+        environment: ZhihuApiEnvironment,
+        exporter: ArticleExporter,
         includeAppAttribution: Boolean,
         onComplete: (Boolean) -> Unit,
     ) {
@@ -933,9 +959,9 @@ class ArticleViewModel(
             return
         }
 
-        if (environment.requiresHtmlExportPermission() && !environment.hasImageExportPermission()) {
+        if (exporter.requiresHtmlExportPermission() && !exporter.hasImageExportPermission()) {
             withContext(Dispatchers.Main) {
-                environment.requestImageExportPermission()
+                exporter.requestImageExportPermission()
                 permissionRequestCount++
                 userMessages.showShortMessage("需要存储权限才能导出 HTML，正在请求权限")
                 onComplete(false)
@@ -945,14 +971,14 @@ class ArticleViewModel(
 
         try {
             val htmlContent = withContext(Dispatchers.Default) {
-                environment.buildOfflineArticleExportHtml(
+                exporter.buildOfflineArticleExportHtml(
                     content = requireExportSourceContent(),
                     includeAppAttribution = includeAppAttribution,
                     httpClient = httpClient ?: environment.httpClient(),
                 )
             }
             val savedLocation = withContext(Dispatchers.Default) {
-                environment.saveHtmlToDownloads(
+                exporter.saveHtmlToDownloads(
                     displayName = buildArticleExportFileName(
                         content = requireExportSourceContent(),
                         extension = "html",
@@ -976,7 +1002,8 @@ class ArticleViewModel(
     }
 
     private suspend fun exportToImageInternal(
-        environment: ArticleExportContentEnvironment,
+        environment: ZhihuApiEnvironment,
+        exporter: ArticleExporter,
         includeComments: Boolean,
         commentCount: Int,
         includeAppAttribution: Boolean,
@@ -991,9 +1018,9 @@ class ArticleViewModel(
             return
         }
 
-        if (!environment.hasImageExportPermission()) {
+        if (!exporter.hasImageExportPermission()) {
             withContext(Dispatchers.Main) {
-                environment.requestImageExportPermission()
+                exporter.requestImageExportPermission()
                 permissionRequestCount++
                 userMessages.showShortMessage("需要存储权限才能导出图片，正在请求权限")
                 onComplete(false)
@@ -1003,11 +1030,12 @@ class ArticleViewModel(
 
         var preparedWebView: PreparedArticleExportContent? = null
         var bitmap: Any? = null
-        val renderer = environment.articleImageExportRenderer()
+        val renderer = exporter.articleImageExportRenderer()
         try {
             preparedWebView = renderer.prepareExportWebView(
                 htmlContent = createHtmlContent(
                     environment = environment,
+                    exporter = exporter,
                     includeComments = includeComments,
                     commentCount = commentCount,
                     includeAppAttribution = includeAppAttribution,
@@ -1017,7 +1045,7 @@ class ArticleViewModel(
             val capturedBitmap = renderer.captureExportBitmap(preparedWebView)
             bitmap = capturedBitmap
             withContext(Dispatchers.Default) {
-                environment.saveImageToMediaStore(
+                exporter.saveImageToMediaStore(
                     displayName = buildArticleExportFileName(
                         content = requireExportSourceContent(),
                         extension = "jpg",
@@ -1046,7 +1074,8 @@ class ArticleViewModel(
 
     // 创建HTML内容
     private suspend fun createHtmlContent(
-        environment: ArticleExportContentEnvironment,
+        environment: ZhihuApiEnvironment,
+        exporter: ArticleExporter,
         includeComments: Boolean,
         commentCount: Int,
         includeAppAttribution: Boolean,
@@ -1060,7 +1089,7 @@ class ArticleViewModel(
             ""
         }
 
-        return environment.buildArticleExportHtml(
+        return exporter.buildArticleExportHtml(
             content = requireExportSourceContent(),
             includeAppAttribution = includeAppAttribution,
             extraSectionsHtml = commentsHtml,
@@ -1068,7 +1097,7 @@ class ArticleViewModel(
     }
 
     private suspend fun fetchExportComments(
-        environment: ArticleExportContentEnvironment,
+        environment: ZhihuApiEnvironment,
         requestedCount: Int,
     ): List<ArticleExportComment> {
         val safeRequestedCount = requestedCount.coerceAtLeast(0)
@@ -1112,11 +1141,11 @@ class ArticleViewModel(
     }
 
     // 导出到剪贴板
-    fun exportToClipboard(environment: ClipboardEnvironment) {
+    fun exportToClipboard(clipboard: PlainTextClipboard) {
         val markdown = convertToMarkdown()
 
         // 将Markdown文本复制到剪贴板
-        environment.setPlainTextClipboard("Zhihu Article", markdown)
+        clipboard("Zhihu Article", markdown)
 
         userMessages.showShortMessage("文章已复制到剪贴板")
     }

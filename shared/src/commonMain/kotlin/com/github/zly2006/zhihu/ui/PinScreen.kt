@@ -77,8 +77,10 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.fleeksoft.ksoup.Ksoup
 import com.github.zly2006.zhihu.data.DataHolder
+import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.decodePinContentDetail
 import com.github.zly2006.zhihu.data.officialBadge
+import com.github.zly2006.zhihu.filter.ContentOpenTracker
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.LocalNavigator
@@ -87,8 +89,8 @@ import com.github.zly2006.zhihu.navigation.Person
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.resolveContent
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.reading.ReadingPlaybackStatus
 import com.github.zly2006.zhihu.reading.ReadingQueueSourceRegistry
 import com.github.zly2006.zhihu.reading.ReadingStartRequest
@@ -99,7 +101,6 @@ import com.github.zly2006.zhihu.reading.loadReadingPreferences
 import com.github.zly2006.zhihu.reading.rememberReadingPlayerController
 import com.github.zly2006.zhihu.reading.toReadingQueueItem
 import com.github.zly2006.zhihu.ui.components.AuthorBadge
-import com.github.zly2006.zhihu.ui.components.CommentScreenComponent
 import com.github.zly2006.zhihu.ui.components.ContentEndMarker
 import com.github.zly2006.zhihu.ui.components.PageTurnTarget
 import com.github.zly2006.zhihu.ui.components.ShareDialog
@@ -112,14 +113,13 @@ import com.github.zly2006.zhihu.ui.components.rememberShareActionExecutor
 import com.github.zly2006.zhihu.util.formatCompactCount
 import com.github.zly2006.zhihu.util.jsonObject
 import com.github.zly2006.zhihu.util.twoDigitString
-import com.github.zly2006.zhihu.viewmodel.ContentLoadEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.addReadHistory
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
 import com.github.zly2006.zhihu.viewmodel.loadVotersPage
 import com.github.zly2006.zhihu.viewmodel.nextUrlOrNull
 import com.github.zly2006.zhihu.viewmodel.postSigned
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.replaceOrAppendUniqueVoters
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -132,6 +132,7 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.putJsonArray
+import org.koin.compose.koinInject
 import kotlin.time.Instant
 import androidx.compose.material.icons.outlined.ThumbUp as OutlinedThumbUp
 
@@ -179,15 +180,17 @@ private suspend fun submitPinPollVote(
 }
 
 private suspend fun loadPinDetail(
-    environment: ContentLoadEnvironment,
+    environment: ZhihuApiEnvironment,
+    history: HistoryStorage,
+    contentOpens: ContentOpenTracker,
     pin: Pin,
 ): DataHolder.Pin {
     environment.addReadHistory(pin.id.toString(), "pin")
     val jsonObject = environment.fetchJson("https://www.zhihu.com/api/v4/pins/${pin.id}?include=topics", "")
         ?: error("想法详情为空")
     val content = decodePinContentDetail(jsonObject)
-    environment.postHistoryDestination(pin.copy(authorName = content.author.name))
-    environment.recordContentOpenEvent(destination = pin)
+    history.add(pin.copy(authorName = content.author.name))
+    contentOpens.record(pin)
     return content
 }
 
@@ -209,9 +212,12 @@ fun PinScreen(
 ) {
     val navigator = LocalNavigator.current
     val coroutineScope = rememberCoroutineScope()
-    val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val readingQueueSources = koinInject<ReadingQueueSourceRegistry>()
+    val paginationEnvironment = rememberZhihuApiEnvironment(allowGuestAccess = false)
 
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
+    val history = koinInject<HistoryStorage>()
+    val contentOpens = koinInject<ContentOpenTracker>()
     val readingPreferences = loadReadingPreferences(settings)
     val readingPlaybackSpeed = loadReadingPlaybackSpeed(settings)
     val readingPlayer = rememberReadingPlayerController()
@@ -230,7 +236,7 @@ fun PinScreen(
         errorMessage = null
         pinContent = null
         try {
-            val loadedPin = loadPinDetail(paginationEnvironment, pin)
+            val loadedPin = loadPinDetail(paginationEnvironment, history, contentOpens, pin)
             pinContent = loadedPin
             isLiked = loadedPin.virtuals.booleanCompat("isLiked", "is_liked")
             likeCount = loadedPin.likeCount
@@ -321,7 +327,7 @@ fun PinScreen(
                                 coroutineScope.launch {
                                     readingPlayer.start(
                                         ReadingStartRequest(
-                                            queue = ReadingQueueSourceRegistry.queueStartingAt(
+                                            queue = readingQueueSources.queueStartingAt(
                                                 current = item,
                                                 sourceId = pin.readingQueueSourceId,
                                                 limit = readingPreferences.queueLimit,
@@ -346,10 +352,12 @@ fun PinScreen(
                                 modifier = Modifier.size(22.dp),
                                 strokeWidth = 2.dp,
                             )
+
                             isCurrentReadingItem && readingPlayerState.isActivelyPlaying -> Icon(
                                 Icons.Default.Pause,
                                 contentDescription = "暂停朗读",
                             )
+
                             else -> Icon(
                                 Icons.AutoMirrored.Filled.VolumeUp,
                                 contentDescription = if (isCurrentReadingItem) "继续朗读" else "开始连续朗读",
@@ -783,7 +791,7 @@ private fun PinContent(
                 fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(8.dp))
-            pin.topics.forEach { topic ->
+            topics.forEach { topic ->
                 Text(
                     "# ${topic.name}",
                     style = MaterialTheme.typography.bodyMedium,

@@ -22,8 +22,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -33,27 +31,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.fleeksoft.ksoup.Ksoup
-import com.github.zly2006.zhihu.account.rememberZhihuAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.markdown.RenderMarkdown
-import com.github.zly2006.zhihu.navigation.AnswerNavigator
 import com.github.zly2006.zhihu.navigation.Article
-import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.TopLevelDestination
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageSink
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
-import com.github.zly2006.zhihu.ui.subscreens.DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY
-import com.github.zly2006.zhihu.viewmodel.ArticleViewModel.CachedAnswerContent
+import com.github.zly2006.zhihu.platform.isLegacyWebViewSupported
+import com.github.zly2006.zhihu.theme.DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY
+import com.github.zly2006.zhihu.ui.article.ARTICLE_USE_WEBVIEW_PREFERENCE_KEY
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.getOrFetchContentDetail
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.jsonPrimitive
+import org.koin.compose.koinInject
 
 data class PinLikeResult(
     val isLiked: Boolean,
@@ -72,13 +68,16 @@ internal suspend fun fetchPinLinkCardPreview(
                     title = compactTitle(detail.title),
                     preview = compactPreview(detail.excerpt.ifBlank { detail.content }),
                 )
+
                 is DataHolder.Answer -> PinLinkCardPreview(
                     title = compactTitle(detail.question.title),
                     preview = compactPreview(detail.excerpt.ifBlank { detail.content }),
                 )
+
                 else -> null
             }
         }
+
         is Question -> {
             (env.getOrFetchContentDetail(destination) as? DataHolder.Question)?.let { detail ->
                 PinLinkCardPreview(
@@ -87,6 +86,7 @@ internal suspend fun fetchPinLinkCardPreview(
                 )
             }
         }
+
         is Pin -> {
             (env.getOrFetchContentDetail(destination) as? DataHolder.Pin)?.let { detail ->
                 PinLinkCardPreview(
@@ -95,7 +95,10 @@ internal suspend fun fetchPinLinkCardPreview(
                 )
             }
         }
-        else -> null
+
+        else -> {
+            null
+        }
     }
 }
 
@@ -114,7 +117,7 @@ internal fun JsonObject?.booleanCompat(vararg keys: String): Boolean {
  */
 @Composable
 fun PinHtmlContent(html: String) {
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     if (settings.getBoolean(ARTICLE_USE_WEBVIEW_PREFERENCE_KEY, false) &&
         isLegacyWebViewSupported
     ) {
@@ -131,26 +134,8 @@ fun PinHtmlContent(html: String) {
     }
 }
 
-expect val isLegacyWebViewSupported: Boolean
-
 @Composable
 expect fun ZhihuHtmlWebViewContent(html: String)
-
-@Composable
-internal fun <T> rememberObservedSetting(
-    settings: SettingsStore,
-    key: String,
-    read: SettingsStore.() -> T,
-): MutableState<T> {
-    val state = remember(settings, key) { mutableStateOf(settings.read()) }
-    DisposableEffect(settings, key, state) {
-        val subscription = settings.observeKeyChanges { changedKey ->
-            if (changedKey == key) state.value = settings.read()
-        }
-        onDispose(subscription::close)
-    }
-    return state
-}
 
 @Composable
 expect fun consumePendingCommentId(content: NavDestination): String?
@@ -181,7 +166,7 @@ fun QuestionDetailContent(
     questionId: Long,
     html: String,
 ) {
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     if (settings.getBoolean(ARTICLE_USE_WEBVIEW_PREFERENCE_KEY, false) &&
         isLegacyWebViewSupported
     ) {
@@ -205,104 +190,6 @@ expect fun QuestionDetailWebViewContent(
     questionId: Long,
     html: String,
 )
-
-@Composable
-expect fun rememberArticleTtsState(): TtsState
-
-interface ArticleSpeechToggler {
-    operator fun invoke(title: String, content: String)
-}
-
-@Composable
-expect fun rememberArticleSpeechToggler(): ArticleSpeechToggler
-
-interface ArticleBrowserOpener {
-    operator fun invoke(article: Article)
-}
-
-@Composable
-expect fun rememberArticleBrowserOpener(): ArticleBrowserOpener
-
-fun articleActionText(
-    article: Article,
-    questionId: Long,
-    title: String,
-    authorName: String,
-): String =
-    when (article.type) {
-        ArticleType.Answer -> {
-            "https://www.zhihu.com/question/$questionId/answer/${article.id}\n【$title - $authorName 的回答】"
-        }
-        ArticleType.Article -> {
-            "https://zhuanlan.zhihu.com/p/${article.id}\n【$title - $authorName 的文章】"
-        }
-    }
-
-fun articleWebUrl(article: Article): String =
-    when (article.type) {
-        ArticleType.Answer -> "https://www.zhihu.com/answer/${article.id}"
-        ArticleType.Article -> "https://zhuanlan.zhihu.com/p/${article.id}"
-    }
-
-fun articleSpeechText(
-    title: String,
-    content: String,
-    maxContentLength: Int = 50_000,
-): String =
-    buildString {
-        append(title)
-        append("。")
-        if (content.isNotEmpty()) {
-            val contentToProcess =
-                if (content.length > maxContentLength) {
-                    content.substring(0, maxContentLength) + "..."
-                } else {
-                    content
-                }
-            append(Ksoup.parse(contentToProcess).text())
-        }
-    }
-
-/**
- * 同一问题下不同回答之间导航时使用的共享状态。
- *
- * 手势处理器会在导航前更新这里的状态，让平台适配层选择正确的入场/出场转场方向，并避免 route 切换时丢失待交接的
- * navigator 或内容。它不能放在单个文章 composable 内，因为离开页和进入页都需要通过它协调。
- */
-interface ArticleAnswerSwitchState {
-    var navigator: AnswerNavigator?
-    var pendingNavigator: AnswerNavigator?
-    var pendingInitialContent: CachedAnswerContent?
-    var navigatingFromAnswerSwitch: Boolean
-    var answerSwitchDisposeInProgress: Boolean
-    var answerTransitionDirection: ArticleAnswerTransitionDirection
-    var isImmersiveMode: Boolean
-
-    fun reset()
-
-    fun promoteForNavigation(direction: ArticleAnswerTransitionDirection)
-}
-
-enum class ArticleAnswerTransitionDirection {
-    DEFAULT,
-    VERTICAL_NEXT,
-    VERTICAL_PREVIOUS,
-    HORIZONTAL_NEXT,
-    HORIZONTAL_PREVIOUS,
-}
-
-enum class TtsState(
-    val isSpeaking: Boolean = false,
-) {
-    Uninitialized,
-    Initializing,
-    Ready,
-    Error,
-    LoadingText,
-    Speaking(true),
-    Paused,
-    SwitchingChunk(true),
-}
 
 /**
  * 影响应用主壳形态的不可变设置快照。
@@ -360,7 +247,7 @@ data class AccountSettingsAccountState(
 
 @Composable
 fun rememberAccountSettingsAccountState(): State<AccountSettingsAccountState> {
-    val accountStore = rememberZhihuAccountStore()
+    val accountStore = koinInject<ZhihuAccountStore>()
     val accounts = accountStore.accountsState.collectAsState()
     return remember(accounts) {
         derivedStateOf {
@@ -383,36 +270,6 @@ fun rememberAccountSettingsAccountState(): State<AccountSettingsAccountState> {
 
 @Composable
 expect fun rememberAppVersionInfo(): String
-
-fun noopSettingsStore(): SettingsStore = object : SettingsStore {
-    override fun getBoolean(key: String, defaultValue: Boolean) = defaultValue
-
-    override fun putBoolean(key: String, value: Boolean) = Unit
-
-    override fun getString(key: String, defaultValue: String) = defaultValue
-
-    override fun putString(key: String, value: String) = Unit
-
-    override fun getStringOrNull(key: String): String? = null
-
-    override fun putStringSet(key: String, value: Set<String>) = Unit
-
-    override fun getStringSet(key: String, defaultValue: Set<String>) = defaultValue
-
-    override fun getInt(key: String, defaultValue: Int) = defaultValue
-
-    override fun putInt(key: String, value: Int) = Unit
-
-    override fun getLong(key: String, defaultValue: Long) = defaultValue
-
-    override fun putLong(key: String, value: Long) = Unit
-
-    override fun getFloat(key: String, defaultValue: Float) = defaultValue
-
-    override fun putFloat(key: String, value: Float) = Unit
-
-    override fun remove(key: String) = Unit
-}
 
 internal const val PEOPLE_PROFILE_INCLUDE_PATH =
     "allow_message,is_followed,is_following,is_org,is_blocking,badge_v2,answer_count,follower_count,following_count,articles_count,question_count,pins_count"

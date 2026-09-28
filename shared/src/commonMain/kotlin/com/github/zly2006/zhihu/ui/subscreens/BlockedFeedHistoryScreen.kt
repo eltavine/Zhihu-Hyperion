@@ -59,11 +59,12 @@ import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.util.twoDigitString
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedFeedRecord
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.Json
+import org.koin.compose.koinInject
 import kotlin.time.Instant
 
 /**
@@ -77,7 +78,7 @@ import kotlin.time.Instant
 fun BlockedFeedHistoryScreen() {
     val navigator = LocalNavigator.current
     val coroutineScope = rememberCoroutineScope()
-    val dao = getContentFilterDatabase().blockedFeedRecordDao()
+    val dao = koinInject<ContentFilterDatabase>().blockedFeedRecordDao()
 
     val records by dao.observeAll().collectAsState(initial = emptyList())
     var showClearDialog by remember { mutableStateOf(false) }

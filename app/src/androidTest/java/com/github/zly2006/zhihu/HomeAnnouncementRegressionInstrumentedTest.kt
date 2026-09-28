@@ -29,7 +29,6 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
 import androidx.core.content.edit
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.FeedDisplayItem
@@ -37,13 +36,14 @@ import com.github.zly2006.zhihu.data.RecommendationMode
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
 import com.github.zly2006.zhihu.navigation.Search
+import com.github.zly2006.zhihu.platform.PREFERENCE_NAME
 import com.github.zly2006.zhihu.test.MainActivityComposeRule
 import com.github.zly2006.zhihu.test.ZhihuMockApi
 import com.github.zly2006.zhihu.test.resetAppPreferences
+import com.github.zly2006.zhihu.test.seedViewModel
 import com.github.zly2006.zhihu.test.setScreenContent
 import com.github.zly2006.zhihu.ui.HOME_FEED_LIST_TAG
 import com.github.zly2006.zhihu.ui.HomeScreen
-import com.github.zly2006.zhihu.ui.PREFERENCE_NAME
 import com.github.zly2006.zhihu.ui.ZHIHU_PLUS_AUTHOR_PINS_URL
 import com.github.zly2006.zhihu.ui.homeAuthorPollAnnouncementTag
 import com.github.zly2006.zhihu.ui.homePinAnnouncementReadKey
@@ -56,6 +56,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.mp.KoinPlatform
 
 @RunWith(AndroidJUnit4::class)
 class HomeAnnouncementRegressionInstrumentedTest {
@@ -68,7 +69,7 @@ class HomeAnnouncementRegressionInstrumentedTest {
         composeRule.resetAppPreferences()
         composeRule.activity.runOnUiThread {
             UpdateManager.updateState.value = UpdateManager.UpdateState.NoUpdate
-            ViewModelProvider(composeRule.activity)[HomeFeedViewModel::class.java].apply {
+            composeRule.seedViewModel { HomeFeedViewModel(KoinPlatform.getKoin().get(), KoinPlatform.getKoin().get()) }.apply {
                 allData.clear()
                 debugData.clear()
                 displayItems.clear()

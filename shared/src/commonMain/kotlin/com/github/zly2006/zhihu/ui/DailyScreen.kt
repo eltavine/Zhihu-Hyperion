@@ -88,7 +88,7 @@ import com.github.zly2006.zhihu.util.formatDailyDate
 import com.github.zly2006.zhihu.util.jsonObject
 import com.github.zly2006.zhihu.util.twoDigitString
 import com.github.zly2006.zhihu.viewmodel.DailyViewModel
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import io.ktor.client.request.get
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -113,7 +113,7 @@ fun DailyScreen(
     isActive: Boolean = true,
 ) {
     val navigator = LocalNavigator.current
-    val httpClient = rememberPaginationEnvironment(allowGuestAccess = false).httpClient()
+    val httpClient = rememberZhihuApiEnvironment(allowGuestAccess = false).httpClient()
     val uriHandler = LocalUriHandler.current
     val viewModel = viewModel { DailyViewModel() }
     var isRefreshing by remember { mutableStateOf(false) }
@@ -189,8 +189,14 @@ fun DailyScreen(
         )
         if (isActive) {
             when (action) {
-                TopLevelReselectAction.Refresh -> doRefresh()
-                TopLevelReselectAction.ScrollToTop -> listState.animateScrollToItem(0)
+                TopLevelReselectAction.Refresh -> {
+                    doRefresh()
+                }
+
+                TopLevelReselectAction.ScrollToTop -> {
+                    listState.animateScrollToItem(0)
+                }
+
                 null -> {}
             }
         }

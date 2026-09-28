@@ -1,0 +1,142 @@
+public final class com/github/zly2006/zhihu/markdown/ComposableSingletons$RenderMarkdownKt {
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/markdown/ComposableSingletons$RenderMarkdownKt;
+	public fun <init> ()V
+	public final fun getLambda$-357616834$Zhihu_core_markdown ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-460913028$Zhihu_core_markdown ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1003078997$Zhihu_core_markdown ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1738218717$Zhihu_core_markdown ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$821701668$Zhihu_core_markdown ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/github/zly2006/zhihu/markdown/ComposableSingletons$SegmentHighlightKt {
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/markdown/ComposableSingletons$SegmentHighlightKt;
+	public fun <init> ()V
+	public final fun getLambda$-1738073678$Zhihu_core_markdown ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/github/zly2006/zhihu/markdown/ComposableSingletons$TiqianMarkdownRendererKt {
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/markdown/ComposableSingletons$TiqianMarkdownRendererKt;
+	public fun <init> ()V
+	public final fun getLambda$-1161489014$Zhihu_core_markdown ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-661435199$Zhihu_core_markdown ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/github/zly2006/zhihu/markdown/MarkdownImageRequestHeaders {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/github/zly2006/zhihu/markdown/MarkdownImageRequestHeaders;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/markdown/MarkdownImageRequestHeaders;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/markdown/MarkdownImageRequestHeaders;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCookieHeader ()Ljava/lang/String;
+	public final fun getUserAgent ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/markdown/MarkdownRuntimeKt {
+	public static final fun rememberMarkdownImageModel (Ljava/lang/String;Landroidx/compose/runtime/Composer;I)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/markdown/MarkdownRuntime_jvmKt {
+	public static final fun rememberMarkdownImageRequestHeaders (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/markdown/MarkdownImageRequestHeaders;
+	public static final fun rememberMarkdownMathFont (Landroidx/compose/runtime/Composer;I)Lcom/hrm/latex/renderer/font/MathFont;
+}
+
+public final class com/github/zly2006/zhihu/markdown/MdAstKt {
+	public static final fun htmlToMdAst (Ljava/lang/String;Z)Lcom/hrm/markdown/parser/ast/Document;
+	public static synthetic fun htmlToMdAst$default (Ljava/lang/String;ZILjava/lang/Object;)Lcom/hrm/markdown/parser/ast/Document;
+	public static final fun markdownToMdAst (Ljava/lang/String;)Lcom/hrm/markdown/parser/ast/Document;
+	public static final fun toMarkdown (Lcom/hrm/markdown/parser/ast/Document;)Ljava/lang/String;
+	public static final fun zhihuHtmlToMarkdown (Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/markdown/RenderMarkdownKt {
+	public static final fun RenderImage (Lcom/hrm/markdown/renderer/MarkdownImageData;Landroidx/compose/ui/Modifier;Ljava/util/List;Landroidx/compose/runtime/Composer;II)V
+	public static final fun RenderMarkdown (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/ScrollState;ZZLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;ZLandroidx/compose/runtime/Composer;II)V
+	public static final fun RenderMarkdownText (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/ScrollState;ZZLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;ZLandroidx/compose/runtime/Composer;II)V
+	public static final fun RenderVideoBox (JLjava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/github/zly2006/zhihu/markdown/SegmentHighlightKt {
+	public static final fun buildSegmentLikeBody (Lcom/github/zly2006/zhihu/util/SegmentHighlightSpan;)Ljava/lang/String;
+	public static final fun buildSegmentUnlikeBody (Lcom/github/zly2006/zhihu/util/SegmentHighlightSpan;)Ljava/lang/String;
+	public static final fun getLocalSegmentCommentSheet ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+	public static final fun updateSegmentMetaAfterLike (Lcom/github/zly2006/zhihu/util/SegmentHighlightSpan;Lkotlinx/serialization/json/JsonObject;)Lcom/github/zly2006/zhihu/data/SegmentInfoMeta;
+	public static final fun updateSegmentMetaAfterUnlike (Lcom/github/zly2006/zhihu/util/SegmentHighlightSpan;)Lcom/github/zly2006/zhihu/data/SegmentInfoMeta;
+}
+
+public final class com/github/zly2006/zhihu/markdown/TiqianMarkdownRendererKt {
+	public static final fun TiqianBrandTitle (Ljava/lang/String;Ljava/lang/String;Landroidx/compose/runtime/Composer;I)V
+	public static final fun isTiqianMarkdownRendererAvailable ()Z
+}
+
+public final class com/github/zly2006/zhihu/util/SegmentHighlightSpan {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lcom/github/zly2006/zhihu/data/SegmentInfoMeta;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/github/zly2006/zhihu/data/SegmentInfoMeta;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lcom/github/zly2006/zhihu/data/SegmentInfoMeta;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/Integer;
+	public final fun component9 ()Ljava/lang/Integer;
+	public final fun copy (Ljava/lang/String;Lcom/github/zly2006/zhihu/data/SegmentInfoMeta;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;)Lcom/github/zly2006/zhihu/util/SegmentHighlightSpan;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/util/SegmentHighlightSpan;Ljava/lang/String;Lcom/github/zly2006/zhihu/data/SegmentInfoMeta;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/util/SegmentHighlightSpan;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContentId ()Ljava/lang/String;
+	public final fun getContentType ()Ljava/lang/String;
+	public final fun getDisplayText ()Ljava/lang/String;
+	public final fun getEndOffset ()Ljava/lang/Integer;
+	public final fun getMeta ()Lcom/github/zly2006/zhihu/data/SegmentInfoMeta;
+	public final fun getParagraphId ()Ljava/lang/String;
+	public final fun getSourceUrl ()Ljava/lang/String;
+	public final fun getStartOffset ()Ljava/lang/Integer;
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/util/SegmentHighlightUtilsKt {
+	public static final fun applySegmentInfosToHtml (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun applySegmentInfosToHtml$default (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public static final fun buildSegmentTextParts (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/util/List;
+	public static synthetic fun buildSegmentTextParts$default (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun parseSegmentTextParagraph (Lcom/fleeksoft/ksoup/nodes/Element;)Lcom/github/zly2006/zhihu/util/SegmentTextParagraph;
+}
+
+public final class com/github/zly2006/zhihu/util/SegmentTextParagraph {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Lcom/github/zly2006/zhihu/util/SegmentTextParagraph;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/util/SegmentTextParagraph;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/util/SegmentTextParagraph;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getParts ()Ljava/util/List;
+	public final fun getPid ()Ljava/lang/String;
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/util/SegmentTextPart {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lcom/github/zly2006/zhihu/util/SegmentHighlightSpan;)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/github/zly2006/zhihu/util/SegmentHighlightSpan;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lcom/github/zly2006/zhihu/util/SegmentHighlightSpan;
+	public final fun copy (Ljava/lang/String;Lcom/github/zly2006/zhihu/util/SegmentHighlightSpan;)Lcom/github/zly2006/zhihu/util/SegmentTextPart;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/util/SegmentTextPart;Ljava/lang/String;Lcom/github/zly2006/zhihu/util/SegmentHighlightSpan;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/util/SegmentTextPart;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getHighlight ()Lcom/github/zly2006/zhihu/util/SegmentHighlightSpan;
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+

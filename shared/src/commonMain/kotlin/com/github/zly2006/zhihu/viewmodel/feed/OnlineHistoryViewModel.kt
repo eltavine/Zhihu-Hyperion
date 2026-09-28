@@ -19,29 +19,35 @@ package com.github.zly2006.zhihu.viewmodel.feed
 
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
+import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.OnlineHistoryDeletePair
 import com.github.zly2006.zhihu.data.OnlineHistoryItem
 import com.github.zly2006.zhihu.data.ZhihuJson.decodeJson
 import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.resolveContent
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
-import com.github.zly2006.zhihu.viewmodel.deleteOnlineHistoryItem
+import com.github.zly2006.zhihu.platform.SettingsStore
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
+import com.github.zly2006.zhihu.viewmodel.deleteOnlineHistory
+import io.ktor.http.isSuccess
 import kotlinx.serialization.json.JsonArray
 
-class OnlineHistoryViewModel : BaseFeedViewModel() {
+class OnlineHistoryViewModel(
+    settings: SettingsStore,
+    private val history: HistoryStorage,
+) : BaseFeedViewModel(settings) {
     override val initialUrl: String = "https://api.zhihu.com/unify-consumption/read_history?offset=0&limit=10"
     override val shouldLogDecodeFailures: Boolean = false
     private val deletionPairs = mutableMapOf<FeedDisplayItem, OnlineHistoryDeletePair>()
 
-    override fun processResponse(environment: PaginationEnvironment, data: List<Feed>, rawData: JsonArray) {
+    override suspend fun processResponse(environment: ZhihuApiEnvironment, data: List<Feed>, rawData: JsonArray) {
         if (displayItems.isEmpty()) {
             deletionPairs.clear()
         }
         val response = rawData.mapNotNull { item ->
             runCatching { decodeJson<OnlineHistoryItem>(item) }.getOrNull()
         }
-        val localHistory = environment.localHistory()
+        val localHistory = history.history
 
         response.forEach { item ->
             val navDest = try {
@@ -78,9 +84,10 @@ class OnlineHistoryViewModel : BaseFeedViewModel() {
         }
     }
 
-    suspend fun deleteItem(environment: PaginationEnvironment, item: FeedDisplayItem) {
+    suspend fun deleteItem(environment: ZhihuApiEnvironment, item: FeedDisplayItem) {
         val pair = checkNotNull(deletionPairs[item]) { "在线历史记录缺少删除标识" }
-        environment.deleteOnlineHistoryItem(pair)
+        val response = environment.deleteOnlineHistory(listOf(pair), clear = false)
+        check(response.status.isSuccess()) { "删除在线历史记录失败: ${response.status}" }
         displayItems.remove(item)
         deletionPairs.remove(item)
     }

@@ -62,7 +62,7 @@ import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.viewmodel.CollectionsViewModel
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,7 +75,7 @@ fun CollectionScreen(
     isActive: Boolean = true,
 ) {
     val navigator = LocalNavigator.current
-    val environment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = false)
     val viewModel: CollectionsViewModel = viewModel(key = urlToken) {
         CollectionsViewModel(urlToken.orEmpty())
     }

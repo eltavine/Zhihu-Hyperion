@@ -109,6 +109,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.github.zly2006.zhihu.account.LoginScreen
 import com.github.zly2006.zhihu.filter.ContentOpenFrom
+import com.github.zly2006.zhihu.markdown.LocalSegmentCommentSheet
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
@@ -133,6 +134,7 @@ import com.github.zly2006.zhihu.navigation.Person
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.Search
+import com.github.zly2006.zhihu.navigation.SegmentCommentHolder
 import com.github.zly2006.zhihu.navigation.SentenceSimilarityTest
 import com.github.zly2006.zhihu.navigation.TopLevelDestination
 import com.github.zly2006.zhihu.navigation.Topic
@@ -141,14 +143,15 @@ import com.github.zly2006.zhihu.navigation.WriteAnswer
 import com.github.zly2006.zhihu.navigation.WritePin
 import com.github.zly2006.zhihu.navigation.loginNavigationRequestFlow
 import com.github.zly2006.zhihu.platform.PlatformBackHandler
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.platformName
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
+import com.github.zly2006.zhihu.reading.CompactReadingPlayerButton
+import com.github.zly2006.zhihu.reading.ReadingPlayerBar
+import com.github.zly2006.zhihu.reading.ReadingQueueSheet
 import com.github.zly2006.zhihu.reading.rememberReadingPlayerController
 import com.github.zly2006.zhihu.reading.saveReadingPlaybackSpeed
-import com.github.zly2006.zhihu.ui.components.CompactReadingPlayerButton
+import com.github.zly2006.zhihu.ui.components.LocalSelectedContentDestination
 import com.github.zly2006.zhihu.ui.components.NoOpPagerNestedScrollConnection
-import com.github.zly2006.zhihu.ui.components.ReadingPlayerBar
-import com.github.zly2006.zhihu.ui.components.ReadingQueueSheet
 import com.github.zly2006.zhihu.ui.subscreens.AppearanceSettingsScreen
 import com.github.zly2006.zhihu.ui.subscreens.BlockedFeedHistoryScreen
 import com.github.zly2006.zhihu.ui.subscreens.ColorSchemeScreen
@@ -161,6 +164,7 @@ import com.github.zly2006.zhihu.ui.subscreens.SettingsSearchScreen
 import com.github.zly2006.zhihu.ui.subscreens.SystemAndUpdateSettingsScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
 
@@ -249,7 +253,7 @@ fun ZhihuMain(
     val reloadBottomBarPreferences = preferenceState::reload
     val readingPlayer = rememberReadingPlayerController()
     val readingPlayerState by readingPlayer.state
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
 
     /** 右侧详情独立持有返回栈；栏内导航保留上级，从左侧重新选项时清空。 */
     val paneStateHolder = rememberSaveableStateHolder()
@@ -514,6 +518,7 @@ fun ZhihuMain(
         CompositionLocalProvider(
             LocalLifecycleOwner provides detailLifecycleOwner,
             LocalArticleNavController provides detailNavController,
+            LocalSegmentCommentSheet provides SegmentCommentSheet,
             LocalNavigator provides Navigator(
                 onNavigate = { destination ->
                     if (
@@ -651,6 +656,7 @@ fun ZhihuMain(
                     CompositionLocalProvider(
                         LocalLifecycleOwner provides listLifecycleOwner,
                         LocalArticleNavController provides navController,
+                        LocalSegmentCommentSheet provides SegmentCommentSheet,
                         LocalNavigator provides Navigator(
                             onNavigate = { destination ->
                                 if (
@@ -986,31 +992,37 @@ private fun MainTabsPager(
                 showTopActions = showHomeTopActions,
                 isActive = pagerState.currentPage == pageIndex,
             )
+
             MainTabPage.FollowPage -> FollowScreen(
                 scrollToTopTrigger = scrollToTopTrigger,
                 innerPadding = innerPadding,
                 parentPagerState = pagerState,
                 isActive = pagerState.currentPage == pageIndex,
             )
+
             MainTabPage.HotListPage -> HotListScreen(
                 innerPadding = innerPadding,
                 scrollToTopTrigger = scrollToTopTrigger,
                 isActive = pagerState.currentPage == pageIndex,
             )
+
             MainTabPage.DailyPage -> DailyScreen(
                 scrollToTopTrigger = scrollToTopTrigger,
                 isActive = pagerState.currentPage == pageIndex,
             )
+
             MainTabPage.OnlineHistoryPage -> OnlineHistoryScreen(
                 scrollToTopTrigger = scrollToTopTrigger,
                 isActive = pagerState.currentPage == pageIndex,
             )
+
             MainTabPage.MyCollectionsPage -> MyCollectionsTopLevelPage(
                 scrollToTopTrigger = scrollToTopTrigger,
                 innerPadding = innerPadding,
                 collectionDirectBrowseEnabled = collectionDirectBrowseEnabled,
                 isActive = pagerState.currentPage == pageIndex,
             )
+
             MainTabPage.AccountPage -> AccountSettingScreen(
                 innerPadding = innerPadding,
                 isActive = pagerState.currentPage == pageIndex,
@@ -1077,6 +1089,7 @@ private fun NavDestination.isAccountDetailDestination(): Boolean = when (this) {
     Account.DeveloperSettings,
     Account.DeveloperSettings.ColorScheme,
     -> true
+
     else -> false
 }
 
@@ -1141,4 +1154,8 @@ private fun NavGraphBuilder.accountSettings(
     composable<Account.DeveloperSettings.ColorScheme> {
         ColorSchemeScreen()
     }
+}
+
+private val SegmentCommentSheet: @Composable (Boolean, () -> Unit, SegmentCommentHolder) -> Unit = { showComments, onDismiss, content ->
+    CommentScreenComponent(showComments = showComments, onDismiss = onDismiss, content = content)
 }

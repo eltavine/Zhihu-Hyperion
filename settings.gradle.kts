@@ -16,6 +16,7 @@
  */
 
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             mavenContent {
@@ -66,12 +67,27 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "Zhihu"
 include(":app")
+include(":core:common")
+include(":core:model")
+include(":core:navigation")
+include(":core:network")
+include(":core:account")
+include(":core:database")
+include(":core:settings")
+include(":core:designsystem")
+include(":core:platform")
+include(":core:nlp")
+include(":core:notification")
+include(":core:updater")
+include(":core:data")
+include(":core:ui")
+include(":core:markdown")
+include(":feature:editor")
 include(":desktopApp")
 include(":macosApp")
 include(":macosUiDebug")
 include(":sentence_embeddings")
 include(":shared")
-include(":shared-local-db")
 include(":markdown-parser")
 include(":markdown-renderer")
 include(":markdown-runtime")

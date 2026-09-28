@@ -21,14 +21,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
+import com.github.zly2006.zhihu.data.CommentSortOrder
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.viewmodel.CommentItem
-import com.github.zly2006.zhihu.viewmodel.ContentBlocklistEnvironment
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.PaginationViewModel
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
+import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
 import com.github.zly2006.zhihu.viewmodel.postSigned
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.launch
@@ -39,13 +39,9 @@ import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonPrimitive
 import kotlin.reflect.typeOf
 
-enum class CommentSortOrder {
-    SCORE, // 按热度
-    TIME, // 按时间
-}
-
 abstract class BaseCommentViewModel(
     val article: NavDestination,
+    private val blockedUsers: BlockedUserDao,
 ) : PaginationViewModel<DataHolder.Comment>(typeOf<DataHolder.Comment>()) {
     protected val commentsMap = mutableMapOf<String, CommentItem>()
     var sortOrder by mutableStateOf(CommentSortOrder.SCORE)
@@ -55,7 +51,7 @@ abstract class BaseCommentViewModel(
     override val isEnd: Boolean
         get() = commentClosedMessage != null || super.isEnd
 
-    override fun refresh(environment: PaginationEnvironment) {
+    override fun refresh(environment: ZhihuApiEnvironment) {
         commentClosedMessage = null
         super.refresh(environment)
     }
@@ -70,9 +66,9 @@ abstract class BaseCommentViewModel(
             ?: "评论区已关闭"
     }
 
-    override fun processResponse(environment: PaginationEnvironment, data: List<DataHolder.Comment>, rawData: JsonArray) {
+    override suspend fun processResponse(environment: ZhihuApiEnvironment, data: List<DataHolder.Comment>, rawData: JsonArray) {
         debugData.addAll(rawData) // 保存原始JSON
-        filterBlockedComments(environment, data).forEach { comment ->
+        filterBlockedComments(data).forEach { comment ->
             if (allData.none { it.id == comment.id }) {
                 // 避免服务器返回重复评论时重复添加，造成LazyColumn key冲突
                 allData.add(comment)
@@ -87,11 +83,8 @@ abstract class BaseCommentViewModel(
         }
     }
 
-    private fun filterBlockedComments(
-        environment: ContentBlocklistEnvironment,
-        comments: List<DataHolder.Comment>,
-    ): List<DataHolder.Comment> {
-        val blockedUserIds = environment.blockedUserIds()
+    private suspend fun filterBlockedComments(comments: List<DataHolder.Comment>): List<DataHolder.Comment> {
+        val blockedUserIds = blockedUsers.getAllUserIds().toSet()
         if (blockedUserIds.isEmpty()) return comments
         return comments.mapNotNull { comment ->
             if (comment.author.id in blockedUserIds) {
@@ -106,7 +99,7 @@ abstract class BaseCommentViewModel(
 
     abstract fun createCommentItem(comment: DataHolder.Comment, article: NavDestination): CommentItem
 
-    fun changeSortOrder(newSortOrder: CommentSortOrder, environment: PaginationEnvironment) {
+    fun changeSortOrder(newSortOrder: CommentSortOrder, environment: ZhihuApiEnvironment) {
         if (sortOrder != newSortOrder) {
             sortOrder = newSortOrder
             refresh(environment)

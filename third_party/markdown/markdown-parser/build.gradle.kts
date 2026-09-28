@@ -29,10 +29,10 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "com.hrm.markdown.parser"
-        compileSdk = 37
-        minSdk = 27
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
         compilerOptions {
             jvmTarget = JvmTarget.JVM_17
@@ -60,8 +60,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation("org.jetbrains.compose.runtime:runtime:1.11.1")
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
+            implementation(libs.compose.runtime)
+            implementation(libs.kotlinx.coroutines.core)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

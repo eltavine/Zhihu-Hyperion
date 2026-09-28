@@ -1,0 +1,97 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, macosArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <Zhihu.core:designsystem>
+final enum class com.github.zly2006.zhihu.theme/ThemeMode : kotlin/Enum<com.github.zly2006.zhihu.theme/ThemeMode> { // com.github.zly2006.zhihu.theme/ThemeMode|null[0]
+    enum entry DARK // com.github.zly2006.zhihu.theme/ThemeMode.DARK|null[0]
+    enum entry LIGHT // com.github.zly2006.zhihu.theme/ThemeMode.LIGHT|null[0]
+    enum entry SYSTEM // com.github.zly2006.zhihu.theme/ThemeMode.SYSTEM|null[0]
+
+    final val entries // com.github.zly2006.zhihu.theme/ThemeMode.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.github.zly2006.zhihu.theme/ThemeMode> // com.github.zly2006.zhihu.theme/ThemeMode.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.github.zly2006.zhihu.theme/ThemeMode // com.github.zly2006.zhihu.theme/ThemeMode.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.github.zly2006.zhihu.theme/ThemeMode> // com.github.zly2006.zhihu.theme/ThemeMode.values|values#static(){}[0]
+}
+
+final class com.github.zly2006.zhihu.theme/ThemeSnapshot { // com.github.zly2006.zhihu.theme/ThemeSnapshot|null[0]
+    constructor <init>(kotlin/Boolean = ..., kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ..., com.github.zly2006.zhihu.theme/ThemeMode = ...) // com.github.zly2006.zhihu.theme/ThemeSnapshot.<init>|<init>(kotlin.Boolean;kotlin.Int;kotlin.Int;kotlin.Int;com.github.zly2006.zhihu.theme.ThemeMode){}[0]
+
+    final val backgroundColorDark // com.github.zly2006.zhihu.theme/ThemeSnapshot.backgroundColorDark|{}backgroundColorDark[0]
+        final fun <get-backgroundColorDark>(): kotlin/Int // com.github.zly2006.zhihu.theme/ThemeSnapshot.backgroundColorDark.<get-backgroundColorDark>|<get-backgroundColorDark>(){}[0]
+    final val backgroundColorLight // com.github.zly2006.zhihu.theme/ThemeSnapshot.backgroundColorLight|{}backgroundColorLight[0]
+        final fun <get-backgroundColorLight>(): kotlin/Int // com.github.zly2006.zhihu.theme/ThemeSnapshot.backgroundColorLight.<get-backgroundColorLight>|<get-backgroundColorLight>(){}[0]
+    final val customColor // com.github.zly2006.zhihu.theme/ThemeSnapshot.customColor|{}customColor[0]
+        final fun <get-customColor>(): kotlin/Int // com.github.zly2006.zhihu.theme/ThemeSnapshot.customColor.<get-customColor>|<get-customColor>(){}[0]
+    final val themeMode // com.github.zly2006.zhihu.theme/ThemeSnapshot.themeMode|{}themeMode[0]
+        final fun <get-themeMode>(): com.github.zly2006.zhihu.theme/ThemeMode // com.github.zly2006.zhihu.theme/ThemeSnapshot.themeMode.<get-themeMode>|<get-themeMode>(){}[0]
+    final val useDynamicColor // com.github.zly2006.zhihu.theme/ThemeSnapshot.useDynamicColor|{}useDynamicColor[0]
+        final fun <get-useDynamicColor>(): kotlin/Boolean // com.github.zly2006.zhihu.theme/ThemeSnapshot.useDynamicColor.<get-useDynamicColor>|<get-useDynamicColor>(){}[0]
+
+    final fun component1(): kotlin/Boolean // com.github.zly2006.zhihu.theme/ThemeSnapshot.component1|component1(){}[0]
+    final fun component2(): kotlin/Int // com.github.zly2006.zhihu.theme/ThemeSnapshot.component2|component2(){}[0]
+    final fun component3(): kotlin/Int // com.github.zly2006.zhihu.theme/ThemeSnapshot.component3|component3(){}[0]
+    final fun component4(): kotlin/Int // com.github.zly2006.zhihu.theme/ThemeSnapshot.component4|component4(){}[0]
+    final fun component5(): com.github.zly2006.zhihu.theme/ThemeMode // com.github.zly2006.zhihu.theme/ThemeSnapshot.component5|component5(){}[0]
+    final fun copy(kotlin/Boolean = ..., kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ..., com.github.zly2006.zhihu.theme/ThemeMode = ...): com.github.zly2006.zhihu.theme/ThemeSnapshot // com.github.zly2006.zhihu.theme/ThemeSnapshot.copy|copy(kotlin.Boolean;kotlin.Int;kotlin.Int;kotlin.Int;com.github.zly2006.zhihu.theme.ThemeMode){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.theme/ThemeSnapshot.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.theme/ThemeSnapshot.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.theme/ThemeSnapshot.toString|toString(){}[0]
+}
+
+final object com.github.zly2006.zhihu.theme/ThemeManager { // com.github.zly2006.zhihu.theme/ThemeManager|null[0]
+    final var isDarkTheme // com.github.zly2006.zhihu.theme/ThemeManager.isDarkTheme|{}isDarkTheme[0]
+        final fun <get-isDarkTheme>(): kotlin/Boolean // com.github.zly2006.zhihu.theme/ThemeManager.isDarkTheme.<get-isDarkTheme>|<get-isDarkTheme>(){}[0]
+
+    final fun getBackgroundColor(androidx.compose.runtime/Composer?, kotlin/Int): androidx.compose.ui.graphics/Color // com.github.zly2006.zhihu.theme/ThemeManager.getBackgroundColor|getBackgroundColor(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+    final fun getCustomColor(androidx.compose.runtime/Composer?, kotlin/Int): androidx.compose.ui.graphics/Color // com.github.zly2006.zhihu.theme/ThemeManager.getCustomColor|getCustomColor(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+    final fun getThemeMode(androidx.compose.runtime/Composer?, kotlin/Int): com.github.zly2006.zhihu.theme/ThemeMode // com.github.zly2006.zhihu.theme/ThemeManager.getThemeMode|getThemeMode(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+    final fun getUseDynamicColor(androidx.compose.runtime/Composer?, kotlin/Int): kotlin/Boolean // com.github.zly2006.zhihu.theme/ThemeManager.getUseDynamicColor|getUseDynamicColor(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+    final fun isDarkTheme(androidx.compose.runtime/Composer?, kotlin/Int): kotlin/Boolean // com.github.zly2006.zhihu.theme/ThemeManager.isDarkTheme|isDarkTheme(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+    final fun load(com.github.zly2006.zhihu.theme/ThemeSnapshot) // com.github.zly2006.zhihu.theme/ThemeManager.load|load(com.github.zly2006.zhihu.theme.ThemeSnapshot){}[0]
+    final fun setBackgroundColor(androidx.compose.ui.graphics/Color, kotlin/Boolean) // com.github.zly2006.zhihu.theme/ThemeManager.setBackgroundColor|setBackgroundColor(androidx.compose.ui.graphics.Color;kotlin.Boolean){}[0]
+    final fun setCustomColor(androidx.compose.ui.graphics/Color) // com.github.zly2006.zhihu.theme/ThemeManager.setCustomColor|setCustomColor(androidx.compose.ui.graphics.Color){}[0]
+    final fun setThemeMode(com.github.zly2006.zhihu.theme/ThemeMode) // com.github.zly2006.zhihu.theme/ThemeManager.setThemeMode|setThemeMode(com.github.zly2006.zhihu.theme.ThemeMode){}[0]
+    final fun setUseDynamicColor(kotlin/Boolean) // com.github.zly2006.zhihu.theme/ThemeManager.setUseDynamicColor|setUseDynamicColor(kotlin.Boolean){}[0]
+    final fun snapshot(): com.github.zly2006.zhihu.theme/ThemeSnapshot // com.github.zly2006.zhihu.theme/ThemeManager.snapshot|snapshot(){}[0]
+}
+
+final const val com.github.zly2006.zhihu.theme/DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY // com.github.zly2006.zhihu.theme/DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY|{}DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY[0]
+    final fun <get-DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY>(): kotlin/String // com.github.zly2006.zhihu.theme/DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY.<get-DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY>|<get-DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY>(){}[0]
+final const val com.github.zly2006.zhihu.theme/DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY // com.github.zly2006.zhihu.theme/DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY|{}DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY[0]
+    final fun <get-DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY>(): kotlin/String // com.github.zly2006.zhihu.theme/DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY.<get-DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY>|<get-DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY>(){}[0]
+final const val com.github.zly2006.zhihu.theme/PREF_BLOCK_SPACING // com.github.zly2006.zhihu.theme/PREF_BLOCK_SPACING|{}PREF_BLOCK_SPACING[0]
+    final fun <get-PREF_BLOCK_SPACING>(): kotlin/String // com.github.zly2006.zhihu.theme/PREF_BLOCK_SPACING.<get-PREF_BLOCK_SPACING>|<get-PREF_BLOCK_SPACING>(){}[0]
+final const val com.github.zly2006.zhihu.theme/PREF_FONT_SIZE // com.github.zly2006.zhihu.theme/PREF_FONT_SIZE|{}PREF_FONT_SIZE[0]
+    final fun <get-PREF_FONT_SIZE>(): kotlin/String // com.github.zly2006.zhihu.theme/PREF_FONT_SIZE.<get-PREF_FONT_SIZE>|<get-PREF_FONT_SIZE>(){}[0]
+final const val com.github.zly2006.zhihu.theme/PREF_LINE_HEIGHT // com.github.zly2006.zhihu.theme/PREF_LINE_HEIGHT|{}PREF_LINE_HEIGHT[0]
+    final fun <get-PREF_LINE_HEIGHT>(): kotlin/String // com.github.zly2006.zhihu.theme/PREF_LINE_HEIGHT.<get-PREF_LINE_HEIGHT>|<get-PREF_LINE_HEIGHT>(){}[0]
+
+final val com.github.zly2006.zhihu.theme/Pink40 // com.github.zly2006.zhihu.theme/Pink40|{}Pink40[0]
+    final fun <get-Pink40>(): androidx.compose.ui.graphics/Color // com.github.zly2006.zhihu.theme/Pink40.<get-Pink40>|<get-Pink40>(){}[0]
+final val com.github.zly2006.zhihu.theme/Pink80 // com.github.zly2006.zhihu.theme/Pink80|{}Pink80[0]
+    final fun <get-Pink80>(): androidx.compose.ui.graphics/Color // com.github.zly2006.zhihu.theme/Pink80.<get-Pink80>|<get-Pink80>(){}[0]
+final val com.github.zly2006.zhihu.theme/Purple40 // com.github.zly2006.zhihu.theme/Purple40|{}Purple40[0]
+    final fun <get-Purple40>(): androidx.compose.ui.graphics/Color // com.github.zly2006.zhihu.theme/Purple40.<get-Purple40>|<get-Purple40>(){}[0]
+final val com.github.zly2006.zhihu.theme/Purple80 // com.github.zly2006.zhihu.theme/Purple80|{}Purple80[0]
+    final fun <get-Purple80>(): androidx.compose.ui.graphics/Color // com.github.zly2006.zhihu.theme/Purple80.<get-Purple80>|<get-Purple80>(){}[0]
+final val com.github.zly2006.zhihu.theme/PurpleGrey40 // com.github.zly2006.zhihu.theme/PurpleGrey40|{}PurpleGrey40[0]
+    final fun <get-PurpleGrey40>(): androidx.compose.ui.graphics/Color // com.github.zly2006.zhihu.theme/PurpleGrey40.<get-PurpleGrey40>|<get-PurpleGrey40>(){}[0]
+final val com.github.zly2006.zhihu.theme/PurpleGrey80 // com.github.zly2006.zhihu.theme/PurpleGrey80|{}PurpleGrey80[0]
+    final fun <get-PurpleGrey80>(): androidx.compose.ui.graphics/Color // com.github.zly2006.zhihu.theme/PurpleGrey80.<get-PurpleGrey80>|<get-PurpleGrey80>(){}[0]
+final val com.github.zly2006.zhihu.theme/Typography // com.github.zly2006.zhihu.theme/Typography|{}Typography[0]
+    final fun <get-Typography>(): androidx.compose.material3/Typography // com.github.zly2006.zhihu.theme/Typography.<get-Typography>|<get-Typography>(){}[0]
+final val com.github.zly2006.zhihu.theme/com_github_zly2006_zhihu_theme_ThemeManager$stableprop // com.github.zly2006.zhihu.theme/com_github_zly2006_zhihu_theme_ThemeManager$stableprop|#static{}com_github_zly2006_zhihu_theme_ThemeManager$stableprop[0]
+final val com.github.zly2006.zhihu.theme/com_github_zly2006_zhihu_theme_ThemeSnapshot$stableprop // com.github.zly2006.zhihu.theme/com_github_zly2006_zhihu_theme_ThemeSnapshot$stableprop|#static{}com_github_zly2006_zhihu_theme_ThemeSnapshot$stableprop[0]
+
+final fun com.github.zly2006.zhihu.theme/PlatformSystemBarEffect(kotlin/Boolean, androidx.compose.runtime/Composer?, kotlin/Int) // com.github.zly2006.zhihu.theme/PlatformSystemBarEffect|PlatformSystemBarEffect(kotlin.Boolean;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.theme/ZhihuTheme(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int) // com.github.zly2006.zhihu.theme/ZhihuTheme|ZhihuTheme(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.theme/com_github_zly2006_zhihu_theme_ThemeManager$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.theme/com_github_zly2006_zhihu_theme_ThemeManager$stableprop_getter|com_github_zly2006_zhihu_theme_ThemeManager$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.theme/com_github_zly2006_zhihu_theme_ThemeSnapshot$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.theme/com_github_zly2006_zhihu_theme_ThemeSnapshot$stableprop_getter|com_github_zly2006_zhihu_theme_ThemeSnapshot$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.theme/currentSystemInDarkTheme(androidx.compose.runtime/Composer?, kotlin/Int): kotlin/Boolean // com.github.zly2006.zhihu.theme/currentSystemInDarkTheme|currentSystemInDarkTheme(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.theme/platformDynamicColorScheme(kotlin/Boolean, androidx.compose.runtime/Composer?, kotlin/Int): androidx.compose.material3/ColorScheme? // com.github.zly2006.zhihu.theme/platformDynamicColorScheme|platformDynamicColorScheme(kotlin.Boolean;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.theme/resolveDarkTheme(com.github.zly2006.zhihu.theme/ThemeMode, kotlin/Boolean): kotlin/Boolean // com.github.zly2006.zhihu.theme/resolveDarkTheme|resolveDarkTheme(com.github.zly2006.zhihu.theme.ThemeMode;kotlin.Boolean){}[0]

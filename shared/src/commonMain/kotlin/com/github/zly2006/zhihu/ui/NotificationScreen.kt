@@ -84,26 +84,22 @@ import com.github.zly2006.zhihu.navigation.Notification
 import com.github.zly2006.zhihu.navigation.Person
 import com.github.zly2006.zhihu.navigation.resolveContent
 import com.github.zly2006.zhihu.notification.NotificationSettingsStore
-import com.github.zly2006.zhihu.notification.rememberNotificationSettingsStore
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.util.formatRelativeTime
+import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
 import com.github.zly2006.zhihu.viewmodel.MobileNotificationCategory
-import com.github.zly2006.zhihu.viewmodel.NotificationEnvironment
 import com.github.zly2006.zhihu.viewmodel.NotificationViewModel
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
+import org.koin.compose.koinInject
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
-
-@Composable
-expect fun rememberNotificationEnvironment(
-    settingsStore: NotificationSettingsStore,
-): NotificationEnvironment
 
 /**
  * 通知主页复用官方 Android `message/v3` 的信息层级：四个分类、邀请回答入口和私信会话列表。
@@ -113,9 +109,10 @@ expect fun rememberNotificationEnvironment(
 @Composable
 fun NotificationScreen() {
     val navigator = LocalNavigator.current
-    val settingsStore = rememberNotificationSettingsStore()
-    val viewModel = viewModel { NotificationViewModel() }
-    val environment = rememberNotificationEnvironment(settingsStore)
+    val settingsStore = koinInject<NotificationSettingsStore>()
+    val mobileClient = koinInject<MobileClientProvider>()
+    val viewModel = viewModel { NotificationViewModel(mobileClient) }
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = false)
     val coroutineScope = rememberCoroutineScope()
     val userMessages = rememberUserMessageSink()
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -140,7 +137,7 @@ fun NotificationScreen() {
                     if (viewModel.unreadCount > 0) {
                         IconButton(onClick = {
                             coroutineScope.launch {
-                                if (viewModel.markAllAsRead(environment)) {
+                                if (viewModel.markAllAsRead()) {
                                     userMessages.showMessage("已全部标记为已读")
                                 } else {
                                     userMessages.showMessage("标记已读失败")
@@ -462,14 +459,15 @@ fun NotificationItemView(
                         )
                     }
                     val emojisUsed = remember { mutableSetOf<String>() }
-                    val displayText = if (notification.content?.subTitle == "喜欢了你的评论") {
+                    val content = notification.content
+                    val displayText = if (content?.subTitle == "喜欢了你的评论") {
                         buildAnnotatedString {
-                            append(Ksoup.parse(notification.content.subText).text())
+                            append(Ksoup.parse(content.subText).text())
                         }
-                    } else if (notification.content?.subTitle?.contains("评论了") == true) {
-                        val document = Ksoup.parseBodyFragment(notification.content.abstractText)
+                    } else if (content?.subTitle?.contains("评论了") == true) {
+                        val document = Ksoup.parseBodyFragment(content.abstractText)
                         val openExternalUrl = rememberExternalUrlOpener()
-                        val string = remember(notification.content.abstractText) {
+                        val string = remember(content.abstractText) {
                             emojisUsed.clear()
                             buildAnnotatedString {
                                 dfsSimple(
@@ -484,7 +482,7 @@ fun NotificationItemView(
                         string
                     } else {
                         buildAnnotatedString {
-                            append(Ksoup.parse(notification.content?.text.orEmpty()).text())
+                            append(Ksoup.parse(content?.text.orEmpty()).text())
                         }
                     }
 

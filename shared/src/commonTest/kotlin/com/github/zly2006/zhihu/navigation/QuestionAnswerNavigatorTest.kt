@@ -17,6 +17,7 @@
 
 package com.github.zly2006.zhihu.navigation
 
+import com.github.zly2006.zhihu.viewmodel.QuestionAnswerNavigator
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.CompletableDeferred
@@ -28,8 +29,6 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -37,16 +36,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNull
 
 class QuestionAnswerNavigatorTest {
-    @BeforeTest
-    fun ignoreOpenedAnswersByDefault() {
-        openedAnswerIdsReaderForTesting = { emptySet() }
-    }
-
-    @AfterTest
-    fun clearOpenedAnswersReader() {
-        openedAnswerIdsReaderForTesting = null
-    }
-
     @Test
     fun seededQuestionAnswerListKeepsClickedPositionForSwitching() = runTest {
         val navigator = QuestionAnswerNavigator(
@@ -56,6 +45,7 @@ class QuestionAnswerNavigatorTest {
             initialNextUrl = "https://www.zhihu.com/api/v4/questions/1/feeds?limit=20&order=updated&offset=20",
             order = "updated",
             environment = NoopEnvironment,
+            readOpenedAnswerIds = { emptySet() },
         )
 
         assertEquals(101L, navigator.previousAnswerPreview?.article?.id)
@@ -69,6 +59,7 @@ class QuestionAnswerNavigatorTest {
             questionId = 1L,
             initialNextAnswers = listOf(answer(103L), answer(104L)),
             environment = NoopEnvironment,
+            readOpenedAnswerIds = { emptySet() },
         )
 
         assertEquals(listOf(103L), navigator.remainingAnswersSnapshot(102L, limit = 1).map(Article::id))
@@ -82,6 +73,7 @@ class QuestionAnswerNavigatorTest {
             questionId = 1L,
             initialNextAnswers = listOf(answer(104L), answer(105L)),
             environment = NoopEnvironment,
+            readOpenedAnswerIds = { emptySet() },
         )
         navigator.pushAnswer(answer(101L).toCachedContent())
         navigator.pushAnswer(answer(102L).toCachedContent())
@@ -99,11 +91,12 @@ class QuestionAnswerNavigatorTest {
     @Test
     fun remainingAnswerSnapshotFiltersOpenedInitialCandidates() = runTest {
         val openedAnswerIds = setOf(104L, 106L)
-        openedAnswerIdsReaderForTesting = { ids -> ids.filter { it in openedAnswerIds }.toSet() }
+        val readOpenedAnswerIds: suspend (List<Long>) -> Set<Long> = { ids -> ids.filter { it in openedAnswerIds }.toSet() }
         val navigator = QuestionAnswerNavigator(
             questionId = 1L,
             initialNextAnswers = listOf(103L, 104L, 105L, 106L, 107L).map(::answer),
             environment = NoopEnvironment,
+            readOpenedAnswerIds = readOpenedAnswerIds,
         )
 
         assertEquals(
@@ -122,12 +115,13 @@ class QuestionAnswerNavigatorTest {
                 secondNextUrl to feedPage(listOf(105L, 106L), ""),
             ),
         )
-        openedAnswerIdsReaderForTesting = { ids -> ids.filterTo(mutableSetOf()) { it == 104L } }
+        val readOpenedAnswerIds: suspend (List<Long>) -> Set<Long> = { ids -> ids.filterTo(mutableSetOf()) { it == 104L } }
         val navigator = QuestionAnswerNavigator(
             questionId = 1L,
             initialNextAnswers = listOf(answer(103L)),
             initialNextUrl = firstNextUrl,
             environment = environment,
+            readOpenedAnswerIds = readOpenedAnswerIds,
         )
 
         assertEquals(
@@ -143,7 +137,7 @@ class QuestionAnswerNavigatorTest {
     @Test
     fun failedInitialCandidateLookupCanBeRetried() = runTest {
         var lookupAttempts = 0
-        openedAnswerIdsReaderForTesting = {
+        val readOpenedAnswerIds: suspend (List<Long>) -> Set<Long> = {
             lookupAttempts++
             if (lookupAttempts == 1) error("lookup failed")
             emptySet()
@@ -152,6 +146,7 @@ class QuestionAnswerNavigatorTest {
             questionId = 1L,
             initialNextAnswers = listOf(answer(103L), answer(104L)),
             environment = NoopEnvironment,
+            readOpenedAnswerIds = readOpenedAnswerIds,
         )
 
         assertFailsWith<IllegalStateException> {
@@ -166,11 +161,12 @@ class QuestionAnswerNavigatorTest {
 
     @Test
     fun newlyDiscoveredPreviousAnswerInvalidatesCachedPreviousContent() = runTest {
-        openedAnswerIdsReaderForTesting = { setOf(103L) }
+        val readOpenedAnswerIds: suspend (List<Long>) -> Set<Long> = { setOf(103L) }
         val navigator = QuestionAnswerNavigator(
             questionId = 1L,
             initialNextAnswers = listOf(answer(103L)),
             environment = NoopEnvironment,
+            readOpenedAnswerIds = readOpenedAnswerIds,
         )
         navigator.previousAnswerContent = answer(101L).toCachedContent()
 
@@ -184,7 +180,7 @@ class QuestionAnswerNavigatorTest {
     fun snapshotWaitsForInFlightInitialCandidateFiltering() = runTest {
         val lookupStarted = CompletableDeferred<Unit>()
         val finishLookup = CompletableDeferred<Unit>()
-        openedAnswerIdsReaderForTesting = {
+        val readOpenedAnswerIds: suspend (List<Long>) -> Set<Long> = {
             lookupStarted.complete(Unit)
             finishLookup.await()
             emptySet()
@@ -193,6 +189,7 @@ class QuestionAnswerNavigatorTest {
             questionId = 1L,
             initialNextAnswers = listOf(answer(103L), answer(104L)),
             environment = NoopEnvironment,
+            readOpenedAnswerIds = readOpenedAnswerIds,
         )
 
         val prefetch = async { navigator.prefetchNext(102L) }
@@ -214,6 +211,7 @@ class QuestionAnswerNavigatorTest {
             questionId = 1L,
             order = "updated",
             environment = environment,
+            readOpenedAnswerIds = { emptySet() },
         )
 
         assertNull(navigator.loadNext())
@@ -239,6 +237,7 @@ class QuestionAnswerNavigatorTest {
                 answer(100L),
             ),
             environment = NoopEnvironment,
+            readOpenedAnswerIds = { emptySet() },
         )
 
         assertEquals(101L, navigator.previousAnswerPreview?.article?.id)
@@ -253,6 +252,7 @@ class QuestionAnswerNavigatorTest {
             questionId = 1L,
             initialPreviousAnswers = listOf(article(201L)),
             environment = NoopEnvironment,
+            readOpenedAnswerIds = { emptySet() },
         )
 
         assertNull(navigator.previousAnswerPreview)
@@ -261,11 +261,12 @@ class QuestionAnswerNavigatorTest {
     @Test
     fun seededNextAnswersAreCheckedAgainstOpenedHistoryBeforeDownNavigation() = runTest {
         val openedAnswerIds = setOf(104L, 106L)
-        openedAnswerIdsReaderForTesting = { ids -> ids.filter { it in openedAnswerIds }.toSet() }
+        val readOpenedAnswerIds: suspend (List<Long>) -> Set<Long> = { ids -> ids.filter { it in openedAnswerIds }.toSet() }
         val navigator = QuestionAnswerNavigator(
             questionId = 1L,
             initialNextAnswers = listOf(103L, 104L, 105L, 106L, 107L).map(::answer),
             environment = NoopEnvironment,
+            readOpenedAnswerIds = readOpenedAnswerIds,
         )
 
         assertEquals(103L, navigator.loadNext()?.id)
@@ -283,11 +284,12 @@ class QuestionAnswerNavigatorTest {
         )
 
         rounds.forEachIndexed { roundIndex, (candidateIds, openedAnswerIds) ->
-            openedAnswerIdsReaderForTesting = { ids -> ids.filter { it in openedAnswerIds }.toSet() }
+            val readOpenedAnswerIds: suspend (List<Long>) -> Set<Long> = { ids -> ids.filter { it in openedAnswerIds }.toSet() }
             val navigator = QuestionAnswerNavigator(
                 questionId = roundIndex + 1L,
                 initialNextAnswers = candidateIds.map(::answer),
                 environment = NoopEnvironment,
+                readOpenedAnswerIds = readOpenedAnswerIds,
             )
 
             val expectedFreshIds = candidateIds.filterNot { it in openedAnswerIds }
@@ -302,10 +304,11 @@ class QuestionAnswerNavigatorTest {
     fun directArticleScreenNavigatorSkipsOpenedAnswersWithoutQuestionScreenSeed() = runTest {
         val environment = FeedEnvironment(listOf(101L, 102L, 103L, 104L))
         val openedAnswerIds = mutableSetOf(101L, 102L)
-        openedAnswerIdsReaderForTesting = { ids -> ids.filterTo(mutableSetOf()) { it in openedAnswerIds } }
+        val readOpenedAnswerIds: suspend (List<Long>) -> Set<Long> = { ids -> ids.filterTo(mutableSetOf()) { it in openedAnswerIds } }
         val navigator = QuestionAnswerNavigator(
             questionId = 1L,
             environment = environment,
+            readOpenedAnswerIds = readOpenedAnswerIds,
         )
 
         navigator.pushAnswer(answer(101L).toCachedContent())
@@ -315,6 +318,7 @@ class QuestionAnswerNavigatorTest {
         val reopenedNavigator = QuestionAnswerNavigator(
             questionId = 1L,
             environment = environment,
+            readOpenedAnswerIds = readOpenedAnswerIds,
         )
         reopenedNavigator.pushAnswer(answer(101L).toCachedContent())
         assertEquals(104L, reopenedNavigator.loadNext()?.id)
@@ -325,10 +329,11 @@ class QuestionAnswerNavigatorTest {
     fun directArticleScreenReentrySkipsAnswersViewedInPreviousSession() = runTest {
         val environment = FeedEnvironment(listOf(101L, 102L, 103L, 104L, 105L))
         val openedAnswerIds = mutableSetOf(101L, 102L)
-        openedAnswerIdsReaderForTesting = { ids -> ids.filterTo(mutableSetOf()) { it in openedAnswerIds } }
+        val readOpenedAnswerIds: suspend (List<Long>) -> Set<Long> = { ids -> ids.filterTo(mutableSetOf()) { it in openedAnswerIds } }
         val navigator = QuestionAnswerNavigator(
             questionId = 1L,
             environment = environment,
+            readOpenedAnswerIds = readOpenedAnswerIds,
         )
 
         navigator.pushAnswer(answer(101L).toCachedContent())

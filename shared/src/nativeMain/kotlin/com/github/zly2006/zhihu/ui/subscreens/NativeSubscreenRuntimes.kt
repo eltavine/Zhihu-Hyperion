@@ -20,15 +20,14 @@ package com.github.zly2006.zhihu.ui.subscreens
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
-import com.github.zly2006.zhihu.account.defaultNativeAccountStore
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.nativeAppVersionName
 import com.github.zly2006.zhihu.platform.nativeBundledResourcePath
 import com.github.zly2006.zhihu.platform.nativeIsDesktop
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
-import com.github.zly2006.zhihu.ui.NativeArticleSpeechController
-import com.github.zly2006.zhihu.ui.TtsState
+import com.github.zly2006.zhihu.reading.NativeArticleSpeechController
+import com.github.zly2006.zhihu.reading.TtsState
 import com.github.zly2006.zhihu.updater.SemanticVersion
 import com.github.zly2006.zhihu.updater.extractGithubReleaseNotes
 import com.github.zly2006.zhihu.updater.fetchLatestZhihuRelease
@@ -41,6 +40,7 @@ import kotlinx.cinterop.reinterpret
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import org.koin.compose.koinInject
 import platform.Foundation.NSFileManager
 
 private const val PREF_SKIPPED_VERSION = "skippedVersion"
@@ -52,8 +52,8 @@ actual fun rememberSystemUpdateState(): StateFlow<SystemUpdateState> = nativeSys
 
 @Composable
 actual fun rememberSystemUpdateChecker(): SystemUpdateChecker {
-    val settings = rememberSettingsStore()
-    val accountStore = defaultNativeAccountStore
+    val settings = koinInject<SettingsStore>()
+    val accountStore = koinInject<ZhihuAccountStore>()
     return remember(settings, accountStore) {
         object : SystemUpdateChecker {
             override suspend fun check() {
@@ -70,7 +70,7 @@ actual fun rememberSystemUpdateChecker(): SystemUpdateChecker {
 
 @Composable
 actual fun rememberSystemUpdateVersionSkipper(): SystemUpdateVersionSkipper {
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     return remember(settings) {
         object : SystemUpdateVersionSkipper {
             override fun skip(version: String) {

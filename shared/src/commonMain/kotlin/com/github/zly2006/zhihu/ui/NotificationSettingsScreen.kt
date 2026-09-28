@@ -42,12 +42,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.github.zly2006.zhihu.navigation.LocalNavigator
+import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.notification.NotificationType
-import com.github.zly2006.zhihu.notification.rememberNotificationSettingsStore
 import com.github.zly2006.zhihu.ui.components.SettingItemGroup
 import com.github.zly2006.zhihu.ui.components.SettingItemWithSwitch
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
+import org.koin.compose.koinInject
 import com.github.zly2006.zhihu.notification.matchNotificationType as sharedMatchNotificationType
 
 object NotificationPreferences {
@@ -67,7 +68,7 @@ fun NotificationSettingsScreen(
     setting: String? = null,
 ) {
     val navigator = LocalNavigator.current
-    val settingsStore = rememberNotificationSettingsStore()
+    val settingsStore = koinInject<NotificationSettingsStore>()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val highlightedSetting = setting.orEmpty()
     val scrollState = rememberScrollState()

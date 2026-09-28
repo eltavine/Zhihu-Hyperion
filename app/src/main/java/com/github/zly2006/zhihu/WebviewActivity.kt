@@ -108,7 +108,7 @@ class WebviewActivity : ComponentActivity() {
     private fun setupCookies(webView: WebView) {
         val cookieManager = CookieManager.getInstance()
         cookieManager.setAcceptCookie(true)
-        AccountData.loadData(this).cookies.forEach { (name, value) ->
+        AccountData.data.cookies.forEach { (name, value) ->
             cookieManager.setCookie(
                 "zhihu.com",
                 "$name=$value; domain=.zhihu.com; path=/",

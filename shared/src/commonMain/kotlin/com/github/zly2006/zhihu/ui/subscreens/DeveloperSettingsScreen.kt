@@ -61,24 +61,25 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.github.zly2006.zhihu.account.rememberZhihuAccountStore
-import com.github.zly2006.zhihu.data.ZHIHU_ME_URL
+import com.github.zly2006.zhihu.account.ZHIHU_ME_URL
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.SentenceSimilarityTest
 import com.github.zly2006.zhihu.notification.HOME_NOTIFICATION_READ_UUIDS_PREFERENCE_KEY
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isSentenceSimilaritySupported
 import com.github.zly2006.zhihu.platform.rememberIsLiteVariant
 import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
-import com.github.zly2006.zhihu.ui.HOME_PIN_ANNOUNCEMENT_READ_KEY_PREFIX
-import com.github.zly2006.zhihu.ui.TtsState
+import com.github.zly2006.zhihu.reading.TtsState
 import com.github.zly2006.zhihu.ui.components.SettingItemOverall
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.feed.HOME_PIN_ANNOUNCEMENT_READ_KEY_PREFIX
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 const val DEVELOPER_SETTINGS_BACK_BUTTON_TAG = "developerSettings/backButton"
 const val DEVELOPER_SETTINGS_MODE_TAG = "developerSettings/modeToggle"
@@ -95,13 +96,13 @@ const val DEVELOPER_SETTINGS_COLOR_SCHEME_TAG = "developerSettings/colorScheme"
 @Composable
 fun DeveloperSettingsScreen() {
     val navigator = LocalNavigator.current
-    val environment = rememberPaginationEnvironment(allowGuestAccess = false)
-    val accountStore = rememberZhihuAccountStore()
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = false)
+    val accountStore = koinInject<ZhihuAccountStore>()
     val runtimeInfo = rememberDeveloperInfo()
     val copyPlainText = rememberPlainTextClipboard()
     val userMessages = rememberUserMessageSink()
     val coroutineScope = rememberCoroutineScope()
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     var developerModeEnabled by remember {
         mutableStateOf(settings.getBoolean("developer", false))
     }

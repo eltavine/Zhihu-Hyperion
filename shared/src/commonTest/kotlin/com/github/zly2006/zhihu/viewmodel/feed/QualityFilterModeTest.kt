@@ -19,11 +19,11 @@ package com.github.zly2006.zhihu.viewmodel.feed
 
 import com.github.zly2006.zhihu.data.CommonFeed
 import com.github.zly2006.zhihu.data.Feed
+import com.github.zly2006.zhihu.data.FeedDisplaySettings
 import com.github.zly2006.zhihu.data.Person
+import com.github.zly2006.zhihu.data.QualityFilterMode
 import com.github.zly2006.zhihu.data.QualityFilterSettings
-import com.github.zly2006.zhihu.viewmodel.FeedDisplayEnvironment
-import com.github.zly2006.zhihu.viewmodel.FeedDisplaySettings
-import com.github.zly2006.zhihu.viewmodel.QualityFilterMode
+import com.github.zly2006.zhihu.platform.MapSettingsStore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -51,10 +51,8 @@ class QualityFilterModeTest {
 
     @Test
     fun offModeKeepsOriginalCard() {
-        val item = HomeFeedViewModel().createDisplayItem(
-            object : FeedDisplayEnvironment {
-                override fun feedDisplaySettings() = FeedDisplaySettings(qualityFilterMode = QualityFilterMode.OFF)
-            },
+        val item = DisplayViewModel().createDisplayItem(
+            FeedDisplaySettings(qualityFilterMode = QualityFilterMode.OFF),
             lowQualityArticle,
         )
 
@@ -66,10 +64,8 @@ class QualityFilterModeTest {
     @Test
     fun rulesAndHideModesMarkQualityFilteredCards() {
         listOf(QualityFilterMode.RULES, QualityFilterMode.HIDE).forEach { mode ->
-            val item = HomeFeedViewModel().createDisplayItem(
-                object : FeedDisplayEnvironment {
-                    override fun feedDisplaySettings() = FeedDisplaySettings(qualityFilterMode = mode)
-                },
+            val item = DisplayViewModel().createDisplayItem(
+                FeedDisplaySettings(qualityFilterMode = mode),
                 lowQualityArticle,
             )
 
@@ -81,16 +77,18 @@ class QualityFilterModeTest {
 
     @Test
     fun customArticleVoteupThresholdIsApplied() {
-        val item = HomeFeedViewModel().createDisplayItem(
-            object : FeedDisplayEnvironment {
-                override fun feedDisplaySettings() = FeedDisplaySettings(
-                    qualityFilter = QualityFilterSettings(articleVoteupCount = 1000),
-                )
-            },
+        val item = DisplayViewModel().createDisplayItem(
+            FeedDisplaySettings(
+                qualityFilter = QualityFilterSettings(articleVoteupCount = 1000),
+            ),
             lowQualityArticle.copy(target = (lowQualityArticle.target as Feed.ArticleTarget).copy(voteupCount = 500)),
         )
 
         assertTrue(item.isQualityFiltered)
         assertTrue(item.summary.orEmpty().contains("1000"))
+    }
+
+    private class DisplayViewModel : BaseFeedViewModel(MapSettingsStore()) {
+        override val initialUrl: String = ""
     }
 }

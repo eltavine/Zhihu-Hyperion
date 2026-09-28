@@ -43,6 +43,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.zly2006.zhihu.data.CommentSortOrder
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.ZhihuJson
+import com.github.zly2006.zhihu.navigation.AndroidArticleNavigationHandoff
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.CommentHolder
@@ -59,21 +60,18 @@ import com.github.zly2006.zhihu.test.mockRootComments
 import com.github.zly2006.zhihu.test.resetAppPreferences
 import com.github.zly2006.zhihu.test.seedViewModel
 import com.github.zly2006.zhihu.test.setScreenContent
-import com.github.zly2006.zhihu.ui.AndroidArticleNavigationHandoff
 import com.github.zly2006.zhihu.ui.COMMENT_EMOJI_BUTTON_TAG
 import com.github.zly2006.zhihu.ui.COMMENT_EMOJI_ITEM_TAG_PREFIX
 import com.github.zly2006.zhihu.ui.COMMENT_EMOJI_PICKER_TAG
 import com.github.zly2006.zhihu.ui.COMMENT_INPUT_TAG
 import com.github.zly2006.zhihu.ui.COMMENT_SCREEN_LIST_TAG
 import com.github.zly2006.zhihu.ui.CommentScreen
-import com.github.zly2006.zhihu.ui.components.CommentScreenComponent
+import com.github.zly2006.zhihu.ui.CommentScreenComponent
 import com.github.zly2006.zhihu.viewmodel.CommentItem
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.comment.BaseCommentViewModel
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUser
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
-import com.github.zly2006.zhihu.viewmodel.paginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import io.ktor.http.HttpMethod
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
@@ -85,6 +83,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.mp.KoinPlatform
 
 @RunWith(AndroidJUnit4::class)
 class CommentScreenInstrumentedTest {
@@ -96,7 +95,7 @@ class CommentScreenInstrumentedTest {
         composeRule.resetAppPreferences()
         ZhihuMockApi.install(enabled = true)
         ZhihuMockApi.reset()
-        val database = getContentFilterDatabase(composeRule.activity)
+        val database = KoinPlatform.getKoin().get<ContentFilterDatabase>()
         database.blockedUserDao().clearAllUsers()
         ZhihuMockApi.mockJsonPrefix(
             method = HttpMethod.Post,
@@ -133,7 +132,7 @@ class CommentScreenInstrumentedTest {
             urlPrefix = "https://www.zhihu.com/api/v4/comment_v5/comment/liked-root-comment/child_comment",
             commentId = "other-child-comment",
         )
-        AndroidArticleNavigationHandoff.prepareComment(CommentHolder("liked-child-comment", ROOT_ARTICLE))
+        KoinPlatform.getKoin().get<AndroidArticleNavigationHandoff>().prepareComment(CommentHolder("liked-child-comment", ROOT_ARTICLE))
 
         composeRule.setScreenContent {
             CommentScreenComponent(
@@ -158,7 +157,7 @@ class CommentScreenInstrumentedTest {
 
     @After
     fun tearDown() = runBlocking {
-        val database = getContentFilterDatabase(composeRule.activity)
+        val database = KoinPlatform.getKoin().get<ContentFilterDatabase>()
         database.blockedUserDao().clearAllUsers()
         ZhihuMockApi.install(enabled = InstrumentedTestEnvironment.isMockMode())
     }
@@ -404,7 +403,7 @@ class CommentScreenInstrumentedTest {
          *    the screen receives them.
          */
         runBlocking {
-            val database = getContentFilterDatabase(composeRule.activity)
+            val database = KoinPlatform.getKoin().get<ContentFilterDatabase>()
             database.blockedUserDao().insertUser(BlockedUser("blocked-root-author", "被屏蔽根评论作者"))
             database.blockedUserDao().insertUser(BlockedUser("blocked-child-author", "被屏蔽子评论作者"))
             mockRootComments(
@@ -480,7 +479,7 @@ class CommentScreenInstrumentedTest {
     private class SeededRootCommentViewModel(
         article: NavDestination,
         seededComments: List<DataHolder.Comment>,
-    ) : BaseCommentViewModel(article) {
+    ) : BaseCommentViewModel(article, KoinPlatform.getKoin().get<ContentFilterDatabase>().blockedUserDao()) {
         override val initialUrl: String = "https://example.invalid/root_comments"
         var loadMoreCount = 0
             private set
@@ -500,14 +499,14 @@ class CommentScreenInstrumentedTest {
             CommentItem(comment, CommentHolder(comment.id, article))
 
         suspend fun processForTest(context: android.content.Context, data: List<DataHolder.Comment>) {
-            processResponse(paginationEnvironment(context), data, JsonArray(emptyList()))
+            processResponse(KoinPlatform.getKoin().get<ZhihuApiEnvironment>(), data, JsonArray(emptyList()))
         }
 
-        override fun loadMore(environment: PaginationEnvironment) {
+        override fun loadMore(environment: ZhihuApiEnvironment) {
             loadMoreCount += 1
         }
 
-        override fun refresh(environment: PaginationEnvironment) {
+        override fun refresh(environment: ZhihuApiEnvironment) {
             refreshHistory += sortOrder
         }
 
@@ -523,7 +522,7 @@ class CommentScreenInstrumentedTest {
     private class SeededChildCommentViewModel(
         content: CommentHolder,
         seededComments: List<DataHolder.Comment>,
-    ) : BaseCommentViewModel(content) {
+    ) : BaseCommentViewModel(content, KoinPlatform.getKoin().get<ContentFilterDatabase>().blockedUserDao()) {
         data class Submission(
             val text: String,
             val replyToCommentId: String?,
@@ -542,7 +541,7 @@ class CommentScreenInstrumentedTest {
         override fun createCommentItem(comment: DataHolder.Comment, article: NavDestination): CommentItem =
             CommentItem(comment, null)
 
-        override fun loadMore(environment: PaginationEnvironment) = Unit
+        override fun loadMore(environment: ZhihuApiEnvironment) = Unit
 
         override fun submitComment(
             content: NavDestination,

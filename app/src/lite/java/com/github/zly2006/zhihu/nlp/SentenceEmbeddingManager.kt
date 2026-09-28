@@ -18,17 +18,8 @@
 package com.github.zly2006.zhihu.nlp
 
 import android.content.Context
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
+/** lite 变体不打包句向量模型；启动流程与 full 共用这个入口，因此这里没有需要准备的模型。 */
 object SentenceEmbeddingManager {
-    private val _state = MutableStateFlow<ModelState>(ModelState.Uninitialized)
-    val state: StateFlow<ModelState> = _state.asStateFlow()
-
-    fun setDefaultContext(context: Context) = Unit // TODO: lite variant sentence embeddings are disabled
-
-    fun ensureModel(context: Context) = Unit // TODO: lite variant sentence embeddings are disabled
-
-    suspend fun unload() = Unit // TODO: lite variant sentence embeddings are disabled
+    fun ensureModel(context: Context) = Unit
 }

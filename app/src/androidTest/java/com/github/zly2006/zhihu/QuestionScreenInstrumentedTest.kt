@@ -52,12 +52,11 @@ import com.github.zly2006.zhihu.ui.QUESTION_SORT_DEFAULT_TAG
 import com.github.zly2006.zhihu.ui.QUESTION_SORT_UPDATED_TAG
 import com.github.zly2006.zhihu.ui.QUESTION_WRITE_ANSWER_BUTTON_TAG
 import com.github.zly2006.zhihu.ui.QuestionScreen
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerSwitchState
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.QuestionFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUser
-import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
-import com.github.zly2006.zhihu.viewmodel.paginationEnvironment
-import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import io.ktor.http.HttpMethod
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
@@ -69,6 +68,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.mp.KoinPlatform
 import com.github.zly2006.zhihu.data.Person as FeedPerson
 
 @RunWith(AndroidJUnit4::class)
@@ -81,13 +81,13 @@ class QuestionScreenInstrumentedTest {
         composeRule.resetAppPreferences()
         ZhihuMockApi.install(enabled = true)
         ZhihuMockApi.reset()
-        val database = getContentFilterDatabase(composeRule.activity)
+        val database = KoinPlatform.getKoin().get<ContentFilterDatabase>()
         database.blockedUserDao().clearAllUsers()
     }
 
     @After
     fun tearDown() = runBlocking {
-        val database = getContentFilterDatabase(composeRule.activity)
+        val database = KoinPlatform.getKoin().get<ContentFilterDatabase>()
         database.blockedUserDao().clearAllUsers()
         ZhihuMockApi.install(enabled = InstrumentedTestEnvironment.isMockMode())
     }
@@ -151,7 +151,7 @@ class QuestionScreenInstrumentedTest {
             listOf(Article(type = ArticleType.Answer, id = 7003L)),
             navigator.destinations,
         )
-        val pendingNavigator = sharedArticleAnswerSwitchState.pendingNavigator
+        val pendingNavigator = KoinPlatform.getKoin().get<ArticleAnswerSwitchState>().pendingNavigator
         assertEquals(7002L, pendingNavigator?.previousAnswerPreview?.article?.id)
         assertEquals(7004L, runBlocking { pendingNavigator?.loadNext()?.id })
     }
@@ -205,7 +205,7 @@ class QuestionScreenInstrumentedTest {
          */
         val viewModel = TestableQuestionFeedViewModel(123456789L)
         runBlocking {
-            val database = getContentFilterDatabase(composeRule.activity)
+            val database = KoinPlatform.getKoin().get<ContentFilterDatabase>()
             database.blockedUserDao().insertUser(BlockedUser("blocked-answer-author", "被屏蔽回答作者"))
             viewModel.processForTest(
                 composeRule.activity,
@@ -267,7 +267,7 @@ class QuestionScreenInstrumentedTest {
     private class SeededQuestionFeedViewModel(
         questionId: Long,
         private val seededIsEnd: Boolean,
-    ) : QuestionFeedViewModel(questionId) {
+    ) : QuestionFeedViewModel(questionId, KoinPlatform.getKoin().get(), KoinPlatform.getKoin().get<ContentFilterDatabase>().blockedUserDao()) {
         var refreshCount = 0
             private set
         var loadMoreCount = 0
@@ -276,11 +276,11 @@ class QuestionScreenInstrumentedTest {
         override val isEnd: Boolean
             get() = seededIsEnd
 
-        override fun refresh(environment: PaginationEnvironment) {
+        override fun refresh(environment: ZhihuApiEnvironment) {
             refreshCount += 1
         }
 
-        override fun loadMore(environment: PaginationEnvironment) {
+        override fun loadMore(environment: ZhihuApiEnvironment) {
             loadMoreCount += 1
         }
     }
@@ -351,9 +351,9 @@ class QuestionScreenInstrumentedTest {
 
     private class TestableQuestionFeedViewModel(
         questionId: Long,
-    ) : QuestionFeedViewModel(questionId) {
+    ) : QuestionFeedViewModel(questionId, KoinPlatform.getKoin().get(), KoinPlatform.getKoin().get<ContentFilterDatabase>().blockedUserDao()) {
         suspend fun processForTest(context: android.content.Context, data: List<Feed>) {
-            processResponse(paginationEnvironment(context), data, JsonArray(emptyList()))
+            processResponse(KoinPlatform.getKoin().get<ZhihuApiEnvironment>(), data, JsonArray(emptyList()))
         }
     }
 

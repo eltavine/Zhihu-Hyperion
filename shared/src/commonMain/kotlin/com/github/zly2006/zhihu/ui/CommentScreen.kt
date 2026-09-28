@@ -133,6 +133,7 @@ import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Element
 import com.fleeksoft.ksoup.nodes.Node
 import com.fleeksoft.ksoup.nodes.TextNode
+import com.github.zly2006.zhihu.data.CommentSortOrder
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.CommentHolder
@@ -144,28 +145,28 @@ import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.SegmentCommentHolder
 import com.github.zly2006.zhihu.navigation.resolveContent
 import com.github.zly2006.zhihu.platform.PlatformBackHandler
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
 import com.github.zly2006.zhihu.platform.rememberImagePreviewOpener
 import com.github.zly2006.zhihu.platform.rememberImageSaver
 import com.github.zly2006.zhihu.platform.rememberImageSharer
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.reading.ReadingCommentOrder
 import com.github.zly2006.zhihu.reading.loadReadingPreferences
 import com.github.zly2006.zhihu.reading.saveReadingPreferences
+import com.github.zly2006.zhihu.theme.PREF_FONT_SIZE
+import com.github.zly2006.zhihu.theme.PREF_LINE_HEIGHT
 import com.github.zly2006.zhihu.ui.components.PageTurnFab
 import com.github.zly2006.zhihu.ui.components.pageTurnContentEndMarker
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.ui.components.replaceSelection
-import com.github.zly2006.zhihu.ui.subscreens.PREF_FONT_SIZE
-import com.github.zly2006.zhihu.ui.subscreens.PREF_LINE_HEIGHT
 import com.github.zly2006.zhihu.util.twoDigitString
 import com.github.zly2006.zhihu.viewmodel.CommentItem
 import com.github.zly2006.zhihu.viewmodel.comment.BaseCommentViewModel
 import com.github.zly2006.zhihu.viewmodel.comment.ChildCommentViewModel
-import com.github.zly2006.zhihu.viewmodel.comment.CommentSortOrder
 import com.github.zly2006.zhihu.viewmodel.comment.RootCommentViewModel
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -173,6 +174,7 @@ import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
+import org.koin.compose.koinInject
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.time.Clock
@@ -449,8 +451,8 @@ fun CommentScreen(
     pageTurnEnabled: Boolean = false,
     showPageTurnFab: Boolean = false,
 ) {
-    val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
-    val readingSettings = rememberSettingsStore()
+    val paginationEnvironment = rememberZhihuApiEnvironment(allowGuestAccess = false)
+    val readingSettings = koinInject<SettingsStore>()
     val initialReadingCommentOrder = remember(readingSettings) {
         loadReadingPreferences(readingSettings).commentOrder
     }
@@ -501,15 +503,17 @@ fun CommentScreen(
         showEmojiPicker = false
     }
 
+    val blockedUsers = koinInject<ContentFilterDatabase>().blockedUserDao()
+
     // 根据内容类型选择合适的ViewModel
     val viewModel: BaseCommentViewModel = when (resolvedContent) {
         is CommentHolder -> remember(viewModelKey) {
             // 子评论不进行状态保存
-            ChildCommentViewModel(resolvedContent, initialComment)
+            ChildCommentViewModel(resolvedContent, blockedUsers, initialComment)
         }
 
         else -> viewModel(key = viewModelKey) {
-            RootCommentViewModel(resolvedContent, initialCommentId).apply {
+            RootCommentViewModel(resolvedContent, blockedUsers, initialCommentId).apply {
                 sortOrder = when (initialReadingCommentOrder) {
                     ReadingCommentOrder.Score -> CommentSortOrder.SCORE
                     ReadingCommentOrder.Time -> CommentSortOrder.TIME
@@ -1364,7 +1368,7 @@ private fun CommentItem(
                 val inlineContent = rememberCommentEmojiInlineContent(emojisUsed)
 
                 Column {
-                    val settings = rememberSettingsStore()
+                    val settings = koinInject<SettingsStore>()
                     val fontSizePercent = remember { settings.getInt(PREF_FONT_SIZE, 100) }
                     val lineHeightPercent = remember { settings.getInt(PREF_LINE_HEIGHT, 160) }
                     SelectionContainer(
@@ -1610,7 +1614,10 @@ fun AnnotatedString.Builder.dfsSimple(
     when (node) {
         is Element -> {
             when (node.tagName()) {
-                "br" -> append("\n")
+                "br" -> {
+                    append("\n")
+                }
+
                 "a" -> {
                     val href = node.attr("href")
                     val linkText = node.text()
@@ -1628,14 +1635,21 @@ fun AnnotatedString.Builder.dfsSimple(
                     }
                 }
 
-                else -> node.childNodes().forEach {
-                    dfsSimple(it, onNavigate, openExternalUrl, componentUsed)
+                else -> {
+                    node.childNodes().forEach {
+                        dfsSimple(it, onNavigate, openExternalUrl, componentUsed)
+                    }
                 }
             }
         }
 
-        is TextNode -> processTextWithEmoji(node.text(), componentUsed)
-        else -> append(node.outerHtml())
+        is TextNode -> {
+            processTextWithEmoji(node.text(), componentUsed)
+        }
+
+        else -> {
+            append(node.outerHtml())
+        }
     }
 }
 

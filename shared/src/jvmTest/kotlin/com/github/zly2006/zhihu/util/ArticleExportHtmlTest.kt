@@ -318,13 +318,8 @@ class ArticleExportHtmlTest {
         )
     }
 
-    private fun loadExportTemplateAsset(): String {
-        val templateFile = listOf(
-            File("../app/src/main/assets/article_export_template.html"),
-            File("app/src/main/assets/article_export_template.html"),
-            File("src/main/assets/article_export_template.html"),
-        ).firstOrNull(File::exists)
-            ?: throw FileNotFoundException("article_export_template.html")
-        return templateFile.readText()
-    }
+    private fun loadExportTemplateAsset(): String =
+        checkNotNull(javaClass.classLoader.getResourceAsStream(ARTICLE_EXPORT_TEMPLATE_ASSET))
+            .bufferedReader()
+            .use { it.readText() }
 }

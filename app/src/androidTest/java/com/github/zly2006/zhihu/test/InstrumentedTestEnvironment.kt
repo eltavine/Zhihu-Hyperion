@@ -21,7 +21,7 @@ import android.content.Context
 import android.os.Bundle
 import com.github.zly2006.zhihu.data.AccountData
 import com.github.zly2006.zhihu.data.Person
-import com.github.zly2006.zhihu.ui.PREFERENCE_NAME
+import com.github.zly2006.zhihu.platform.PREFERENCE_NAME
 
 object InstrumentedTestEnvironment {
     const val DATA_MODE_ARG = "zhpp_data_mode"
@@ -55,7 +55,6 @@ object InstrumentedTestEnvironment {
         when (currentDataMode) {
             DataMode.MOCK -> {
                 AccountData.saveData(
-                    context,
                     AccountData.Data(
                         login = true,
                         username = "AndroidTestUser",
@@ -82,7 +81,6 @@ object InstrumentedTestEnvironment {
             DataMode.REAL -> {
                 val secretAccountData = loadRealAccountData(context)
                 AccountData.saveData(
-                    context,
                     secretAccountData.copy(
                         login = secretAccountData.login || secretAccountData.cookies.isNotEmpty(),
                         userAgent = secretAccountData.userAgent.ifBlank { AccountData.ANDROID_USER_AGENT },

@@ -27,10 +27,13 @@ import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.target
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.util.raiseForStatus
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
+import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
 import com.github.zly2006.zhihu.viewmodel.postSigned
+import com.github.zly2006.zhihu.viewmodel.toFeedDisplaySettings
 import io.ktor.http.encodeURLParameter
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonArray
@@ -43,8 +46,10 @@ private const val SEARCH_VERTICAL_INFO = "0,0,0,0,0,0,0,0,0,0,0,0"
 
 open class SearchViewModel(
     val searchQuery: String,
+    settings: SettingsStore,
+    private val blockedUsers: BlockedUserDao,
     private val restrictedMemberHashId: String = "",
-) : BaseFeedViewModel() {
+) : BaseFeedViewModel(settings) {
     val entities = mutableStateListOf<SearchEntity>()
     private var pendingGeneralEntities = emptyList<PendingGeneralEntity>()
     val changingTopicIds = mutableStateListOf<String>()
@@ -59,7 +64,7 @@ open class SearchViewModel(
     override val include = "data[*].highlight,object,type"
 
     fun selectTab(
-        environment: PaginationEnvironment,
+        environment: ZhihuApiEnvironment,
         tab: SearchTab,
     ) {
         if (searchTab == tab) return
@@ -68,7 +73,7 @@ open class SearchViewModel(
     }
 
     fun updateFilters(
-        environment: PaginationEnvironment,
+        environment: ZhihuApiEnvironment,
         newFilters: SearchFilters,
     ) {
         if (filters == newFilters) return
@@ -77,7 +82,7 @@ open class SearchViewModel(
     }
 
     suspend fun setTopicFollowing(
-        environment: PaginationEnvironment,
+        environment: ZhihuApiEnvironment,
         topicId: String,
         following: Boolean,
     ): Result<Unit> {
@@ -101,18 +106,18 @@ open class SearchViewModel(
         }
     }
 
-    override fun refresh(environment: PaginationEnvironment) {
+    override fun refresh(environment: ZhihuApiEnvironment) {
         entities.clear()
         super.refresh(environment)
     }
 
-    fun retry(environment: PaginationEnvironment) {
+    fun retry(environment: ZhihuApiEnvironment) {
         errorMessage = null
         loadMore(environment)
     }
 
     override fun decodePage(
-        environment: PaginationEnvironment,
+        environment: ZhihuApiEnvironment,
         rawData: JsonArray,
     ): List<Feed> {
         val existingIds = entities.mapTo(mutableSetOf(), SearchEntity::id)
@@ -154,12 +159,16 @@ open class SearchViewModel(
             val content = entry["object"] as? JsonObject ?: return@mapNotNull null
             try {
                 when (searchTab) {
-                    SearchTab.General -> error("General 搜索已在保序分支解码")
+                    SearchTab.General -> {
+                        error("General 搜索已在保序分支解码")
+                    }
+
                     SearchTab.People -> {
                         val person = ZhihuJson.decodeJson<DataHolder.People>(content)
                         if (existingIds.add(person.id)) entities += SearchEntity.Person(person)
                         null
                     }
+
                     SearchTab.Topic -> {
                         val topic = ZhihuJson.decodeJson<TopicSearchObject>(content)
                         if (topic.type != "topic") return@mapNotNull null
@@ -194,12 +203,12 @@ open class SearchViewModel(
         return feeds
     }
 
-    override fun processResponse(
-        environment: PaginationEnvironment,
+    override suspend fun processResponse(
+        environment: ZhihuApiEnvironment,
         data: List<Feed>,
         rawData: JsonArray,
     ) {
-        val blockedUserIds = environment.blockedUserIds()
+        val blockedUserIds = blockedUsers.getAllUserIds().toSet()
         super.processResponse(
             environment,
             data.filterNot { it.target?.author?.id in blockedUserIds },
@@ -212,7 +221,8 @@ open class SearchViewModel(
         pendingGeneralEntities.forEach { pending ->
             val entity = when (pending) {
                 is PendingGeneralEntity.Person -> SearchEntity.Person(pending.person)
-                is PendingGeneralEntity.Content -> createDisplayItem(environment, pending.feed)
+
+                is PendingGeneralEntity.Content -> createDisplayItem(settings.toFeedDisplaySettings(), pending.feed)
                     .stableKey
                     .let(loadedContent::get)
                     ?.let { SearchEntity.Content(it) }
@@ -240,7 +250,7 @@ data class SearchSuggestItem(
  * 网络或解码失败时静默返回空列表，UI 回落到热搜/历史建议。
  */
 suspend fun fetchSearchSuggest(
-    environment: PaginationEnvironment,
+    environment: ZhihuApiEnvironment,
     query: String,
 ): List<SearchSuggestItem> {
     val json = runCatching {

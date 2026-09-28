@@ -75,9 +75,10 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.github.zly2006.zhihu.data.AIGC_MARKING_ENABLED_PREFERENCE_KEY
 import com.github.zly2006.zhihu.navigation.LocalNavigator
+import com.github.zly2006.zhihu.platform.MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.ui.components.SettingItem
 import com.github.zly2006.zhihu.ui.components.SettingItemGroup
 import com.github.zly2006.zhihu.ui.components.SettingItemWithSwitch
@@ -86,13 +87,13 @@ import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.util.ContinuousUsageReminderPolicy
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 import zhihu.shared.generated.resources.Res
 import zhihu.shared.generated.resources.ic_discord_24dp
 import zhihu.shared.generated.resources.ic_github_24dp
 import zhihu.shared.generated.resources.ic_telegram_24dp
 
 internal const val CONTINUOUS_USAGE_REMINDER_INTERVAL_MINUTES_KEY = "continuousUsageReminderIntervalMinutes"
-internal const val MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY = "macosQuitOnWindowClose"
 const val SYSTEM_SETTINGS_AIGC_MARKING_TAG = "system_settings_aigc_marking"
 
 /**
@@ -107,7 +108,7 @@ const val SYSTEM_SETTINGS_AIGC_MARKING_TAG = "system_settings_aigc_marking"
 fun SystemAndUpdateSettingsScreen(
     setting: String? = null,
 ) {
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val updateStateFlow = rememberSystemUpdateState()
     val checkForUpdate = rememberSystemUpdateChecker()
     val skipUpdateVersion = rememberSystemUpdateVersionSkipper()
@@ -287,8 +288,14 @@ fun SystemAndUpdateSettingsScreen(
                                 onClick = {
                                     coroutineScope.launch {
                                         when (val state = updateState) {
-                                            is SystemUpdateState.UpdateAvailable -> downloadUpdate.download(state.downloadUrl)
-                                            is SystemUpdateState.Downloaded -> installDownloadedUpdate.install()
+                                            is SystemUpdateState.UpdateAvailable -> {
+                                                downloadUpdate.download(state.downloadUrl)
+                                            }
+
+                                            is SystemUpdateState.Downloaded -> {
+                                                installDownloadedUpdate.install()
+                                            }
+
                                             else -> {}
                                         }
                                     }
@@ -298,12 +305,15 @@ fun SystemAndUpdateSettingsScreen(
                                 Text(
                                     when (updateState) {
                                         is SystemUpdateState.UpdateAvailable -> "下载更新"
+
                                         is SystemUpdateState.Downloading -> "下载中..."
+
                                         is SystemUpdateState.Downloaded -> if (isApkUpdateInstallSupported) {
                                             "安装更新"
                                         } else {
                                             "暂不支持安装 APK 更新"
                                         }
+
                                         else -> "下载更新"
                                     },
                                     Modifier.padding(0.dp, 4.dp),
@@ -425,9 +435,11 @@ fun SystemAndUpdateSettingsScreen(
                                         scrollState.animateScrollTo(0)
                                     }
                                 }
+
                                 SystemUpdateState.Latest -> {
                                     resetSystemUpdateState()
                                 }
+
                                 else -> { /* NOOP */ }
                             }
                         }

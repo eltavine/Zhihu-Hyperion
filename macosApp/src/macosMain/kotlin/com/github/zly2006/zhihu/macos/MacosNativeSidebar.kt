@@ -310,6 +310,7 @@ internal class MacosNativeSidebarController(
         item: Any,
     ): NSView = when (item) {
         is SectionNode -> NSTextField.labelWithString(item.title)
+
         is ItemNode -> NSTableCellView().apply {
             val imageView = NSImageView().apply {
                 image = NSImage.imageWithSystemSymbolName(item.model.systemSymbolName, item.model.title)
@@ -320,6 +321,7 @@ internal class MacosNativeSidebarController(
             addSubview(imageView)
             addSubview(label)
         }
+
         else -> error("Unsupported sidebar item")
     }
 

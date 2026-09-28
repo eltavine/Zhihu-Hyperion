@@ -28,10 +28,10 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "com.hrm.latex.base"
-        compileSdk = 37
-        minSdk = 27
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
         compilerOptions.jvmTarget = JvmTarget.JVM_17
     }
     jvm {

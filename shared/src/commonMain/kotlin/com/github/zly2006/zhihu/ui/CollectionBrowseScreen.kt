@@ -68,10 +68,9 @@ import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
-import com.github.zly2006.zhihu.viewmodel.CollectionContentEnvironment
 import com.github.zly2006.zhihu.viewmodel.CollectionContentViewModel
 import com.github.zly2006.zhihu.viewmodel.CollectionsViewModel
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -92,8 +91,7 @@ fun CollectionBrowseScreen(
     isActive: Boolean = true,
 ) {
     val navigator = LocalNavigator.current
-    val environment = rememberPaginationEnvironment(allowGuestAccess = false)
-    val contentEnvironment = environment as CollectionContentEnvironment
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = false)
     val useLocalCollections = urlToken == null
     val collectionsViewModel: CollectionsViewModel = viewModel(key = urlToken) {
         CollectionsViewModel(urlToken.orEmpty())
@@ -161,12 +159,12 @@ fun CollectionBrowseScreen(
         if (isActive && !useLocalCollections && contentViewModel != null) {
             if (randomMode) {
                 contentViewModel.refreshRandom(
-                    environment = contentEnvironment,
+                    environment = environment,
                     itemCount = selectedCollectionItemCount,
                     randomSeed = randomSeed,
                 )
             } else {
-                contentViewModel.refresh(contentEnvironment)
+                contentViewModel.refresh(environment)
             }
         }
     }
@@ -183,12 +181,18 @@ fun CollectionBrowseScreen(
                     if (randomMode) {
                         randomSeed = Random.nextInt()
                     } else {
-                        contentViewModel?.refresh(contentEnvironment)
+                        contentViewModel?.refresh(environment)
                     }
                 }
             }
-            TopLevelReselectAction.ScrollToTop -> listState.animateScrollToItem(0)
-            null -> Unit
+
+            TopLevelReselectAction.ScrollToTop -> {
+                listState.animateScrollToItem(0)
+            }
+
+            null -> {
+                Unit
+            }
         }
         cachedScrollToTopTrigger = scrollToTopTrigger
     }
@@ -309,6 +313,7 @@ fun CollectionBrowseScreen(
                     Text("还没有收藏夹", modifier = Modifier.testTag(COLLECTION_BROWSE_EMPTY_COLLECTIONS_TAG))
                 }
             }
+
             contentViewModel == null -> {
                 Box(
                     modifier = Modifier
@@ -319,6 +324,7 @@ fun CollectionBrowseScreen(
                     CircularProgressIndicator(modifier = Modifier.testTag(COLLECTION_BROWSE_LOADING_COLLECTIONS_TAG))
                 }
             }
+
             else -> {
                 PullToRefreshBox(
                     isRefreshing = collectionsViewModel.isLoading || contentViewModel.isLoading,
@@ -328,7 +334,7 @@ fun CollectionBrowseScreen(
                             if (randomMode) {
                                 randomSeed = Random.nextInt()
                             } else {
-                                contentViewModel.refresh(contentEnvironment)
+                                contentViewModel.refresh(environment)
                             }
                         }
                     },
@@ -350,7 +356,7 @@ fun CollectionBrowseScreen(
                     } else {
                         CollectionContentBody(
                             viewModel = contentViewModel,
-                            environment = contentEnvironment,
+                            environment = environment,
                             collectionId = selectedCollectionId.orEmpty(),
                             modifier = Modifier.fillMaxSize(),
                             listState = listState,

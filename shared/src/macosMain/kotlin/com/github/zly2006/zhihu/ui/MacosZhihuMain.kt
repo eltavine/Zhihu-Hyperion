@@ -37,8 +37,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.github.zly2006.zhihu.account.defaultNativeAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.fetchHighestQualityZhihuVideoUrl
+import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
+import com.github.zly2006.zhihu.filter.ContentOpenTracker
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
@@ -58,9 +60,9 @@ import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.Search
 import com.github.zly2006.zhihu.navigation.TopLevelDestination
 import com.github.zly2006.zhihu.navigation.Video
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.platformBottomBarItemLimit
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.theme.ThemeManager
 import com.github.zly2006.zhihu.ui.subscreens.BOTTOM_BAR_ITEMS_PREFERENCE_KEY
@@ -74,12 +76,13 @@ import com.github.zly2006.zhihu.ui.subscreens.navDestinationFromName
 import com.github.zly2006.zhihu.ui.subscreens.normalizeBottomBarSelection
 import com.github.zly2006.zhihu.ui.subscreens.resolveValidStartDestinationKey
 import com.github.zly2006.zhihu.util.signZhihuFetchRequest
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerSwitchState
+import com.github.zly2006.zhihu.viewmodel.ArticleAnswerTransitionDirection
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel
-import com.github.zly2006.zhihu.viewmodel.prepareNativePendingContentOpen
-import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.compose.koinInject
 
 /**
  * macOS Kotlin/Native 主界面入口。
@@ -90,7 +93,9 @@ import kotlinx.coroutines.withContext
 fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
     /** 主返回栈控制器，承载 MainTabs 主壳和单栏页面。 */
     val navController = rememberNavController()
-    val accountStore = defaultNativeAccountStore
+    val accountStore = koinInject<ZhihuAccountStore>()
+    val contentOpens = koinInject<ContentOpenTracker>()
+    val answerSwitchState = koinInject<ArticleAnswerSwitchState>()
     val accounts by accountStore.accountsState.collectAsState()
     val accountSession = accounts.session
     val httpClient = remember(accountStore, accountSession) { accountStore.client.httpClient() }
@@ -157,7 +162,9 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
                         ArticleType.Answer -> "answer"
                         ArticleType.Article -> "article"
                     }
+
                     is Question -> current.questionId.toString() to "question"
+
                     else -> return
                 }
                 coroutineScope.launch {
@@ -182,21 +189,23 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
                     }
                 }
             }
+
             MainTabs -> {
                 mainTabNavigationTarget = Home
                 navigateToMainTabs()
             }
+
             else -> {
-                prepareNativePendingContentOpen(
-                    target = route,
-                    currentMainTabOpenFrom = if (
+                contentOpens.prepare(
+                    destination = route,
+                    openFrom = if (
                         runCatching { navController.currentBackStackEntry?.toRoute<MainTabs>() }.getOrNull() != null
                     ) {
                         currentMainTabOpenFrom
                     } else {
                         null
-                    },
-                    source = currentContentOpenSource(targetController),
+                    }
+                        ?: ContentOpenEventSupport.inferOpenFrom(currentContentOpenSource(targetController), route),
                 )
                 targetController.navigate(route)
             }
@@ -223,29 +232,49 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
             showHomeTopActions = windowChrome == null,
             onCurrentMainTabDestinationChange = { currentMainTabDestination = it },
             articleEnterTransition = {
-                when (sharedArticleAnswerSwitchState.answerTransitionDirection) {
-                    ArticleAnswerTransitionDirection.VERTICAL_NEXT ->
+                when (answerSwitchState.answerTransitionDirection) {
+                    ArticleAnswerTransitionDirection.VERTICAL_NEXT -> {
                         slideInVertically(tween(300)) { it } + fadeIn(tween(300))
-                    ArticleAnswerTransitionDirection.VERTICAL_PREVIOUS ->
+                    }
+
+                    ArticleAnswerTransitionDirection.VERTICAL_PREVIOUS -> {
                         slideInVertically(tween(300)) { -it } + fadeIn(tween(300))
-                    ArticleAnswerTransitionDirection.HORIZONTAL_NEXT ->
+                    }
+
+                    ArticleAnswerTransitionDirection.HORIZONTAL_NEXT -> {
                         slideInHorizontally(tween(300)) { it } + fadeIn(tween(300))
-                    ArticleAnswerTransitionDirection.HORIZONTAL_PREVIOUS ->
+                    }
+
+                    ArticleAnswerTransitionDirection.HORIZONTAL_PREVIOUS -> {
                         slideInHorizontally(tween(300)) { -it } + fadeIn(tween(300))
-                    else -> slideInHorizontally(tween(300)) { it }
+                    }
+
+                    else -> {
+                        slideInHorizontally(tween(300)) { it }
+                    }
                 }
             },
             articleExitTransition = {
-                when (sharedArticleAnswerSwitchState.answerTransitionDirection) {
-                    ArticleAnswerTransitionDirection.VERTICAL_NEXT ->
+                when (answerSwitchState.answerTransitionDirection) {
+                    ArticleAnswerTransitionDirection.VERTICAL_NEXT -> {
                         slideOutVertically(tween(300)) { -it } + fadeOut(tween(300))
-                    ArticleAnswerTransitionDirection.VERTICAL_PREVIOUS ->
+                    }
+
+                    ArticleAnswerTransitionDirection.VERTICAL_PREVIOUS -> {
                         slideOutVertically(tween(300)) { it } + fadeOut(tween(300))
-                    ArticleAnswerTransitionDirection.HORIZONTAL_NEXT ->
+                    }
+
+                    ArticleAnswerTransitionDirection.HORIZONTAL_NEXT -> {
                         slideOutHorizontally(tween(300)) { -it } + fadeOut(tween(300))
-                    ArticleAnswerTransitionDirection.HORIZONTAL_PREVIOUS ->
+                    }
+
+                    ArticleAnswerTransitionDirection.HORIZONTAL_PREVIOUS -> {
                         slideOutHorizontally(tween(300)) { it } + fadeOut(tween(300))
-                    else -> ExitTransition.None
+                    }
+
+                    else -> {
+                        ExitTransition.None
+                    }
                 }
             },
             articleContent = { article: Article, navEntry ->
@@ -268,9 +297,13 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
             }
             when (destination) {
                 Home -> MacosWindowNavigationItem(Home.name, "首页", "house", "内容", Home == currentMainTabDestination, action)
+
                 Follow -> MacosWindowNavigationItem(Follow.name, "关注", "person.2", "内容", Follow == currentMainTabDestination, action)
+
                 HotList -> MacosWindowNavigationItem(HotList.name, "热榜", "flame", "内容", HotList == currentMainTabDestination, action)
+
                 Daily -> MacosWindowNavigationItem(Daily.name, "日报", "newspaper", "内容", Daily == currentMainTabDestination, action)
+
                 OnlineHistory -> MacosWindowNavigationItem(
                     OnlineHistory.name,
                     "历史",
@@ -279,6 +312,7 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
                     OnlineHistory == currentMainTabDestination,
                     action,
                 )
+
                 MyCollections -> MacosWindowNavigationItem(
                     MyCollections.name,
                     "收藏",
@@ -287,6 +321,7 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
                     MyCollections == currentMainTabDestination,
                     action,
                 )
+
                 Account -> MacosWindowNavigationItem(
                     Account.name,
                     "账号",
@@ -295,6 +330,7 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
                     Account == currentMainTabDestination,
                     action,
                 )
+
                 else -> null
             }
         }
@@ -323,7 +359,7 @@ fun MacosZhihuMain(windowChrome: MacosWindowChromeHost? = null) {
 
 @Composable
 private fun rememberMacosZhihuMainPreferenceState(): ZhihuMainPreferenceState {
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val allBottomBarItemKeys = remember {
         listOf(Home.name, Follow.name, HotList.name, Daily.name, OnlineHistory.name, MyCollections.name, Account.name)
     }

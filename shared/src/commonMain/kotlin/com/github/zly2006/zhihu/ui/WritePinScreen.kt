@@ -42,10 +42,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -90,17 +92,17 @@ import com.github.zly2006.zhihu.markdown.rememberMarkdownImageModel
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.WritePin
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
+import com.github.zly2006.zhihu.ui.article.ARTICLE_USE_WEBVIEW_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.components.MarkdownShortcut
 import com.github.zly2006.zhihu.ui.components.WriteContentFabColumn
 import com.github.zly2006.zhihu.ui.components.WriteContentMarkdownEditor
-import com.github.zly2006.zhihu.ui.components.WriteContentPreviewSheet
 import com.github.zly2006.zhihu.util.json
 import com.github.zly2006.zhihu.util.raiseForStatus
 import com.github.zly2006.zhihu.viewmodel.postSigned
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import io.ktor.client.request.header
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -112,6 +114,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
+import org.koin.compose.koinInject
 import kotlin.time.Duration.Companion.milliseconds
 
 const val WRITE_PIN_TITLE_TAG = "WritePinTitle"
@@ -211,10 +214,10 @@ fun WritePinScreen(destination: WritePin = WritePin()) {
     val userMessages = rememberUserMessageSink()
     val coroutineScope = rememberCoroutineScope()
     val copyToClipboard = rememberPlainTextClipboard()
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val environment = rememberPaginationEnvironment(false)
+    val environment = rememberZhihuApiEnvironment(false)
 
     val initialTopic = remember(destination.publishTopicId, destination.topicName) {
         destination.publishTopicId
@@ -244,7 +247,7 @@ fun WritePinScreen(destination: WritePin = WritePin()) {
     var isUploadingImage by remember { mutableStateOf(false) }
     var errorDialogMessage by remember { mutableStateOf<String?>(null) }
     var showPreviewSheet by remember { mutableStateOf(false) }
-    val previewSheetState = androidx.compose.material3.rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val previewSheetState = rememberBottomSheetState(initialValue = SheetValue.Hidden, enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded))
     var isPreviewLoading by remember { mutableStateOf(false) }
     var previewHtml by remember { mutableStateOf<String?>(null) }
     var previewMarkdown by remember { mutableStateOf<String?>(null) }

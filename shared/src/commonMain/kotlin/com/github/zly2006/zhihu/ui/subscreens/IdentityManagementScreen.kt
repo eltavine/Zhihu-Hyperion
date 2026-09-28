@@ -77,7 +77,6 @@ import com.github.zly2006.zhihu.account.ZhihuIdentityToken
 import com.github.zly2006.zhihu.account.ZhihuSavedAccount
 import com.github.zly2006.zhihu.account.applyIdentityHeaders
 import com.github.zly2006.zhihu.account.identitySuccessBody
-import com.github.zly2006.zhihu.account.rememberZhihuAccountStore
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.requestLoginNavigation
@@ -94,6 +93,7 @@ import io.ktor.http.contentType
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.jsonObject
+import org.koin.compose.koinInject
 
 const val IDENTITY_MANAGEMENT_SCREEN_TAG = "identityManagement.screen"
 const val IDENTITY_MANAGEMENT_CREATE_TAG = "identityManagement.create"
@@ -192,7 +192,7 @@ private suspend fun completeIdentityChange(
 @Composable
 fun IdentityManagementScreen() {
     val navigator = LocalNavigator.current
-    val accountStore = rememberZhihuAccountStore()
+    val accountStore = koinInject<ZhihuAccountStore>()
     val userMessages = rememberUserMessageSink()
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -343,11 +343,13 @@ fun IdentityManagementScreen() {
                             endAction = {
                                 when {
                                     isSwitching -> CircularProgressIndicator(Modifier.size(20.dp))
+
                                     isCurrent -> Text(
                                         "当前登录",
                                         color = MaterialTheme.colorScheme.primary,
                                         style = MaterialTheme.typography.labelLarge,
                                     )
+
                                     else -> Icon(Icons.Default.SwitchAccount, contentDescription = "切换")
                                 }
                             },

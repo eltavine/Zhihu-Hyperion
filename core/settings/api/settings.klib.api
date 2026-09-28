@@ -1,0 +1,50 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, macosArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <Zhihu.core:settings>
+abstract interface com.github.zly2006.zhihu.platform/SettingsStore { // com.github.zly2006.zhihu.platform/SettingsStore|null[0]
+    abstract fun getBoolean(kotlin/String, kotlin/Boolean): kotlin/Boolean // com.github.zly2006.zhihu.platform/SettingsStore.getBoolean|getBoolean(kotlin.String;kotlin.Boolean){}[0]
+    abstract fun getFloat(kotlin/String, kotlin/Float): kotlin/Float // com.github.zly2006.zhihu.platform/SettingsStore.getFloat|getFloat(kotlin.String;kotlin.Float){}[0]
+    abstract fun getInt(kotlin/String, kotlin/Int): kotlin/Int // com.github.zly2006.zhihu.platform/SettingsStore.getInt|getInt(kotlin.String;kotlin.Int){}[0]
+    abstract fun getLong(kotlin/String, kotlin/Long): kotlin/Long // com.github.zly2006.zhihu.platform/SettingsStore.getLong|getLong(kotlin.String;kotlin.Long){}[0]
+    abstract fun getString(kotlin/String, kotlin/String): kotlin/String // com.github.zly2006.zhihu.platform/SettingsStore.getString|getString(kotlin.String;kotlin.String){}[0]
+    abstract fun getStringOrNull(kotlin/String): kotlin/String? // com.github.zly2006.zhihu.platform/SettingsStore.getStringOrNull|getStringOrNull(kotlin.String){}[0]
+    abstract fun getStringSet(kotlin/String, kotlin.collections/Set<kotlin/String>): kotlin.collections/Set<kotlin/String> // com.github.zly2006.zhihu.platform/SettingsStore.getStringSet|getStringSet(kotlin.String;kotlin.collections.Set<kotlin.String>){}[0]
+    abstract fun putBoolean(kotlin/String, kotlin/Boolean) // com.github.zly2006.zhihu.platform/SettingsStore.putBoolean|putBoolean(kotlin.String;kotlin.Boolean){}[0]
+    abstract fun putFloat(kotlin/String, kotlin/Float) // com.github.zly2006.zhihu.platform/SettingsStore.putFloat|putFloat(kotlin.String;kotlin.Float){}[0]
+    abstract fun putInt(kotlin/String, kotlin/Int) // com.github.zly2006.zhihu.platform/SettingsStore.putInt|putInt(kotlin.String;kotlin.Int){}[0]
+    abstract fun putLong(kotlin/String, kotlin/Long) // com.github.zly2006.zhihu.platform/SettingsStore.putLong|putLong(kotlin.String;kotlin.Long){}[0]
+    abstract fun putString(kotlin/String, kotlin/String) // com.github.zly2006.zhihu.platform/SettingsStore.putString|putString(kotlin.String;kotlin.String){}[0]
+    abstract fun putStringSet(kotlin/String, kotlin.collections/Set<kotlin/String>) // com.github.zly2006.zhihu.platform/SettingsStore.putStringSet|putStringSet(kotlin.String;kotlin.collections.Set<kotlin.String>){}[0]
+    abstract fun remove(kotlin/String) // com.github.zly2006.zhihu.platform/SettingsStore.remove|remove(kotlin.String){}[0]
+    open fun observeKeyChanges(kotlin/Function1<kotlin/String, kotlin/Unit>): kotlin/AutoCloseable // com.github.zly2006.zhihu.platform/SettingsStore.observeKeyChanges|observeKeyChanges(kotlin.Function1<kotlin.String,kotlin.Unit>){}[0]
+    open fun removeByPrefix(kotlin/String) // com.github.zly2006.zhihu.platform/SettingsStore.removeByPrefix|removeByPrefix(kotlin.String){}[0]
+}
+
+final class com.github.zly2006.zhihu.platform/MapSettingsStore : com.github.zly2006.zhihu.platform/SettingsStore { // com.github.zly2006.zhihu.platform/MapSettingsStore|null[0]
+    constructor <init>(kotlin.collections/MutableMap<kotlin/String, kotlin/Any> = ...) // com.github.zly2006.zhihu.platform/MapSettingsStore.<init>|<init>(kotlin.collections.MutableMap<kotlin.String,kotlin.Any>){}[0]
+
+    final fun getBoolean(kotlin/String, kotlin/Boolean): kotlin/Boolean // com.github.zly2006.zhihu.platform/MapSettingsStore.getBoolean|getBoolean(kotlin.String;kotlin.Boolean){}[0]
+    final fun getFloat(kotlin/String, kotlin/Float): kotlin/Float // com.github.zly2006.zhihu.platform/MapSettingsStore.getFloat|getFloat(kotlin.String;kotlin.Float){}[0]
+    final fun getInt(kotlin/String, kotlin/Int): kotlin/Int // com.github.zly2006.zhihu.platform/MapSettingsStore.getInt|getInt(kotlin.String;kotlin.Int){}[0]
+    final fun getLong(kotlin/String, kotlin/Long): kotlin/Long // com.github.zly2006.zhihu.platform/MapSettingsStore.getLong|getLong(kotlin.String;kotlin.Long){}[0]
+    final fun getString(kotlin/String, kotlin/String): kotlin/String // com.github.zly2006.zhihu.platform/MapSettingsStore.getString|getString(kotlin.String;kotlin.String){}[0]
+    final fun getStringOrNull(kotlin/String): kotlin/String? // com.github.zly2006.zhihu.platform/MapSettingsStore.getStringOrNull|getStringOrNull(kotlin.String){}[0]
+    final fun getStringSet(kotlin/String, kotlin.collections/Set<kotlin/String>): kotlin.collections/Set<kotlin/String> // com.github.zly2006.zhihu.platform/MapSettingsStore.getStringSet|getStringSet(kotlin.String;kotlin.collections.Set<kotlin.String>){}[0]
+    final fun putBoolean(kotlin/String, kotlin/Boolean) // com.github.zly2006.zhihu.platform/MapSettingsStore.putBoolean|putBoolean(kotlin.String;kotlin.Boolean){}[0]
+    final fun putFloat(kotlin/String, kotlin/Float) // com.github.zly2006.zhihu.platform/MapSettingsStore.putFloat|putFloat(kotlin.String;kotlin.Float){}[0]
+    final fun putInt(kotlin/String, kotlin/Int) // com.github.zly2006.zhihu.platform/MapSettingsStore.putInt|putInt(kotlin.String;kotlin.Int){}[0]
+    final fun putLong(kotlin/String, kotlin/Long) // com.github.zly2006.zhihu.platform/MapSettingsStore.putLong|putLong(kotlin.String;kotlin.Long){}[0]
+    final fun putString(kotlin/String, kotlin/String) // com.github.zly2006.zhihu.platform/MapSettingsStore.putString|putString(kotlin.String;kotlin.String){}[0]
+    final fun putStringSet(kotlin/String, kotlin.collections/Set<kotlin/String>) // com.github.zly2006.zhihu.platform/MapSettingsStore.putStringSet|putStringSet(kotlin.String;kotlin.collections.Set<kotlin.String>){}[0]
+    final fun remove(kotlin/String) // com.github.zly2006.zhihu.platform/MapSettingsStore.remove|remove(kotlin.String){}[0]
+}
+
+final fun com.github.zly2006.zhihu.platform/noopSettingsStore(): com.github.zly2006.zhihu.platform/SettingsStore // com.github.zly2006.zhihu.platform/noopSettingsStore|noopSettingsStore(){}[0]
+
+// Targets: [macosArm64]
+final fun com.github.zly2006.zhihu.platform/macosSettingsStore(kotlin/String): com.github.zly2006.zhihu.platform/SettingsStore // com.github.zly2006.zhihu.platform/macosSettingsStore|macosSettingsStore(kotlin.String){}[0]

@@ -22,16 +22,16 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.lifecycle.ViewModelProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.test.MainActivityComposeRule
 import com.github.zly2006.zhihu.test.RecordingNavigator
 import com.github.zly2006.zhihu.test.resetAppPreferences
+import com.github.zly2006.zhihu.test.seedViewModel
 import com.github.zly2006.zhihu.test.setScreenContent
 import com.github.zly2006.zhihu.ui.OnlineHistoryScreen
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.OnlineHistoryViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -49,6 +49,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.mp.KoinPlatform
 
 @RunWith(AndroidJUnit4::class)
 class OnlineHistoryScreenInstrumentedTest {
@@ -56,7 +57,7 @@ class OnlineHistoryScreenInstrumentedTest {
     val composeRule: MainActivityComposeRule = createAndroidComposeRule()
 
     private val onlineHistoryViewModel: OnlineHistoryViewModel
-        get() = ViewModelProvider(composeRule.activity)[OnlineHistoryViewModel::class.java]
+        get() = composeRule.seedViewModel { OnlineHistoryViewModel(KoinPlatform.getKoin().get(), KoinPlatform.getKoin().get()) }
 
     @Before
     fun setUp() {
@@ -136,7 +137,7 @@ class OnlineHistoryScreenInstrumentedTest {
                 }
                 """.trimIndent(),
             ).jsonObject
-        val environment = object : PaginationEnvironment {
+        val environment = object : ZhihuApiEnvironment {
             override fun httpClient() = client
 
             override fun authenticatedCookies() = emptyMap<String, String>()
@@ -145,7 +146,7 @@ class OnlineHistoryScreenInstrumentedTest {
 
             override suspend fun handleFetchFailure(tag: String?, error: Exception) = Unit
         }
-        val viewModel = OnlineHistoryViewModel()
+        val viewModel = OnlineHistoryViewModel(KoinPlatform.getKoin().get(), KoinPlatform.getKoin().get())
 
         composeRule.activity.runOnUiThread {
             viewModel.refresh(environment)

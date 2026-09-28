@@ -19,11 +19,11 @@
 package com.hrm.markdown.renderer.selection
 
 import androidx.collection.LongObjectMap
+import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.text.selection.LocalSelectionRegistrar
 import androidx.compose.foundation.text.selection.Selectable
 import androidx.compose.foundation.text.selection.Selection
 import androidx.compose.foundation.text.selection.SelectionAdjustment
-import androidx.compose.foundation.text.selection.SelectionLayoutBuilder
 import androidx.compose.foundation.text.selection.SelectionRegistrar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.PinnableContainer
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextRange
@@ -145,7 +146,7 @@ private class PersistentSelectionRegistrar(
             persistentSelectable.attach(selectable)
             persistentSelectable.documentOrder = documentOrder
         } else {
-            PersistentSelectable(selectable, documentOrder).also {
+            forwardingPersistentSelectable(selectable, documentOrder).also {
                 selectables[selectable.selectableId] = it
                 androidxRegistrar.subscribe(it)
             }
@@ -262,7 +263,8 @@ private class ScopedPersistentSelectionRegistrar(
 
 }
 
-private class PersistentSelectable(
+/** Platform subclasses from [forwardingPersistentSelectable] forward `appendSelectableInfoToBuilder`. */
+internal abstract class PersistentSelectable(
     delegate: Selectable,
     override var documentOrder: List<Int>,
 ) : Selectable, DocumentOrderedSelectable {
@@ -270,6 +272,15 @@ private class PersistentSelectable(
     private var delegate: Selectable? = delegate
     private var text = delegate.getText()
     private var selectAllSelection = delegate.getSelectAllSelection()
+
+    protected val currentDelegate: Selectable?
+        get() = delegate
+
+    override val pinnableContainer: PinnableContainer?
+        get() = delegate?.pinnableContainer
+
+    override val bringIntoViewRequester: BringIntoViewRequester?
+        get() = delegate?.bringIntoViewRequester
 
     fun attach(selectable: Selectable) {
         delegate = selectable
@@ -283,10 +294,6 @@ private class PersistentSelectable(
         selectAllSelection = selectable.getSelectAllSelection()
         delegate = null
         return true
-    }
-
-    override fun appendSelectableInfoToBuilder(builder: SelectionLayoutBuilder) {
-        delegate?.appendSelectableInfoToBuilder(builder)
     }
 
     override fun getSelectAllSelection(): Selection? =

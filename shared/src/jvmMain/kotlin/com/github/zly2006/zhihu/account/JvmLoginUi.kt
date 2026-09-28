@@ -27,13 +27,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toComposeImageBitmap
-import com.github.zly2006.zhihu.desktop.defaultDesktopAccountStore
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.ui.components.DesktopRiskControlWebView
 import com.github.zly2006.zhihu.ui.components.DesktopWebviewComp
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.launch
 import org.jetbrains.skia.Image
+import org.koin.compose.koinInject
 import java.util.Base64
 import java.util.TimeZone
 
@@ -47,7 +47,7 @@ actual val isLoginRiskControlSupported: Boolean = true
 
 @Composable
 actual fun rememberLoginHttpClient(cookies: MutableMap<String, String>): HttpClient {
-    val store = defaultDesktopAccountStore
+    val store = koinInject<ZhihuAccountStore>()
     val httpClient = remember(store) { store.client.temporaryHttpClient(cookies) }
     DisposableEffect(httpClient) {
         onDispose(httpClient::close)
@@ -83,7 +83,7 @@ actual fun decodePhoneLoginCaptchaImage(content: String) = runCatching {
 
 @Composable
 actual fun QrLoginPane(onLoginSuccess: (String) -> Unit) {
-    val store = defaultDesktopAccountStore
+    val store = koinInject<ZhihuAccountStore>()
     SharedQrLoginPane(
         onLoginSuccess = { cookies ->
             if (store.login(cookies.toMutableMap())) {
@@ -99,7 +99,7 @@ actual fun QrLoginPane(onLoginSuccess: (String) -> Unit) {
 
 @Composable
 actual fun WebLoginPane(onLoginSuccess: (String) -> Unit) {
-    val store = defaultDesktopAccountStore
+    val store = koinInject<ZhihuAccountStore>()
     val scope = rememberCoroutineScope()
     var currentUrl by remember { mutableStateOf<String?>(null) }
     var isVerifying by remember { mutableStateOf(false) }

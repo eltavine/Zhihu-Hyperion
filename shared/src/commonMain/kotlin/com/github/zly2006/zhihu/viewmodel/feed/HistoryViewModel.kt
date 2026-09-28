@@ -18,28 +18,33 @@
 package com.github.zly2006.zhihu.viewmodel.feed
 
 import com.github.zly2006.zhihu.data.FeedDisplayItem
+import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.Person
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.platform.SettingsStore
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 
-class HistoryViewModel : BaseFeedViewModel() {
+class HistoryViewModel(
+    settings: SettingsStore,
+    private val history: HistoryStorage,
+) : BaseFeedViewModel(settings) {
     override val initialUrl: String
         get() = error("不需要URL")
 
     override val isEnd: Boolean
         get() = displayItems.isNotEmpty()
 
-    override fun refresh(environment: PaginationEnvironment) {
+    override fun refresh(environment: ZhihuApiEnvironment) {
         if (isLoading) return
         isLoading = true
         errorMessage = null
 
         displayItems.clear()
 
-        environment.localHistory().forEach { dest ->
+        history.history.forEach { dest ->
             val displayItem = when (dest) {
                 is Article -> {
                     FeedDisplayItem(
@@ -52,6 +57,7 @@ class HistoryViewModel : BaseFeedViewModel() {
                         navDestinationJson = dest.toFeedDisplayItemNavDestinationJson(),
                     )
                 }
+
                 is Question -> {
                     FeedDisplayItem(
                         title = dest.title,
@@ -61,6 +67,7 @@ class HistoryViewModel : BaseFeedViewModel() {
                         summary = "",
                     )
                 }
+
                 is Person -> {
                     FeedDisplayItem(
                         title = dest.name,
@@ -70,6 +77,7 @@ class HistoryViewModel : BaseFeedViewModel() {
                         summary = "",
                     )
                 }
+
                 is Pin -> {
                     FeedDisplayItem(
                         title = "想法",
@@ -81,7 +89,9 @@ class HistoryViewModel : BaseFeedViewModel() {
                     )
                 }
 
-                else -> null
+                else -> {
+                    null
+                }
             }
 
             displayItem?.let {
@@ -92,9 +102,9 @@ class HistoryViewModel : BaseFeedViewModel() {
         isLoading = false
     }
 
-    override suspend fun fetchFeeds(environment: PaginationEnvironment) = Unit
+    override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) = Unit
 
-    override fun loadMore(environment: PaginationEnvironment) {
+    override fun loadMore(environment: ZhihuApiEnvironment) {
         // 不需要loadMore，所有数据一次性加载
     }
 }

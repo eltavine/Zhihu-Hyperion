@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import com.github.zly2006.zhihu.platform.androidUserMessageSink
 import com.github.zly2006.zhihu.platform.rememberIsLiteVariant
 import com.github.zly2006.zhihu.reading.AndroidReadingPlayerBridge
-import com.github.zly2006.zhihu.ui.rememberArticleTtsState
+import com.github.zly2006.zhihu.reading.rememberArticleTtsState
 import com.github.zly2006.zhihu.updater.UpdateManager
 import com.github.zly2006.zhihu.updater.UpdateManager.UpdateState
 import com.github.zly2006.zhihu.util.ContinuousUsageReminderManager
@@ -227,8 +227,11 @@ actual val isApkUpdateInstallSupported: Boolean = true
 
 private fun UpdateState.toSystemUpdateState(): SystemUpdateState = when (this) {
     UpdateState.NoUpdate -> SystemUpdateState.NoUpdate
+
     UpdateState.Checking -> SystemUpdateState.Checking
+
     UpdateState.Latest -> SystemUpdateState.Latest
+
     is UpdateState.UpdateAvailable -> SystemUpdateState.UpdateAvailable(
         version = version.toString(),
         isNightly = isNightly,
@@ -236,8 +239,11 @@ private fun UpdateState.toSystemUpdateState(): SystemUpdateState = when (this) {
         downloadUrl = downloadUrl,
         cnDownloadUrl = cnDownloadUrl,
     )
+
     UpdateState.Downloading -> SystemUpdateState.Downloading
+
     is UpdateState.Downloaded -> SystemUpdateState.Downloaded
+
     is UpdateState.Error -> SystemUpdateState.Error(message)
 }
 

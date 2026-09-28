@@ -103,6 +103,8 @@ import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.MOBILE_NOTIFICATION_MESSAGE_URL
 import com.github.zly2006.zhihu.data.MobileNotificationMessageOverview
+import com.github.zly2006.zhihu.data.QUALITY_FILTER_MODE_PREFERENCE_KEY
+import com.github.zly2006.zhihu.data.QualityFilterMode
 import com.github.zly2006.zhihu.data.RecommendationMode
 import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.filter.RemoteHistorySync
@@ -123,46 +125,47 @@ import com.github.zly2006.zhihu.notification.HOME_NOTIFICATION_ACTION_OPEN_URL
 import com.github.zly2006.zhihu.notification.HOME_NOTIFICATION_ACTION_OPEN_WEBVIEW
 import com.github.zly2006.zhihu.notification.HOME_NOTIFICATION_ACTION_SET_SETTING
 import com.github.zly2006.zhihu.notification.HOME_NOTIFICATION_REFRESH_INTERVAL_MILLIS
+import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.notification.OnlineHomeNotification
 import com.github.zly2006.zhihu.notification.OnlineHomeNotificationRepository
-import com.github.zly2006.zhihu.notification.rememberNotificationSettingsStore
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageDuration
 import com.github.zly2006.zhihu.platform.rememberAppPrivateDirectory
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
 import com.github.zly2006.zhihu.platform.rememberIsLiteVariant
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
+import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.platform.rememberWebViewUrlOpener
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
 import com.github.zly2006.zhihu.ui.components.AnnouncementCard
 import com.github.zly2006.zhihu.ui.components.AnnouncementCardDefaults
 import com.github.zly2006.zhihu.ui.components.BlockByKeywordsDialog
+import com.github.zly2006.zhihu.ui.components.DEFAULT_FAB_OPACITY
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockConfirmDialog
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockRequest
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockType
 import com.github.zly2006.zhihu.ui.components.FeedCard
-import com.github.zly2006.zhihu.ui.components.FeedPullToRefresh
 import com.github.zly2006.zhihu.ui.components.MyModalBottomSheet
+import com.github.zly2006.zhihu.ui.components.PREF_FAB_OPACITY
 import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.ui.components.feedKeywordExtractionAvailable
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
-import com.github.zly2006.zhihu.ui.subscreens.DEFAULT_FAB_OPACITY
-import com.github.zly2006.zhihu.ui.subscreens.PREF_FAB_OPACITY
 import com.github.zly2006.zhihu.ui.subscreens.SystemUpdateState
 import com.github.zly2006.zhihu.ui.subscreens.rememberSystemUpdateState
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.json
-import com.github.zly2006.zhihu.viewmodel.QUALITY_FILTER_MODE_PREFERENCE_KEY
-import com.github.zly2006.zhihu.viewmodel.QualityFilterMode
+import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
+import com.github.zly2006.zhihu.viewmodel.feed.AUTO_REFRESH_HOME_ON_STARTUP_PREFERENCE_KEY
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
+import com.github.zly2006.zhihu.viewmodel.feed.HOME_PIN_ANNOUNCEMENT_READ_KEY_PREFIX
 import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedInteractionViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedViewModel
+import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
 import com.github.zly2006.zhihu.viewmodel.local.LocalHomeFeedViewModel
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.za.AndroidHomeFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.za.MixedHomeFeedViewModel
 import io.ktor.client.request.get
@@ -183,10 +186,10 @@ import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import org.koin.compose.koinInject
+import org.koin.mp.KoinPlatform
 import kotlin.time.Clock
 
-const val PREFERENCE_NAME = "com.github.zly2006.zhihu_preferences"
-const val ARTICLE_USE_WEBVIEW_PREFERENCE_KEY = "webviewRenderLegacy"
 const val HOME_TOP_ACTIONS_TAG = "home_top_actions"
 const val HOME_SEARCH_BUTTON_TAG = "home_search_button"
 const val HOME_CREATE_FAB_TAG = "home_create_fab"
@@ -202,7 +205,6 @@ const val HOME_FEED_LIST_TAG = "home_feed_list"
 const val HOME_REFRESH_BUTTON_TAG = "home_refresh_button"
 const val HOME_AUTHOR_POLL_ANNOUNCEMENT_TAG = "home_author_poll_announcement"
 const val HOME_ONLINE_NOTIFICATION_TAG = "home_online_notification"
-const val HOME_PIN_ANNOUNCEMENT_READ_KEY_PREFIX = "readHomePinAnnouncement_"
 private const val MAX_HOME_PIN_ANNOUNCEMENTS = 3
 
 fun homeAuthorPollAnnouncementTag(pinId: Long): String = "$HOME_AUTHOR_POLL_ANNOUNCEMENT_TAG:$pinId"
@@ -211,12 +213,9 @@ fun homeOnlineNotificationTag(uuid: String): String = "$HOME_ONLINE_NOTIFICATION
 
 fun homePinAnnouncementReadKey(pinId: Long): String = "$HOME_PIN_ANNOUNCEMENT_READ_KEY_PREFIX$pinId"
 
-// Pager can dispose this page while its feed ViewModels survive. Keep the header rows and
-// synchronization owner alive too, so restoring a saved list index does not shift the visible card.
-private class HomeScreenState(
-    settings: SettingsStore,
-) : ViewModel() {
-    val remoteHistory = RemoteHistorySync(settings)
+// Pager can dispose this page while its feed ViewModels survive. Keep the header rows alive too,
+// so restoring a saved list index does not shift the visible card.
+private class HomeScreenState : ViewModel() {
     val onlineNotifications = mutableStateOf(emptyList<OnlineHomeNotification>())
     val authorPinAnnouncements = mutableStateOf(emptyList<HomePinAnnouncement>())
     val dismissedUpdateVersion = mutableStateOf<String?>(null)
@@ -239,13 +238,15 @@ fun HomeScreen(
 ) {
     val readingPlayerOverlayPadding = LocalReadingPlayerOverlayPadding.current
     val navigator = LocalNavigator.current
-    val baseEnvironment = rememberPaginationEnvironment(allowGuestAccess = true)
-    val settings = rememberSettingsStore()
-    val homeState: HomeScreenState = viewModel { HomeScreenState(settings) }
-    val remoteHistory = homeState.remoteHistory
-    val paginationEnvironment = remember(baseEnvironment, remoteHistory) { remoteHistory.feedEnvironment(baseEnvironment) }
+    val paginationEnvironment = rememberZhihuApiEnvironment(allowGuestAccess = true)
+    val settings = koinInject<SettingsStore>()
+    val homeState: HomeScreenState = viewModel { HomeScreenState() }
+    val remoteHistory = koinInject<RemoteHistorySync>()
+    val homeFeedFilter = koinInject<HomeFeedFilter>()
+    val mobileClient = koinInject<MobileClientProvider>()
+    val clipboard = rememberPlainTextClipboard()
     val appPrivateDirectory = rememberAppPrivateDirectory()
-    val notificationSettings = rememberNotificationSettingsStore()
+    val notificationSettings = koinInject<NotificationSettingsStore>()
     val userMessages = rememberUserMessageSink()
     val openExternalUrl = rememberExternalUrlOpener()
     val openWebViewUrl = rememberWebViewUrlOpener()
@@ -295,12 +296,24 @@ fun HomeScreen(
     val isDebuggable = rememberHomeIsDebuggable()
     val isLiteVariant = rememberIsLiteVariant()
     val viewModel: BaseFeedViewModel = when (currentRecommendationMode) {
-        RecommendationMode.WEB -> viewModel { HomeFeedViewModel() }
-        RecommendationMode.ANDROID -> viewModel { AndroidHomeFeedViewModel() }
-        RecommendationMode.LOCAL -> viewModel { LocalHomeFeedViewModel() }
-        RecommendationMode.MIXED -> viewModel { MixedHomeFeedViewModel() }
+        RecommendationMode.WEB -> viewModel { HomeFeedViewModel(settings, homeFeedFilter) }
+        RecommendationMode.ANDROID -> viewModel { AndroidHomeFeedViewModel(settings, homeFeedFilter, mobileClient) }
+        RecommendationMode.LOCAL -> viewModel { LocalHomeFeedViewModel(settings, KoinPlatform.getKoin().inject()) }
+        RecommendationMode.MIXED -> viewModel { MixedHomeFeedViewModel(settings, homeFeedFilter, mobileClient) }
     }
     val localHomeViewModel = viewModel as? LocalHomeFeedViewModel
+    if (localHomeViewModel?.showDatabaseError == true) {
+        AlertDialog(
+            onDismissRequest = { localHomeViewModel.showDatabaseError = false },
+            title = { Text("数据库错误") },
+            text = { Text("本地推荐系统的数据库未正确初始化。请尝试重启应用或清除应用数据。") },
+            confirmButton = {
+                TextButton(onClick = { localHomeViewModel.showDatabaseError = false }) {
+                    Text("确定")
+                }
+            },
+        )
+    }
     val readingQueueSourceId = "home:${currentRecommendationMode.name}"
     RegisterReadingQueueSource(
         sourceId = readingQueueSourceId,
@@ -319,8 +332,14 @@ fun HomeScreen(
                 isAtTop = listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0,
             )
         ) {
-            TopLevelReselectAction.Refresh -> viewModel.refresh(paginationEnvironment)
-            TopLevelReselectAction.ScrollToTop -> listState.animateScrollToItem(0)
+            TopLevelReselectAction.Refresh -> {
+                viewModel.refresh(paginationEnvironment)
+            }
+
+            TopLevelReselectAction.ScrollToTop -> {
+                listState.animateScrollToItem(0)
+            }
+
             null -> {}
         }
         cachedScrollToTopTrigger = scrollToTopTrigger
@@ -329,11 +348,10 @@ fun HomeScreen(
     var unreadCount by remember { mutableIntStateOf(0) }
     LaunchedEffect(Unit) {
         try {
-            unreadCount = paginationEnvironment
-                .mobileHomeFeedHttpClient()
-                .get("$MOBILE_NOTIFICATION_MESSAGE_URL?limit=20")
-                .json<MobileNotificationMessageOverview>()
-                .totalUnreadCount
+            unreadCount = mobileClient
+                .withClient { client ->
+                    client.get("$MOBILE_NOTIFICATION_MESSAGE_URL?limit=20").json<MobileNotificationMessageOverview>()
+                }.totalUnreadCount
         } catch (_: Exception) {
             // 忽略错误
         }
@@ -372,7 +390,7 @@ fun HomeScreen(
                 settings.getBoolean("enableContentFilter", true) &&
                 !settings.getBoolean("reverseBlock", false)
             ) {
-                remoteHistory.start(homeState.viewModelScope, baseEnvironment)
+                remoteHistory.start(homeState.viewModelScope, paginationEnvironment)
             }
             if (!account.login && settings.getBoolean("loginForRecommendation", true)) {
                 requestLoginNavigation()
@@ -760,30 +778,36 @@ fun HomeScreen(
                                                         ?.contentOrNull
                                                         ?.let(openExternalUrl::invoke)
                                                 }
+
                                                 HOME_NOTIFICATION_ACTION_OPEN_WEBVIEW -> {
                                                     accept.value
                                                         ?.jsonPrimitive
                                                         ?.contentOrNull
                                                         ?.let(openWebViewUrl::invoke)
                                                 }
+
                                                 HOME_NOTIFICATION_ACTION_OPEN_UPDATE_SETTINGS -> {
                                                     navigator.onNavigate(Account.SystemAndUpdateSettings())
                                                 }
+
                                                 HOME_NOTIFICATION_ACTION_OPEN_PIN -> {
                                                     accept.value?.jsonPrimitive?.contentOrNull?.toLongOrNull()?.let {
                                                         navigator.onNavigate(Pin(it))
                                                     }
                                                 }
+
                                                 HOME_NOTIFICATION_ACTION_OPEN_ANSWER -> {
                                                     accept.value?.jsonPrimitive?.contentOrNull?.toLongOrNull()?.let {
                                                         navigator.onNavigate(Article(type = ArticleType.Answer, id = it))
                                                     }
                                                 }
+
                                                 HOME_NOTIFICATION_ACTION_OPEN_ARTICLE -> {
                                                     accept.value?.jsonPrimitive?.contentOrNull?.toLongOrNull()?.let {
                                                         navigator.onNavigate(Article(type = ArticleType.Article, id = it))
                                                     }
                                                 }
+
                                                 HOME_NOTIFICATION_ACTION_SET_SETTING -> {
                                                     val setting = accept.value?.jsonObject
                                                     val name = setting?.get("setting_name")?.jsonPrimitive?.contentOrNull
@@ -791,15 +815,20 @@ fun HomeScreen(
                                                         "boolean" -> setting["value"]?.jsonPrimitive?.booleanOrNull?.let {
                                                             settings.putBoolean(name!!, it)
                                                         }
+
                                                         "string" -> setting["value"]?.jsonPrimitive?.contentOrNull?.let {
                                                             settings.putString(name!!, it)
                                                         }
+
                                                         "int" -> setting["value"]?.jsonPrimitive?.intOrNull?.let {
                                                             settings.putInt(name!!, it)
                                                         }
                                                     }
                                                 }
-                                                else -> userMessages.showShortMessage("当前版本不支持此通知操作")
+
+                                                else -> {
+                                                    userMessages.showShortMessage("当前版本不支持此通知操作")
+                                                }
                                             }
                                         },
                                         dismiss = { Text(notification.dismiss) },
@@ -945,7 +974,7 @@ fun HomeScreen(
                         DraggableRefreshButton(
                             onClick = {
                                 val data = Json.encodeToString(viewModel.debugData)
-                                paginationEnvironment.setPlainTextClipboard("data", data)
+                                clipboard("data", data)
                                 userMessages.showShortMessage("已复制调试数据")
                             },
                             preferenceName = "copyAll",

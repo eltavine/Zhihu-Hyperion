@@ -1,0 +1,1007 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, macosArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <Zhihu.core:navigation>
+final enum class com.github.zly2006.zhihu.navigation/ArticleType : kotlin/Enum<com.github.zly2006.zhihu.navigation/ArticleType> { // com.github.zly2006.zhihu.navigation/ArticleType|null[0]
+    enum entry Answer // com.github.zly2006.zhihu.navigation/ArticleType.Answer|null[0]
+    enum entry Article // com.github.zly2006.zhihu.navigation/ArticleType.Article|null[0]
+
+    final val entries // com.github.zly2006.zhihu.navigation/ArticleType.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.github.zly2006.zhihu.navigation/ArticleType> // com.github.zly2006.zhihu.navigation/ArticleType.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/ArticleType.toString|toString(){}[0]
+    final fun valueOf(kotlin/String): com.github.zly2006.zhihu.navigation/ArticleType // com.github.zly2006.zhihu.navigation/ArticleType.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.github.zly2006.zhihu.navigation/ArticleType> // com.github.zly2006.zhihu.navigation/ArticleType.values|values#static(){}[0]
+
+    final object Companion : kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/ArticleType.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/ArticleType> // com.github.zly2006.zhihu.navigation/ArticleType.Companion.serializer|serializer(){}[0]
+        final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/ArticleType.Companion.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+    }
+}
+
+abstract interface com.github.zly2006.zhihu.navigation/TopLevelDestination { // com.github.zly2006.zhihu.navigation/TopLevelDestination|null[0]
+    abstract val name // com.github.zly2006.zhihu.navigation/TopLevelDestination.name|{}name[0]
+        abstract fun <get-name>(): kotlin/String // com.github.zly2006.zhihu.navigation/TopLevelDestination.name.<get-name>|<get-name>(){}[0]
+}
+
+sealed interface com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/NavDestination|null[0]
+    final object Companion : kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/NavDestination.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/NavDestination> // com.github.zly2006.zhihu.navigation/NavDestination.Companion.serializer|serializer(){}[0]
+        final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/NavDestination.Companion.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.navigation/Article : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/Article|null[0]
+    constructor <init>(kotlin/String = ..., com.github.zly2006.zhihu.navigation/ArticleType, kotlin/Long, kotlin/String = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...) // com.github.zly2006.zhihu.navigation/Article.<init>|<init>(kotlin.String;com.github.zly2006.zhihu.navigation.ArticleType;kotlin.Long;kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
+
+    final val id // com.github.zly2006.zhihu.navigation/Article.id|{}id[0]
+        final fun <get-id>(): kotlin/Long // com.github.zly2006.zhihu.navigation/Article.id.<get-id>|<get-id>(){}[0]
+    final val readingQueueSourceId // com.github.zly2006.zhihu.navigation/Article.readingQueueSourceId|{}readingQueueSourceId[0]
+        final fun <get-readingQueueSourceId>(): kotlin/String? // com.github.zly2006.zhihu.navigation/Article.readingQueueSourceId.<get-readingQueueSourceId>|<get-readingQueueSourceId>(){}[0]
+    final val type // com.github.zly2006.zhihu.navigation/Article.type|{}type[0]
+        final fun <get-type>(): com.github.zly2006.zhihu.navigation/ArticleType // com.github.zly2006.zhihu.navigation/Article.type.<get-type>|<get-type>(){}[0]
+
+    final var authorBio // com.github.zly2006.zhihu.navigation/Article.authorBio|{}authorBio[0]
+        final fun <get-authorBio>(): kotlin/String // com.github.zly2006.zhihu.navigation/Article.authorBio.<get-authorBio>|<get-authorBio>(){}[0]
+        final fun <set-authorBio>(kotlin/String) // com.github.zly2006.zhihu.navigation/Article.authorBio.<set-authorBio>|<set-authorBio>(kotlin.String){}[0]
+    final var authorName // com.github.zly2006.zhihu.navigation/Article.authorName|{}authorName[0]
+        final fun <get-authorName>(): kotlin/String // com.github.zly2006.zhihu.navigation/Article.authorName.<get-authorName>|<get-authorName>(){}[0]
+        final fun <set-authorName>(kotlin/String) // com.github.zly2006.zhihu.navigation/Article.authorName.<set-authorName>|<set-authorName>(kotlin.String){}[0]
+    final var avatarSrc // com.github.zly2006.zhihu.navigation/Article.avatarSrc|{}avatarSrc[0]
+        final fun <get-avatarSrc>(): kotlin/String? // com.github.zly2006.zhihu.navigation/Article.avatarSrc.<get-avatarSrc>|<get-avatarSrc>(){}[0]
+        final fun <set-avatarSrc>(kotlin/String?) // com.github.zly2006.zhihu.navigation/Article.avatarSrc.<set-avatarSrc>|<set-avatarSrc>(kotlin.String?){}[0]
+    final var excerpt // com.github.zly2006.zhihu.navigation/Article.excerpt|{}excerpt[0]
+        final fun <get-excerpt>(): kotlin/String? // com.github.zly2006.zhihu.navigation/Article.excerpt.<get-excerpt>|<get-excerpt>(){}[0]
+        final fun <set-excerpt>(kotlin/String?) // com.github.zly2006.zhihu.navigation/Article.excerpt.<set-excerpt>|<set-excerpt>(kotlin.String?){}[0]
+    final var title // com.github.zly2006.zhihu.navigation/Article.title|{}title[0]
+        final fun <get-title>(): kotlin/String // com.github.zly2006.zhihu.navigation/Article.title.<get-title>|<get-title>(){}[0]
+        final fun <set-title>(kotlin/String) // com.github.zly2006.zhihu.navigation/Article.title.<set-title>|<set-title>(kotlin.String){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.navigation/Article.component1|component1(){}[0]
+    final fun component2(): com.github.zly2006.zhihu.navigation/ArticleType // com.github.zly2006.zhihu.navigation/Article.component2|component2(){}[0]
+    final fun component3(): kotlin/Long // com.github.zly2006.zhihu.navigation/Article.component3|component3(){}[0]
+    final fun component4(): kotlin/String // com.github.zly2006.zhihu.navigation/Article.component4|component4(){}[0]
+    final fun component5(): kotlin/String // com.github.zly2006.zhihu.navigation/Article.component5|component5(){}[0]
+    final fun component6(): kotlin/String? // com.github.zly2006.zhihu.navigation/Article.component6|component6(){}[0]
+    final fun component7(): kotlin/String? // com.github.zly2006.zhihu.navigation/Article.component7|component7(){}[0]
+    final fun component8(): kotlin/String? // com.github.zly2006.zhihu.navigation/Article.component8|component8(){}[0]
+    final fun copy(kotlin/String = ..., com.github.zly2006.zhihu.navigation/ArticleType = ..., kotlin/Long = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...): com.github.zly2006.zhihu.navigation/Article // com.github.zly2006.zhihu.navigation/Article.copy|copy(kotlin.String;com.github.zly2006.zhihu.navigation.ArticleType;kotlin.Long;kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Article.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Article.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Article.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/Article> { // com.github.zly2006.zhihu.navigation/Article.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.navigation/Article.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/Article.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/Article.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/Article // com.github.zly2006.zhihu.navigation/Article.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/Article) // com.github.zly2006.zhihu.navigation/Article.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.Article){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.navigation/Article.Companion|null[0]
+        final val $childSerializers // com.github.zly2006.zhihu.navigation/Article.Companion.$childSerializers|{}$childSerializers[0]
+
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Article> // com.github.zly2006.zhihu.navigation/Article.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.navigation/CollectionContent : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/CollectionContent|null[0]
+    constructor <init>(kotlin/String) // com.github.zly2006.zhihu.navigation/CollectionContent.<init>|<init>(kotlin.String){}[0]
+
+    final val collectionId // com.github.zly2006.zhihu.navigation/CollectionContent.collectionId|{}collectionId[0]
+        final fun <get-collectionId>(): kotlin/String // com.github.zly2006.zhihu.navigation/CollectionContent.collectionId.<get-collectionId>|<get-collectionId>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.navigation/CollectionContent.component1|component1(){}[0]
+    final fun copy(kotlin/String = ...): com.github.zly2006.zhihu.navigation/CollectionContent // com.github.zly2006.zhihu.navigation/CollectionContent.copy|copy(kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/CollectionContent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/CollectionContent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/CollectionContent.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/CollectionContent> { // com.github.zly2006.zhihu.navigation/CollectionContent.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.navigation/CollectionContent.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/CollectionContent.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/CollectionContent.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/CollectionContent // com.github.zly2006.zhihu.navigation/CollectionContent.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/CollectionContent) // com.github.zly2006.zhihu.navigation/CollectionContent.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.CollectionContent){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.navigation/CollectionContent.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/CollectionContent> // com.github.zly2006.zhihu.navigation/CollectionContent.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.navigation/Collections : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/Collections|null[0]
+    constructor <init>(kotlin/String) // com.github.zly2006.zhihu.navigation/Collections.<init>|<init>(kotlin.String){}[0]
+
+    final val userToken // com.github.zly2006.zhihu.navigation/Collections.userToken|{}userToken[0]
+        final fun <get-userToken>(): kotlin/String // com.github.zly2006.zhihu.navigation/Collections.userToken.<get-userToken>|<get-userToken>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.navigation/Collections.component1|component1(){}[0]
+    final fun copy(kotlin/String = ...): com.github.zly2006.zhihu.navigation/Collections // com.github.zly2006.zhihu.navigation/Collections.copy|copy(kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Collections.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Collections.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Collections.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/Collections> { // com.github.zly2006.zhihu.navigation/Collections.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.navigation/Collections.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/Collections.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/Collections.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/Collections // com.github.zly2006.zhihu.navigation/Collections.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/Collections) // com.github.zly2006.zhihu.navigation/Collections.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.Collections){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.navigation/Collections.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Collections> // com.github.zly2006.zhihu.navigation/Collections.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.navigation/CommentHolder : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/CommentHolder|null[0]
+    constructor <init>(kotlin/String, com.github.zly2006.zhihu.navigation/NavDestination) // com.github.zly2006.zhihu.navigation/CommentHolder.<init>|<init>(kotlin.String;com.github.zly2006.zhihu.navigation.NavDestination){}[0]
+
+    final val article // com.github.zly2006.zhihu.navigation/CommentHolder.article|{}article[0]
+        final fun <get-article>(): com.github.zly2006.zhihu.navigation/NavDestination // com.github.zly2006.zhihu.navigation/CommentHolder.article.<get-article>|<get-article>(){}[0]
+    final val commentId // com.github.zly2006.zhihu.navigation/CommentHolder.commentId|{}commentId[0]
+        final fun <get-commentId>(): kotlin/String // com.github.zly2006.zhihu.navigation/CommentHolder.commentId.<get-commentId>|<get-commentId>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.navigation/CommentHolder.component1|component1(){}[0]
+    final fun component2(): com.github.zly2006.zhihu.navigation/NavDestination // com.github.zly2006.zhihu.navigation/CommentHolder.component2|component2(){}[0]
+    final fun copy(kotlin/String = ..., com.github.zly2006.zhihu.navigation/NavDestination = ...): com.github.zly2006.zhihu.navigation/CommentHolder // com.github.zly2006.zhihu.navigation/CommentHolder.copy|copy(kotlin.String;com.github.zly2006.zhihu.navigation.NavDestination){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/CommentHolder.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/CommentHolder.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/CommentHolder.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/CommentHolder> { // com.github.zly2006.zhihu.navigation/CommentHolder.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.navigation/CommentHolder.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/CommentHolder.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/CommentHolder.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/CommentHolder // com.github.zly2006.zhihu.navigation/CommentHolder.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/CommentHolder) // com.github.zly2006.zhihu.navigation/CommentHolder.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.CommentHolder){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.navigation/CommentHolder.Companion|null[0]
+        final val $childSerializers // com.github.zly2006.zhihu.navigation/CommentHolder.Companion.$childSerializers|{}$childSerializers[0]
+
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/CommentHolder> // com.github.zly2006.zhihu.navigation/CommentHolder.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.navigation/Navigator { // com.github.zly2006.zhihu.navigation/Navigator|null[0]
+    constructor <init>(kotlin/Function1<com.github.zly2006.zhihu.navigation/NavDestination, kotlin/Unit>, kotlin/Function0<kotlin/Unit>, kotlin/Function1<com.github.zly2006.zhihu.navigation/TopLevelDestination, kotlin/Unit> = ...) // com.github.zly2006.zhihu.navigation/Navigator.<init>|<init>(kotlin.Function1<com.github.zly2006.zhihu.navigation.NavDestination,kotlin.Unit>;kotlin.Function0<kotlin.Unit>;kotlin.Function1<com.github.zly2006.zhihu.navigation.TopLevelDestination,kotlin.Unit>){}[0]
+
+    final val onNavigate // com.github.zly2006.zhihu.navigation/Navigator.onNavigate|{}onNavigate[0]
+        final fun <get-onNavigate>(): kotlin/Function1<com.github.zly2006.zhihu.navigation/NavDestination, kotlin/Unit> // com.github.zly2006.zhihu.navigation/Navigator.onNavigate.<get-onNavigate>|<get-onNavigate>(){}[0]
+    final val onNavigateBack // com.github.zly2006.zhihu.navigation/Navigator.onNavigateBack|{}onNavigateBack[0]
+        final fun <get-onNavigateBack>(): kotlin/Function0<kotlin/Unit> // com.github.zly2006.zhihu.navigation/Navigator.onNavigateBack.<get-onNavigateBack>|<get-onNavigateBack>(){}[0]
+    final val onNavigateTopLevel // com.github.zly2006.zhihu.navigation/Navigator.onNavigateTopLevel|{}onNavigateTopLevel[0]
+        final fun <get-onNavigateTopLevel>(): kotlin/Function1<com.github.zly2006.zhihu.navigation/TopLevelDestination, kotlin/Unit> // com.github.zly2006.zhihu.navigation/Navigator.onNavigateTopLevel.<get-onNavigateTopLevel>|<get-onNavigateTopLevel>(){}[0]
+
+    final fun component1(): kotlin/Function1<com.github.zly2006.zhihu.navigation/NavDestination, kotlin/Unit> // com.github.zly2006.zhihu.navigation/Navigator.component1|component1(){}[0]
+    final fun component2(): kotlin/Function0<kotlin/Unit> // com.github.zly2006.zhihu.navigation/Navigator.component2|component2(){}[0]
+    final fun component3(): kotlin/Function1<com.github.zly2006.zhihu.navigation/TopLevelDestination, kotlin/Unit> // com.github.zly2006.zhihu.navigation/Navigator.component3|component3(){}[0]
+    final fun copy(kotlin/Function1<com.github.zly2006.zhihu.navigation/NavDestination, kotlin/Unit> = ..., kotlin/Function0<kotlin/Unit> = ..., kotlin/Function1<com.github.zly2006.zhihu.navigation/TopLevelDestination, kotlin/Unit> = ...): com.github.zly2006.zhihu.navigation/Navigator // com.github.zly2006.zhihu.navigation/Navigator.copy|copy(kotlin.Function1<com.github.zly2006.zhihu.navigation.NavDestination,kotlin.Unit>;kotlin.Function0<kotlin.Unit>;kotlin.Function1<com.github.zly2006.zhihu.navigation.TopLevelDestination,kotlin.Unit>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Navigator.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Navigator.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Navigator.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.navigation/Person : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/Person|null[0]
+    constructor <init>(kotlin/String, kotlin/String, kotlin/String = ..., kotlin/String = ...) // com.github.zly2006.zhihu.navigation/Person.<init>|<init>(kotlin.String;kotlin.String;kotlin.String;kotlin.String){}[0]
+
+    final val jumpTo // com.github.zly2006.zhihu.navigation/Person.jumpTo|{}jumpTo[0]
+        final fun <get-jumpTo>(): kotlin/String // com.github.zly2006.zhihu.navigation/Person.jumpTo.<get-jumpTo>|<get-jumpTo>(){}[0]
+    final val name // com.github.zly2006.zhihu.navigation/Person.name|{}name[0]
+        final fun <get-name>(): kotlin/String // com.github.zly2006.zhihu.navigation/Person.name.<get-name>|<get-name>(){}[0]
+    final val userTokenOrId // com.github.zly2006.zhihu.navigation/Person.userTokenOrId|{}userTokenOrId[0]
+        final fun <get-userTokenOrId>(): kotlin/String // com.github.zly2006.zhihu.navigation/Person.userTokenOrId.<get-userTokenOrId>|<get-userTokenOrId>(){}[0]
+
+    final var id // com.github.zly2006.zhihu.navigation/Person.id|{}id[0]
+        final fun <get-id>(): kotlin/String // com.github.zly2006.zhihu.navigation/Person.id.<get-id>|<get-id>(){}[0]
+        final fun <set-id>(kotlin/String) // com.github.zly2006.zhihu.navigation/Person.id.<set-id>|<set-id>(kotlin.String){}[0]
+    final var urlToken // com.github.zly2006.zhihu.navigation/Person.urlToken|{}urlToken[0]
+        final fun <get-urlToken>(): kotlin/String // com.github.zly2006.zhihu.navigation/Person.urlToken.<get-urlToken>|<get-urlToken>(){}[0]
+        final fun <set-urlToken>(kotlin/String) // com.github.zly2006.zhihu.navigation/Person.urlToken.<set-urlToken>|<set-urlToken>(kotlin.String){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.navigation/Person.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.navigation/Person.component2|component2(){}[0]
+    final fun component3(): kotlin/String // com.github.zly2006.zhihu.navigation/Person.component3|component3(){}[0]
+    final fun component4(): kotlin/String // com.github.zly2006.zhihu.navigation/Person.component4|component4(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String = ...): com.github.zly2006.zhihu.navigation/Person // com.github.zly2006.zhihu.navigation/Person.copy|copy(kotlin.String;kotlin.String;kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Person.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Person.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Person.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/Person> { // com.github.zly2006.zhihu.navigation/Person.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.navigation/Person.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/Person.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/Person.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/Person // com.github.zly2006.zhihu.navigation/Person.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/Person) // com.github.zly2006.zhihu.navigation/Person.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.Person){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.navigation/Person.Companion|null[0]
+        final const val EMPTY_ID // com.github.zly2006.zhihu.navigation/Person.Companion.EMPTY_ID|{}EMPTY_ID[0]
+            final fun <get-EMPTY_ID>(): kotlin/String // com.github.zly2006.zhihu.navigation/Person.Companion.EMPTY_ID.<get-EMPTY_ID>|<get-EMPTY_ID>(){}[0]
+
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Person> // com.github.zly2006.zhihu.navigation/Person.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.navigation/Pin : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/Pin|null[0]
+    constructor <init>(kotlin/Long, kotlin/String = ..., kotlin/String? = ...) // com.github.zly2006.zhihu.navigation/Pin.<init>|<init>(kotlin.Long;kotlin.String;kotlin.String?){}[0]
+
+    final val authorName // com.github.zly2006.zhihu.navigation/Pin.authorName|{}authorName[0]
+        final fun <get-authorName>(): kotlin/String // com.github.zly2006.zhihu.navigation/Pin.authorName.<get-authorName>|<get-authorName>(){}[0]
+    final val id // com.github.zly2006.zhihu.navigation/Pin.id|{}id[0]
+        final fun <get-id>(): kotlin/Long // com.github.zly2006.zhihu.navigation/Pin.id.<get-id>|<get-id>(){}[0]
+    final val readingQueueSourceId // com.github.zly2006.zhihu.navigation/Pin.readingQueueSourceId|{}readingQueueSourceId[0]
+        final fun <get-readingQueueSourceId>(): kotlin/String? // com.github.zly2006.zhihu.navigation/Pin.readingQueueSourceId.<get-readingQueueSourceId>|<get-readingQueueSourceId>(){}[0]
+
+    final fun component1(): kotlin/Long // com.github.zly2006.zhihu.navigation/Pin.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.navigation/Pin.component2|component2(){}[0]
+    final fun component3(): kotlin/String? // com.github.zly2006.zhihu.navigation/Pin.component3|component3(){}[0]
+    final fun copy(kotlin/Long = ..., kotlin/String = ..., kotlin/String? = ...): com.github.zly2006.zhihu.navigation/Pin // com.github.zly2006.zhihu.navigation/Pin.copy|copy(kotlin.Long;kotlin.String;kotlin.String?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Pin.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Pin.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Pin.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/Pin> { // com.github.zly2006.zhihu.navigation/Pin.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.navigation/Pin.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/Pin.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/Pin.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/Pin // com.github.zly2006.zhihu.navigation/Pin.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/Pin) // com.github.zly2006.zhihu.navigation/Pin.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.Pin){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.navigation/Pin.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Pin> // com.github.zly2006.zhihu.navigation/Pin.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.navigation/Question : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/Question|null[0]
+    constructor <init>(kotlin/Long, kotlin/String = ..., kotlin/String? = ...) // com.github.zly2006.zhihu.navigation/Question.<init>|<init>(kotlin.Long;kotlin.String;kotlin.String?){}[0]
+
+    final val questionId // com.github.zly2006.zhihu.navigation/Question.questionId|{}questionId[0]
+        final fun <get-questionId>(): kotlin/Long // com.github.zly2006.zhihu.navigation/Question.questionId.<get-questionId>|<get-questionId>(){}[0]
+    final val readingQueueSourceId // com.github.zly2006.zhihu.navigation/Question.readingQueueSourceId|{}readingQueueSourceId[0]
+        final fun <get-readingQueueSourceId>(): kotlin/String? // com.github.zly2006.zhihu.navigation/Question.readingQueueSourceId.<get-readingQueueSourceId>|<get-readingQueueSourceId>(){}[0]
+    final val title // com.github.zly2006.zhihu.navigation/Question.title|{}title[0]
+        final fun <get-title>(): kotlin/String // com.github.zly2006.zhihu.navigation/Question.title.<get-title>|<get-title>(){}[0]
+
+    final fun component1(): kotlin/Long // com.github.zly2006.zhihu.navigation/Question.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.navigation/Question.component2|component2(){}[0]
+    final fun component3(): kotlin/String? // com.github.zly2006.zhihu.navigation/Question.component3|component3(){}[0]
+    final fun copy(kotlin/Long = ..., kotlin/String = ..., kotlin/String? = ...): com.github.zly2006.zhihu.navigation/Question // com.github.zly2006.zhihu.navigation/Question.copy|copy(kotlin.Long;kotlin.String;kotlin.String?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Question.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Question.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Question.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/Question> { // com.github.zly2006.zhihu.navigation/Question.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.navigation/Question.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/Question.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/Question.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/Question // com.github.zly2006.zhihu.navigation/Question.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/Question) // com.github.zly2006.zhihu.navigation/Question.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.Question){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.navigation/Question.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Question> // com.github.zly2006.zhihu.navigation/Question.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.navigation/Search : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/Search|null[0]
+    constructor <init>(kotlin/String = ..., kotlin/String = ..., kotlin/String = ...) // com.github.zly2006.zhihu.navigation/Search.<init>|<init>(kotlin.String;kotlin.String;kotlin.String){}[0]
+
+    final val isRestrictedToMember // com.github.zly2006.zhihu.navigation/Search.isRestrictedToMember|{}isRestrictedToMember[0]
+        final fun <get-isRestrictedToMember>(): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Search.isRestrictedToMember.<get-isRestrictedToMember>|<get-isRestrictedToMember>(){}[0]
+    final val query // com.github.zly2006.zhihu.navigation/Search.query|{}query[0]
+        final fun <get-query>(): kotlin/String // com.github.zly2006.zhihu.navigation/Search.query.<get-query>|<get-query>(){}[0]
+    final val restrictedMemberHashId // com.github.zly2006.zhihu.navigation/Search.restrictedMemberHashId|{}restrictedMemberHashId[0]
+        final fun <get-restrictedMemberHashId>(): kotlin/String // com.github.zly2006.zhihu.navigation/Search.restrictedMemberHashId.<get-restrictedMemberHashId>|<get-restrictedMemberHashId>(){}[0]
+    final val restrictedMemberName // com.github.zly2006.zhihu.navigation/Search.restrictedMemberName|{}restrictedMemberName[0]
+        final fun <get-restrictedMemberName>(): kotlin/String // com.github.zly2006.zhihu.navigation/Search.restrictedMemberName.<get-restrictedMemberName>|<get-restrictedMemberName>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.navigation/Search.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.navigation/Search.component2|component2(){}[0]
+    final fun component3(): kotlin/String // com.github.zly2006.zhihu.navigation/Search.component3|component3(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String = ...): com.github.zly2006.zhihu.navigation/Search // com.github.zly2006.zhihu.navigation/Search.copy|copy(kotlin.String;kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Search.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Search.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Search.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/Search> { // com.github.zly2006.zhihu.navigation/Search.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.navigation/Search.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/Search.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/Search.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/Search // com.github.zly2006.zhihu.navigation/Search.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/Search) // com.github.zly2006.zhihu.navigation/Search.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.Search){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.navigation/Search.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Search> // com.github.zly2006.zhihu.navigation/Search.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.navigation/SegmentCommentHolder : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/SegmentCommentHolder|null[0]
+    constructor <init>(kotlin/String, kotlin/String, kotlin/String, kotlin/String, kotlin/String, kotlin/Int, kotlin/Int) // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.<init>|<init>(kotlin.String;kotlin.String;kotlin.String;kotlin.String;kotlin.String;kotlin.Int;kotlin.Int){}[0]
+
+    final val contentId // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.contentId|{}contentId[0]
+        final fun <get-contentId>(): kotlin/String // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.contentId.<get-contentId>|<get-contentId>(){}[0]
+    final val contentType // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.contentType|{}contentType[0]
+        final fun <get-contentType>(): kotlin/String // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.contentType.<get-contentType>|<get-contentType>(){}[0]
+    final val endOffset // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.endOffset|{}endOffset[0]
+        final fun <get-endOffset>(): kotlin/Int // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.endOffset.<get-endOffset>|<get-endOffset>(){}[0]
+    final val paragraphId // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.paragraphId|{}paragraphId[0]
+        final fun <get-paragraphId>(): kotlin/String // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.paragraphId.<get-paragraphId>|<get-paragraphId>(){}[0]
+    final val segmentContent // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.segmentContent|{}segmentContent[0]
+        final fun <get-segmentContent>(): kotlin/String // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.segmentContent.<get-segmentContent>|<get-segmentContent>(){}[0]
+    final val segmentId // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.segmentId|{}segmentId[0]
+        final fun <get-segmentId>(): kotlin/String // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.segmentId.<get-segmentId>|<get-segmentId>(){}[0]
+    final val startOffset // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.startOffset|{}startOffset[0]
+        final fun <get-startOffset>(): kotlin/Int // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.startOffset.<get-startOffset>|<get-startOffset>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.component2|component2(){}[0]
+    final fun component3(): kotlin/String // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.component3|component3(){}[0]
+    final fun component4(): kotlin/String // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.component4|component4(){}[0]
+    final fun component5(): kotlin/String // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.component5|component5(){}[0]
+    final fun component6(): kotlin/Int // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.component6|component6(){}[0]
+    final fun component7(): kotlin/Int // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.component7|component7(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/Int = ..., kotlin/Int = ...): com.github.zly2006.zhihu.navigation/SegmentCommentHolder // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.copy|copy(kotlin.String;kotlin.String;kotlin.String;kotlin.String;kotlin.String;kotlin.Int;kotlin.Int){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/SegmentCommentHolder> { // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/SegmentCommentHolder // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/SegmentCommentHolder) // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.SegmentCommentHolder){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/SegmentCommentHolder> // com.github.zly2006.zhihu.navigation/SegmentCommentHolder.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.navigation/Topic : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/Topic|null[0]
+    constructor <init>(kotlin/String, kotlin/String = ..., kotlin/String = ...) // com.github.zly2006.zhihu.navigation/Topic.<init>|<init>(kotlin.String;kotlin.String;kotlin.String){}[0]
+
+    final val id // com.github.zly2006.zhihu.navigation/Topic.id|{}id[0]
+        final fun <get-id>(): kotlin/String // com.github.zly2006.zhihu.navigation/Topic.id.<get-id>|<get-id>(){}[0]
+    final val name // com.github.zly2006.zhihu.navigation/Topic.name|{}name[0]
+        final fun <get-name>(): kotlin/String // com.github.zly2006.zhihu.navigation/Topic.name.<get-name>|<get-name>(){}[0]
+    final val section // com.github.zly2006.zhihu.navigation/Topic.section|{}section[0]
+        final fun <get-section>(): kotlin/String // com.github.zly2006.zhihu.navigation/Topic.section.<get-section>|<get-section>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.navigation/Topic.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.navigation/Topic.component2|component2(){}[0]
+    final fun component3(): kotlin/String // com.github.zly2006.zhihu.navigation/Topic.component3|component3(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String = ...): com.github.zly2006.zhihu.navigation/Topic // com.github.zly2006.zhihu.navigation/Topic.copy|copy(kotlin.String;kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Topic.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Topic.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Topic.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/Topic> { // com.github.zly2006.zhihu.navigation/Topic.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.navigation/Topic.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/Topic.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/Topic.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/Topic // com.github.zly2006.zhihu.navigation/Topic.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/Topic) // com.github.zly2006.zhihu.navigation/Topic.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.Topic){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.navigation/Topic.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Topic> // com.github.zly2006.zhihu.navigation/Topic.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.navigation/Video : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/Video|null[0]
+    constructor <init>(kotlin/Long) // com.github.zly2006.zhihu.navigation/Video.<init>|<init>(kotlin.Long){}[0]
+
+    final val id // com.github.zly2006.zhihu.navigation/Video.id|{}id[0]
+        final fun <get-id>(): kotlin/Long // com.github.zly2006.zhihu.navigation/Video.id.<get-id>|<get-id>(){}[0]
+
+    final fun component1(): kotlin/Long // com.github.zly2006.zhihu.navigation/Video.component1|component1(){}[0]
+    final fun copy(kotlin/Long = ...): com.github.zly2006.zhihu.navigation/Video // com.github.zly2006.zhihu.navigation/Video.copy|copy(kotlin.Long){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Video.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Video.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Video.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/Video> { // com.github.zly2006.zhihu.navigation/Video.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.navigation/Video.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/Video.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/Video.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/Video // com.github.zly2006.zhihu.navigation/Video.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/Video) // com.github.zly2006.zhihu.navigation/Video.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.Video){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.navigation/Video.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Video> // com.github.zly2006.zhihu.navigation/Video.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.navigation/WriteAnswer : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/WriteAnswer|null[0]
+    constructor <init>(kotlin/Long, kotlin/String = ..., kotlin/String = ...) // com.github.zly2006.zhihu.navigation/WriteAnswer.<init>|<init>(kotlin.Long;kotlin.String;kotlin.String){}[0]
+
+    final val questionDetail // com.github.zly2006.zhihu.navigation/WriteAnswer.questionDetail|{}questionDetail[0]
+        final fun <get-questionDetail>(): kotlin/String // com.github.zly2006.zhihu.navigation/WriteAnswer.questionDetail.<get-questionDetail>|<get-questionDetail>(){}[0]
+    final val questionId // com.github.zly2006.zhihu.navigation/WriteAnswer.questionId|{}questionId[0]
+        final fun <get-questionId>(): kotlin/Long // com.github.zly2006.zhihu.navigation/WriteAnswer.questionId.<get-questionId>|<get-questionId>(){}[0]
+    final val questionTitle // com.github.zly2006.zhihu.navigation/WriteAnswer.questionTitle|{}questionTitle[0]
+        final fun <get-questionTitle>(): kotlin/String // com.github.zly2006.zhihu.navigation/WriteAnswer.questionTitle.<get-questionTitle>|<get-questionTitle>(){}[0]
+
+    final fun component1(): kotlin/Long // com.github.zly2006.zhihu.navigation/WriteAnswer.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.navigation/WriteAnswer.component2|component2(){}[0]
+    final fun component3(): kotlin/String // com.github.zly2006.zhihu.navigation/WriteAnswer.component3|component3(){}[0]
+    final fun copy(kotlin/Long = ..., kotlin/String = ..., kotlin/String = ...): com.github.zly2006.zhihu.navigation/WriteAnswer // com.github.zly2006.zhihu.navigation/WriteAnswer.copy|copy(kotlin.Long;kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/WriteAnswer.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/WriteAnswer.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/WriteAnswer.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/WriteAnswer> { // com.github.zly2006.zhihu.navigation/WriteAnswer.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.navigation/WriteAnswer.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/WriteAnswer.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/WriteAnswer.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/WriteAnswer // com.github.zly2006.zhihu.navigation/WriteAnswer.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/WriteAnswer) // com.github.zly2006.zhihu.navigation/WriteAnswer.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.WriteAnswer){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.navigation/WriteAnswer.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/WriteAnswer> // com.github.zly2006.zhihu.navigation/WriteAnswer.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.navigation/WritePin : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/WritePin|null[0]
+    constructor <init>(kotlin/String = ..., kotlin/String = ...) // com.github.zly2006.zhihu.navigation/WritePin.<init>|<init>(kotlin.String;kotlin.String){}[0]
+
+    final val publishTopicId // com.github.zly2006.zhihu.navigation/WritePin.publishTopicId|{}publishTopicId[0]
+        final fun <get-publishTopicId>(): kotlin/String // com.github.zly2006.zhihu.navigation/WritePin.publishTopicId.<get-publishTopicId>|<get-publishTopicId>(){}[0]
+    final val topicName // com.github.zly2006.zhihu.navigation/WritePin.topicName|{}topicName[0]
+        final fun <get-topicName>(): kotlin/String // com.github.zly2006.zhihu.navigation/WritePin.topicName.<get-topicName>|<get-topicName>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.navigation/WritePin.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.navigation/WritePin.component2|component2(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ...): com.github.zly2006.zhihu.navigation/WritePin // com.github.zly2006.zhihu.navigation/WritePin.copy|copy(kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/WritePin.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/WritePin.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/WritePin.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/WritePin> { // com.github.zly2006.zhihu.navigation/WritePin.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.navigation/WritePin.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/WritePin.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/WritePin.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/WritePin // com.github.zly2006.zhihu.navigation/WritePin.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/WritePin) // com.github.zly2006.zhihu.navigation/WritePin.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.WritePin){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.navigation/WritePin.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/WritePin> // com.github.zly2006.zhihu.navigation/WritePin.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final object com.github.zly2006.zhihu.navigation/Account : com.github.zly2006.zhihu.navigation/TopLevelDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/Account|null[0]
+    final val name // com.github.zly2006.zhihu.navigation/Account.name|{}name[0]
+        final fun <get-name>(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.name.<get-name>|<get-name>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Account.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Account.hashCode|hashCode(){}[0]
+    final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Account> // com.github.zly2006.zhihu.navigation/Account.serializer|serializer(){}[0]
+    final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/Account.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.toString|toString(){}[0]
+
+    final class AppearanceSettings : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/Account.AppearanceSettings|null[0]
+        constructor <init>(kotlin/String = ...) // com.github.zly2006.zhihu.navigation/Account.AppearanceSettings.<init>|<init>(kotlin.String){}[0]
+
+        final val setting // com.github.zly2006.zhihu.navigation/Account.AppearanceSettings.setting|{}setting[0]
+            final fun <get-setting>(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.AppearanceSettings.setting.<get-setting>|<get-setting>(){}[0]
+
+        final fun component1(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.AppearanceSettings.component1|component1(){}[0]
+        final fun copy(kotlin/String = ...): com.github.zly2006.zhihu.navigation/Account.AppearanceSettings // com.github.zly2006.zhihu.navigation/Account.AppearanceSettings.copy|copy(kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Account.AppearanceSettings.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Account.AppearanceSettings.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.AppearanceSettings.toString|toString(){}[0]
+
+        final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/Account.AppearanceSettings> { // com.github.zly2006.zhihu.navigation/Account.AppearanceSettings.$serializer|null[0]
+            final val descriptor // com.github.zly2006.zhihu.navigation/Account.AppearanceSettings.$serializer.descriptor|{}descriptor[0]
+                final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/Account.AppearanceSettings.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+            final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/Account.AppearanceSettings.$serializer.childSerializers|childSerializers(){}[0]
+            final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/Account.AppearanceSettings // com.github.zly2006.zhihu.navigation/Account.AppearanceSettings.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+            final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/Account.AppearanceSettings) // com.github.zly2006.zhihu.navigation/Account.AppearanceSettings.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.Account.AppearanceSettings){}[0]
+        }
+
+        final object Companion { // com.github.zly2006.zhihu.navigation/Account.AppearanceSettings.Companion|null[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Account.AppearanceSettings> // com.github.zly2006.zhihu.navigation/Account.AppearanceSettings.Companion.serializer|serializer(){}[0]
+        }
+    }
+
+    final class RecommendSettings : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/Account.RecommendSettings|null[0]
+        constructor <init>(kotlin/String = ...) // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.<init>|<init>(kotlin.String){}[0]
+
+        final val setting // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.setting|{}setting[0]
+            final fun <get-setting>(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.setting.<get-setting>|<get-setting>(){}[0]
+
+        final fun component1(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.component1|component1(){}[0]
+        final fun copy(kotlin/String = ...): com.github.zly2006.zhihu.navigation/Account.RecommendSettings // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.copy|copy(kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.toString|toString(){}[0]
+
+        final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/Account.RecommendSettings> { // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.$serializer|null[0]
+            final val descriptor // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.$serializer.descriptor|{}descriptor[0]
+                final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+            final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.$serializer.childSerializers|childSerializers(){}[0]
+            final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/Account.RecommendSettings // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+            final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/Account.RecommendSettings) // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.Account.RecommendSettings){}[0]
+        }
+
+        final object BlockedFeedHistory : com.github.zly2006.zhihu.navigation/NavDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.BlockedFeedHistory|null[0]
+            final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.BlockedFeedHistory.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.BlockedFeedHistory.hashCode|hashCode(){}[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Account.RecommendSettings.BlockedFeedHistory> // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.BlockedFeedHistory.serializer|serializer(){}[0]
+            final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.BlockedFeedHistory.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+            final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.BlockedFeedHistory.toString|toString(){}[0]
+        }
+
+        final object Blocklist : com.github.zly2006.zhihu.navigation/NavDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.Blocklist|null[0]
+            final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.Blocklist.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.Blocklist.hashCode|hashCode(){}[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Account.RecommendSettings.Blocklist> // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.Blocklist.serializer|serializer(){}[0]
+            final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.Blocklist.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+            final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.Blocklist.toString|toString(){}[0]
+        }
+
+        final object Companion { // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.Companion|null[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Account.RecommendSettings> // com.github.zly2006.zhihu.navigation/Account.RecommendSettings.Companion.serializer|serializer(){}[0]
+        }
+    }
+
+    final class SystemAndUpdateSettings : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings|null[0]
+        constructor <init>(kotlin/String = ...) // com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings.<init>|<init>(kotlin.String){}[0]
+
+        final val setting // com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings.setting|{}setting[0]
+            final fun <get-setting>(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings.setting.<get-setting>|<get-setting>(){}[0]
+
+        final fun component1(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings.component1|component1(){}[0]
+        final fun copy(kotlin/String = ...): com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings // com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings.copy|copy(kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings.toString|toString(){}[0]
+
+        final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings> { // com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings.$serializer|null[0]
+            final val descriptor // com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings.$serializer.descriptor|{}descriptor[0]
+                final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+            final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings.$serializer.childSerializers|childSerializers(){}[0]
+            final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings // com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+            final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings) // com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.Account.SystemAndUpdateSettings){}[0]
+        }
+
+        final object Companion { // com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings.Companion|null[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings> // com.github.zly2006.zhihu.navigation/Account.SystemAndUpdateSettings.Companion.serializer|serializer(){}[0]
+        }
+    }
+
+    final object DeveloperSettings : com.github.zly2006.zhihu.navigation/NavDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/Account.DeveloperSettings|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Account.DeveloperSettings.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Account.DeveloperSettings.hashCode|hashCode(){}[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Account.DeveloperSettings> // com.github.zly2006.zhihu.navigation/Account.DeveloperSettings.serializer|serializer(){}[0]
+        final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/Account.DeveloperSettings.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+        final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.DeveloperSettings.toString|toString(){}[0]
+
+        final object ColorScheme : com.github.zly2006.zhihu.navigation/NavDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/Account.DeveloperSettings.ColorScheme|null[0]
+            final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Account.DeveloperSettings.ColorScheme.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Account.DeveloperSettings.ColorScheme.hashCode|hashCode(){}[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Account.DeveloperSettings.ColorScheme> // com.github.zly2006.zhihu.navigation/Account.DeveloperSettings.ColorScheme.serializer|serializer(){}[0]
+            final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/Account.DeveloperSettings.ColorScheme.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+            final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.DeveloperSettings.ColorScheme.toString|toString(){}[0]
+        }
+    }
+
+    final object IdentityManagement : com.github.zly2006.zhihu.navigation/NavDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/Account.IdentityManagement|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Account.IdentityManagement.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Account.IdentityManagement.hashCode|hashCode(){}[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Account.IdentityManagement> // com.github.zly2006.zhihu.navigation/Account.IdentityManagement.serializer|serializer(){}[0]
+        final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/Account.IdentityManagement.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+        final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.IdentityManagement.toString|toString(){}[0]
+    }
+
+    final object OpenSourceLicenses : com.github.zly2006.zhihu.navigation/NavDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/Account.OpenSourceLicenses|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Account.OpenSourceLicenses.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Account.OpenSourceLicenses.hashCode|hashCode(){}[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Account.OpenSourceLicenses> // com.github.zly2006.zhihu.navigation/Account.OpenSourceLicenses.serializer|serializer(){}[0]
+        final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/Account.OpenSourceLicenses.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+        final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.OpenSourceLicenses.toString|toString(){}[0]
+    }
+
+    final object ReadingSettings : com.github.zly2006.zhihu.navigation/NavDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/Account.ReadingSettings|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Account.ReadingSettings.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Account.ReadingSettings.hashCode|hashCode(){}[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Account.ReadingSettings> // com.github.zly2006.zhihu.navigation/Account.ReadingSettings.serializer|serializer(){}[0]
+        final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/Account.ReadingSettings.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+        final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.ReadingSettings.toString|toString(){}[0]
+    }
+
+    final object SettingsSearch : com.github.zly2006.zhihu.navigation/NavDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/Account.SettingsSearch|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Account.SettingsSearch.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Account.SettingsSearch.hashCode|hashCode(){}[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Account.SettingsSearch> // com.github.zly2006.zhihu.navigation/Account.SettingsSearch.serializer|serializer(){}[0]
+        final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/Account.SettingsSearch.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+        final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Account.SettingsSearch.toString|toString(){}[0]
+    }
+}
+
+final object com.github.zly2006.zhihu.navigation/ArticleTypeNavType : androidx.navigation/NavType<com.github.zly2006.zhihu.navigation/ArticleType> { // com.github.zly2006.zhihu.navigation/ArticleTypeNavType|null[0]
+    final fun get(androidx.savedstate/SavedState, kotlin/String): com.github.zly2006.zhihu.navigation/ArticleType? // com.github.zly2006.zhihu.navigation/ArticleTypeNavType.get|get(androidx.savedstate.SavedState;kotlin.String){}[0]
+    final fun parseValue(kotlin/String): com.github.zly2006.zhihu.navigation/ArticleType // com.github.zly2006.zhihu.navigation/ArticleTypeNavType.parseValue|parseValue(kotlin.String){}[0]
+    final fun put(androidx.savedstate/SavedState, kotlin/String, com.github.zly2006.zhihu.navigation/ArticleType) // com.github.zly2006.zhihu.navigation/ArticleTypeNavType.put|put(androidx.savedstate.SavedState;kotlin.String;com.github.zly2006.zhihu.navigation.ArticleType){}[0]
+    final fun serializeAsValue(com.github.zly2006.zhihu.navigation/ArticleType): kotlin/String // com.github.zly2006.zhihu.navigation/ArticleTypeNavType.serializeAsValue|serializeAsValue(com.github.zly2006.zhihu.navigation.ArticleType){}[0]
+}
+
+final object com.github.zly2006.zhihu.navigation/Daily : com.github.zly2006.zhihu.navigation/TopLevelDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/Daily|null[0]
+    final val name // com.github.zly2006.zhihu.navigation/Daily.name|{}name[0]
+        final fun <get-name>(): kotlin/String // com.github.zly2006.zhihu.navigation/Daily.name.<get-name>|<get-name>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Daily.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Daily.hashCode|hashCode(){}[0]
+    final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Daily> // com.github.zly2006.zhihu.navigation/Daily.serializer|serializer(){}[0]
+    final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/Daily.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Daily.toString|toString(){}[0]
+}
+
+final object com.github.zly2006.zhihu.navigation/EmptyDetail : com.github.zly2006.zhihu.navigation/NavDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/EmptyDetail|null[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/EmptyDetail.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/EmptyDetail.hashCode|hashCode(){}[0]
+    final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/EmptyDetail> // com.github.zly2006.zhihu.navigation/EmptyDetail.serializer|serializer(){}[0]
+    final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/EmptyDetail.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/EmptyDetail.toString|toString(){}[0]
+}
+
+final object com.github.zly2006.zhihu.navigation/Follow : com.github.zly2006.zhihu.navigation/TopLevelDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/Follow|null[0]
+    final val name // com.github.zly2006.zhihu.navigation/Follow.name|{}name[0]
+        final fun <get-name>(): kotlin/String // com.github.zly2006.zhihu.navigation/Follow.name.<get-name>|<get-name>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Follow.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Follow.hashCode|hashCode(){}[0]
+    final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Follow> // com.github.zly2006.zhihu.navigation/Follow.serializer|serializer(){}[0]
+    final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/Follow.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Follow.toString|toString(){}[0]
+}
+
+final object com.github.zly2006.zhihu.navigation/History : com.github.zly2006.zhihu.navigation/NavDestination, com.github.zly2006.zhihu.navigation/TopLevelDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/History|null[0]
+    final val name // com.github.zly2006.zhihu.navigation/History.name|{}name[0]
+        final fun <get-name>(): kotlin/String // com.github.zly2006.zhihu.navigation/History.name.<get-name>|<get-name>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/History.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/History.hashCode|hashCode(){}[0]
+    final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/History> // com.github.zly2006.zhihu.navigation/History.serializer|serializer(){}[0]
+    final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/History.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/History.toString|toString(){}[0]
+}
+
+final object com.github.zly2006.zhihu.navigation/Home : com.github.zly2006.zhihu.navigation/TopLevelDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/Home|null[0]
+    final val name // com.github.zly2006.zhihu.navigation/Home.name|{}name[0]
+        final fun <get-name>(): kotlin/String // com.github.zly2006.zhihu.navigation/Home.name.<get-name>|<get-name>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Home.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Home.hashCode|hashCode(){}[0]
+    final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Home> // com.github.zly2006.zhihu.navigation/Home.serializer|serializer(){}[0]
+    final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/Home.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Home.toString|toString(){}[0]
+}
+
+final object com.github.zly2006.zhihu.navigation/HotList : com.github.zly2006.zhihu.navigation/TopLevelDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/HotList|null[0]
+    final val name // com.github.zly2006.zhihu.navigation/HotList.name|{}name[0]
+        final fun <get-name>(): kotlin/String // com.github.zly2006.zhihu.navigation/HotList.name.<get-name>|<get-name>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/HotList.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/HotList.hashCode|hashCode(){}[0]
+    final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/HotList> // com.github.zly2006.zhihu.navigation/HotList.serializer|serializer(){}[0]
+    final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/HotList.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/HotList.toString|toString(){}[0]
+}
+
+final object com.github.zly2006.zhihu.navigation/Login : com.github.zly2006.zhihu.navigation/NavDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/Login|null[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Login.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Login.hashCode|hashCode(){}[0]
+    final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Login> // com.github.zly2006.zhihu.navigation/Login.serializer|serializer(){}[0]
+    final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/Login.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Login.toString|toString(){}[0]
+}
+
+final object com.github.zly2006.zhihu.navigation/MainTabs : com.github.zly2006.zhihu.navigation/NavDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/MainTabs|null[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/MainTabs.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/MainTabs.hashCode|hashCode(){}[0]
+    final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/MainTabs> // com.github.zly2006.zhihu.navigation/MainTabs.serializer|serializer(){}[0]
+    final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/MainTabs.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/MainTabs.toString|toString(){}[0]
+}
+
+final object com.github.zly2006.zhihu.navigation/MyCollections : com.github.zly2006.zhihu.navigation/TopLevelDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/MyCollections|null[0]
+    final val name // com.github.zly2006.zhihu.navigation/MyCollections.name|{}name[0]
+        final fun <get-name>(): kotlin/String // com.github.zly2006.zhihu.navigation/MyCollections.name.<get-name>|<get-name>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/MyCollections.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/MyCollections.hashCode|hashCode(){}[0]
+    final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/MyCollections> // com.github.zly2006.zhihu.navigation/MyCollections.serializer|serializer(){}[0]
+    final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/MyCollections.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/MyCollections.toString|toString(){}[0]
+}
+
+final object com.github.zly2006.zhihu.navigation/Notification : com.github.zly2006.zhihu.navigation/NavDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/Notification|null[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Notification.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Notification.hashCode|hashCode(){}[0]
+    final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Notification> // com.github.zly2006.zhihu.navigation/Notification.serializer|serializer(){}[0]
+    final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/Notification.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Notification.toString|toString(){}[0]
+
+    final class Entry : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/Notification.Entry|null[0]
+        constructor <init>(kotlin/String, kotlin/String) // com.github.zly2006.zhihu.navigation/Notification.Entry.<init>|<init>(kotlin.String;kotlin.String){}[0]
+
+        final val entryName // com.github.zly2006.zhihu.navigation/Notification.Entry.entryName|{}entryName[0]
+            final fun <get-entryName>(): kotlin/String // com.github.zly2006.zhihu.navigation/Notification.Entry.entryName.<get-entryName>|<get-entryName>(){}[0]
+        final val title // com.github.zly2006.zhihu.navigation/Notification.Entry.title|{}title[0]
+            final fun <get-title>(): kotlin/String // com.github.zly2006.zhihu.navigation/Notification.Entry.title.<get-title>|<get-title>(){}[0]
+
+        final fun component1(): kotlin/String // com.github.zly2006.zhihu.navigation/Notification.Entry.component1|component1(){}[0]
+        final fun component2(): kotlin/String // com.github.zly2006.zhihu.navigation/Notification.Entry.component2|component2(){}[0]
+        final fun copy(kotlin/String = ..., kotlin/String = ...): com.github.zly2006.zhihu.navigation/Notification.Entry // com.github.zly2006.zhihu.navigation/Notification.Entry.copy|copy(kotlin.String;kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Notification.Entry.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Notification.Entry.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Notification.Entry.toString|toString(){}[0]
+
+        final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/Notification.Entry> { // com.github.zly2006.zhihu.navigation/Notification.Entry.$serializer|null[0]
+            final val descriptor // com.github.zly2006.zhihu.navigation/Notification.Entry.$serializer.descriptor|{}descriptor[0]
+                final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/Notification.Entry.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+            final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/Notification.Entry.$serializer.childSerializers|childSerializers(){}[0]
+            final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/Notification.Entry // com.github.zly2006.zhihu.navigation/Notification.Entry.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+            final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/Notification.Entry) // com.github.zly2006.zhihu.navigation/Notification.Entry.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.Notification.Entry){}[0]
+        }
+
+        final object Companion { // com.github.zly2006.zhihu.navigation/Notification.Entry.Companion|null[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Notification.Entry> // com.github.zly2006.zhihu.navigation/Notification.Entry.Companion.serializer|serializer(){}[0]
+        }
+    }
+
+    final class Message : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/Notification.Message|null[0]
+        constructor <init>(kotlin/String, kotlin/String = ..., kotlin/String = ...) // com.github.zly2006.zhihu.navigation/Notification.Message.<init>|<init>(kotlin.String;kotlin.String;kotlin.String){}[0]
+
+        final val avatarUrl // com.github.zly2006.zhihu.navigation/Notification.Message.avatarUrl|{}avatarUrl[0]
+            final fun <get-avatarUrl>(): kotlin/String // com.github.zly2006.zhihu.navigation/Notification.Message.avatarUrl.<get-avatarUrl>|<get-avatarUrl>(){}[0]
+        final val name // com.github.zly2006.zhihu.navigation/Notification.Message.name|{}name[0]
+            final fun <get-name>(): kotlin/String // com.github.zly2006.zhihu.navigation/Notification.Message.name.<get-name>|<get-name>(){}[0]
+        final val peerId // com.github.zly2006.zhihu.navigation/Notification.Message.peerId|{}peerId[0]
+            final fun <get-peerId>(): kotlin/String // com.github.zly2006.zhihu.navigation/Notification.Message.peerId.<get-peerId>|<get-peerId>(){}[0]
+
+        final fun component1(): kotlin/String // com.github.zly2006.zhihu.navigation/Notification.Message.component1|component1(){}[0]
+        final fun component2(): kotlin/String // com.github.zly2006.zhihu.navigation/Notification.Message.component2|component2(){}[0]
+        final fun component3(): kotlin/String // com.github.zly2006.zhihu.navigation/Notification.Message.component3|component3(){}[0]
+        final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String = ...): com.github.zly2006.zhihu.navigation/Notification.Message // com.github.zly2006.zhihu.navigation/Notification.Message.copy|copy(kotlin.String;kotlin.String;kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Notification.Message.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Notification.Message.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Notification.Message.toString|toString(){}[0]
+
+        final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/Notification.Message> { // com.github.zly2006.zhihu.navigation/Notification.Message.$serializer|null[0]
+            final val descriptor // com.github.zly2006.zhihu.navigation/Notification.Message.$serializer.descriptor|{}descriptor[0]
+                final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/Notification.Message.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+            final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/Notification.Message.$serializer.childSerializers|childSerializers(){}[0]
+            final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/Notification.Message // com.github.zly2006.zhihu.navigation/Notification.Message.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+            final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/Notification.Message) // com.github.zly2006.zhihu.navigation/Notification.Message.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.Notification.Message){}[0]
+        }
+
+        final object Companion { // com.github.zly2006.zhihu.navigation/Notification.Message.Companion|null[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Notification.Message> // com.github.zly2006.zhihu.navigation/Notification.Message.Companion.serializer|serializer(){}[0]
+        }
+    }
+
+    final class NotificationSettings : com.github.zly2006.zhihu.navigation/NavDestination { // com.github.zly2006.zhihu.navigation/Notification.NotificationSettings|null[0]
+        constructor <init>(kotlin/String = ...) // com.github.zly2006.zhihu.navigation/Notification.NotificationSettings.<init>|<init>(kotlin.String){}[0]
+
+        final val setting // com.github.zly2006.zhihu.navigation/Notification.NotificationSettings.setting|{}setting[0]
+            final fun <get-setting>(): kotlin/String // com.github.zly2006.zhihu.navigation/Notification.NotificationSettings.setting.<get-setting>|<get-setting>(){}[0]
+
+        final fun component1(): kotlin/String // com.github.zly2006.zhihu.navigation/Notification.NotificationSettings.component1|component1(){}[0]
+        final fun copy(kotlin/String = ...): com.github.zly2006.zhihu.navigation/Notification.NotificationSettings // com.github.zly2006.zhihu.navigation/Notification.NotificationSettings.copy|copy(kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Notification.NotificationSettings.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Notification.NotificationSettings.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Notification.NotificationSettings.toString|toString(){}[0]
+
+        final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.navigation/Notification.NotificationSettings> { // com.github.zly2006.zhihu.navigation/Notification.NotificationSettings.$serializer|null[0]
+            final val descriptor // com.github.zly2006.zhihu.navigation/Notification.NotificationSettings.$serializer.descriptor|{}descriptor[0]
+                final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.navigation/Notification.NotificationSettings.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+            final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.navigation/Notification.NotificationSettings.$serializer.childSerializers|childSerializers(){}[0]
+            final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.navigation/Notification.NotificationSettings // com.github.zly2006.zhihu.navigation/Notification.NotificationSettings.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+            final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.navigation/Notification.NotificationSettings) // com.github.zly2006.zhihu.navigation/Notification.NotificationSettings.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.navigation.Notification.NotificationSettings){}[0]
+        }
+
+        final object Companion { // com.github.zly2006.zhihu.navigation/Notification.NotificationSettings.Companion|null[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Notification.NotificationSettings> // com.github.zly2006.zhihu.navigation/Notification.NotificationSettings.Companion.serializer|serializer(){}[0]
+        }
+    }
+
+    final object Invitations : com.github.zly2006.zhihu.navigation/NavDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/Notification.Invitations|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/Notification.Invitations.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/Notification.Invitations.hashCode|hashCode(){}[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/Notification.Invitations> // com.github.zly2006.zhihu.navigation/Notification.Invitations.serializer|serializer(){}[0]
+        final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/Notification.Invitations.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+        final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/Notification.Invitations.toString|toString(){}[0]
+    }
+}
+
+final object com.github.zly2006.zhihu.navigation/OnlineHistory : com.github.zly2006.zhihu.navigation/TopLevelDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/OnlineHistory|null[0]
+    final val name // com.github.zly2006.zhihu.navigation/OnlineHistory.name|{}name[0]
+        final fun <get-name>(): kotlin/String // com.github.zly2006.zhihu.navigation/OnlineHistory.name.<get-name>|<get-name>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/OnlineHistory.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/OnlineHistory.hashCode|hashCode(){}[0]
+    final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/OnlineHistory> // com.github.zly2006.zhihu.navigation/OnlineHistory.serializer|serializer(){}[0]
+    final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/OnlineHistory.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/OnlineHistory.toString|toString(){}[0]
+}
+
+final object com.github.zly2006.zhihu.navigation/SentenceSimilarityTest : com.github.zly2006.zhihu.navigation/NavDestination, kotlinx.serialization.internal/SerializerFactory { // com.github.zly2006.zhihu.navigation/SentenceSimilarityTest|null[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.navigation/SentenceSimilarityTest.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.navigation/SentenceSimilarityTest.hashCode|hashCode(){}[0]
+    final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.navigation/SentenceSimilarityTest> // com.github.zly2006.zhihu.navigation/SentenceSimilarityTest.serializer|serializer(){}[0]
+    final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.github.zly2006.zhihu.navigation/SentenceSimilarityTest.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.navigation/SentenceSimilarityTest.toString|toString(){}[0]
+}
+
+final val com.github.zly2006.zhihu.data/navDestination // com.github.zly2006.zhihu.data/navDestination|@com.github.zly2006.zhihu.data.Feed.Target{}navDestination[0]
+    final fun (com.github.zly2006.zhihu.data/Feed.Target).<get-navDestination>(): com.github.zly2006.zhihu.navigation/NavDestination? // com.github.zly2006.zhihu.data/navDestination.<get-navDestination>|<get-navDestination>@com.github.zly2006.zhihu.data.Feed.Target(){}[0]
+final val com.github.zly2006.zhihu.data/navDestination // com.github.zly2006.zhihu.data/navDestination|@com.github.zly2006.zhihu.data.FeedDisplayItem{}navDestination[0]
+    final fun (com.github.zly2006.zhihu.data/FeedDisplayItem).<get-navDestination>(): com.github.zly2006.zhihu.navigation/NavDestination? // com.github.zly2006.zhihu.data/navDestination.<get-navDestination>|<get-navDestination>@com.github.zly2006.zhihu.data.FeedDisplayItem(){}[0]
+final val com.github.zly2006.zhihu.navigation/LocalNavigator // com.github.zly2006.zhihu.navigation/LocalNavigator|{}LocalNavigator[0]
+    final fun <get-LocalNavigator>(): androidx.compose.runtime/ProvidableCompositionLocal<com.github.zly2006.zhihu.navigation/Navigator> // com.github.zly2006.zhihu.navigation/LocalNavigator.<get-LocalNavigator>|<get-LocalNavigator>(){}[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account$stableprop|#static{}com_github_zly2006_zhihu_navigation_Account$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_AppearanceSettings$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_AppearanceSettings$stableprop|#static{}com_github_zly2006_zhihu_navigation_Account_AppearanceSettings$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_AppearanceSettings_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_AppearanceSettings_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_Account_AppearanceSettings_$serializer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_DeveloperSettings$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_DeveloperSettings$stableprop|#static{}com_github_zly2006_zhihu_navigation_Account_DeveloperSettings$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_DeveloperSettings_ColorScheme$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_DeveloperSettings_ColorScheme$stableprop|#static{}com_github_zly2006_zhihu_navigation_Account_DeveloperSettings_ColorScheme$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_IdentityManagement$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_IdentityManagement$stableprop|#static{}com_github_zly2006_zhihu_navigation_Account_IdentityManagement$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_OpenSourceLicenses$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_OpenSourceLicenses$stableprop|#static{}com_github_zly2006_zhihu_navigation_Account_OpenSourceLicenses$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_ReadingSettings$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_ReadingSettings$stableprop|#static{}com_github_zly2006_zhihu_navigation_Account_ReadingSettings$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_RecommendSettings$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_RecommendSettings$stableprop|#static{}com_github_zly2006_zhihu_navigation_Account_RecommendSettings$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_RecommendSettings_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_RecommendSettings_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_Account_RecommendSettings_$serializer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_RecommendSettings_BlockedFeedHistory$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_RecommendSettings_BlockedFeedHistory$stableprop|#static{}com_github_zly2006_zhihu_navigation_Account_RecommendSettings_BlockedFeedHistory$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_RecommendSettings_Blocklist$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_RecommendSettings_Blocklist$stableprop|#static{}com_github_zly2006_zhihu_navigation_Account_RecommendSettings_Blocklist$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_SettingsSearch$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_SettingsSearch$stableprop|#static{}com_github_zly2006_zhihu_navigation_Account_SettingsSearch$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_SystemAndUpdateSettings$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_SystemAndUpdateSettings$stableprop|#static{}com_github_zly2006_zhihu_navigation_Account_SystemAndUpdateSettings$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_SystemAndUpdateSettings_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_SystemAndUpdateSettings_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_Account_SystemAndUpdateSettings_$serializer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Article$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Article$stableprop|#static{}com_github_zly2006_zhihu_navigation_Article$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_ArticleTypeNavType$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_ArticleTypeNavType$stableprop|#static{}com_github_zly2006_zhihu_navigation_ArticleTypeNavType$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Article_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Article_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_Article_$serializer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_CollectionContent$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_CollectionContent$stableprop|#static{}com_github_zly2006_zhihu_navigation_CollectionContent$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_CollectionContent_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_CollectionContent_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_CollectionContent_$serializer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Collections$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Collections$stableprop|#static{}com_github_zly2006_zhihu_navigation_Collections$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Collections_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Collections_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_Collections_$serializer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_CommentHolder$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_CommentHolder$stableprop|#static{}com_github_zly2006_zhihu_navigation_CommentHolder$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_CommentHolder_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_CommentHolder_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_CommentHolder_$serializer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Daily$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Daily$stableprop|#static{}com_github_zly2006_zhihu_navigation_Daily$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_EmptyDetail$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_EmptyDetail$stableprop|#static{}com_github_zly2006_zhihu_navigation_EmptyDetail$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Follow$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Follow$stableprop|#static{}com_github_zly2006_zhihu_navigation_Follow$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_History$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_History$stableprop|#static{}com_github_zly2006_zhihu_navigation_History$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Home$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Home$stableprop|#static{}com_github_zly2006_zhihu_navigation_Home$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_HotList$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_HotList$stableprop|#static{}com_github_zly2006_zhihu_navigation_HotList$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Login$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Login$stableprop|#static{}com_github_zly2006_zhihu_navigation_Login$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_MainTabs$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_MainTabs$stableprop|#static{}com_github_zly2006_zhihu_navigation_MainTabs$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_MyCollections$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_MyCollections$stableprop|#static{}com_github_zly2006_zhihu_navigation_MyCollections$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Navigator$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Navigator$stableprop|#static{}com_github_zly2006_zhihu_navigation_Navigator$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification$stableprop|#static{}com_github_zly2006_zhihu_navigation_Notification$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Entry$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Entry$stableprop|#static{}com_github_zly2006_zhihu_navigation_Notification_Entry$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Entry_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Entry_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_Notification_Entry_$serializer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Invitations$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Invitations$stableprop|#static{}com_github_zly2006_zhihu_navigation_Notification_Invitations$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Message$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Message$stableprop|#static{}com_github_zly2006_zhihu_navigation_Notification_Message$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Message_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Message_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_Notification_Message_$serializer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_NotificationSettings$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_NotificationSettings$stableprop|#static{}com_github_zly2006_zhihu_navigation_Notification_NotificationSettings$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_NotificationSettings_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_NotificationSettings_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_Notification_NotificationSettings_$serializer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_OnlineHistory$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_OnlineHistory$stableprop|#static{}com_github_zly2006_zhihu_navigation_OnlineHistory$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Person$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Person$stableprop|#static{}com_github_zly2006_zhihu_navigation_Person$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Person_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Person_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_Person_$serializer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Pin$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Pin$stableprop|#static{}com_github_zly2006_zhihu_navigation_Pin$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Pin_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Pin_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_Pin_$serializer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Question$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Question$stableprop|#static{}com_github_zly2006_zhihu_navigation_Question$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Question_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Question_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_Question_$serializer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Search$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Search$stableprop|#static{}com_github_zly2006_zhihu_navigation_Search$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Search_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Search_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_Search_$serializer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_SegmentCommentHolder$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_SegmentCommentHolder$stableprop|#static{}com_github_zly2006_zhihu_navigation_SegmentCommentHolder$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_SegmentCommentHolder_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_SegmentCommentHolder_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_SegmentCommentHolder_$serializer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_SentenceSimilarityTest$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_SentenceSimilarityTest$stableprop|#static{}com_github_zly2006_zhihu_navigation_SentenceSimilarityTest$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Topic$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Topic$stableprop|#static{}com_github_zly2006_zhihu_navigation_Topic$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Topic_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Topic_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_Topic_$serializer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Video$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Video$stableprop|#static{}com_github_zly2006_zhihu_navigation_Video$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Video_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Video_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_Video_$serializer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_WriteAnswer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_WriteAnswer$stableprop|#static{}com_github_zly2006_zhihu_navigation_WriteAnswer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_WriteAnswer_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_WriteAnswer_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_WriteAnswer_$serializer$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_WritePin$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_WritePin$stableprop|#static{}com_github_zly2006_zhihu_navigation_WritePin$stableprop[0]
+final val com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_WritePin_$serializer$stableprop // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_WritePin_$serializer$stableprop|#static{}com_github_zly2006_zhihu_navigation_WritePin_$serializer$stableprop[0]
+
+final fun (com.github.zly2006.zhihu.navigation/NavDestination).com.github.zly2006.zhihu.data/toFeedDisplayItemNavDestinationJson(): kotlin/String // com.github.zly2006.zhihu.data/toFeedDisplayItemNavDestinationJson|toFeedDisplayItemNavDestinationJson@com.github.zly2006.zhihu.navigation.NavDestination(){}[0]
+final fun (com.github.zly2006.zhihu.navigation/NavDestination).com.github.zly2006.zhihu.navigation/withReadingQueueSource(kotlin/String?): com.github.zly2006.zhihu.navigation/NavDestination // com.github.zly2006.zhihu.navigation/withReadingQueueSource|withReadingQueueSource@com.github.zly2006.zhihu.navigation.NavDestination(kotlin.String?){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account$stableprop_getter|com_github_zly2006_zhihu_navigation_Account$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_AppearanceSettings$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_AppearanceSettings$stableprop_getter|com_github_zly2006_zhihu_navigation_Account_AppearanceSettings$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_AppearanceSettings_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_AppearanceSettings_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_Account_AppearanceSettings_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_DeveloperSettings$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_DeveloperSettings$stableprop_getter|com_github_zly2006_zhihu_navigation_Account_DeveloperSettings$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_DeveloperSettings_ColorScheme$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_DeveloperSettings_ColorScheme$stableprop_getter|com_github_zly2006_zhihu_navigation_Account_DeveloperSettings_ColorScheme$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_IdentityManagement$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_IdentityManagement$stableprop_getter|com_github_zly2006_zhihu_navigation_Account_IdentityManagement$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_OpenSourceLicenses$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_OpenSourceLicenses$stableprop_getter|com_github_zly2006_zhihu_navigation_Account_OpenSourceLicenses$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_ReadingSettings$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_ReadingSettings$stableprop_getter|com_github_zly2006_zhihu_navigation_Account_ReadingSettings$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_RecommendSettings$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_RecommendSettings$stableprop_getter|com_github_zly2006_zhihu_navigation_Account_RecommendSettings$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_RecommendSettings_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_RecommendSettings_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_Account_RecommendSettings_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_RecommendSettings_BlockedFeedHistory$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_RecommendSettings_BlockedFeedHistory$stableprop_getter|com_github_zly2006_zhihu_navigation_Account_RecommendSettings_BlockedFeedHistory$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_RecommendSettings_Blocklist$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_RecommendSettings_Blocklist$stableprop_getter|com_github_zly2006_zhihu_navigation_Account_RecommendSettings_Blocklist$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_SettingsSearch$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_SettingsSearch$stableprop_getter|com_github_zly2006_zhihu_navigation_Account_SettingsSearch$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_SystemAndUpdateSettings$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_SystemAndUpdateSettings$stableprop_getter|com_github_zly2006_zhihu_navigation_Account_SystemAndUpdateSettings$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_SystemAndUpdateSettings_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Account_SystemAndUpdateSettings_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_Account_SystemAndUpdateSettings_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Article$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Article$stableprop_getter|com_github_zly2006_zhihu_navigation_Article$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_ArticleTypeNavType$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_ArticleTypeNavType$stableprop_getter|com_github_zly2006_zhihu_navigation_ArticleTypeNavType$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Article_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Article_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_Article_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_CollectionContent$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_CollectionContent$stableprop_getter|com_github_zly2006_zhihu_navigation_CollectionContent$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_CollectionContent_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_CollectionContent_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_CollectionContent_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Collections$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Collections$stableprop_getter|com_github_zly2006_zhihu_navigation_Collections$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Collections_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Collections_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_Collections_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_CommentHolder$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_CommentHolder$stableprop_getter|com_github_zly2006_zhihu_navigation_CommentHolder$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_CommentHolder_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_CommentHolder_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_CommentHolder_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Daily$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Daily$stableprop_getter|com_github_zly2006_zhihu_navigation_Daily$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_EmptyDetail$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_EmptyDetail$stableprop_getter|com_github_zly2006_zhihu_navigation_EmptyDetail$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Follow$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Follow$stableprop_getter|com_github_zly2006_zhihu_navigation_Follow$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_History$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_History$stableprop_getter|com_github_zly2006_zhihu_navigation_History$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Home$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Home$stableprop_getter|com_github_zly2006_zhihu_navigation_Home$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_HotList$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_HotList$stableprop_getter|com_github_zly2006_zhihu_navigation_HotList$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Login$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Login$stableprop_getter|com_github_zly2006_zhihu_navigation_Login$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_MainTabs$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_MainTabs$stableprop_getter|com_github_zly2006_zhihu_navigation_MainTabs$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_MyCollections$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_MyCollections$stableprop_getter|com_github_zly2006_zhihu_navigation_MyCollections$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Navigator$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Navigator$stableprop_getter|com_github_zly2006_zhihu_navigation_Navigator$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification$stableprop_getter|com_github_zly2006_zhihu_navigation_Notification$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Entry$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Entry$stableprop_getter|com_github_zly2006_zhihu_navigation_Notification_Entry$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Entry_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Entry_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_Notification_Entry_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Invitations$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Invitations$stableprop_getter|com_github_zly2006_zhihu_navigation_Notification_Invitations$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Message$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Message$stableprop_getter|com_github_zly2006_zhihu_navigation_Notification_Message$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Message_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_Message_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_Notification_Message_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_NotificationSettings$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_NotificationSettings$stableprop_getter|com_github_zly2006_zhihu_navigation_Notification_NotificationSettings$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_NotificationSettings_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Notification_NotificationSettings_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_Notification_NotificationSettings_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_OnlineHistory$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_OnlineHistory$stableprop_getter|com_github_zly2006_zhihu_navigation_OnlineHistory$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Person$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Person$stableprop_getter|com_github_zly2006_zhihu_navigation_Person$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Person_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Person_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_Person_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Pin$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Pin$stableprop_getter|com_github_zly2006_zhihu_navigation_Pin$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Pin_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Pin_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_Pin_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Question$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Question$stableprop_getter|com_github_zly2006_zhihu_navigation_Question$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Question_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Question_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_Question_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Search$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Search$stableprop_getter|com_github_zly2006_zhihu_navigation_Search$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Search_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Search_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_Search_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_SegmentCommentHolder$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_SegmentCommentHolder$stableprop_getter|com_github_zly2006_zhihu_navigation_SegmentCommentHolder$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_SegmentCommentHolder_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_SegmentCommentHolder_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_SegmentCommentHolder_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_SentenceSimilarityTest$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_SentenceSimilarityTest$stableprop_getter|com_github_zly2006_zhihu_navigation_SentenceSimilarityTest$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Topic$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Topic$stableprop_getter|com_github_zly2006_zhihu_navigation_Topic$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Topic_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Topic_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_Topic_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Video$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Video$stableprop_getter|com_github_zly2006_zhihu_navigation_Video$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Video_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_Video_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_Video_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_WriteAnswer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_WriteAnswer$stableprop_getter|com_github_zly2006_zhihu_navigation_WriteAnswer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_WriteAnswer_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_WriteAnswer_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_WriteAnswer_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_WritePin$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_WritePin$stableprop_getter|com_github_zly2006_zhihu_navigation_WritePin$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_WritePin_$serializer$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.navigation/com_github_zly2006_zhihu_navigation_WritePin_$serializer$stableprop_getter|com_github_zly2006_zhihu_navigation_WritePin_$serializer$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.navigation/resolveContent(io.ktor.http/Url): com.github.zly2006.zhihu.navigation/NavDestination? // com.github.zly2006.zhihu.navigation/resolveContent|resolveContent(io.ktor.http.Url){}[0]
+final fun com.github.zly2006.zhihu.navigation/resolveContent(kotlin/String): com.github.zly2006.zhihu.navigation/NavDestination? // com.github.zly2006.zhihu.navigation/resolveContent|resolveContent(kotlin.String){}[0]
+final fun com.github.zly2006.zhihu.navigation/zhihuQuestionFeedsUrl(kotlin/Long, kotlin/Int, kotlin/String? = ...): kotlin/String // com.github.zly2006.zhihu.navigation/zhihuQuestionFeedsUrl|zhihuQuestionFeedsUrl(kotlin.Long;kotlin.Int;kotlin.String?){}[0]
+final fun com.github.zly2006.zhihu.navigation/zhihuQuestionFeedsUrl(kotlin/String, kotlin/Int, kotlin/String? = ...): kotlin/String // com.github.zly2006.zhihu.navigation/zhihuQuestionFeedsUrl|zhihuQuestionFeedsUrl(kotlin.String;kotlin.Int;kotlin.String?){}[0]

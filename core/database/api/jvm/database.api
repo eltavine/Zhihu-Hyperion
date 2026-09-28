@@ -1,0 +1,757 @@
+public final class com/github/zly2006/zhihu/data/DatabaseModule_jvmKt {
+	public static final fun databaseModule (Ljava/io/File;Ljava/io/File;)Lorg/koin/core/module/Module;
+}
+
+public final class com/github/zly2006/zhihu/data/RoomDriverConfig_jvmKt {
+	public static final fun applyPlatformDriver (Landroidx/room/RoomDatabase$Builder;)Landroidx/room/RoomDatabase$Builder;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecord {
+	public static final field Companion Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecord$Companion;
+	public static final field MAX_RECORDS I
+	public static final field TABLE_NAME Ljava/lang/String;
+	public fun <init> (JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()J
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Ljava/lang/String;)Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecord;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecord;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecord;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAuthorId ()Ljava/lang/String;
+	public final fun getAuthorName ()Ljava/lang/String;
+	public final fun getBlockReason ()Ljava/lang/String;
+	public final fun getBlockedTime ()J
+	public final fun getContentId ()Ljava/lang/String;
+	public final fun getContentType ()Ljava/lang/String;
+	public final fun getExcerpt ()Ljava/lang/String;
+	public final fun getId ()J
+	public final fun getMatchedKeywords ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecord$Companion {
+}
+
+public abstract interface class com/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecordDao {
+	public abstract fun clearAllRecords (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun deleteOldestRecords (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun deleteRecord (JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getRecentBlockedRecords (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getRecentBlockedRecords$default (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecordDao;ILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public abstract fun getRecordCount (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun insertRecord (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecord;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun maintainRecordLimit (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecordDao$DefaultImpls {
+	public static synthetic fun getRecentBlockedRecords$default (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecordDao;ILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static fun maintainRecordLimit (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecordDao;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecordDao_Impl : com/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecordDao {
+	public static final field Companion Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecordDao_Impl$Companion;
+	public fun <init> (Landroidx/room/RoomDatabase;)V
+	public fun clearAllRecords (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun deleteOldestRecords (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun deleteRecord (JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getRecentBlockedRecords (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getRecordCount (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun insertRecord (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecord;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun maintainRecordLimit (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecordDao_Impl$Companion {
+	public final fun getRequiredConverters ()Ljava/util/List;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedFeedRecord {
+	public static final field Companion Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedFeedRecord$Companion;
+	public static final field MAX_RECORDS I
+	public static final field TABLE_NAME Ljava/lang/String;
+	public fun <init> (JLjava/lang/String;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)V
+	public synthetic fun <init> (JLjava/lang/String;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component11 ()J
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/Long;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (JLjava/lang/String;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedFeedRecord;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedFeedRecord;JLjava/lang/String;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedFeedRecord;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAuthorId ()Ljava/lang/String;
+	public final fun getAuthorName ()Ljava/lang/String;
+	public final fun getBlockedReason ()Ljava/lang/String;
+	public final fun getBlockedTime ()J
+	public final fun getContent ()Ljava/lang/String;
+	public final fun getFeedJson ()Ljava/lang/String;
+	public final fun getId ()J
+	public final fun getNavDestinationJson ()Ljava/lang/String;
+	public final fun getQuestionId ()Ljava/lang/Long;
+	public final fun getTitle ()Ljava/lang/String;
+	public final fun getUrl ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedFeedRecord$Companion {
+}
+
+public abstract interface class com/github/zly2006/zhihu/viewmodel/filter/BlockedFeedRecordDao {
+	public abstract fun clearAll (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun deleteById (JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun insert (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedFeedRecord;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun maintainLimit (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun observeAll ()Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedFeedRecordDao_Impl : com/github/zly2006/zhihu/viewmodel/filter/BlockedFeedRecordDao {
+	public static final field Companion Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedFeedRecordDao_Impl$Companion;
+	public fun <init> (Landroidx/room/RoomDatabase;)V
+	public fun clearAll (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun deleteById (JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun insert (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedFeedRecord;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun maintainLimit (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun observeAll ()Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedFeedRecordDao_Impl$Companion {
+	public final fun getRequiredConverters ()Ljava/util/List;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedKeyword {
+	public static final field Companion Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedKeyword$Companion;
+	public static final field TABLE_NAME Ljava/lang/String;
+	public fun <init> (JLjava/lang/String;Ljava/lang/String;ZZJ)V
+	public synthetic fun <init> (JLjava/lang/String;Ljava/lang/String;ZZJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Z
+	public final fun component5 ()Z
+	public final fun component6 ()J
+	public final fun copy (JLjava/lang/String;Ljava/lang/String;ZZJ)Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedKeyword;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedKeyword;JLjava/lang/String;Ljava/lang/String;ZZJILjava/lang/Object;)Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedKeyword;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCaseSensitive ()Z
+	public final fun getCreatedTime ()J
+	public final fun getId ()J
+	public final fun getKeyword ()Ljava/lang/String;
+	public final fun getKeywordType ()Ljava/lang/String;
+	public final fun getKeywordTypeEnum ()Lcom/github/zly2006/zhihu/viewmodel/filter/KeywordType;
+	public final fun getNLPKeywords ()Ljava/util/List;
+	public fun hashCode ()I
+	public final fun isRegex ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedKeyword$Companion {
+}
+
+public abstract interface class com/github/zly2006/zhihu/viewmodel/filter/BlockedKeywordDao {
+	public abstract fun clearAllKeywords (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun deleteKeyword (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedKeyword;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun deleteKeywordById (JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getAllKeywords (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getKeywordCount (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun insertKeyword (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedKeyword;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedKeywordDao_Impl : com/github/zly2006/zhihu/viewmodel/filter/BlockedKeywordDao {
+	public static final field Companion Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedKeywordDao_Impl$Companion;
+	public fun <init> (Landroidx/room/RoomDatabase;)V
+	public fun clearAllKeywords (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun deleteKeyword (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedKeyword;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun deleteKeywordById (JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getAllKeywords (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getKeywordCount (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun insertKeyword (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedKeyword;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedKeywordDao_Impl$Companion {
+	public final fun getRequiredConverters ()Ljava/util/List;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedQuestionAuthor {
+	public static final field Companion Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedQuestionAuthor$Companion;
+	public static final field TABLE_NAME Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()J
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedQuestionAuthor;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedQuestionAuthor;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedQuestionAuthor;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAvatarUrl ()Ljava/lang/String;
+	public final fun getCreatedTime ()J
+	public final fun getUrlToken ()Ljava/lang/String;
+	public final fun getUserId ()Ljava/lang/String;
+	public final fun getUserName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedQuestionAuthor$Companion {
+}
+
+public abstract interface class com/github/zly2006/zhihu/viewmodel/filter/BlockedQuestionAuthorDao {
+	public abstract fun clearAllUsers (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun deleteUserById (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getAllUsers (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getUserCount (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun insertUser (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedQuestionAuthor;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun isUserBlocked (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedQuestionAuthorDao_Impl : com/github/zly2006/zhihu/viewmodel/filter/BlockedQuestionAuthorDao {
+	public static final field Companion Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedQuestionAuthorDao_Impl$Companion;
+	public fun <init> (Landroidx/room/RoomDatabase;)V
+	public fun clearAllUsers (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun deleteUserById (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getAllUsers (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getUserCount (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun insertUser (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedQuestionAuthor;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun isUserBlocked (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedQuestionAuthorDao_Impl$Companion {
+	public final fun getRequiredConverters ()Ljava/util/List;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedTopic {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;J)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()J
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;J)Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedTopic;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedTopic;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedTopic;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAddedTime ()J
+	public final fun getTopicId ()Ljava/lang/String;
+	public final fun getTopicName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/github/zly2006/zhihu/viewmodel/filter/BlockedTopicDao {
+	public abstract fun clearAllTopics (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun deleteTopicById (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getAllTopics (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getBlockedTopicIds (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getTopicCount (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getTopicNameById (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun insertTopic (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedTopic;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun isTopicBlocked (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedTopicDao_Impl : com/github/zly2006/zhihu/viewmodel/filter/BlockedTopicDao {
+	public static final field Companion Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedTopicDao_Impl$Companion;
+	public fun <init> (Landroidx/room/RoomDatabase;)V
+	public fun clearAllTopics (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun deleteTopicById (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getAllTopics (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getBlockedTopicIds (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getTopicCount (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getTopicNameById (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun insertTopic (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedTopic;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun isTopicBlocked (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedTopicDao_Impl$Companion {
+	public final fun getRequiredConverters ()Ljava/util/List;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedUser {
+	public static final field Companion Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedUser$Companion;
+	public static final field TABLE_NAME Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()J
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedUser;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedUser;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedUser;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAvatarUrl ()Ljava/lang/String;
+	public final fun getCreatedTime ()J
+	public final fun getUrlToken ()Ljava/lang/String;
+	public final fun getUserId ()Ljava/lang/String;
+	public final fun getUserName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedUser$Companion {
+}
+
+public abstract interface class com/github/zly2006/zhihu/viewmodel/filter/BlockedUserDao {
+	public abstract fun clearAllUsers (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun deleteUserById (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getAllUserIds (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getAllUsers (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getUserCount (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun insertUser (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedUser;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun isUserBlocked (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedUserDao_Impl : com/github/zly2006/zhihu/viewmodel/filter/BlockedUserDao {
+	public static final field Companion Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedUserDao_Impl$Companion;
+	public fun <init> (Landroidx/room/RoomDatabase;)V
+	public fun clearAllUsers (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun deleteUserById (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getAllUserIds (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getAllUsers (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getUserCount (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun insertUser (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedUser;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun isUserBlocked (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/BlockedUserDao_Impl$Companion {
+	public final fun getRequiredConverters ()Ljava/util/List;
+}
+
+public abstract interface class com/github/zly2006/zhihu/viewmodel/filter/ContentFilterDao {
+	public abstract fun clearAllRecords (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getFilteredContent (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getFilteredContent$default (Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterDao;ILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public abstract fun getRecordCount (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getViewRecord (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getViewedContentIdsByIds (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun incrementViewCount (Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun incrementViewCount$default (Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterDao;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public abstract fun insertOrUpdateViewRecord (Lcom/github/zly2006/zhihu/viewmodel/filter/ContentViewRecord;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun markAsInteracted (Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun markAsInteracted$default (Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterDao;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/ContentFilterDao$DefaultImpls {
+	public static synthetic fun getFilteredContent$default (Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterDao;ILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun incrementViewCount$default (Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterDao;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun markAsInteracted$default (Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterDao;Ljava/lang/String;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/ContentFilterDao_Impl : com/github/zly2006/zhihu/viewmodel/filter/ContentFilterDao {
+	public static final field Companion Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterDao_Impl$Companion;
+	public fun <init> (Landroidx/room/RoomDatabase;)V
+	public fun clearAllRecords (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getFilteredContent (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getRecordCount (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getViewRecord (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getViewedContentIdsByIds (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun incrementViewCount (Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun insertOrUpdateViewRecord (Lcom/github/zly2006/zhihu/viewmodel/filter/ContentViewRecord;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun markAsInteracted (Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/ContentFilterDao_Impl$Companion {
+	public final fun getRequiredConverters ()Ljava/util/List;
+}
+
+public abstract class com/github/zly2006/zhihu/viewmodel/filter/ContentFilterDatabase : androidx/room/RoomDatabase {
+	public fun <init> ()V
+	public abstract fun blockedContentRecordDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecordDao;
+	public abstract fun blockedFeedRecordDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedFeedRecordDao;
+	public abstract fun blockedKeywordDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedKeywordDao;
+	public abstract fun blockedQuestionAuthorDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedQuestionAuthorDao;
+	public abstract fun blockedTopicDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedTopicDao;
+	public abstract fun blockedUserDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedUserDao;
+	public abstract fun contentFilterDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterDao;
+	public abstract fun contentOpenEventDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/ContentOpenEventDao;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/ContentFilterDatabaseConstructor : androidx/room/RoomDatabaseConstructor {
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterDatabaseConstructor;
+	public synthetic fun initialize ()Landroidx/room/RoomDatabase;
+	public fun initialize ()Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterDatabase;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/ContentFilterDatabaseKt {
+	public static final fun buildContentFilterDatabase (Landroidx/room/RoomDatabase$Builder;)Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterDatabase;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/ContentFilterDatabase_Impl : com/github/zly2006/zhihu/viewmodel/filter/ContentFilterDatabase {
+	public fun <init> ()V
+	public fun blockedContentRecordDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedContentRecordDao;
+	public fun blockedFeedRecordDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedFeedRecordDao;
+	public fun blockedKeywordDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedKeywordDao;
+	public fun blockedQuestionAuthorDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedQuestionAuthorDao;
+	public fun blockedTopicDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedTopicDao;
+	public fun blockedUserDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedUserDao;
+	public fun contentFilterDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterDao;
+	public fun contentOpenEventDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/ContentOpenEventDao;
+	public fun createAutoMigrations (Ljava/util/Map;)Ljava/util/List;
+	public synthetic fun createOpenDelegate ()Landroidx/room/RoomOpenDelegateMarker;
+	public fun getRequiredAutoMigrationSpecClasses ()Ljava/util/Set;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/ContentOpenEvent {
+	public static final field Companion Lcom/github/zly2006/zhihu/viewmodel/filter/ContentOpenEvent$Companion;
+	public static final field TABLE_NAME Ljava/lang/String;
+	public fun <init> (JLjava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/String;J)V
+	public synthetic fun <init> (JLjava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/String;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/Long;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()J
+	public final fun copy (JLjava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/String;J)Lcom/github/zly2006/zhihu/viewmodel/filter/ContentOpenEvent;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/viewmodel/filter/ContentOpenEvent;JLjava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/String;JILjava/lang/Object;)Lcom/github/zly2006/zhihu/viewmodel/filter/ContentOpenEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContentId ()Ljava/lang/String;
+	public final fun getContentType ()Ljava/lang/String;
+	public final fun getId ()J
+	public final fun getOpenFrom ()Ljava/lang/String;
+	public final fun getOpenedAt ()J
+	public final fun getQuestionId ()Ljava/lang/Long;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/ContentOpenEvent$Companion {
+}
+
+public abstract interface class com/github/zly2006/zhihu/viewmodel/filter/ContentOpenEventDao {
+	public abstract fun getOpenedContentKeys (Ljava/lang/String;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getOpenedContentKeysByKeys (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getRemotelySyncedContentKeys (Ljava/lang/String;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getRemotelySyncedContentKeysByKeys (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun insert (Lcom/github/zly2006/zhihu/viewmodel/filter/ContentOpenEvent;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/ContentOpenEventDao$DefaultImpls {
+	public static fun getOpenedContentKeysByKeys (Lcom/github/zly2006/zhihu/viewmodel/filter/ContentOpenEventDao;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun getRemotelySyncedContentKeysByKeys (Lcom/github/zly2006/zhihu/viewmodel/filter/ContentOpenEventDao;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/ContentOpenEventDao_Impl : com/github/zly2006/zhihu/viewmodel/filter/ContentOpenEventDao {
+	public static final field Companion Lcom/github/zly2006/zhihu/viewmodel/filter/ContentOpenEventDao_Impl$Companion;
+	public fun <init> (Landroidx/room/RoomDatabase;)V
+	public fun getOpenedContentKeys (Ljava/lang/String;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getOpenedContentKeysByKeys (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getRemotelySyncedContentKeys (Ljava/lang/String;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getRemotelySyncedContentKeysByKeys (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun insert (Lcom/github/zly2006/zhihu/viewmodel/filter/ContentOpenEvent;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/ContentOpenEventDao_Impl$Companion {
+	public final fun getRequiredConverters ()Ljava/util/List;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/ContentViewRecord {
+	public static final field Companion Lcom/github/zly2006/zhihu/viewmodel/filter/ContentViewRecord$Companion;
+	public static final field MAX_VIEW_COUNT_WITHOUT_INTERACTION I
+	public static final field TABLE_NAME Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZJJLjava/lang/Long;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZJJLjava/lang/Long;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()I
+	public final fun component5 ()Z
+	public final fun component6 ()J
+	public final fun component7 ()J
+	public final fun component8 ()Ljava/lang/Long;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZJJLjava/lang/Long;)Lcom/github/zly2006/zhihu/viewmodel/filter/ContentViewRecord;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/viewmodel/filter/ContentViewRecord;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZJJLjava/lang/Long;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/viewmodel/filter/ContentViewRecord;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFirstViewTime ()J
+	public final fun getHasInteraction ()Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getLastInteractionTime ()Ljava/lang/Long;
+	public final fun getLastViewTime ()J
+	public final fun getTargetId ()Ljava/lang/String;
+	public final fun getTargetType ()Ljava/lang/String;
+	public final fun getViewCount ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/ContentViewRecord$Companion {
+	public final fun generateId (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/JvmContentFilterDatabaseKt {
+	public static final fun desktopContentFilterDatabaseFile ()Ljava/io/File;
+	public static final fun getContentFilterDatabase (Ljava/io/File;)Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterDatabase;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/KeywordType : java/lang/Enum {
+	public static final field EXACT_MATCH Lcom/github/zly2006/zhihu/viewmodel/filter/KeywordType;
+	public static final field NLP_SEMANTIC Lcom/github/zly2006/zhihu/viewmodel/filter/KeywordType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/zly2006/zhihu/viewmodel/filter/KeywordType;
+	public static fun values ()[Lcom/github/zly2006/zhihu/viewmodel/filter/KeywordType;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/MatchedKeywordInfo {
+	public static final field Companion Lcom/github/zly2006/zhihu/viewmodel/filter/MatchedKeywordInfo$Companion;
+	public fun <init> (Ljava/lang/String;D)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()D
+	public final fun copy (Ljava/lang/String;D)Lcom/github/zly2006/zhihu/viewmodel/filter/MatchedKeywordInfo;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/viewmodel/filter/MatchedKeywordInfo;Ljava/lang/String;DILjava/lang/Object;)Lcom/github/zly2006/zhihu/viewmodel/filter/MatchedKeywordInfo;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getKeyword ()Ljava/lang/String;
+	public final fun getSimilarity ()D
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/viewmodel/filter/MatchedKeywordInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/viewmodel/filter/MatchedKeywordInfo$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/viewmodel/filter/MatchedKeywordInfo;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/viewmodel/filter/MatchedKeywordInfo;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/MatchedKeywordInfo$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/local/ContentLikeCount {
+	public fun <init> (Ljava/lang/String;I)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()I
+	public final fun copy (Ljava/lang/String;I)Lcom/github/zly2006/zhihu/viewmodel/local/ContentLikeCount;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/viewmodel/local/ContentLikeCount;Ljava/lang/String;IILjava/lang/Object;)Lcom/github/zly2006/zhihu/viewmodel/local/ContentLikeCount;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContentId ()Ljava/lang/String;
+	public final fun getCount ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/local/CrawlingReason : java/lang/Enum {
+	public static final field CollaborativeFiltering Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;
+	public static final field Following Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;
+	public static final field FollowingUpvote Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;
+	public static final field Trending Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;
+	public static final field UpvotedQuestion Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;
+	public final fun getDefaultWeight ()D
+	public final fun getDisplayText ()Ljava/lang/String;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;
+	public static fun values ()[Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/local/CrawlingResult {
+	public fun <init> (JJLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;DJ)V
+	public synthetic fun <init> (JJLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;DJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component2 ()J
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;
+	public final fun component8 ()D
+	public final fun component9 ()J
+	public final fun copy (JJLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;DJ)Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingResult;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingResult;JJLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;DJILjava/lang/Object;)Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContentId ()Ljava/lang/String;
+	public final fun getCreatedAt ()J
+	public final fun getId ()J
+	public final fun getReason ()Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;
+	public final fun getScore ()D
+	public final fun getSummary ()Ljava/lang/String;
+	public final fun getTaskId ()J
+	public final fun getTitle ()Ljava/lang/String;
+	public final fun getUrl ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/local/CrawlingStatus : java/lang/Enum {
+	public static final field Completed Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;
+	public static final field Failed Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;
+	public static final field InProgress Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;
+	public static final field NotStarted Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;
+	public static fun values ()[Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/local/CrawlingTask {
+	public fun <init> (JLjava/lang/String;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;IJLjava/lang/Long;Ljava/lang/String;)V
+	public synthetic fun <init> (JLjava/lang/String;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;IJLjava/lang/Long;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;
+	public final fun component4 ()Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;
+	public final fun component5 ()I
+	public final fun component6 ()J
+	public final fun component7 ()Ljava/lang/Long;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun copy (JLjava/lang/String;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;IJLjava/lang/Long;Ljava/lang/String;)Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingTask;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingTask;JLjava/lang/String;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;IJLjava/lang/Long;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingTask;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCreatedAt ()J
+	public final fun getErrorMessage ()Ljava/lang/String;
+	public final fun getExecutedAt ()Ljava/lang/Long;
+	public final fun getId ()J
+	public final fun getPriority ()I
+	public final fun getReason ()Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;
+	public final fun getStatus ()Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;
+	public final fun getUrl ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/github/zly2006/zhihu/viewmodel/local/LocalContentDao {
+	public abstract fun cleanupOldBehaviors (JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun cleanupOldFeeds (JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun cleanupOldResults (JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun cleanupOldTasks (Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getBehaviorsByActionSince (Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getBehaviorsSince (JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getFeedById (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getMostLikedContent (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getRecentResults (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getResultCountByReason (Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getResultsByReason (Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getTaskCountByReasonAndStatus (Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getTasksByStatus (Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun insertBehavior (Lcom/github/zly2006/zhihu/viewmodel/local/UserBehavior;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun insertFeed (Lcom/github/zly2006/zhihu/viewmodel/local/LocalFeed;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun insertResults (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun insertTasks (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun updateFeedFeedback (Ljava/lang/String;DLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun updateTask (Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingTask;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/local/LocalContentDao_Impl : com/github/zly2006/zhihu/viewmodel/local/LocalContentDao {
+	public static final field Companion Lcom/github/zly2006/zhihu/viewmodel/local/LocalContentDao_Impl$Companion;
+	public fun <init> (Landroidx/room/RoomDatabase;)V
+	public fun cleanupOldBehaviors (JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun cleanupOldFeeds (JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun cleanupOldResults (JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun cleanupOldTasks (Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getBehaviorsByActionSince (Ljava/lang/String;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getBehaviorsSince (JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getFeedById (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getMostLikedContent (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getRecentResults (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getResultCountByReason (Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getResultsByReason (Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getTaskCountByReasonAndStatus (Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getTasksByStatus (Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun insertBehavior (Lcom/github/zly2006/zhihu/viewmodel/local/UserBehavior;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun insertFeed (Lcom/github/zly2006/zhihu/viewmodel/local/LocalFeed;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun insertResults (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun insertTasks (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun updateFeedFeedback (Ljava/lang/String;DLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun updateTask (Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingTask;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/local/LocalContentDao_Impl$Companion {
+	public final fun getRequiredConverters ()Ljava/util/List;
+}
+
+public abstract class com/github/zly2006/zhihu/viewmodel/local/LocalContentDatabase : androidx/room/RoomDatabase {
+	public fun <init> ()V
+	public abstract fun contentDao ()Lcom/github/zly2006/zhihu/viewmodel/local/LocalContentDao;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/local/LocalContentDatabaseConstructor : androidx/room/RoomDatabaseConstructor {
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/viewmodel/local/LocalContentDatabaseConstructor;
+	public synthetic fun initialize ()Landroidx/room/RoomDatabase;
+	public fun initialize ()Lcom/github/zly2006/zhihu/viewmodel/local/LocalContentDatabase;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/local/LocalContentDatabaseKt {
+	public static final fun buildLocalContentDatabase (Landroidx/room/RoomDatabase$Builder;)Lcom/github/zly2006/zhihu/viewmodel/local/LocalContentDatabase;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/local/LocalContentDatabase_Impl : com/github/zly2006/zhihu/viewmodel/local/LocalContentDatabase {
+	public fun <init> ()V
+	public fun contentDao ()Lcom/github/zly2006/zhihu/viewmodel/local/LocalContentDao;
+	public fun createAutoMigrations (Ljava/util/Map;)Ljava/util/List;
+	public synthetic fun createOpenDelegate ()Landroidx/room/RoomOpenDelegateMarker;
+	public fun getRequiredAutoMigrationSpecClasses ()Ljava/util/Set;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/local/LocalContentDatabase_jvmKt {
+	public static final fun getLocalContentDatabase (Ljava/io/File;)Lcom/github/zly2006/zhihu/viewmodel/local/LocalContentDatabase;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/local/LocalDatabaseConverters {
+	public fun <init> ()V
+	public final fun fromCrawlingReason (Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;)Ljava/lang/String;
+	public final fun fromCrawlingStatus (Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;)Ljava/lang/String;
+	public final fun toCrawlingReason (Ljava/lang/String;)Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingReason;
+	public final fun toCrawlingStatus (Ljava/lang/String;)Lcom/github/zly2006/zhihu/viewmodel/local/CrawlingStatus;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/local/LocalFeed {
+	public fun <init> (Ljava/lang/String;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;DJ)V
+	public synthetic fun <init> (Ljava/lang/String;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;DJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()D
+	public final fun component8 ()J
+	public final fun copy (Ljava/lang/String;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;DJ)Lcom/github/zly2006/zhihu/viewmodel/local/LocalFeed;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/viewmodel/local/LocalFeed;Ljava/lang/String;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;DJILjava/lang/Object;)Lcom/github/zly2006/zhihu/viewmodel/local/LocalFeed;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCreatedAt ()J
+	public final fun getId ()Ljava/lang/String;
+	public final fun getNavDestination ()Ljava/lang/String;
+	public final fun getReasonDisplay ()Ljava/lang/String;
+	public final fun getResultId ()J
+	public final fun getSummary ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public final fun getUserFeedback ()D
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/local/UserBehavior {
+	public fun <init> (JLjava/lang/String;Ljava/lang/String;JLjava/lang/Long;)V
+	public synthetic fun <init> (JLjava/lang/String;Ljava/lang/String;JLjava/lang/Long;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()J
+	public final fun component5 ()Ljava/lang/Long;
+	public final fun copy (JLjava/lang/String;Ljava/lang/String;JLjava/lang/Long;)Lcom/github/zly2006/zhihu/viewmodel/local/UserBehavior;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/viewmodel/local/UserBehavior;JLjava/lang/String;Ljava/lang/String;JLjava/lang/Long;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/viewmodel/local/UserBehavior;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAction ()Ljava/lang/String;
+	public final fun getContentId ()Ljava/lang/String;
+	public final fun getDuration ()Ljava/lang/Long;
+	public final fun getId ()J
+	public final fun getTimestamp ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+

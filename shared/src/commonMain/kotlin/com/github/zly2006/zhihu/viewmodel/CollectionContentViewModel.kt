@@ -55,21 +55,6 @@ data class CollectionHtmlExportResult(
     val zipFilePath: String?,
 )
 
-interface CollectionExportEnvironment {
-    suspend fun exportCollectionItemsToHtmlZip(
-        collectionTitle: String,
-        items: List<CollectionItem>,
-        includeImages: Boolean,
-        onProgress: suspend (CollectionHtmlExportProgress) -> Unit,
-    ): CollectionHtmlExportResult
-
-    suspend fun handleCollectionExportFailure(error: Exception)
-}
-
-interface CollectionContentEnvironment :
-    PaginationEnvironment,
-    CollectionExportEnvironment
-
 suspend fun ZhihuApiEnvironment.fetchCollection(collectionId: String): Collection {
     val json = fetchJson("https://www.zhihu.com/api/v4/collections/$collectionId", "") ?: error("收藏夹信息为空")
     return ZhihuJson.decodeJson<Collection>(json["collection"] ?: throw IllegalStateException("收藏夹信息为空"))
@@ -103,7 +88,7 @@ class CollectionContentViewModel(
     val nextPageUrl: String
         get() = lastPaging?.next.orEmpty()
 
-    override fun processResponse(environment: PaginationEnvironment, data: List<CollectionItem>, rawData: JsonArray) {
+    override suspend fun processResponse(environment: ZhihuApiEnvironment, data: List<CollectionItem>, rawData: JsonArray) {
         super.processResponse(environment, data, rawData)
         displayItems.addAll(data.map { createDisplayItem(it) }) // 展示用的已flatten数据
         if (randomPageOffsets != null) {
@@ -131,7 +116,7 @@ class CollectionContentViewModel(
         },
     )
 
-    override fun refresh(environment: PaginationEnvironment) {
+    override fun refresh(environment: ZhihuApiEnvironment) {
         activeRandomSeed = null
         activeRandomItemCount = null
         randomDisplayOrderKeys.clear()
@@ -141,7 +126,7 @@ class CollectionContentViewModel(
     }
 
     fun refreshRandom(
-        environment: PaginationEnvironment,
+        environment: ZhihuApiEnvironment,
         itemCount: Int,
         randomSeed: Int,
     ) {
@@ -178,7 +163,7 @@ class CollectionContentViewModel(
         randomDisplayOrderKeys.addAll(keys)
     }
 
-    private fun refreshCurrentPagingMode(environment: PaginationEnvironment) {
+    private fun refreshCurrentPagingMode(environment: ZhihuApiEnvironment) {
         displayItems.clear()
         viewModelScope.launch {
             collection = environment.fetchCollection(collectionId)
@@ -187,7 +172,8 @@ class CollectionContentViewModel(
     }
 
     fun exportAllToHtmlZip(
-        environment: CollectionContentEnvironment,
+        environment: ZhihuApiEnvironment,
+        exporter: CollectionExporter,
         includeImages: Boolean,
     ) {
         if (exportDialogState?.isCompleted == false) return
@@ -220,7 +206,8 @@ class CollectionContentViewModel(
                 }
 
                 val exportTitle = title
-                val result = environment.exportCollectionItemsToHtmlZip(
+                val result = exporter.exportCollectionItemsToHtmlZip(
+                    environment = environment,
                     collectionTitle = exportTitle,
                     items = items,
                     includeImages = includeImages,
@@ -267,7 +254,7 @@ class CollectionContentViewModel(
                     isCompleted = true,
                     resultMessage = e.message ?: "未知错误",
                 )
-                environment.handleCollectionExportFailure(e)
+                exporter.handleCollectionExportFailure(e)
             }
         }
     }
@@ -276,7 +263,7 @@ class CollectionContentViewModel(
         exportDialogState = null
     }
 
-    private suspend fun ensureAllCollectionItemsLoaded(environment: CollectionContentEnvironment): List<CollectionItem> {
+    private suspend fun ensureAllCollectionItemsLoaded(environment: ZhihuApiEnvironment): List<CollectionItem> {
         if (collection == null) {
             collection = environment.fetchCollection(collectionId)
         }

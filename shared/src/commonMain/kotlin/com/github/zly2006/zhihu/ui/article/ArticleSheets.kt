@@ -33,9 +33,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,7 +57,7 @@ internal fun ArticleSummarySheet(
 ) {
     if (!showDialog) return
     val scrollState = rememberScrollState()
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val sheetState = rememberBottomSheetState(initialValue = SheetValue.Hidden, enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded))
     MyModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
@@ -112,7 +113,7 @@ internal fun AigcFlagSheet(
     onSubmitRequest: () -> Unit,
 ) {
     if (!showDialog) return
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val sheetState = rememberBottomSheetState(initialValue = SheetValue.Hidden, enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded))
     MyModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,

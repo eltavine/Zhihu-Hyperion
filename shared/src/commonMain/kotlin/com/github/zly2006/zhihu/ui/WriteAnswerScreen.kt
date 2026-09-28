@@ -41,9 +41,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -82,20 +83,20 @@ import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.WriteAnswer
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
+import com.github.zly2006.zhihu.ui.article.ARTICLE_USE_WEBVIEW_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.components.MyModalBottomSheet
 import com.github.zly2006.zhihu.ui.components.SettingItemWithSwitch
 import com.github.zly2006.zhihu.ui.components.WriteContentFabColumn
 import com.github.zly2006.zhihu.ui.components.WriteContentMarkdownEditor
-import com.github.zly2006.zhihu.ui.components.WriteContentPreviewSheet
 import com.github.zly2006.zhihu.ui.components.replaceSelection
 import com.github.zly2006.zhihu.util.json
 import com.github.zly2006.zhihu.util.raiseForStatus
 import com.github.zly2006.zhihu.viewmodel.fetchContentDetail
 import com.github.zly2006.zhihu.viewmodel.postSigned
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import io.ktor.client.request.header
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -103,6 +104,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
+import org.koin.compose.koinInject
 
 const val WRITE_ANSWER_CONTENT_TAG = "WriteAnswerContent"
 const val WRITE_ANSWER_FAB_PREVIEW_TAG = "WriteAnswerFabPreview"
@@ -116,10 +118,10 @@ fun WriteAnswerScreen(
 ) {
     val navigator = LocalNavigator.current
     val userMessages = rememberUserMessageSink()
-    val environment = rememberPaginationEnvironment(false)
+    val environment = rememberZhihuApiEnvironment(false)
     val coroutineScope = rememberCoroutineScope()
     val copyToClipboard = rememberPlainTextClipboard()
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     var editorActionsVisible by remember { mutableStateOf(true) }
@@ -136,8 +138,8 @@ fun WriteAnswerScreen(
     var errorDialogMessage by remember { mutableStateOf<String?>(null) }
     var showSettingsSheet by remember { mutableStateOf(false) }
     var showPreviewSheet by remember { mutableStateOf(false) }
-    val settingsSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val previewSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val settingsSheetState = rememberBottomSheetState(initialValue = SheetValue.Hidden, enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded))
+    val previewSheetState = rememberBottomSheetState(initialValue = SheetValue.Hidden, enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded))
     var isPreviewLoading by remember { mutableStateOf(false) }
     var previewHtml by remember { mutableStateOf<String?>(null) }
     var previewMarkdown by remember { mutableStateOf<String?>(null) }
@@ -433,6 +435,7 @@ fun WriteAnswerScreen(
                             editorActionsVisible = false
                             accumulatedEditorScroll = 0f
                         }
+
                         accumulatedEditorScroll >= actionVisibilityThreshold -> {
                             editorActionsVisible = true
                             accumulatedEditorScroll = 0f

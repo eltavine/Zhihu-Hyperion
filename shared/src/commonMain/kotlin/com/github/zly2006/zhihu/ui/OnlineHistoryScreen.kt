@@ -43,22 +43,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.navigation.History
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.platform.PlatformBackHandler
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
-import com.github.zly2006.zhihu.ui.TopLevelReselectAction
 import com.github.zly2006.zhihu.ui.components.FeedCard
-import com.github.zly2006.zhihu.ui.components.FeedPullToRefresh
 import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
-import com.github.zly2006.zhihu.ui.topLevelReselectAction
+import com.github.zly2006.zhihu.viewmodel.deleteOnlineHistory
 import com.github.zly2006.zhihu.viewmodel.feed.OnlineHistoryViewModel
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 const val ONLINE_HISTORY_OVERFLOW_TAG = "online_history_overflow"
 
@@ -75,7 +76,9 @@ fun OnlineHistoryScreen(
     isActive: Boolean = true,
 ) {
     val navigator = LocalNavigator.current
-    val viewModel: OnlineHistoryViewModel = viewModel { OnlineHistoryViewModel() }
+    val history = koinInject<HistoryStorage>()
+    val settings = koinInject<SettingsStore>()
+    val viewModel: OnlineHistoryViewModel = viewModel { OnlineHistoryViewModel(settings, history) }
     val readingQueueSourceId = "history:online"
     if (isActive) {
         RegisterReadingQueueSource(
@@ -83,7 +86,7 @@ fun OnlineHistoryScreen(
             items = viewModel.displayItems,
         )
     }
-    val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val paginationEnvironment = rememberZhihuApiEnvironment(allowGuestAccess = false)
     val userMessages = rememberUserMessageSink()
     val coroutineScope = rememberCoroutineScope()
     val listState = rememberLazyListState()
@@ -108,8 +111,14 @@ fun OnlineHistoryScreen(
         )
         if (isActive) {
             when (action) {
-                TopLevelReselectAction.Refresh -> viewModel.refresh(paginationEnvironment)
-                TopLevelReselectAction.ScrollToTop -> listState.animateScrollToItem(0)
+                TopLevelReselectAction.Refresh -> {
+                    viewModel.refresh(paginationEnvironment)
+                }
+
+                TopLevelReselectAction.ScrollToTop -> {
+                    listState.animateScrollToItem(0)
+                }
+
                 null -> {}
             }
         }
@@ -171,7 +180,10 @@ fun OnlineHistoryScreen(
                     TextButton(onClick = {
                         showClearHistoryDialog = false
                         coroutineScope.launch {
-                            paginationEnvironment.clearAllHistory()
+                            history.clear()
+                            if ("d_c0" in paginationEnvironment.authenticatedCookies()) {
+                                paginationEnvironment.deleteOnlineHistory(emptyList(), clear = true)
+                            }
                             viewModel.displayItems.clear()
                             userMessages.showShortMessage("已清除所有历史记录")
                         }

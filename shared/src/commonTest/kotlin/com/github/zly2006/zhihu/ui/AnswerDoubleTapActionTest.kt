@@ -17,6 +17,7 @@
 
 package com.github.zly2006.zhihu.ui
 
+import com.github.zly2006.zhihu.ui.article.AnswerDoubleTapAction
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

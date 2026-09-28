@@ -18,7 +18,7 @@
 package com.github.zly2006.zhihu.ui.subscreens
 
 import androidx.compose.runtime.Composable
-import com.github.zly2006.zhihu.ui.TtsState
+import com.github.zly2006.zhihu.reading.TtsState
 import kotlinx.coroutines.flow.StateFlow
 
 expect val isWebViewCustomFontSupported: Boolean

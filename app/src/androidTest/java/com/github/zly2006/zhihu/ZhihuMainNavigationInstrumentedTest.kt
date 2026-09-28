@@ -62,6 +62,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.zly2006.zhihu.filter.ContentOpenFrom
+import com.github.zly2006.zhihu.filter.ContentOpenTracker
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
@@ -74,7 +75,9 @@ import com.github.zly2006.zhihu.navigation.MyCollections
 import com.github.zly2006.zhihu.navigation.OnlineHistory
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.Video
+import com.github.zly2006.zhihu.platform.PREFERENCE_NAME
 import com.github.zly2006.zhihu.reading.AndroidReadingPlayerBridge
+import com.github.zly2006.zhihu.reading.READING_QUEUE_SHEET_TAG
 import com.github.zly2006.zhihu.reading.ReadingContentType
 import com.github.zly2006.zhihu.reading.ReadingPlaybackStatus
 import com.github.zly2006.zhihu.reading.ReadingPlayerState
@@ -84,16 +87,13 @@ import com.github.zly2006.zhihu.test.resetAppPreferences
 import com.github.zly2006.zhihu.test.setZhihuMainContent
 import com.github.zly2006.zhihu.theme.ThemeManager
 import com.github.zly2006.zhihu.theme.ZhihuTheme
-import com.github.zly2006.zhihu.ui.AndroidArticleNavigationHandoff
 import com.github.zly2006.zhihu.ui.AndroidZhihuMain
 import com.github.zly2006.zhihu.ui.FOLLOW_SCREEN_PAGER_TAG
-import com.github.zly2006.zhihu.ui.PREFERENCE_NAME
 import com.github.zly2006.zhihu.ui.QUESTION_SCREEN_LIST_TAG
 import com.github.zly2006.zhihu.ui.ZhihuMain
 import com.github.zly2006.zhihu.ui.components.LocalPageTurnDispatcher
 import com.github.zly2006.zhihu.ui.components.PageTurnCommand
 import com.github.zly2006.zhihu.ui.components.PageTurnDispatcher
-import com.github.zly2006.zhihu.ui.components.READING_QUEUE_SHEET_TAG
 import com.github.zly2006.zhihu.ui.rememberAndroidZhihuMainPreferenceState
 import com.github.zly2006.zhihu.ui.subscreens.BOTTOM_BAR_ITEMS_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.subscreens.COLLECTION_DIRECT_BROWSE_PREFERENCE_KEY
@@ -104,6 +104,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.mp.KoinPlatform
 
 @RunWith(AndroidJUnit4::class)
 class ZhihuMainNavigationInstrumentedTest {
@@ -188,7 +189,7 @@ class ZhihuMainNavigationInstrumentedTest {
         var openFrom: String? = null
         composeRule.runOnIdle {
             composeRule.activity.navigate(article)
-            openFrom = AndroidArticleNavigationHandoff.consumeContentOpenFrom(article)
+            openFrom = KoinPlatform.getKoin().get<ContentOpenTracker>().consume(article)
         }
 
         assertEquals(ContentOpenFrom.HOME_FEED, openFrom)

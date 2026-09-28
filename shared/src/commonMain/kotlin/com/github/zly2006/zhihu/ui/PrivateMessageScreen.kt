@@ -68,22 +68,25 @@ import com.github.zly2006.zhihu.data.ZhihuPrivateMessage
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Notification
 import com.github.zly2006.zhihu.navigation.resolveContent
-import com.github.zly2006.zhihu.notification.rememberNotificationSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.platform.rememberZhihuWebUrlOpener
 import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.util.formatRelativeTime
+import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
 import com.github.zly2006.zhihu.viewmodel.PrivateMessageViewModel
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PrivateMessageScreen(destination: Notification.Message) {
     val navigator = LocalNavigator.current
-    val environment = rememberNotificationEnvironment(rememberNotificationSettingsStore())
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = false)
+    val mobileClient = koinInject<MobileClientProvider>()
     val viewModel = viewModel(key = "private_message_${destination.peerId}") {
-        PrivateMessageViewModel(destination.peerId)
+        PrivateMessageViewModel(destination.peerId, mobileClient)
     }
     val peerName = viewModel.peer?.name?.ifBlank { destination.name } ?: destination.name
     val peerAvatar = viewModel.peer?.avatarUrl?.ifBlank { destination.avatarUrl } ?: destination.avatarUrl
@@ -165,7 +168,7 @@ fun PrivateMessageScreen(destination: Notification.Message) {
                         onClick = {
                             val content = draft
                             coroutineScope.launch {
-                                if (viewModel.sendMessage(content, environment)) {
+                                if (viewModel.sendMessage(content)) {
                                     draft = ""
                                 } else {
                                     userMessages.showMessage(viewModel.errorMessage ?: "发送失败")

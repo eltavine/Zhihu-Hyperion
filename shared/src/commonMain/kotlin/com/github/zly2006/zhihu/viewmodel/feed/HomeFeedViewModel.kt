@@ -21,20 +21,23 @@ import androidx.lifecycle.viewModelScope
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.FeedDisplayItem
+import com.github.zly2006.zhihu.data.QualityFilterMode
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.flattenFeeds
 import com.github.zly2006.zhihu.data.navDestination
 import com.github.zly2006.zhihu.data.questionAuthor
 import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.navigation.Question
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.util.Log
-import com.github.zly2006.zhihu.viewmodel.ContentInteractionEnvironment
 import com.github.zly2006.zhihu.viewmodel.HomeFeedFilterResult
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
-import com.github.zly2006.zhihu.viewmodel.QualityFilterMode
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.ContentDetailProvider
+import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
 import com.github.zly2006.zhihu.viewmodel.filter.extractTopicIds
+import com.github.zly2006.zhihu.viewmodel.getOrFetchContentDetail
 import com.github.zly2006.zhihu.viewmodel.postSigned
+import com.github.zly2006.zhihu.viewmodel.toFeedDisplaySettings
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.header
@@ -75,15 +78,21 @@ suspend fun resolveFeedQuestionAuthorInfo(
     }
 
     val questionDestination = when (val raw = feedItem.raw) {
-        is DataHolder.Question -> return raw.author.let { Pair(it.id, it.name) }
+        is DataHolder.Question -> {
+            return raw.author.let { Pair(it.id, it.name) }
+        }
+
         is DataHolder.Answer -> {
             raw.question.author?.let { return Pair(it.id, it.name) }
             Question(questionId = raw.question.id, title = raw.question.title)
         }
-        else -> when (val target = feedItem.feed?.target) {
-            is Feed.AnswerTarget -> Question(questionId = target.question.id, title = target.question.title)
-            is Feed.QuestionTarget -> Question(questionId = target.id, title = target.title)
-            else -> null
+
+        else -> {
+            when (val target = feedItem.feed?.target) {
+                is Feed.AnswerTarget -> Question(questionId = target.question.id, title = target.question.title)
+                is Feed.QuestionTarget -> Question(questionId = target.id, title = target.title)
+                else -> null
+            }
         }
     } ?: return null
 
@@ -147,13 +156,15 @@ private suspend fun resolveFeedBlockContentDetail(
 }
 
 interface HomeFeedInteractionViewModel {
-    suspend fun recordContentInteraction(environment: ContentInteractionEnvironment, feed: Feed)
+    suspend fun recordContentInteraction(environment: ZhihuApiEnvironment, feed: Feed)
 
-    fun onUiContentClick(environment: ContentInteractionEnvironment, feed: Feed, item: FeedDisplayItem)
+    fun onUiContentClick(environment: ZhihuApiEnvironment, feed: Feed, item: FeedDisplayItem)
 }
 
-class HomeFeedViewModel :
-    BaseFeedViewModel(),
+class HomeFeedViewModel(
+    settings: SettingsStore,
+    private val filter: HomeFeedFilter,
+) : BaseFeedViewModel(settings),
     HomeFeedInteractionViewModel {
     private val reportedTouchedItems = hashSetOf<Pair<String, String>>()
 
@@ -165,35 +176,36 @@ class HomeFeedViewModel :
         allowGuestAccess = true
     }
 
-    public override suspend fun fetchFeeds(environment: PaginationEnvironment) {
+    public override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) {
         markItemsAsTouched(environment)
         super.fetchFeeds(environment)
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    override fun processResponse(environment: PaginationEnvironment, data: List<Feed>, rawData: JsonArray) {
+    override suspend fun processResponse(environment: ZhihuApiEnvironment, data: List<Feed>, rawData: JsonArray) {
         allData.addAll(data)
         debugData.addAll(rawData)
 
         viewModelScope.launch {
+            val display = settings.toFeedDisplaySettings()
             val loadedItems = data
                 .flattenFeeds()
-                .map { feed -> createDisplayItem(environment, feed) }
-            val newItems = if (environment.feedDisplaySettings().qualityFilterMode == QualityFilterMode.HIDE) {
+                .map { feed -> createDisplayItem(display, feed) }
+            val newItems = if (display.qualityFilterMode == QualityFilterMode.HIDE) {
                 loadedItems.filterNot { it.isQualityFiltered }
             } else {
                 loadedItems
             }
 
-            val reverseBlock = environment.feedDisplaySettings().reverseBlock
-            val foregroundItems = environment.applyForegroundHomeFeedFilter(newItems)
+            val reverseBlock = display.reverseBlock
+            val foregroundItems = filter.foreground(newItems)
             if (!reverseBlock) {
                 withContext(Dispatchers.Main) {
                     addDisplayItems(foregroundItems)
                 }
             }
 
-            val filteredItems = environment.applyBackgroundHomeFeedFilter(foregroundItems)
+            val filteredItems = filter.background(foregroundItems, ContentDetailProvider(environment::getOrFetchContentDetail))
             if (reverseBlock) {
                 addDisplayItems(filteredItems)
             }
@@ -217,9 +229,9 @@ class HomeFeedViewModel :
      * 记录用户与内容的交互行为
      * 应该在用户点击、点赞等操作时调用
      */
-    override suspend fun recordContentInteraction(environment: ContentInteractionEnvironment, feed: Feed) {
+    override suspend fun recordContentInteraction(environment: ZhihuApiEnvironment, feed: Feed) {
         try {
-            environment.recordContentInteraction(feed)
+            filter.recordInteraction(feed)
         } catch (e: Exception) {
             environment.handleFetchFailure("HomeFeedViewModel", e)
         }
@@ -229,7 +241,7 @@ class HomeFeedViewModel :
      * 记录用户点击内容
      * 在viewModelScope中运行，使用viewModelScope代替GlobalScope
      */
-    override fun onUiContentClick(environment: ContentInteractionEnvironment, feed: Feed, item: FeedDisplayItem) {
+    override fun onUiContentClick(environment: ZhihuApiEnvironment, feed: Feed, item: FeedDisplayItem) {
         viewModelScope.launch(Dispatchers.Default) {
             if (environment.authenticatedCookies()["d_c0"] != null) {
                 val payloadItem = when (val target = feed.target) {
@@ -256,7 +268,7 @@ class HomeFeedViewModel :
     }
 
     private suspend fun markItemsAsTouched(
-        environment: ContentInteractionEnvironment,
+        environment: ZhihuApiEnvironment,
     ) {
         try {
             if (environment.authenticatedCookies()["d_c0"] == null) return
@@ -297,7 +309,7 @@ class HomeFeedViewModel :
         }
     }
 
-    override fun refresh(environment: PaginationEnvironment) {
+    override fun refresh(environment: ZhihuApiEnvironment) {
         super.refresh(environment)
         reportedTouchedItems.clear()
     }

@@ -18,7 +18,9 @@
 package com.github.zly2006.zhihu.reading
 
 import com.github.zly2006.zhihu.platform.MapSettingsStore
+import com.github.zly2006.zhihu.viewmodel.filter.getContentFilterDatabase
 import kotlinx.coroutines.test.runTest
+import kotlin.io.path.createTempDirectory
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -26,9 +28,14 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class ReadingPlayerTest {
+    private val filterDatabase = getContentFilterDatabase(
+        createTempDirectory("reading-player").resolve("content-filter.db").toFile(),
+    )
+    private val readingQueueSources = ReadingQueueSourceRegistry(filterDatabase)
+
     @AfterTest
-    fun clearRegistry() {
-        ReadingQueueSourceRegistry.clearForTesting()
+    fun closeDatabase() {
+        filterDatabase.close()
     }
 
     @Test
@@ -265,10 +272,10 @@ class ReadingPlayerTest {
                 title = "回答$id",
             )
         }
-        ReadingQueueSourceRegistry.register("question:1", items)
+        readingQueueSources.register("question:1", items)
         val current = items[2].copy(bodyHtml = "<p>正文</p>")
 
-        val queue = ReadingQueueSourceRegistry.queueStartingAt(
+        val queue = readingQueueSources.queueStartingAt(
             current = current,
             sourceId = "question:1",
             limit = 3,
@@ -293,10 +300,10 @@ class ReadingPlayerTest {
                 title = "回答$id",
             )
         }
-        ReadingQueueSourceRegistry.register("question:1", items)
+        readingQueueSources.register("question:1", items)
         val current = items[1].copy(bodyHtml = "<p>正文</p>")
 
-        val queue = ReadingQueueSourceRegistry.queueStartingAt(
+        val queue = readingQueueSources.queueStartingAt(
             current = current,
             sourceId = "question:1",
             limit = 5,
@@ -321,9 +328,9 @@ class ReadingPlayerTest {
                 id = id,
             )
         }
-        ReadingQueueSourceRegistry.register("question:1", items)
+        readingQueueSources.register("question:1", items)
 
-        val queue = ReadingQueueSourceRegistry.queueStartingAt(
+        val queue = readingQueueSources.queueStartingAt(
             current = items.first(),
             sourceId = "question:1",
             limit = 3,
@@ -338,10 +345,10 @@ class ReadingPlayerTest {
         val current = ReadingQueueItem(ReadingContentType.Answer, id = 1)
         val sourceA = listOf(current, ReadingQueueItem(ReadingContentType.Answer, id = 2))
         val sourceB = listOf(current, ReadingQueueItem(ReadingContentType.Answer, id = 3))
-        ReadingQueueSourceRegistry.register("source:a", sourceA)
-        ReadingQueueSourceRegistry.register("source:b", sourceB)
+        readingQueueSources.register("source:a", sourceA)
+        readingQueueSources.register("source:b", sourceB)
 
-        val queue = ReadingQueueSourceRegistry.queueStartingAt(
+        val queue = readingQueueSources.queueStartingAt(
             current = current,
             sourceId = "source:a",
             limit = 3,
@@ -353,11 +360,11 @@ class ReadingPlayerTest {
     @Test
     fun directNavigationDoesNotReuseAnOldOrigin() = runTest {
         val current = ReadingQueueItem(ReadingContentType.Answer, id = 1)
-        ReadingQueueSourceRegistry.register(
+        readingQueueSources.register(
             "source:a",
             listOf(current, ReadingQueueItem(ReadingContentType.Answer, id = 2)),
         )
-        val queue = ReadingQueueSourceRegistry.queueStartingAt(
+        val queue = readingQueueSources.queueStartingAt(
             current = current,
             sourceId = null,
             limit = 3,
@@ -368,7 +375,7 @@ class ReadingPlayerTest {
 
     @Test
     fun answerSwitchedBeyondItsOriginFallsBackToQuestionOrder() = runTest {
-        ReadingQueueSourceRegistry.register(
+        readingQueueSources.register(
             "home:feed",
             listOf(
                 ReadingQueueItem(ReadingContentType.Answer, id = 1),
@@ -382,7 +389,7 @@ class ReadingPlayerTest {
             bodyHtml = "<p>当前回答</p>",
         )
 
-        val queue = ReadingQueueSourceRegistry.queueStartingAt(
+        val queue = readingQueueSources.queueStartingAt(
             current = current,
             sourceId = "home:feed",
             limit = 3,
@@ -400,12 +407,12 @@ class ReadingPlayerTest {
     @Test
     fun matchingOriginStillWinsOverQuestionFallback() = runTest {
         val current = ReadingQueueItem(ReadingContentType.Answer, id = 1)
-        ReadingQueueSourceRegistry.register(
+        readingQueueSources.register(
             "home:feed",
             listOf(current, ReadingQueueItem(ReadingContentType.Article, id = 2)),
         )
 
-        val queue = ReadingQueueSourceRegistry.queueStartingAt(
+        val queue = readingQueueSources.queueStartingAt(
             current = current,
             sourceId = "home:feed",
             limit = 3,
@@ -420,9 +427,9 @@ class ReadingPlayerTest {
     @Test
     fun exhaustedMatchingOriginFallsBackToQuestionOrder() = runTest {
         val current = ReadingQueueItem(ReadingContentType.Answer, id = 1)
-        ReadingQueueSourceRegistry.register("question:1:answers:default", listOf(current))
+        readingQueueSources.register("question:1:answers:default", listOf(current))
 
-        val queue = ReadingQueueSourceRegistry.queueStartingAt(
+        val queue = readingQueueSources.queueStartingAt(
             current = current,
             sourceId = "question:1:answers:default",
             limit = 3,
@@ -439,12 +446,12 @@ class ReadingPlayerTest {
     fun matchingQuestionOriginExtendsAfterItsLoadedItems() = runTest {
         val current = ReadingQueueItem(ReadingContentType.Answer, id = 1)
         val loadedNext = ReadingQueueItem(ReadingContentType.Answer, id = 11)
-        ReadingQueueSourceRegistry.register(
+        readingQueueSources.register(
             "question:1:answers:default",
             listOf(current, loadedNext),
         )
 
-        val queue = ReadingQueueSourceRegistry.queueStartingAt(
+        val queue = readingQueueSources.queueStartingAt(
             current = current,
             sourceId = "question:1:answers:default",
             limit = 4,
@@ -463,12 +470,12 @@ class ReadingPlayerTest {
         val current = ReadingQueueItem(ReadingContentType.Answer, id = 1)
         val firstLoaded = ReadingQueueItem(ReadingContentType.Answer, id = 11)
         val secondLoaded = ReadingQueueItem(ReadingContentType.Answer, id = 12)
-        ReadingQueueSourceRegistry.register(
+        readingQueueSources.register(
             "question:1:answers:default",
             listOf(current, firstLoaded, secondLoaded),
         )
 
-        val queue = ReadingQueueSourceRegistry.queueStartingAt(
+        val queue = readingQueueSources.queueStartingAt(
             current = current,
             sourceId = "question:1:answers:default",
             limit = 5,

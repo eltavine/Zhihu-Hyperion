@@ -88,7 +88,7 @@ import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Topic
 import com.github.zly2006.zhihu.navigation.WritePin
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.components.FeedCard
 import com.github.zly2006.zhihu.ui.components.PaginatedList
@@ -100,11 +100,10 @@ import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.ui.components.rememberShareActionExecutor
 import com.github.zly2006.zhihu.util.raiseForStatus
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
 import com.github.zly2006.zhihu.viewmodel.postSigned
-import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import io.ktor.http.Url
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
@@ -112,6 +111,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonPrimitive
+import org.koin.compose.koinInject
 
 const val TOPIC_SCREEN_TAG = "topic_screen"
 const val TOPIC_SHARE_BUTTON_TAG = "topic_share_button"
@@ -225,7 +225,7 @@ class TopicViewModel(
     var isFollowingChanging by mutableStateOf(false)
         private set
 
-    suspend fun loadDetail(environment: PaginationEnvironment) {
+    suspend fun loadDetail(environment: ZhihuApiEnvironment) {
         detailErrorMessage = null
         runCatching {
             environment.fetchJson(
@@ -239,7 +239,7 @@ class TopicViewModel(
             }
     }
 
-    fun selectTab(environment: PaginationEnvironment, tab: TopicFeedTab) {
+    fun selectTab(environment: ZhihuApiEnvironment, tab: TopicFeedTab) {
         if (selectedTab == tab && items.isNotEmpty()) return
         loadJob?.cancel()
         loadJob = null
@@ -253,7 +253,7 @@ class TopicViewModel(
         loadMore(environment)
     }
 
-    fun selectDiscussionSort(environment: PaginationEnvironment, sort: TopicDiscussionSort) {
+    fun selectDiscussionSort(environment: ZhihuApiEnvironment, sort: TopicDiscussionSort) {
         if (discussionSort == sort) return
         loadJob?.cancel()
         loadJob = null
@@ -267,7 +267,7 @@ class TopicViewModel(
         loadMore(environment)
     }
 
-    fun selectIdeasSort(environment: PaginationEnvironment, sort: TopicIdeasSort) {
+    fun selectIdeasSort(environment: ZhihuApiEnvironment, sort: TopicIdeasSort) {
         if (ideasSort == sort) return
         loadJob?.cancel()
         loadJob = null
@@ -281,7 +281,7 @@ class TopicViewModel(
         loadMore(environment)
     }
 
-    private suspend fun loadMoreNow(environment: PaginationEnvironment) {
+    private suspend fun loadMoreNow(environment: ZhihuApiEnvironment) {
         if (isEnd) return
         val generation = requestGeneration
         isLoading = true
@@ -325,12 +325,12 @@ class TopicViewModel(
         }
     }
 
-    fun loadMore(environment: PaginationEnvironment) {
+    fun loadMore(environment: ZhihuApiEnvironment) {
         if (isEnd || isLoading || errorMessage != null || loadJob?.isActive == true) return
         loadJob = viewModelScope.launch { loadMoreNow(environment) }
     }
 
-    fun retry(environment: PaginationEnvironment) {
+    fun retry(environment: ZhihuApiEnvironment) {
         errorMessage = null
         loadMore(environment)
     }
@@ -382,8 +382,14 @@ fun topicFeedUrl(
             TopicDiscussionSort.Timeline -> "https://www.zhihu.com/api/v5.1/topics/$topicId/feeds/timeline_activity/v2?limit=20&offset=0"
         }
     }
-    TopicFeedTab.Ideas -> "https://www.zhihu.com/api/v5.1/topics/$topicId/feeds/${ideasSort.endpoint}?offset=0&limit=10"
-    TopicFeedTab.Unanswered -> "https://www.zhihu.com/api/v5.1/topics/$topicId/feeds/top_question/v2?limit=20&offset=0"
+
+    TopicFeedTab.Ideas -> {
+        "https://www.zhihu.com/api/v5.1/topics/$topicId/feeds/${ideasSort.endpoint}?offset=0&limit=10"
+    }
+
+    TopicFeedTab.Unanswered -> {
+        "https://www.zhihu.com/api/v5.1/topics/$topicId/feeds/top_question/v2?limit=20&offset=0"
+    }
 }
 
 fun decodeTopicPinFeeds(json: kotlinx.serialization.json.JsonObject): List<FeedDisplayItem> =
@@ -426,9 +432,9 @@ fun normalizeTopicPagingUrl(rawUrl: String): String? {
 @Composable
 fun TopicScreen(topic: Topic) {
     val navigator = LocalNavigator.current
-    val environment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val environment = rememberZhihuApiEnvironment(allowGuestAccess = false)
     val messages = rememberUserMessageSink()
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val executeShareAction = rememberShareActionExecutor()
     val scope = androidx.compose.runtime.rememberCoroutineScope()
     var showShareDialog by androidx.compose.runtime.remember { mutableStateOf(false) }
@@ -603,9 +609,11 @@ private fun TopicHeader(
                             "${detail.questionsCount} 问题",
                         ).joinToString(" · "),
                     )
+
                     detailErrorMessage != null -> TextButton(onClick = onRetryDetail) {
                         Text("话题信息加载失败：$detailErrorMessage，点击重试", color = MaterialTheme.colorScheme.error)
                     }
+
                     else -> Text("正在加载话题信息…")
                 }
             }

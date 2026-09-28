@@ -19,10 +19,10 @@ package com.github.zly2006.zhihu.ui.subscreens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import com.github.zly2006.zhihu.desktop.defaultDesktopAccountStore
+import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.desktop.openDesktopExternalUrl
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.platformName
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.updater.SemanticVersion
 import com.github.zly2006.zhihu.updater.extractGithubReleaseNotes
 import com.github.zly2006.zhihu.updater.fetchLatestZhihuRelease
@@ -31,6 +31,7 @@ import com.mikepenz.aboutlibraries.Libs
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import org.koin.compose.koinInject
 import java.io.File
 import java.util.Properties
 
@@ -41,8 +42,8 @@ actual fun rememberSystemUpdateState(): StateFlow<SystemUpdateState> = desktopSy
 
 @Composable
 actual fun rememberSystemUpdateChecker(): SystemUpdateChecker {
-    val settings = rememberSettingsStore()
-    val accountStore = defaultDesktopAccountStore
+    val settings = koinInject<SettingsStore>()
+    val accountStore = koinInject<ZhihuAccountStore>()
     return remember(settings, accountStore) {
         object : SystemUpdateChecker {
             override suspend fun check() {
@@ -60,7 +61,7 @@ actual fun rememberSystemUpdateChecker(): SystemUpdateChecker {
 
 @Composable
 actual fun rememberSystemUpdateVersionSkipper(): SystemUpdateVersionSkipper {
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     return remember(settings) {
         object : SystemUpdateVersionSkipper {
             override fun skip(version: String) {
@@ -203,29 +204,12 @@ actual fun rememberOpenSourceLicensesLibraries(): Libs = remember {
 @Composable
 actual fun rememberShowFullVariantLicenses(): Boolean = false
 
-private fun loadDesktopAboutLibrariesJson(): String? {
-    val resourceJson = Thread
-        .currentThread()
-        .contextClassLoader
-        ?.getResourceAsStream("aboutlibraries.json")
-        ?.bufferedReader()
-        ?.use { it.readText() }
-    if (!resourceJson.isNullOrBlank()) {
-        return resourceJson
-    }
-
-    return listOf(
-        "app/build/generated/aboutLibraries/liteDebug/res/raw/aboutlibraries.json",
-        "app/build/generated/aboutLibraries/fullDebug/res/raw/aboutlibraries.json",
-        "app/build/intermediates/packaged_res/liteDebug/packageLiteDebugResources/raw/aboutlibraries.json",
-        "app/build/intermediates/packaged_res/fullDebug/packageFullDebugResources/raw/aboutlibraries.json",
-    ).firstNotNullOfOrNull { path ->
-        File(path)
-            .takeIf { it.isFile }
-            ?.readText()
-            ?.takeIf { it.isNotBlank() }
-    }
-}
+private fun loadDesktopAboutLibrariesJson(): String? = Thread
+    .currentThread()
+    .contextClassLoader
+    ?.getResourceAsStream("aboutlibraries.json")
+    ?.bufferedReader()
+    ?.use { it.readText() }
 
 actual val isWebViewCustomFontSupported: Boolean = false
 

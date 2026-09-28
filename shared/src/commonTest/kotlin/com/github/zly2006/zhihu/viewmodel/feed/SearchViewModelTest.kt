@@ -22,7 +22,10 @@ import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.Person
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.target
-import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
+import com.github.zly2006.zhihu.platform.MapSettingsStore
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
+import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
+import com.github.zly2006.zhihu.viewmodel.filter.FakeBlockedUserDao
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -30,6 +33,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.Url
 import io.ktor.http.headersOf
+import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlin.test.Test
@@ -58,12 +62,12 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun searchResultsExcludeLocallyBlockedAuthors() {
-        val viewModel = TestSearchViewModel()
+    fun searchResultsExcludeLocallyBlockedAuthors() = runTest {
+        val viewModel = TestSearchViewModel(FakeBlockedUserDao("blocked-user"))
         val blocked = answerFeed(id = 1, authorId = "blocked-user")
         val kept = answerFeed(id = 2, authorId = "kept-user")
 
-        viewModel.process(environment("{}", blockedUserIds = setOf("blocked-user")), listOf(blocked, kept))
+        viewModel.process(environment("{}"), listOf(blocked, kept))
 
         assertEquals(listOf<Feed>(kept), viewModel.allData)
         assertEquals(
@@ -77,11 +81,13 @@ class SearchViewModelTest {
         )
     }
 
-    private class TestSearchViewModel : SearchViewModel("query") {
-        override fun refresh(environment: PaginationEnvironment) = Unit
+    private class TestSearchViewModel(
+        blockedUsers: BlockedUserDao = FakeBlockedUserDao(),
+    ) : SearchViewModel("query", MapSettingsStore(), blockedUsers) {
+        override fun refresh(environment: ZhihuApiEnvironment) = Unit
 
-        fun process(
-            environment: PaginationEnvironment,
+        suspend fun process(
+            environment: ZhihuApiEnvironment,
             feeds: List<Feed>,
         ) = processResponse(environment, feeds, JsonArray(emptyList()))
     }
@@ -89,8 +95,7 @@ class SearchViewModelTest {
     private fun environment(
         response: String,
         status: HttpStatusCode = HttpStatusCode.OK,
-        blockedUserIds: Set<String> = emptySet(),
-    ) = object : PaginationEnvironment {
+    ) = object : ZhihuApiEnvironment {
         override fun httpClient() = HttpClient(
             MockEngine {
                 respond(response, status, headersOf(HttpHeaders.ContentType, "application/json"))
@@ -98,8 +103,6 @@ class SearchViewModelTest {
         )
 
         override fun authenticatedCookies() = mapOf("d_c0" to "test")
-
-        override fun blockedUserIds() = blockedUserIds
 
         override suspend fun fetchJson(
             url: String,

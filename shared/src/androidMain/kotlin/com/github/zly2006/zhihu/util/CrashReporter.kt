@@ -24,7 +24,6 @@ import android.util.Log
 import androidx.core.content.FileProvider
 import com.github.zly2006.zhihu.data.ZhihuJson.json
 import com.github.zly2006.zhihu.platform.androidSettingsStore
-import com.github.zly2006.zhihu.viewmodel.AIGC_VOTE_SERVER_URL_KEY
 import io.ktor.client.HttpClient
 import io.ktor.client.request.header
 import io.ktor.client.request.post
@@ -45,7 +44,6 @@ import java.util.UUID
 
 private const val CRASH_REPORT_INSTALL_ID_KEY = "crashReportInstallId"
 private const val CRASH_REPORT_DIRECTORY = "crash-reports"
-private const val DEFAULT_CRASH_REPORT_SERVER_URL = "https://aigc-vote.ai.fintechedu.cn"
 private const val MAX_STACK_TRACE_LENGTH = 32_000
 private const val TAG = "CrashReporter"
 
@@ -116,9 +114,9 @@ object CrashReporter {
         if (files.isEmpty()) return@withContext 0
         val settings = androidSettingsStore(context)
         val baseUrl = settings
-            .getString(AIGC_VOTE_SERVER_URL_KEY, DEFAULT_CRASH_REPORT_SERVER_URL)
+            .getString(AIGC_VOTE_SERVER_URL_KEY, DEFAULT_AIGC_VOTE_SERVER_URL)
             .trimEnd('/')
-            .ifBlank { DEFAULT_CRASH_REPORT_SERVER_URL }
+            .ifBlank { DEFAULT_AIGC_VOTE_SERVER_URL }
         val versionName = runCatching {
             context.packageManager.getPackageInfo(context.packageName, 0).versionName
         }.getOrNull() ?: "unknown"

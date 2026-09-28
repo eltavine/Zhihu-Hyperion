@@ -1,0 +1,811 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, macosArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <Zhihu.core:data>
+final enum class com.github.zly2006.zhihu.data/QualityFilterMode : kotlin/Enum<com.github.zly2006.zhihu.data/QualityFilterMode> { // com.github.zly2006.zhihu.data/QualityFilterMode|null[0]
+    enum entry HIDE // com.github.zly2006.zhihu.data/QualityFilterMode.HIDE|null[0]
+    enum entry OFF // com.github.zly2006.zhihu.data/QualityFilterMode.OFF|null[0]
+    enum entry RULES // com.github.zly2006.zhihu.data/QualityFilterMode.RULES|null[0]
+
+    final val entries // com.github.zly2006.zhihu.data/QualityFilterMode.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.github.zly2006.zhihu.data/QualityFilterMode> // com.github.zly2006.zhihu.data/QualityFilterMode.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.github.zly2006.zhihu.data/QualityFilterMode // com.github.zly2006.zhihu.data/QualityFilterMode.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.github.zly2006.zhihu.data/QualityFilterMode> // com.github.zly2006.zhihu.data/QualityFilterMode.values|values#static(){}[0]
+}
+
+abstract fun interface com.github.zly2006.zhihu.viewmodel.filter/ContentDetailProvider { // com.github.zly2006.zhihu.viewmodel.filter/ContentDetailProvider|null[0]
+    abstract suspend fun get(com.github.zly2006.zhihu.navigation/NavDestination): com.github.zly2006.zhihu.data/DataHolder.Content? // com.github.zly2006.zhihu.viewmodel.filter/ContentDetailProvider.get|get(com.github.zly2006.zhihu.navigation.NavDestination){}[0]
+}
+
+abstract fun interface com.github.zly2006.zhihu.viewmodel.filter/KeywordSemanticMatcher { // com.github.zly2006.zhihu.viewmodel.filter/KeywordSemanticMatcher|null[0]
+    abstract suspend fun checkBlockedPhrases(kotlin/String, kotlin.collections/List<kotlin/String>, kotlin/Double): kotlin.collections/List<kotlin/Pair<kotlin/String, kotlin/Double>> // com.github.zly2006.zhihu.viewmodel.filter/KeywordSemanticMatcher.checkBlockedPhrases|checkBlockedPhrases(kotlin.String;kotlin.collections.List<kotlin.String>;kotlin.Double){}[0]
+}
+
+final class com.github.zly2006.zhihu.data/FeedDisplaySettings { // com.github.zly2006.zhihu.data/FeedDisplaySettings|null[0]
+    constructor <init>(com.github.zly2006.zhihu.data/QualityFilterMode = ..., com.github.zly2006.zhihu.data/QualityFilterSettings = ..., kotlin/Boolean = ...) // com.github.zly2006.zhihu.data/FeedDisplaySettings.<init>|<init>(com.github.zly2006.zhihu.data.QualityFilterMode;com.github.zly2006.zhihu.data.QualityFilterSettings;kotlin.Boolean){}[0]
+
+    final val qualityFilter // com.github.zly2006.zhihu.data/FeedDisplaySettings.qualityFilter|{}qualityFilter[0]
+        final fun <get-qualityFilter>(): com.github.zly2006.zhihu.data/QualityFilterSettings // com.github.zly2006.zhihu.data/FeedDisplaySettings.qualityFilter.<get-qualityFilter>|<get-qualityFilter>(){}[0]
+    final val qualityFilterMode // com.github.zly2006.zhihu.data/FeedDisplaySettings.qualityFilterMode|{}qualityFilterMode[0]
+        final fun <get-qualityFilterMode>(): com.github.zly2006.zhihu.data/QualityFilterMode // com.github.zly2006.zhihu.data/FeedDisplaySettings.qualityFilterMode.<get-qualityFilterMode>|<get-qualityFilterMode>(){}[0]
+    final val reverseBlock // com.github.zly2006.zhihu.data/FeedDisplaySettings.reverseBlock|{}reverseBlock[0]
+        final fun <get-reverseBlock>(): kotlin/Boolean // com.github.zly2006.zhihu.data/FeedDisplaySettings.reverseBlock.<get-reverseBlock>|<get-reverseBlock>(){}[0]
+
+    final fun component1(): com.github.zly2006.zhihu.data/QualityFilterMode // com.github.zly2006.zhihu.data/FeedDisplaySettings.component1|component1(){}[0]
+    final fun component2(): com.github.zly2006.zhihu.data/QualityFilterSettings // com.github.zly2006.zhihu.data/FeedDisplaySettings.component2|component2(){}[0]
+    final fun component3(): kotlin/Boolean // com.github.zly2006.zhihu.data/FeedDisplaySettings.component3|component3(){}[0]
+    final fun copy(com.github.zly2006.zhihu.data/QualityFilterMode = ..., com.github.zly2006.zhihu.data/QualityFilterSettings = ..., kotlin/Boolean = ...): com.github.zly2006.zhihu.data/FeedDisplaySettings // com.github.zly2006.zhihu.data/FeedDisplaySettings.copy|copy(com.github.zly2006.zhihu.data.QualityFilterMode;com.github.zly2006.zhihu.data.QualityFilterSettings;kotlin.Boolean){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.data/FeedDisplaySettings.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.data/FeedDisplaySettings.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.data/FeedDisplaySettings.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.data/HistoryStorage { // com.github.zly2006.zhihu.data/HistoryStorage|null[0]
+    constructor <init>(com.github.zly2006.zhihu.util/TextDocumentStore) // com.github.zly2006.zhihu.data/HistoryStorage.<init>|<init>(com.github.zly2006.zhihu.util.TextDocumentStore){}[0]
+
+    final var history // com.github.zly2006.zhihu.data/HistoryStorage.history|{}history[0]
+        final fun <get-history>(): kotlin.collections/List<com.github.zly2006.zhihu.navigation/NavDestination> // com.github.zly2006.zhihu.data/HistoryStorage.history.<get-history>|<get-history>(){}[0]
+
+    final suspend fun add(com.github.zly2006.zhihu.navigation/NavDestination) // com.github.zly2006.zhihu.data/HistoryStorage.add|add(com.github.zly2006.zhihu.navigation.NavDestination){}[0]
+    final suspend fun clear() // com.github.zly2006.zhihu.data/HistoryStorage.clear|clear(){}[0]
+}
+
+final class com.github.zly2006.zhihu.filter/ContentFilterStats { // com.github.zly2006.zhihu.filter/ContentFilterStats|null[0]
+    constructor <init>(kotlin/Int, kotlin/Int, kotlin/Float) // com.github.zly2006.zhihu.filter/ContentFilterStats.<init>|<init>(kotlin.Int;kotlin.Int;kotlin.Float){}[0]
+
+    final val filterRate // com.github.zly2006.zhihu.filter/ContentFilterStats.filterRate|{}filterRate[0]
+        final fun <get-filterRate>(): kotlin/Float // com.github.zly2006.zhihu.filter/ContentFilterStats.filterRate.<get-filterRate>|<get-filterRate>(){}[0]
+    final val filteredCount // com.github.zly2006.zhihu.filter/ContentFilterStats.filteredCount|{}filteredCount[0]
+        final fun <get-filteredCount>(): kotlin/Int // com.github.zly2006.zhihu.filter/ContentFilterStats.filteredCount.<get-filteredCount>|<get-filteredCount>(){}[0]
+    final val totalRecords // com.github.zly2006.zhihu.filter/ContentFilterStats.totalRecords|{}totalRecords[0]
+        final fun <get-totalRecords>(): kotlin/Int // com.github.zly2006.zhihu.filter/ContentFilterStats.totalRecords.<get-totalRecords>|<get-totalRecords>(){}[0]
+
+    final fun component1(): kotlin/Int // com.github.zly2006.zhihu.filter/ContentFilterStats.component1|component1(){}[0]
+    final fun component2(): kotlin/Int // com.github.zly2006.zhihu.filter/ContentFilterStats.component2|component2(){}[0]
+    final fun component3(): kotlin/Float // com.github.zly2006.zhihu.filter/ContentFilterStats.component3|component3(){}[0]
+    final fun copy(kotlin/Int = ..., kotlin/Int = ..., kotlin/Float = ...): com.github.zly2006.zhihu.filter/ContentFilterStats // com.github.zly2006.zhihu.filter/ContentFilterStats.copy|copy(kotlin.Int;kotlin.Int;kotlin.Float){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.filter/ContentFilterStats.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.filter/ContentFilterStats.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.filter/ContentFilterStats.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.filter/ContentOpenTracker { // com.github.zly2006.zhihu.filter/ContentOpenTracker|null[0]
+    constructor <init>(com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase) // com.github.zly2006.zhihu.filter/ContentOpenTracker.<init>|<init>(com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase){}[0]
+
+    final fun consume(com.github.zly2006.zhihu.navigation/NavDestination): kotlin/String // com.github.zly2006.zhihu.filter/ContentOpenTracker.consume|consume(com.github.zly2006.zhihu.navigation.NavDestination){}[0]
+    final fun prepare(com.github.zly2006.zhihu.navigation/NavDestination, kotlin/String) // com.github.zly2006.zhihu.filter/ContentOpenTracker.prepare|prepare(com.github.zly2006.zhihu.navigation.NavDestination;kotlin.String){}[0]
+    final suspend fun record(com.github.zly2006.zhihu.navigation/NavDestination, kotlin/Long? = ...) // com.github.zly2006.zhihu.filter/ContentOpenTracker.record|record(com.github.zly2006.zhihu.navigation.NavDestination;kotlin.Long?){}[0]
+}
+
+final class com.github.zly2006.zhihu.filter/QuestionAnswerCandidatePartition { // com.github.zly2006.zhihu.filter/QuestionAnswerCandidatePartition|null[0]
+    constructor <init>(kotlin.collections/List<com.github.zly2006.zhihu.navigation/Article>, kotlin.collections/List<com.github.zly2006.zhihu.navigation/Article>) // com.github.zly2006.zhihu.filter/QuestionAnswerCandidatePartition.<init>|<init>(kotlin.collections.List<com.github.zly2006.zhihu.navigation.Article>;kotlin.collections.List<com.github.zly2006.zhihu.navigation.Article>){}[0]
+
+    final val nextCandidates // com.github.zly2006.zhihu.filter/QuestionAnswerCandidatePartition.nextCandidates|{}nextCandidates[0]
+        final fun <get-nextCandidates>(): kotlin.collections/List<com.github.zly2006.zhihu.navigation/Article> // com.github.zly2006.zhihu.filter/QuestionAnswerCandidatePartition.nextCandidates.<get-nextCandidates>|<get-nextCandidates>(){}[0]
+    final val previousCandidates // com.github.zly2006.zhihu.filter/QuestionAnswerCandidatePartition.previousCandidates|{}previousCandidates[0]
+        final fun <get-previousCandidates>(): kotlin.collections/List<com.github.zly2006.zhihu.navigation/Article> // com.github.zly2006.zhihu.filter/QuestionAnswerCandidatePartition.previousCandidates.<get-previousCandidates>|<get-previousCandidates>(){}[0]
+
+    final fun component1(): kotlin.collections/List<com.github.zly2006.zhihu.navigation/Article> // com.github.zly2006.zhihu.filter/QuestionAnswerCandidatePartition.component1|component1(){}[0]
+    final fun component2(): kotlin.collections/List<com.github.zly2006.zhihu.navigation/Article> // com.github.zly2006.zhihu.filter/QuestionAnswerCandidatePartition.component2|component2(){}[0]
+    final fun copy(kotlin.collections/List<com.github.zly2006.zhihu.navigation/Article> = ..., kotlin.collections/List<com.github.zly2006.zhihu.navigation/Article> = ...): com.github.zly2006.zhihu.filter/QuestionAnswerCandidatePartition // com.github.zly2006.zhihu.filter/QuestionAnswerCandidatePartition.copy|copy(kotlin.collections.List<com.github.zly2006.zhihu.navigation.Article>;kotlin.collections.List<com.github.zly2006.zhihu.navigation.Article>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.filter/QuestionAnswerCandidatePartition.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.filter/QuestionAnswerCandidatePartition.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.filter/QuestionAnswerCandidatePartition.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.filter/RemoteHistorySync { // com.github.zly2006.zhihu.filter/RemoteHistorySync|null[0]
+    constructor <init>(com.github.zly2006.zhihu.platform/SettingsStore, com.github.zly2006.zhihu.viewmodel.filter/ContentOpenEventDao) // com.github.zly2006.zhihu.filter/RemoteHistorySync.<init>|<init>(com.github.zly2006.zhihu.platform.SettingsStore;com.github.zly2006.zhihu.viewmodel.filter.ContentOpenEventDao){}[0]
+
+    final val importedRevision // com.github.zly2006.zhihu.filter/RemoteHistorySync.importedRevision|{}importedRevision[0]
+        final fun <get-importedRevision>(): kotlinx.coroutines.flow/StateFlow<kotlin/Int> // com.github.zly2006.zhihu.filter/RemoteHistorySync.importedRevision.<get-importedRevision>|<get-importedRevision>(){}[0]
+
+    final fun start(kotlinx.coroutines/CoroutineScope, com.github.zly2006.zhihu.viewmodel/ZhihuApiEnvironment): kotlinx.coroutines/Job? // com.github.zly2006.zhihu.filter/RemoteHistorySync.start|start(kotlinx.coroutines.CoroutineScope;com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment){}[0]
+    final suspend fun awaitRecentPage() // com.github.zly2006.zhihu.filter/RemoteHistorySync.awaitRecentPage|awaitRecentPage(){}[0]
+    final suspend fun filterRemoteReads(kotlin.collections/List<com.github.zly2006.zhihu.data/FeedDisplayItem>): kotlin.collections/List<com.github.zly2006.zhihu.data/FeedDisplayItem> // com.github.zly2006.zhihu.filter/RemoteHistorySync.filterRemoteReads|filterRemoteReads(kotlin.collections.List<com.github.zly2006.zhihu.data.FeedDisplayItem>){}[0]
+}
+
+final class com.github.zly2006.zhihu.filter/TrackedContentIdentity { // com.github.zly2006.zhihu.filter/TrackedContentIdentity|null[0]
+    constructor <init>(kotlin/String, kotlin/String) // com.github.zly2006.zhihu.filter/TrackedContentIdentity.<init>|<init>(kotlin.String;kotlin.String){}[0]
+
+    final val id // com.github.zly2006.zhihu.filter/TrackedContentIdentity.id|{}id[0]
+        final fun <get-id>(): kotlin/String // com.github.zly2006.zhihu.filter/TrackedContentIdentity.id.<get-id>|<get-id>(){}[0]
+    final val type // com.github.zly2006.zhihu.filter/TrackedContentIdentity.type|{}type[0]
+        final fun <get-type>(): kotlin/String // com.github.zly2006.zhihu.filter/TrackedContentIdentity.type.<get-type>|<get-type>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.filter/TrackedContentIdentity.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.filter/TrackedContentIdentity.component2|component2(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ...): com.github.zly2006.zhihu.filter/TrackedContentIdentity // com.github.zly2006.zhihu.filter/TrackedContentIdentity.copy|copy(kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.filter/TrackedContentIdentity.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.filter/TrackedContentIdentity.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.filter/TrackedContentIdentity.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/BlockedKeywordService { // com.github.zly2006.zhihu.viewmodel.filter/BlockedKeywordService|null[0]
+    constructor <init>(com.github.zly2006.zhihu.viewmodel.filter/BlockedKeywordDao, com.github.zly2006.zhihu.viewmodel.filter/BlockedContentRecordDao, com.github.zly2006.zhihu.viewmodel.filter/KeywordSemanticMatcher?) // com.github.zly2006.zhihu.viewmodel.filter/BlockedKeywordService.<init>|<init>(com.github.zly2006.zhihu.viewmodel.filter.BlockedKeywordDao;com.github.zly2006.zhihu.viewmodel.filter.BlockedContentRecordDao;com.github.zly2006.zhihu.viewmodel.filter.KeywordSemanticMatcher?){}[0]
+
+    final suspend fun checkNLPBlockingWithWeight(kotlin/String, kotlin/String?, kotlin/String?, kotlin/Double = ...): kotlin/Pair<kotlin/Boolean, kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/MatchedKeywordInfo>> // com.github.zly2006.zhihu.viewmodel.filter/BlockedKeywordService.checkNLPBlockingWithWeight|checkNLPBlockingWithWeight(kotlin.String;kotlin.String?;kotlin.String?;kotlin.Double){}[0]
+    final suspend fun recordBlockedContent(kotlin/String, kotlin/String, kotlin/String, kotlin/String?, kotlin/String?, kotlin/String?, kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/MatchedKeywordInfo>) // com.github.zly2006.zhihu.viewmodel.filter/BlockedKeywordService.recordBlockedContent|recordBlockedContent(kotlin.String;kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.collections.List<com.github.zly2006.zhihu.viewmodel.filter.MatchedKeywordInfo>){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup { // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup|null[0]
+    constructor <init>(kotlin/Int = ..., kotlin/Long = ..., kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup> = ..., kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup> = ..., kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/UserBackup> = ..., kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/UserBackup> = ..., kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/TopicBackup> = ...) // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.<init>|<init>(kotlin.Int;kotlin.Long;kotlin.collections.List<com.github.zly2006.zhihu.viewmodel.filter.KeywordBackup>;kotlin.collections.List<com.github.zly2006.zhihu.viewmodel.filter.NlpKeywordBackup>;kotlin.collections.List<com.github.zly2006.zhihu.viewmodel.filter.UserBackup>;kotlin.collections.List<com.github.zly2006.zhihu.viewmodel.filter.UserBackup>;kotlin.collections.List<com.github.zly2006.zhihu.viewmodel.filter.TopicBackup>){}[0]
+
+    final val exportTime // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.exportTime|{}exportTime[0]
+        final fun <get-exportTime>(): kotlin/Long // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.exportTime.<get-exportTime>|<get-exportTime>(){}[0]
+    final val keywords // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.keywords|{}keywords[0]
+        final fun <get-keywords>(): kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup> // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.keywords.<get-keywords>|<get-keywords>(){}[0]
+    final val nlpKeywords // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.nlpKeywords|{}nlpKeywords[0]
+        final fun <get-nlpKeywords>(): kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup> // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.nlpKeywords.<get-nlpKeywords>|<get-nlpKeywords>(){}[0]
+    final val questionAuthors // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.questionAuthors|{}questionAuthors[0]
+        final fun <get-questionAuthors>(): kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/UserBackup> // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.questionAuthors.<get-questionAuthors>|<get-questionAuthors>(){}[0]
+    final val topics // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.topics|{}topics[0]
+        final fun <get-topics>(): kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/TopicBackup> // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.topics.<get-topics>|<get-topics>(){}[0]
+    final val users // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.users|{}users[0]
+        final fun <get-users>(): kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/UserBackup> // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.users.<get-users>|<get-users>(){}[0]
+    final val version // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.version|{}version[0]
+        final fun <get-version>(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.version.<get-version>|<get-version>(){}[0]
+
+    final fun component1(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.component1|component1(){}[0]
+    final fun component2(): kotlin/Long // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.component2|component2(){}[0]
+    final fun component3(): kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup> // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.component3|component3(){}[0]
+    final fun component4(): kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup> // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.component4|component4(){}[0]
+    final fun component5(): kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/UserBackup> // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.component5|component5(){}[0]
+    final fun component6(): kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/UserBackup> // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.component6|component6(){}[0]
+    final fun component7(): kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/TopicBackup> // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.component7|component7(){}[0]
+    final fun copy(kotlin/Int = ..., kotlin/Long = ..., kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup> = ..., kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup> = ..., kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/UserBackup> = ..., kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/UserBackup> = ..., kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/TopicBackup> = ...): com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.copy|copy(kotlin.Int;kotlin.Long;kotlin.collections.List<com.github.zly2006.zhihu.viewmodel.filter.KeywordBackup>;kotlin.collections.List<com.github.zly2006.zhihu.viewmodel.filter.NlpKeywordBackup>;kotlin.collections.List<com.github.zly2006.zhihu.viewmodel.filter.UserBackup>;kotlin.collections.List<com.github.zly2006.zhihu.viewmodel.filter.UserBackup>;kotlin.collections.List<com.github.zly2006.zhihu.viewmodel.filter.TopicBackup>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup> { // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup) // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.viewmodel.filter.BlocklistBackup){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.Companion|null[0]
+        final val $childSerializers // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.Companion.$childSerializers|{}$childSerializers[0]
+
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup> // com.github.zly2006.zhihu.viewmodel.filter/BlocklistBackup.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats { // com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats|null[0]
+    constructor <init>(kotlin/Int, kotlin/Int, kotlin/Int, kotlin/Int = ...) // com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats.<init>|<init>(kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+
+    final val keywordCount // com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats.keywordCount|{}keywordCount[0]
+        final fun <get-keywordCount>(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats.keywordCount.<get-keywordCount>|<get-keywordCount>(){}[0]
+    final val questionAuthorCount // com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats.questionAuthorCount|{}questionAuthorCount[0]
+        final fun <get-questionAuthorCount>(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats.questionAuthorCount.<get-questionAuthorCount>|<get-questionAuthorCount>(){}[0]
+    final val topicCount // com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats.topicCount|{}topicCount[0]
+        final fun <get-topicCount>(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats.topicCount.<get-topicCount>|<get-topicCount>(){}[0]
+    final val userCount // com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats.userCount|{}userCount[0]
+        final fun <get-userCount>(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats.userCount.<get-userCount>|<get-userCount>(){}[0]
+
+    final fun component1(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats.component1|component1(){}[0]
+    final fun component2(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats.component2|component2(){}[0]
+    final fun component3(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats.component3|component3(){}[0]
+    final fun component4(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats.component4|component4(){}[0]
+    final fun copy(kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ...): com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats // com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats.copy|copy(kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/BlocklistStats.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/ContentFilterManager { // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterManager|null[0]
+    constructor <init>(com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDao) // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterManager.<init>|<init>(com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDao){}[0]
+
+    final suspend fun clearAllData() // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterManager.clearAllData|clearAllData(){}[0]
+    final suspend fun getAlreadyViewedContentIds(kotlin.collections/List<kotlin/Pair<kotlin/String, kotlin/String>>): kotlin.collections/Set<kotlin/String> // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterManager.getAlreadyViewedContentIds|getAlreadyViewedContentIds(kotlin.collections.List<kotlin.Pair<kotlin.String,kotlin.String>>){}[0]
+    final suspend fun recordContentInteraction(kotlin/String, kotlin/String) // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterManager.recordContentInteraction|recordContentInteraction(kotlin.String;kotlin.String){}[0]
+    final suspend fun recordContentView(kotlin/String, kotlin/String) // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterManager.recordContentView|recordContentView(kotlin.String;kotlin.String){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings { // com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings|null[0]
+    constructor <init>(kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...) // com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings.<init>|<init>(kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
+
+    final val blockPaidContent // com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings.blockPaidContent|{}blockPaidContent[0]
+        final fun <get-blockPaidContent>(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings.blockPaidContent.<get-blockPaidContent>|<get-blockPaidContent>(){}[0]
+    final val blockWeChatOfficialAccount // com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings.blockWeChatOfficialAccount|{}blockWeChatOfficialAccount[0]
+        final fun <get-blockWeChatOfficialAccount>(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings.blockWeChatOfficialAccount.<get-blockWeChatOfficialAccount>|<get-blockWeChatOfficialAccount>(){}[0]
+    final val blockZhihuAdPlatform // com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings.blockZhihuAdPlatform|{}blockZhihuAdPlatform[0]
+        final fun <get-blockZhihuAdPlatform>(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings.blockZhihuAdPlatform.<get-blockZhihuAdPlatform>|<get-blockZhihuAdPlatform>(){}[0]
+    final val blockZhihuSchool // com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings.blockZhihuSchool|{}blockZhihuSchool[0]
+        final fun <get-blockZhihuSchool>(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings.blockZhihuSchool.<get-blockZhihuSchool>|<get-blockZhihuSchool>(){}[0]
+
+    final fun component1(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings.component1|component1(){}[0]
+    final fun component2(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings.component2|component2(){}[0]
+    final fun component3(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings.component3|component3(){}[0]
+    final fun component4(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings.component4|component4(){}[0]
+    final fun copy(kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...): com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings // com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings.copy|copy(kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterPipeline { // com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterPipeline|null[0]
+    constructor <init>(com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings, com.github.zly2006.zhihu.viewmodel.filter/BlockedKeywordDao, com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao, com.github.zly2006.zhihu.viewmodel.filter/BlockedQuestionAuthorDao, com.github.zly2006.zhihu.viewmodel.filter/BlockedTopicDao, com.github.zly2006.zhihu.viewmodel.filter/BlockedKeywordService, kotlin.coroutines/SuspendFunction1<kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/FilterableContent>, kotlin/Unit> = ...) // com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterPipeline.<init>|<init>(com.github.zly2006.zhihu.viewmodel.filter.FeedFilterSettings;com.github.zly2006.zhihu.viewmodel.filter.BlockedKeywordDao;com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao;com.github.zly2006.zhihu.viewmodel.filter.BlockedQuestionAuthorDao;com.github.zly2006.zhihu.viewmodel.filter.BlockedTopicDao;com.github.zly2006.zhihu.viewmodel.filter.BlockedKeywordService;kotlin.coroutines.SuspendFunction1<kotlin.collections.List<com.github.zly2006.zhihu.viewmodel.filter.FilterableContent>,kotlin.Unit>){}[0]
+
+    final suspend fun filter(kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/FilterableContent>): com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterResult // com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterPipeline.filter|filter(kotlin.collections.List<com.github.zly2006.zhihu.viewmodel.filter.FilterableContent>){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterResult { // com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterResult|null[0]
+    constructor <init>(kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/FilterableContent>, kotlin.collections/List<kotlin/Pair<com.github.zly2006.zhihu.viewmodel.filter/FilterableContent, kotlin/String>>) // com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterResult.<init>|<init>(kotlin.collections.List<com.github.zly2006.zhihu.viewmodel.filter.FilterableContent>;kotlin.collections.List<kotlin.Pair<com.github.zly2006.zhihu.viewmodel.filter.FilterableContent,kotlin.String>>){}[0]
+
+    final val blocked // com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterResult.blocked|{}blocked[0]
+        final fun <get-blocked>(): kotlin.collections/List<kotlin/Pair<com.github.zly2006.zhihu.viewmodel.filter/FilterableContent, kotlin/String>> // com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterResult.blocked.<get-blocked>|<get-blocked>(){}[0]
+    final val kept // com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterResult.kept|{}kept[0]
+        final fun <get-kept>(): kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/FilterableContent> // com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterResult.kept.<get-kept>|<get-kept>(){}[0]
+
+    final fun component1(): kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/FilterableContent> // com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterResult.component1|component1(){}[0]
+    final fun component2(): kotlin.collections/List<kotlin/Pair<com.github.zly2006.zhihu.viewmodel.filter/FilterableContent, kotlin/String>> // com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterResult.component2|component2(){}[0]
+    final fun copy(kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/FilterableContent> = ..., kotlin.collections/List<kotlin/Pair<com.github.zly2006.zhihu.viewmodel.filter/FilterableContent, kotlin/String>> = ...): com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterResult // com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterResult.copy|copy(kotlin.collections.List<com.github.zly2006.zhihu.viewmodel.filter.FilterableContent>;kotlin.collections.List<kotlin.Pair<com.github.zly2006.zhihu.viewmodel.filter.FilterableContent,kotlin.String>>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterResult.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterResult.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterResult.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/FeedContentIdentity { // com.github.zly2006.zhihu.viewmodel.filter/FeedContentIdentity|null[0]
+    constructor <init>(kotlin/String, kotlin/String) // com.github.zly2006.zhihu.viewmodel.filter/FeedContentIdentity.<init>|<init>(kotlin.String;kotlin.String){}[0]
+
+    final val id // com.github.zly2006.zhihu.viewmodel.filter/FeedContentIdentity.id|{}id[0]
+        final fun <get-id>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/FeedContentIdentity.id.<get-id>|<get-id>(){}[0]
+    final val type // com.github.zly2006.zhihu.viewmodel.filter/FeedContentIdentity.type|{}type[0]
+        final fun <get-type>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/FeedContentIdentity.type.<get-type>|<get-type>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/FeedContentIdentity.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/FeedContentIdentity.component2|component2(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ...): com.github.zly2006.zhihu.viewmodel.filter/FeedContentIdentity // com.github.zly2006.zhihu.viewmodel.filter/FeedContentIdentity.copy|copy(kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedContentIdentity.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/FeedContentIdentity.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/FeedContentIdentity.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/FeedDisplayFilterPipeline { // com.github.zly2006.zhihu.viewmodel.filter/FeedDisplayFilterPipeline|null[0]
+    constructor <init>(com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings, com.github.zly2006.zhihu.viewmodel.filter/ContentDetailProvider, com.github.zly2006.zhihu.viewmodel.filter/FeedContentFilterPipeline, com.github.zly2006.zhihu.viewmodel.filter/BlockedFeedRecordDao) // com.github.zly2006.zhihu.viewmodel.filter/FeedDisplayFilterPipeline.<init>|<init>(com.github.zly2006.zhihu.viewmodel.filter.FeedFilterSettings;com.github.zly2006.zhihu.viewmodel.filter.ContentDetailProvider;com.github.zly2006.zhihu.viewmodel.filter.FeedContentFilterPipeline;com.github.zly2006.zhihu.viewmodel.filter.BlockedFeedRecordDao){}[0]
+
+    final suspend fun filter(kotlin.collections/List<com.github.zly2006.zhihu.data/FeedDisplayItem>): kotlin.collections/List<com.github.zly2006.zhihu.data/FeedDisplayItem> // com.github.zly2006.zhihu.viewmodel.filter/FeedDisplayFilterPipeline.filter|filter(kotlin.collections.List<com.github.zly2006.zhihu.data.FeedDisplayItem>){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings { // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings|null[0]
+    constructor <init>(kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Double = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Int = ..., com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings = ...) // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.<init>|<init>(kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Double;kotlin.Boolean;kotlin.Boolean;kotlin.Int;com.github.zly2006.zhihu.viewmodel.filter.FeedAdBlockSettings){}[0]
+
+    final val adBlockSettings // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.adBlockSettings|{}adBlockSettings[0]
+        final fun <get-adBlockSettings>(): com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.adBlockSettings.<get-adBlockSettings>|<get-adBlockSettings>(){}[0]
+    final val enableContentFilter // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.enableContentFilter|{}enableContentFilter[0]
+        final fun <get-enableContentFilter>(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.enableContentFilter.<get-enableContentFilter>|<get-enableContentFilter>(){}[0]
+    final val enableKeywordBlocking // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.enableKeywordBlocking|{}enableKeywordBlocking[0]
+        final fun <get-enableKeywordBlocking>(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.enableKeywordBlocking.<get-enableKeywordBlocking>|<get-enableKeywordBlocking>(){}[0]
+    final val enableNlpBlocking // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.enableNlpBlocking|{}enableNlpBlocking[0]
+        final fun <get-enableNlpBlocking>(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.enableNlpBlocking.<get-enableNlpBlocking>|<get-enableNlpBlocking>(){}[0]
+    final val enableTopicBlocking // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.enableTopicBlocking|{}enableTopicBlocking[0]
+        final fun <get-enableTopicBlocking>(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.enableTopicBlocking.<get-enableTopicBlocking>|<get-enableTopicBlocking>(){}[0]
+    final val enableUserBlocking // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.enableUserBlocking|{}enableUserBlocking[0]
+        final fun <get-enableUserBlocking>(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.enableUserBlocking.<get-enableUserBlocking>|<get-enableUserBlocking>(){}[0]
+    final val filterFollowedUserContent // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.filterFollowedUserContent|{}filterFollowedUserContent[0]
+        final fun <get-filterFollowedUserContent>(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.filterFollowedUserContent.<get-filterFollowedUserContent>|<get-filterFollowedUserContent>(){}[0]
+    final val nlpSimilarityThreshold // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.nlpSimilarityThreshold|{}nlpSimilarityThreshold[0]
+        final fun <get-nlpSimilarityThreshold>(): kotlin/Double // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.nlpSimilarityThreshold.<get-nlpSimilarityThreshold>|<get-nlpSimilarityThreshold>(){}[0]
+    final val reverseBlock // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.reverseBlock|{}reverseBlock[0]
+        final fun <get-reverseBlock>(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.reverseBlock.<get-reverseBlock>|<get-reverseBlock>(){}[0]
+    final val topicBlockingThreshold // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.topicBlockingThreshold|{}topicBlockingThreshold[0]
+        final fun <get-topicBlockingThreshold>(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.topicBlockingThreshold.<get-topicBlockingThreshold>|<get-topicBlockingThreshold>(){}[0]
+
+    final fun component1(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.component1|component1(){}[0]
+    final fun component10(): com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.component10|component10(){}[0]
+    final fun component2(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.component2|component2(){}[0]
+    final fun component3(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.component3|component3(){}[0]
+    final fun component4(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.component4|component4(){}[0]
+    final fun component5(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.component5|component5(){}[0]
+    final fun component6(): kotlin/Double // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.component6|component6(){}[0]
+    final fun component7(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.component7|component7(){}[0]
+    final fun component8(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.component8|component8(){}[0]
+    final fun component9(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.component9|component9(){}[0]
+    final fun copy(kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Double = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Int = ..., com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings = ...): com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.copy|copy(kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Double;kotlin.Boolean;kotlin.Boolean;kotlin.Int;com.github.zly2006.zhihu.viewmodel.filter.FeedAdBlockSettings){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/FilterableContent { // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent|null[0]
+    constructor <init>(kotlin/String, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/String, kotlin/String, com.github.zly2006.zhihu.data/DataHolder.Content, kotlin/Boolean = ..., kotlin/Long? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...) // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.<init>|<init>(kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String;kotlin.String;com.github.zly2006.zhihu.data.DataHolder.Content;kotlin.Boolean;kotlin.Long?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
+
+    final val authorId // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.authorId|{}authorId[0]
+        final fun <get-authorId>(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.authorId.<get-authorId>|<get-authorId>(){}[0]
+    final val authorName // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.authorName|{}authorName[0]
+        final fun <get-authorName>(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.authorName.<get-authorName>|<get-authorName>(){}[0]
+    final val content // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.content|{}content[0]
+        final fun <get-content>(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.content.<get-content>|<get-content>(){}[0]
+    final val contentId // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.contentId|{}contentId[0]
+        final fun <get-contentId>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.contentId.<get-contentId>|<get-contentId>(){}[0]
+    final val contentType // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.contentType|{}contentType[0]
+        final fun <get-contentType>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.contentType.<get-contentType>|<get-contentType>(){}[0]
+    final val feedJson // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.feedJson|{}feedJson[0]
+        final fun <get-feedJson>(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.feedJson.<get-feedJson>|<get-feedJson>(){}[0]
+    final val isFollowing // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.isFollowing|{}isFollowing[0]
+        final fun <get-isFollowing>(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.isFollowing.<get-isFollowing>|<get-isFollowing>(){}[0]
+    final val navDestinationJson // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.navDestinationJson|{}navDestinationJson[0]
+        final fun <get-navDestinationJson>(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.navDestinationJson.<get-navDestinationJson>|<get-navDestinationJson>(){}[0]
+    final val questionAuthorId // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.questionAuthorId|{}questionAuthorId[0]
+        final fun <get-questionAuthorId>(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.questionAuthorId.<get-questionAuthorId>|<get-questionAuthorId>(){}[0]
+    final val questionAuthorName // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.questionAuthorName|{}questionAuthorName[0]
+        final fun <get-questionAuthorName>(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.questionAuthorName.<get-questionAuthorName>|<get-questionAuthorName>(){}[0]
+    final val questionId // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.questionId|{}questionId[0]
+        final fun <get-questionId>(): kotlin/Long? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.questionId.<get-questionId>|<get-questionId>(){}[0]
+    final val raw // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.raw|{}raw[0]
+        final fun <get-raw>(): com.github.zly2006.zhihu.data/DataHolder.Content // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.raw.<get-raw>|<get-raw>(){}[0]
+    final val summary // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.summary|{}summary[0]
+        final fun <get-summary>(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.summary.<get-summary>|<get-summary>(){}[0]
+    final val title // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.title|{}title[0]
+        final fun <get-title>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.title.<get-title>|<get-title>(){}[0]
+    final val url // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.url|{}url[0]
+        final fun <get-url>(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.url.<get-url>|<get-url>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.component1|component1(){}[0]
+    final fun component10(): kotlin/Long? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.component10|component10(){}[0]
+    final fun component11(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.component11|component11(){}[0]
+    final fun component12(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.component12|component12(){}[0]
+    final fun component13(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.component13|component13(){}[0]
+    final fun component14(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.component14|component14(){}[0]
+    final fun component15(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.component15|component15(){}[0]
+    final fun component2(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.component2|component2(){}[0]
+    final fun component3(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.component3|component3(){}[0]
+    final fun component4(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.component4|component4(){}[0]
+    final fun component5(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.component5|component5(){}[0]
+    final fun component6(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.component6|component6(){}[0]
+    final fun component7(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.component7|component7(){}[0]
+    final fun component8(): com.github.zly2006.zhihu.data/DataHolder.Content // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.component8|component8(){}[0]
+    final fun component9(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.component9|component9(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String = ..., kotlin/String = ..., com.github.zly2006.zhihu.data/DataHolder.Content = ..., kotlin/Boolean = ..., kotlin/Long? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...): com.github.zly2006.zhihu.viewmodel.filter/FilterableContent // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.copy|copy(kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String;kotlin.String;com.github.zly2006.zhihu.data.DataHolder.Content;kotlin.Boolean;kotlin.Long?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/FilterableContent.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/ForegroundReadFilterPipeline { // com.github.zly2006.zhihu.viewmodel.filter/ForegroundReadFilterPipeline|null[0]
+    constructor <init>(com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings, com.github.zly2006.zhihu.viewmodel.filter/ContentFilterManager, com.github.zly2006.zhihu.viewmodel.filter/ContentOpenEventDao, com.github.zly2006.zhihu.viewmodel.filter/BlockedFeedRecordDao) // com.github.zly2006.zhihu.viewmodel.filter/ForegroundReadFilterPipeline.<init>|<init>(com.github.zly2006.zhihu.viewmodel.filter.FeedFilterSettings;com.github.zly2006.zhihu.viewmodel.filter.ContentFilterManager;com.github.zly2006.zhihu.viewmodel.filter.ContentOpenEventDao;com.github.zly2006.zhihu.viewmodel.filter.BlockedFeedRecordDao){}[0]
+
+    final suspend fun filter(kotlin.collections/List<com.github.zly2006.zhihu.data/FeedDisplayItem>): kotlin.collections/List<com.github.zly2006.zhihu.data/FeedDisplayItem> // com.github.zly2006.zhihu.viewmodel.filter/ForegroundReadFilterPipeline.filter|filter(kotlin.collections.List<com.github.zly2006.zhihu.data.FeedDisplayItem>){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/HomeFeedFilter { // com.github.zly2006.zhihu.viewmodel.filter/HomeFeedFilter|null[0]
+    constructor <init>(com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase, com.github.zly2006.zhihu.platform/SettingsStore, com.github.zly2006.zhihu.filter/RemoteHistorySync, com.github.zly2006.zhihu.viewmodel.filter/KeywordSemanticMatcher? = ..., kotlin.coroutines/SuspendFunction1<kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/FilterableContent>, kotlin/Unit> = ...) // com.github.zly2006.zhihu.viewmodel.filter/HomeFeedFilter.<init>|<init>(com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase;com.github.zly2006.zhihu.platform.SettingsStore;com.github.zly2006.zhihu.filter.RemoteHistorySync;com.github.zly2006.zhihu.viewmodel.filter.KeywordSemanticMatcher?;kotlin.coroutines.SuspendFunction1<kotlin.collections.List<com.github.zly2006.zhihu.viewmodel.filter.FilterableContent>,kotlin.Unit>){}[0]
+
+    final suspend fun background(kotlin.collections/List<com.github.zly2006.zhihu.data/FeedDisplayItem>, com.github.zly2006.zhihu.viewmodel.filter/ContentDetailProvider): kotlin.collections/List<com.github.zly2006.zhihu.data/FeedDisplayItem> // com.github.zly2006.zhihu.viewmodel.filter/HomeFeedFilter.background|background(kotlin.collections.List<com.github.zly2006.zhihu.data.FeedDisplayItem>;com.github.zly2006.zhihu.viewmodel.filter.ContentDetailProvider){}[0]
+    final suspend fun foreground(kotlin.collections/List<com.github.zly2006.zhihu.data/FeedDisplayItem>): kotlin.collections/List<com.github.zly2006.zhihu.data/FeedDisplayItem> // com.github.zly2006.zhihu.viewmodel.filter/HomeFeedFilter.foreground|foreground(kotlin.collections.List<com.github.zly2006.zhihu.data.FeedDisplayItem>){}[0]
+    final suspend fun recordInteraction(com.github.zly2006.zhihu.data/Feed) // com.github.zly2006.zhihu.viewmodel.filter/HomeFeedFilter.recordInteraction|recordInteraction(com.github.zly2006.zhihu.data.Feed){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup { // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup|null[0]
+    constructor <init>(kotlin/String, kotlin/Boolean = ..., kotlin/Boolean = ...) // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.<init>|<init>(kotlin.String;kotlin.Boolean;kotlin.Boolean){}[0]
+
+    final val caseSensitive // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.caseSensitive|{}caseSensitive[0]
+        final fun <get-caseSensitive>(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.caseSensitive.<get-caseSensitive>|<get-caseSensitive>(){}[0]
+    final val isRegex // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.isRegex|{}isRegex[0]
+        final fun <get-isRegex>(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.isRegex.<get-isRegex>|<get-isRegex>(){}[0]
+    final val keyword // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.keyword|{}keyword[0]
+        final fun <get-keyword>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.keyword.<get-keyword>|<get-keyword>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.component1|component1(){}[0]
+    final fun component2(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.component2|component2(){}[0]
+    final fun component3(): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.component3|component3(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/Boolean = ..., kotlin/Boolean = ...): com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.copy|copy(kotlin.String;kotlin.Boolean;kotlin.Boolean){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup> { // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup) // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.viewmodel.filter.KeywordBackup){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup> // com.github.zly2006.zhihu.viewmodel.filter/KeywordBackup.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup { // com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup|null[0]
+    constructor <init>(kotlin/String) // com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup.<init>|<init>(kotlin.String){}[0]
+
+    final val keyword // com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup.keyword|{}keyword[0]
+        final fun <get-keyword>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup.keyword.<get-keyword>|<get-keyword>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup.component1|component1(){}[0]
+    final fun copy(kotlin/String = ...): com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup // com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup.copy|copy(kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup> { // com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup // com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup) // com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.viewmodel.filter.NlpKeywordBackup){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup> // com.github.zly2006.zhihu.viewmodel.filter/NlpKeywordBackup.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/TopicBackup { // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup|null[0]
+    constructor <init>(kotlin/String, kotlin/String) // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.<init>|<init>(kotlin.String;kotlin.String){}[0]
+
+    final val topicId // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.topicId|{}topicId[0]
+        final fun <get-topicId>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.topicId.<get-topicId>|<get-topicId>(){}[0]
+    final val topicName // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.topicName|{}topicName[0]
+        final fun <get-topicName>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.topicName.<get-topicName>|<get-topicName>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.component2|component2(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ...): com.github.zly2006.zhihu.viewmodel.filter/TopicBackup // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.copy|copy(kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.viewmodel.filter/TopicBackup> { // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.viewmodel.filter/TopicBackup // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.viewmodel.filter/TopicBackup) // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.viewmodel.filter.TopicBackup){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.viewmodel.filter/TopicBackup> // com.github.zly2006.zhihu.viewmodel.filter/TopicBackup.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/UserBackup { // com.github.zly2006.zhihu.viewmodel.filter/UserBackup|null[0]
+    constructor <init>(kotlin/String, kotlin/String, kotlin/String = ..., kotlin/String = ...) // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.<init>|<init>(kotlin.String;kotlin.String;kotlin.String;kotlin.String){}[0]
+
+    final val avatarUrl // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.avatarUrl|{}avatarUrl[0]
+        final fun <get-avatarUrl>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.avatarUrl.<get-avatarUrl>|<get-avatarUrl>(){}[0]
+    final val urlToken // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.urlToken|{}urlToken[0]
+        final fun <get-urlToken>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.urlToken.<get-urlToken>|<get-urlToken>(){}[0]
+    final val userId // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.userId|{}userId[0]
+        final fun <get-userId>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.userId.<get-userId>|<get-userId>(){}[0]
+    final val userName // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.userName|{}userName[0]
+        final fun <get-userName>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.userName.<get-userName>|<get-userName>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.component2|component2(){}[0]
+    final fun component3(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.component3|component3(){}[0]
+    final fun component4(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.component4|component4(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String = ...): com.github.zly2006.zhihu.viewmodel.filter/UserBackup // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.copy|copy(kotlin.String;kotlin.String;kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.viewmodel.filter/UserBackup> { // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.viewmodel.filter/UserBackup // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.viewmodel.filter/UserBackup) // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.viewmodel.filter.UserBackup){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.viewmodel.filter/UserBackup> // com.github.zly2006.zhihu.viewmodel.filter/UserBackup.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.viewmodel.local/CrawlingExecutor { // com.github.zly2006.zhihu.viewmodel.local/CrawlingExecutor|null[0]
+    constructor <init>(com.github.zly2006.zhihu.viewmodel.local/LocalContentDao, com.github.zly2006.zhihu.viewmodel/ZhihuApiEnvironment) // com.github.zly2006.zhihu.viewmodel.local/CrawlingExecutor.<init>|<init>(com.github.zly2006.zhihu.viewmodel.local.LocalContentDao;com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment){}[0]
+
+    final suspend fun executeTask(com.github.zly2006.zhihu.viewmodel.local/CrawlingTask) // com.github.zly2006.zhihu.viewmodel.local/CrawlingExecutor.executeTask|executeTask(com.github.zly2006.zhihu.viewmodel.local.CrawlingTask){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.local/FeedGenerator { // com.github.zly2006.zhihu.viewmodel.local/FeedGenerator|null[0]
+    constructor <init>(com.github.zly2006.zhihu.viewmodel.local/LocalContentDao) // com.github.zly2006.zhihu.viewmodel.local/FeedGenerator.<init>|<init>(com.github.zly2006.zhihu.viewmodel.local.LocalContentDao){}[0]
+
+    final suspend fun generateFeedFromResult(com.github.zly2006.zhihu.viewmodel.local/CrawlingResult, kotlin/String): com.github.zly2006.zhihu.viewmodel.local/LocalFeed // com.github.zly2006.zhihu.viewmodel.local/FeedGenerator.generateFeedFromResult|generateFeedFromResult(com.github.zly2006.zhihu.viewmodel.local.CrawlingResult;kotlin.String){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity { // com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity|null[0]
+    constructor <init>(kotlin/Double, kotlin/String? = ...) // com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity.<init>|<init>(kotlin.Double;kotlin.String?){}[0]
+
+    final val explanation // com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity.explanation|{}explanation[0]
+        final fun <get-explanation>(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity.explanation.<get-explanation>|<get-explanation>(){}[0]
+    final val multiplier // com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity.multiplier|{}multiplier[0]
+        final fun <get-multiplier>(): kotlin/Double // com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity.multiplier.<get-multiplier>|<get-multiplier>(){}[0]
+
+    final fun component1(): kotlin/Double // com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity.component1|component1(){}[0]
+    final fun component2(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity.component2|component2(){}[0]
+    final fun copy(kotlin/Double = ..., kotlin/String? = ...): com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity // com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity.copy|copy(kotlin.Double;kotlin.String?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity { // com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity|null[0]
+    constructor <init>(kotlin/String, kotlin/String) // com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity.<init>|<init>(kotlin.String;kotlin.String){}[0]
+
+    final val id // com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity.id|{}id[0]
+        final fun <get-id>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity.id.<get-id>|<get-id>(){}[0]
+    final val type // com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity.type|{}type[0]
+        final fun <get-type>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity.type.<get-type>|<get-type>(){}[0]
+    final val value // com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity.value|{}value[0]
+        final fun <get-value>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity.value.<get-value>|<get-value>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity.component2|component2(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ...): com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity // com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity.copy|copy(kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity.hashCode|hashCode(){}[0]
+    final fun toNavDestination(kotlin/String): com.github.zly2006.zhihu.navigation/NavDestination? // com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity.toNavDestination|toNavDestination(kotlin.String){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.local/LocalContentInitializer { // com.github.zly2006.zhihu.viewmodel.local/LocalContentInitializer|null[0]
+    constructor <init>(com.github.zly2006.zhihu.viewmodel.local/LocalContentDao) // com.github.zly2006.zhihu.viewmodel.local/LocalContentInitializer.<init>|<init>(com.github.zly2006.zhihu.viewmodel.local.LocalContentDao){}[0]
+
+    final suspend fun initializeIfNeeded() // com.github.zly2006.zhihu.viewmodel.local/LocalContentInitializer.initializeIfNeeded|initializeIfNeeded(){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.local/LocalContentStats { // com.github.zly2006.zhihu.viewmodel.local/LocalContentStats|null[0]
+    constructor <init>(kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ...) // com.github.zly2006.zhihu.viewmodel.local/LocalContentStats.<init>|<init>(kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+
+    final val clicks // com.github.zly2006.zhihu.viewmodel.local/LocalContentStats.clicks|{}clicks[0]
+        final fun <get-clicks>(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalContentStats.clicks.<get-clicks>|<get-clicks>(){}[0]
+    final val dislikes // com.github.zly2006.zhihu.viewmodel.local/LocalContentStats.dislikes|{}dislikes[0]
+        final fun <get-dislikes>(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalContentStats.dislikes.<get-dislikes>|<get-dislikes>(){}[0]
+    final val likes // com.github.zly2006.zhihu.viewmodel.local/LocalContentStats.likes|{}likes[0]
+        final fun <get-likes>(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalContentStats.likes.<get-likes>|<get-likes>(){}[0]
+
+    final fun component1(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalContentStats.component1|component1(){}[0]
+    final fun component2(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalContentStats.component2|component2(){}[0]
+    final fun component3(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalContentStats.component3|component3(){}[0]
+    final fun copy(kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ...): com.github.zly2006.zhihu.viewmodel.local/LocalContentStats // com.github.zly2006.zhihu.viewmodel.local/LocalContentStats.copy|copy(kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.local/LocalContentStats.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalContentStats.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/LocalContentStats.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference { // com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference|null[0]
+    constructor <init>(kotlin/Double, kotlin/String? = ...) // com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference.<init>|<init>(kotlin.Double;kotlin.String?){}[0]
+
+    final val explanation // com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference.explanation|{}explanation[0]
+        final fun <get-explanation>(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference.explanation.<get-explanation>|<get-explanation>(){}[0]
+    final val multiplier // com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference.multiplier|{}multiplier[0]
+        final fun <get-multiplier>(): kotlin/Double // com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference.multiplier.<get-multiplier>|<get-multiplier>(){}[0]
+
+    final fun component1(): kotlin/Double // com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference.component1|component1(){}[0]
+    final fun component2(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference.component2|component2(){}[0]
+    final fun copy(kotlin/Double = ..., kotlin/String? = ...): com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference // com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference.copy|copy(kotlin.Double;kotlin.String?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats { // com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats|null[0]
+    constructor <init>(kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ...) // com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats.<init>|<init>(kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+
+    final val clicks // com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats.clicks|{}clicks[0]
+        final fun <get-clicks>(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats.clicks.<get-clicks>|<get-clicks>(){}[0]
+    final val dislikes // com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats.dislikes|{}dislikes[0]
+        final fun <get-dislikes>(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats.dislikes.<get-dislikes>|<get-dislikes>(){}[0]
+    final val likes // com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats.likes|{}likes[0]
+        final fun <get-likes>(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats.likes.<get-likes>|<get-likes>(){}[0]
+
+    final fun component1(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats.component1|component1(){}[0]
+    final fun component2(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats.component2|component2(){}[0]
+    final fun component3(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats.component3|component3(){}[0]
+    final fun copy(kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ...): com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats // com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats.copy|copy(kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/LocalReasonStats.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine : kotlin/AutoCloseable { // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine|null[0]
+    constructor <init>(com.github.zly2006.zhihu.viewmodel.local/LocalContentDao, com.github.zly2006.zhihu.viewmodel.local/CrawlingExecutor, kotlin.coroutines/SuspendFunction0<kotlin/Unit> = ..., kotlin/Function1<kotlinx.coroutines/CoroutineScope, kotlin/Unit> = ...) // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine.<init>|<init>(com.github.zly2006.zhihu.viewmodel.local.LocalContentDao;com.github.zly2006.zhihu.viewmodel.local.CrawlingExecutor;kotlin.coroutines.SuspendFunction0<kotlin.Unit>;kotlin.Function1<kotlinx.coroutines.CoroutineScope,kotlin.Unit>){}[0]
+
+    final fun close() // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine.close|close(){}[0]
+    final suspend fun generateRecommendations(kotlin/Int = ...): kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry> // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine.generateRecommendations|generateRecommendations(kotlin.Int){}[0]
+    final suspend fun initialize() // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine.initialize|initialize(){}[0]
+    final suspend fun recordContentOpened(kotlin/String, com.github.zly2006.zhihu.viewmodel.local/CrawlingReason) // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine.recordContentOpened|recordContentOpened(kotlin.String;com.github.zly2006.zhihu.viewmodel.local.CrawlingReason){}[0]
+    final suspend fun recordRecommendationFeedback(kotlin/String?, kotlin/String, com.github.zly2006.zhihu.viewmodel.local/CrawlingReason, kotlin/Double) // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine.recordRecommendationFeedback|recordRecommendationFeedback(kotlin.String?;kotlin.String;com.github.zly2006.zhihu.viewmodel.local.CrawlingReason;kotlin.Double){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry { // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry|null[0]
+    constructor <init>(com.github.zly2006.zhihu.viewmodel.local/LocalFeed, com.github.zly2006.zhihu.viewmodel.local/CrawlingResult, com.github.zly2006.zhihu.navigation/NavDestination?) // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry.<init>|<init>(com.github.zly2006.zhihu.viewmodel.local.LocalFeed;com.github.zly2006.zhihu.viewmodel.local.CrawlingResult;com.github.zly2006.zhihu.navigation.NavDestination?){}[0]
+
+    final val feed // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry.feed|{}feed[0]
+        final fun <get-feed>(): com.github.zly2006.zhihu.viewmodel.local/LocalFeed // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry.feed.<get-feed>|<get-feed>(){}[0]
+    final val navDestination // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry.navDestination|{}navDestination[0]
+        final fun <get-navDestination>(): com.github.zly2006.zhihu.navigation/NavDestination? // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry.navDestination.<get-navDestination>|<get-navDestination>(){}[0]
+    final val result // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry.result|{}result[0]
+        final fun <get-result>(): com.github.zly2006.zhihu.viewmodel.local/CrawlingResult // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry.result.<get-result>|<get-result>(){}[0]
+
+    final fun component1(): com.github.zly2006.zhihu.viewmodel.local/LocalFeed // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry.component1|component1(){}[0]
+    final fun component2(): com.github.zly2006.zhihu.viewmodel.local/CrawlingResult // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry.component2|component2(){}[0]
+    final fun component3(): com.github.zly2006.zhihu.navigation/NavDestination? // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry.component3|component3(){}[0]
+    final fun copy(com.github.zly2006.zhihu.viewmodel.local/LocalFeed = ..., com.github.zly2006.zhihu.viewmodel.local/CrawlingResult = ..., com.github.zly2006.zhihu.navigation/NavDestination? = ...): com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry.copy|copy(com.github.zly2006.zhihu.viewmodel.local.LocalFeed;com.github.zly2006.zhihu.viewmodel.local.CrawlingResult;com.github.zly2006.zhihu.navigation.NavDestination?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEntry.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationSignal { // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationSignal|null[0]
+    constructor <init>(kotlin/Double, kotlin/String? = ...) // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationSignal.<init>|<init>(kotlin.Double;kotlin.String?){}[0]
+
+    final val explanation // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationSignal.explanation|{}explanation[0]
+        final fun <get-explanation>(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationSignal.explanation.<get-explanation>|<get-explanation>(){}[0]
+    final val multiplier // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationSignal.multiplier|{}multiplier[0]
+        final fun <get-multiplier>(): kotlin/Double // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationSignal.multiplier.<get-multiplier>|<get-multiplier>(){}[0]
+
+    final fun component1(): kotlin/Double // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationSignal.component1|component1(){}[0]
+    final fun component2(): kotlin/String? // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationSignal.component2|component2(){}[0]
+    final fun copy(kotlin/Double = ..., kotlin/String? = ...): com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationSignal // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationSignal.copy|copy(kotlin.Double;kotlin.String?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationSignal.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationSignal.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationSignal.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.local/RankedLocalResult { // com.github.zly2006.zhihu.viewmodel.local/RankedLocalResult|null[0]
+    constructor <init>(com.github.zly2006.zhihu.viewmodel.local/CrawlingResult, kotlin/Double, kotlin/String) // com.github.zly2006.zhihu.viewmodel.local/RankedLocalResult.<init>|<init>(com.github.zly2006.zhihu.viewmodel.local.CrawlingResult;kotlin.Double;kotlin.String){}[0]
+
+    final val finalScore // com.github.zly2006.zhihu.viewmodel.local/RankedLocalResult.finalScore|{}finalScore[0]
+        final fun <get-finalScore>(): kotlin/Double // com.github.zly2006.zhihu.viewmodel.local/RankedLocalResult.finalScore.<get-finalScore>|<get-finalScore>(){}[0]
+    final val reasonDisplay // com.github.zly2006.zhihu.viewmodel.local/RankedLocalResult.reasonDisplay|{}reasonDisplay[0]
+        final fun <get-reasonDisplay>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/RankedLocalResult.reasonDisplay.<get-reasonDisplay>|<get-reasonDisplay>(){}[0]
+    final val result // com.github.zly2006.zhihu.viewmodel.local/RankedLocalResult.result|{}result[0]
+        final fun <get-result>(): com.github.zly2006.zhihu.viewmodel.local/CrawlingResult // com.github.zly2006.zhihu.viewmodel.local/RankedLocalResult.result.<get-result>|<get-result>(){}[0]
+
+    final fun component1(): com.github.zly2006.zhihu.viewmodel.local/CrawlingResult // com.github.zly2006.zhihu.viewmodel.local/RankedLocalResult.component1|component1(){}[0]
+    final fun component2(): kotlin/Double // com.github.zly2006.zhihu.viewmodel.local/RankedLocalResult.component2|component2(){}[0]
+    final fun component3(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/RankedLocalResult.component3|component3(){}[0]
+    final fun copy(com.github.zly2006.zhihu.viewmodel.local/CrawlingResult = ..., kotlin/Double = ..., kotlin/String = ...): com.github.zly2006.zhihu.viewmodel.local/RankedLocalResult // com.github.zly2006.zhihu.viewmodel.local/RankedLocalResult.copy|copy(com.github.zly2006.zhihu.viewmodel.local.CrawlingResult;kotlin.Double;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.local/RankedLocalResult.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/RankedLocalResult.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/RankedLocalResult.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.local/TaskScheduler { // com.github.zly2006.zhihu.viewmodel.local/TaskScheduler|null[0]
+    constructor <init>(com.github.zly2006.zhihu.viewmodel.local/LocalContentDao, com.github.zly2006.zhihu.viewmodel.local/CrawlingExecutor) // com.github.zly2006.zhihu.viewmodel.local/TaskScheduler.<init>|<init>(com.github.zly2006.zhihu.viewmodel.local.LocalContentDao;com.github.zly2006.zhihu.viewmodel.local.CrawlingExecutor){}[0]
+
+    final fun startScheduling(kotlinx.coroutines/CoroutineScope) // com.github.zly2006.zhihu.viewmodel.local/TaskScheduler.startScheduling|startScheduling(kotlinx.coroutines.CoroutineScope){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer { // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer|null[0]
+    constructor <init>(com.github.zly2006.zhihu.viewmodel.local/LocalContentDao) // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.<init>|<init>(com.github.zly2006.zhihu.viewmodel.local.LocalContentDao){}[0]
+
+    final suspend fun buildBehaviorProfile(): com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.RecommendationBehaviorProfile // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.buildBehaviorProfile|buildBehaviorProfile(){}[0]
+    final suspend fun recordBehavior(kotlin/String, kotlin/String, kotlin/Long? = ...) // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.recordBehavior|recordBehavior(kotlin.String;kotlin.String;kotlin.Long?){}[0]
+    final suspend fun recordContentOpened(kotlin/String, com.github.zly2006.zhihu.viewmodel.local/CrawlingReason) // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.recordContentOpened|recordContentOpened(kotlin.String;com.github.zly2006.zhihu.viewmodel.local.CrawlingReason){}[0]
+    final suspend fun recordRecommendationFeedback(kotlin/String, com.github.zly2006.zhihu.viewmodel.local/CrawlingReason, kotlin/Double) // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.recordRecommendationFeedback|recordRecommendationFeedback(kotlin.String;com.github.zly2006.zhihu.viewmodel.local.CrawlingReason;kotlin.Double){}[0]
+
+    final class RecommendationBehaviorProfile { // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.RecommendationBehaviorProfile|null[0]
+        constructor <init>(kotlin.collections/Map<com.github.zly2006.zhihu.viewmodel.local/CrawlingReason, com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference>, kotlin.collections/Map<kotlin/String, com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity>) // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.RecommendationBehaviorProfile.<init>|<init>(kotlin.collections.Map<com.github.zly2006.zhihu.viewmodel.local.CrawlingReason,com.github.zly2006.zhihu.viewmodel.local.LocalReasonPreference>;kotlin.collections.Map<kotlin.String,com.github.zly2006.zhihu.viewmodel.local.LocalContentAffinity>){}[0]
+
+        final val contentAffinities // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.RecommendationBehaviorProfile.contentAffinities|{}contentAffinities[0]
+            final fun <get-contentAffinities>(): kotlin.collections/Map<kotlin/String, com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity> // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.RecommendationBehaviorProfile.contentAffinities.<get-contentAffinities>|<get-contentAffinities>(){}[0]
+        final val reasonPreferences // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.RecommendationBehaviorProfile.reasonPreferences|{}reasonPreferences[0]
+            final fun <get-reasonPreferences>(): kotlin.collections/Map<com.github.zly2006.zhihu.viewmodel.local/CrawlingReason, com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference> // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.RecommendationBehaviorProfile.reasonPreferences.<get-reasonPreferences>|<get-reasonPreferences>(){}[0]
+
+        final fun component1(): kotlin.collections/Map<com.github.zly2006.zhihu.viewmodel.local/CrawlingReason, com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference> // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.RecommendationBehaviorProfile.component1|component1(){}[0]
+        final fun component2(): kotlin.collections/Map<kotlin/String, com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity> // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.RecommendationBehaviorProfile.component2|component2(){}[0]
+        final fun copy(kotlin.collections/Map<com.github.zly2006.zhihu.viewmodel.local/CrawlingReason, com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference> = ..., kotlin.collections/Map<kotlin/String, com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity> = ...): com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.RecommendationBehaviorProfile // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.RecommendationBehaviorProfile.copy|copy(kotlin.collections.Map<com.github.zly2006.zhihu.viewmodel.local.CrawlingReason,com.github.zly2006.zhihu.viewmodel.local.LocalReasonPreference>;kotlin.collections.Map<kotlin.String,com.github.zly2006.zhihu.viewmodel.local.LocalContentAffinity>){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.RecommendationBehaviorProfile.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.RecommendationBehaviorProfile.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/UserBehaviorAnalyzer.RecommendationBehaviorProfile.toString|toString(){}[0]
+    }
+}
+
+final object com.github.zly2006.zhihu.data/ContentDetailCache { // com.github.zly2006.zhihu.data/ContentDetailCache|null[0]
+    final suspend fun getOrFetch(com.github.zly2006.zhihu.navigation/NavDestination, kotlin.coroutines/SuspendFunction1<com.github.zly2006.zhihu.navigation/NavDestination, com.github.zly2006.zhihu.data/DataHolder.Content?>): com.github.zly2006.zhihu.data/DataHolder.Content? // com.github.zly2006.zhihu.data/ContentDetailCache.getOrFetch|getOrFetch(com.github.zly2006.zhihu.navigation.NavDestination;kotlin.coroutines.SuspendFunction1<com.github.zly2006.zhihu.navigation.NavDestination,com.github.zly2006.zhihu.data.DataHolder.Content?>){}[0]
+}
+
+final object com.github.zly2006.zhihu.filter/ContentOpenEventSupport { // com.github.zly2006.zhihu.filter/ContentOpenEventSupport|null[0]
+    final fun inferOpenFrom(com.github.zly2006.zhihu.navigation/NavDestination?, com.github.zly2006.zhihu.navigation/NavDestination): kotlin/String // com.github.zly2006.zhihu.filter/ContentOpenEventSupport.inferOpenFrom|inferOpenFrom(com.github.zly2006.zhihu.navigation.NavDestination?;com.github.zly2006.zhihu.navigation.NavDestination){}[0]
+    final fun partitionQuestionAnswerCandidates(kotlin.collections/List<com.github.zly2006.zhihu.navigation/Article>, kotlin.collections/Set<kotlin/Long>, kotlin/Long, kotlin.collections/Set<kotlin/Long> = ..., kotlin.collections/Set<kotlin/Long> = ..., kotlin.collections/Set<kotlin/Long> = ...): com.github.zly2006.zhihu.filter/QuestionAnswerCandidatePartition // com.github.zly2006.zhihu.filter/ContentOpenEventSupport.partitionQuestionAnswerCandidates|partitionQuestionAnswerCandidates(kotlin.collections.List<com.github.zly2006.zhihu.navigation.Article>;kotlin.collections.Set<kotlin.Long>;kotlin.Long;kotlin.collections.Set<kotlin.Long>;kotlin.collections.Set<kotlin.Long>;kotlin.collections.Set<kotlin.Long>){}[0]
+    final fun toTrackedContentIdentity(com.github.zly2006.zhihu.navigation/NavDestination): com.github.zly2006.zhihu.filter/TrackedContentIdentity? // com.github.zly2006.zhihu.filter/ContentOpenEventSupport.toTrackedContentIdentity|toTrackedContentIdentity(com.github.zly2006.zhihu.navigation.NavDestination){}[0]
+    final suspend fun getAlreadyOpenedContentIds(com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase, kotlin.collections/List<kotlin/Pair<kotlin/String, kotlin/String>>): kotlin.collections/Set<kotlin/String> // com.github.zly2006.zhihu.filter/ContentOpenEventSupport.getAlreadyOpenedContentIds|getAlreadyOpenedContentIds(com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase;kotlin.collections.List<kotlin.Pair<kotlin.String,kotlin.String>>){}[0]
+    final suspend fun recordOpenEvent(com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase, com.github.zly2006.zhihu.navigation/NavDestination, kotlin/Long? = ..., kotlin/String = ...) // com.github.zly2006.zhihu.filter/ContentOpenEventSupport.recordOpenEvent|recordOpenEvent(com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase;com.github.zly2006.zhihu.navigation.NavDestination;kotlin.Long?;kotlin.String){}[0]
+}
+
+final object com.github.zly2006.zhihu.filter/ContentOpenFrom { // com.github.zly2006.zhihu.filter/ContentOpenFrom|null[0]
+    final const val ANSWER_SWITCH // com.github.zly2006.zhihu.filter/ContentOpenFrom.ANSWER_SWITCH|{}ANSWER_SWITCH[0]
+        final fun <get-ANSWER_SWITCH>(): kotlin/String // com.github.zly2006.zhihu.filter/ContentOpenFrom.ANSWER_SWITCH.<get-ANSWER_SWITCH>|<get-ANSWER_SWITCH>(){}[0]
+    final const val COLLECTION // com.github.zly2006.zhihu.filter/ContentOpenFrom.COLLECTION|{}COLLECTION[0]
+        final fun <get-COLLECTION>(): kotlin/String // com.github.zly2006.zhihu.filter/ContentOpenFrom.COLLECTION.<get-COLLECTION>|<get-COLLECTION>(){}[0]
+    final const val HISTORY // com.github.zly2006.zhihu.filter/ContentOpenFrom.HISTORY|{}HISTORY[0]
+        final fun <get-HISTORY>(): kotlin/String // com.github.zly2006.zhihu.filter/ContentOpenFrom.HISTORY.<get-HISTORY>|<get-HISTORY>(){}[0]
+    final const val HOME_FEED // com.github.zly2006.zhihu.filter/ContentOpenFrom.HOME_FEED|{}HOME_FEED[0]
+        final fun <get-HOME_FEED>(): kotlin/String // com.github.zly2006.zhihu.filter/ContentOpenFrom.HOME_FEED.<get-HOME_FEED>|<get-HOME_FEED>(){}[0]
+    final const val NOTIFICATION // com.github.zly2006.zhihu.filter/ContentOpenFrom.NOTIFICATION|{}NOTIFICATION[0]
+        final fun <get-NOTIFICATION>(): kotlin/String // com.github.zly2006.zhihu.filter/ContentOpenFrom.NOTIFICATION.<get-NOTIFICATION>|<get-NOTIFICATION>(){}[0]
+    final const val QUESTION_FEED // com.github.zly2006.zhihu.filter/ContentOpenFrom.QUESTION_FEED|{}QUESTION_FEED[0]
+        final fun <get-QUESTION_FEED>(): kotlin/String // com.github.zly2006.zhihu.filter/ContentOpenFrom.QUESTION_FEED.<get-QUESTION_FEED>|<get-QUESTION_FEED>(){}[0]
+    final const val UNKNOWN // com.github.zly2006.zhihu.filter/ContentOpenFrom.UNKNOWN|{}UNKNOWN[0]
+        final fun <get-UNKNOWN>(): kotlin/String // com.github.zly2006.zhihu.filter/ContentOpenFrom.UNKNOWN.<get-UNKNOWN>|<get-UNKNOWN>(){}[0]
+}
+
+final object com.github.zly2006.zhihu.viewmodel.filter/ContentType { // com.github.zly2006.zhihu.viewmodel.filter/ContentType|null[0]
+    final const val ANSWER // com.github.zly2006.zhihu.viewmodel.filter/ContentType.ANSWER|{}ANSWER[0]
+        final fun <get-ANSWER>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/ContentType.ANSWER.<get-ANSWER>|<get-ANSWER>(){}[0]
+    final const val ARTICLE // com.github.zly2006.zhihu.viewmodel.filter/ContentType.ARTICLE|{}ARTICLE[0]
+        final fun <get-ARTICLE>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/ContentType.ARTICLE.<get-ARTICLE>|<get-ARTICLE>(){}[0]
+    final const val COLUMN // com.github.zly2006.zhihu.viewmodel.filter/ContentType.COLUMN|{}COLUMN[0]
+        final fun <get-COLUMN>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/ContentType.COLUMN.<get-COLUMN>|<get-COLUMN>(){}[0]
+    final const val PIN // com.github.zly2006.zhihu.viewmodel.filter/ContentType.PIN|{}PIN[0]
+        final fun <get-PIN>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/ContentType.PIN.<get-PIN>|<get-PIN>(){}[0]
+    final const val QUESTION // com.github.zly2006.zhihu.viewmodel.filter/ContentType.QUESTION|{}QUESTION[0]
+        final fun <get-QUESTION>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/ContentType.QUESTION.<get-QUESTION>|<get-QUESTION>(){}[0]
+    final const val TOPIC // com.github.zly2006.zhihu.viewmodel.filter/ContentType.TOPIC|{}TOPIC[0]
+        final fun <get-TOPIC>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/ContentType.TOPIC.<get-TOPIC>|<get-TOPIC>(){}[0]
+    final const val VIDEO // com.github.zly2006.zhihu.viewmodel.filter/ContentType.VIDEO|{}VIDEO[0]
+        final fun <get-VIDEO>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/ContentType.VIDEO.<get-VIDEO>|<get-VIDEO>(){}[0]
+}
+
+final const val com.github.zly2006.zhihu.data/ANSWER_VOTEUP_THRESHOLD_PREFERENCE_KEY // com.github.zly2006.zhihu.data/ANSWER_VOTEUP_THRESHOLD_PREFERENCE_KEY|{}ANSWER_VOTEUP_THRESHOLD_PREFERENCE_KEY[0]
+    final fun <get-ANSWER_VOTEUP_THRESHOLD_PREFERENCE_KEY>(): kotlin/String // com.github.zly2006.zhihu.data/ANSWER_VOTEUP_THRESHOLD_PREFERENCE_KEY.<get-ANSWER_VOTEUP_THRESHOLD_PREFERENCE_KEY>|<get-ANSWER_VOTEUP_THRESHOLD_PREFERENCE_KEY>(){}[0]
+final const val com.github.zly2006.zhihu.data/ARTICLE_FOLLOWERS_THRESHOLD_PREFERENCE_KEY // com.github.zly2006.zhihu.data/ARTICLE_FOLLOWERS_THRESHOLD_PREFERENCE_KEY|{}ARTICLE_FOLLOWERS_THRESHOLD_PREFERENCE_KEY[0]
+    final fun <get-ARTICLE_FOLLOWERS_THRESHOLD_PREFERENCE_KEY>(): kotlin/String // com.github.zly2006.zhihu.data/ARTICLE_FOLLOWERS_THRESHOLD_PREFERENCE_KEY.<get-ARTICLE_FOLLOWERS_THRESHOLD_PREFERENCE_KEY>|<get-ARTICLE_FOLLOWERS_THRESHOLD_PREFERENCE_KEY>(){}[0]
+final const val com.github.zly2006.zhihu.data/ARTICLE_VOTEUP_THRESHOLD_PREFERENCE_KEY // com.github.zly2006.zhihu.data/ARTICLE_VOTEUP_THRESHOLD_PREFERENCE_KEY|{}ARTICLE_VOTEUP_THRESHOLD_PREFERENCE_KEY[0]
+    final fun <get-ARTICLE_VOTEUP_THRESHOLD_PREFERENCE_KEY>(): kotlin/String // com.github.zly2006.zhihu.data/ARTICLE_VOTEUP_THRESHOLD_PREFERENCE_KEY.<get-ARTICLE_VOTEUP_THRESHOLD_PREFERENCE_KEY>|<get-ARTICLE_VOTEUP_THRESHOLD_PREFERENCE_KEY>(){}[0]
+final const val com.github.zly2006.zhihu.data/QUALITY_FILTER_MODE_PREFERENCE_KEY // com.github.zly2006.zhihu.data/QUALITY_FILTER_MODE_PREFERENCE_KEY|{}QUALITY_FILTER_MODE_PREFERENCE_KEY[0]
+    final fun <get-QUALITY_FILTER_MODE_PREFERENCE_KEY>(): kotlin/String // com.github.zly2006.zhihu.data/QUALITY_FILTER_MODE_PREFERENCE_KEY.<get-QUALITY_FILTER_MODE_PREFERENCE_KEY>|<get-QUALITY_FILTER_MODE_PREFERENCE_KEY>(){}[0]
+final const val com.github.zly2006.zhihu.data/QUESTION_ANSWER_THRESHOLD_PREFERENCE_KEY // com.github.zly2006.zhihu.data/QUESTION_ANSWER_THRESHOLD_PREFERENCE_KEY|{}QUESTION_ANSWER_THRESHOLD_PREFERENCE_KEY[0]
+    final fun <get-QUESTION_ANSWER_THRESHOLD_PREFERENCE_KEY>(): kotlin/String // com.github.zly2006.zhihu.data/QUESTION_ANSWER_THRESHOLD_PREFERENCE_KEY.<get-QUESTION_ANSWER_THRESHOLD_PREFERENCE_KEY>|<get-QUESTION_ANSWER_THRESHOLD_PREFERENCE_KEY>(){}[0]
+final const val com.github.zly2006.zhihu.data/QUESTION_FOLLOWERS_THRESHOLD_PREFERENCE_KEY // com.github.zly2006.zhihu.data/QUESTION_FOLLOWERS_THRESHOLD_PREFERENCE_KEY|{}QUESTION_FOLLOWERS_THRESHOLD_PREFERENCE_KEY[0]
+    final fun <get-QUESTION_FOLLOWERS_THRESHOLD_PREFERENCE_KEY>(): kotlin/String // com.github.zly2006.zhihu.data/QUESTION_FOLLOWERS_THRESHOLD_PREFERENCE_KEY.<get-QUESTION_FOLLOWERS_THRESHOLD_PREFERENCE_KEY>|<get-QUESTION_FOLLOWERS_THRESHOLD_PREFERENCE_KEY>(){}[0]
+final const val com.github.zly2006.zhihu.data/VIDEO_FOLLOWERS_THRESHOLD_PREFERENCE_KEY // com.github.zly2006.zhihu.data/VIDEO_FOLLOWERS_THRESHOLD_PREFERENCE_KEY|{}VIDEO_FOLLOWERS_THRESHOLD_PREFERENCE_KEY[0]
+    final fun <get-VIDEO_FOLLOWERS_THRESHOLD_PREFERENCE_KEY>(): kotlin/String // com.github.zly2006.zhihu.data/VIDEO_FOLLOWERS_THRESHOLD_PREFERENCE_KEY.<get-VIDEO_FOLLOWERS_THRESHOLD_PREFERENCE_KEY>|<get-VIDEO_FOLLOWERS_THRESHOLD_PREFERENCE_KEY>(){}[0]
+final const val com.github.zly2006.zhihu.data/VIDEO_VOTE_THRESHOLD_PREFERENCE_KEY // com.github.zly2006.zhihu.data/VIDEO_VOTE_THRESHOLD_PREFERENCE_KEY|{}VIDEO_VOTE_THRESHOLD_PREFERENCE_KEY[0]
+    final fun <get-VIDEO_VOTE_THRESHOLD_PREFERENCE_KEY>(): kotlin/String // com.github.zly2006.zhihu.data/VIDEO_VOTE_THRESHOLD_PREFERENCE_KEY.<get-VIDEO_VOTE_THRESHOLD_PREFERENCE_KEY>|<get-VIDEO_VOTE_THRESHOLD_PREFERENCE_KEY>(){}[0]
+final const val com.github.zly2006.zhihu.viewmodel.local/LOCAL_CONTENT_TYPE_ANSWER // com.github.zly2006.zhihu.viewmodel.local/LOCAL_CONTENT_TYPE_ANSWER|{}LOCAL_CONTENT_TYPE_ANSWER[0]
+    final fun <get-LOCAL_CONTENT_TYPE_ANSWER>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/LOCAL_CONTENT_TYPE_ANSWER.<get-LOCAL_CONTENT_TYPE_ANSWER>|<get-LOCAL_CONTENT_TYPE_ANSWER>(){}[0]
+final const val com.github.zly2006.zhihu.viewmodel.local/LOCAL_CONTENT_TYPE_ARTICLE // com.github.zly2006.zhihu.viewmodel.local/LOCAL_CONTENT_TYPE_ARTICLE|{}LOCAL_CONTENT_TYPE_ARTICLE[0]
+    final fun <get-LOCAL_CONTENT_TYPE_ARTICLE>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/LOCAL_CONTENT_TYPE_ARTICLE.<get-LOCAL_CONTENT_TYPE_ARTICLE>|<get-LOCAL_CONTENT_TYPE_ARTICLE>(){}[0]
+final const val com.github.zly2006.zhihu.viewmodel.local/LOCAL_CONTENT_TYPE_PIN // com.github.zly2006.zhihu.viewmodel.local/LOCAL_CONTENT_TYPE_PIN|{}LOCAL_CONTENT_TYPE_PIN[0]
+    final fun <get-LOCAL_CONTENT_TYPE_PIN>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/LOCAL_CONTENT_TYPE_PIN.<get-LOCAL_CONTENT_TYPE_PIN>|<get-LOCAL_CONTENT_TYPE_PIN>(){}[0]
+final const val com.github.zly2006.zhihu.viewmodel.local/LOCAL_CONTENT_TYPE_QUESTION // com.github.zly2006.zhihu.viewmodel.local/LOCAL_CONTENT_TYPE_QUESTION|{}LOCAL_CONTENT_TYPE_QUESTION[0]
+    final fun <get-LOCAL_CONTENT_TYPE_QUESTION>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/LOCAL_CONTENT_TYPE_QUESTION.<get-LOCAL_CONTENT_TYPE_QUESTION>|<get-LOCAL_CONTENT_TYPE_QUESTION>(){}[0]
+
+final fun (com.github.zly2006.zhihu.data/Feed.Target).com.github.zly2006.zhihu.viewmodel.local/toLocalContentIdentity(): com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity // com.github.zly2006.zhihu.viewmodel.local/toLocalContentIdentity|toLocalContentIdentity@com.github.zly2006.zhihu.data.Feed.Target(){}[0]
+final fun (com.github.zly2006.zhihu.data/FeedDisplayItem).com.github.zly2006.zhihu.viewmodel.filter/resolveContentIdentity(): com.github.zly2006.zhihu.viewmodel.filter/FeedContentIdentity // com.github.zly2006.zhihu.viewmodel.filter/resolveContentIdentity|resolveContentIdentity@com.github.zly2006.zhihu.data.FeedDisplayItem(){}[0]
+final fun (com.github.zly2006.zhihu.data/FeedDisplayItem).com.github.zly2006.zhihu.viewmodel.filter/toFilterableContent(com.github.zly2006.zhihu.viewmodel.filter/FeedContentIdentity, com.github.zly2006.zhihu.data/DataHolder.Content): com.github.zly2006.zhihu.viewmodel.filter/FilterableContent // com.github.zly2006.zhihu.viewmodel.filter/toFilterableContent|toFilterableContent@com.github.zly2006.zhihu.data.FeedDisplayItem(com.github.zly2006.zhihu.viewmodel.filter.FeedContentIdentity;com.github.zly2006.zhihu.data.DataHolder.Content){}[0]
+final fun (com.github.zly2006.zhihu.platform/SettingsStore).com.github.zly2006.zhihu.viewmodel.filter/toFeedFilterSettings(): com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings // com.github.zly2006.zhihu.viewmodel.filter/toFeedFilterSettings|toFeedFilterSettings@com.github.zly2006.zhihu.platform.SettingsStore(){}[0]
+final fun <#A: kotlin/Any?, #B: kotlin/Any?> com.github.zly2006.zhihu.viewmodel.local/applyReasonDiversity(kotlin.collections/List<#A>, kotlin/Int, kotlin/Function1<#A, #B>): kotlin.collections/List<#A> // com.github.zly2006.zhihu.viewmodel.local/applyReasonDiversity|applyReasonDiversity(kotlin.collections.List<0:0>;kotlin.Int;kotlin.Function1<0:0,0:1>){0§<kotlin.Any?>;1§<kotlin.Any?>}[0]
+final fun com.github.zly2006.zhihu.data/dataModule(kotlinx.io.files/Path): org.koin.core.module/Module // com.github.zly2006.zhihu.data/dataModule|dataModule(kotlinx.io.files.Path){}[0]
+final fun com.github.zly2006.zhihu.data/decodeArticleContentDetail(com.github.zly2006.zhihu.navigation/Article, kotlinx.serialization.json/JsonObject): com.github.zly2006.zhihu.data/DataHolder.Content // com.github.zly2006.zhihu.data/decodeArticleContentDetail|decodeArticleContentDetail(com.github.zly2006.zhihu.navigation.Article;kotlinx.serialization.json.JsonObject){}[0]
+final fun com.github.zly2006.zhihu.data/decodePinContentDetail(kotlinx.serialization.json/JsonObject): com.github.zly2006.zhihu.data/DataHolder.Pin // com.github.zly2006.zhihu.data/decodePinContentDetail|decodePinContentDetail(kotlinx.serialization.json.JsonObject){}[0]
+final fun com.github.zly2006.zhihu.data/decodeQuestionContentDetail(kotlinx.serialization.json/JsonObject): com.github.zly2006.zhihu.data/DataHolder.Question // com.github.zly2006.zhihu.data/decodeQuestionContentDetail|decodeQuestionContentDetail(kotlinx.serialization.json.JsonObject){}[0]
+final fun com.github.zly2006.zhihu.data/selectHighestQualityZhihuVideoUrl(kotlinx.serialization.json/JsonObject): kotlin/String? // com.github.zly2006.zhihu.data/selectHighestQualityZhihuVideoUrl|selectHighestQualityZhihuVideoUrl(kotlinx.serialization.json.JsonObject){}[0]
+final fun com.github.zly2006.zhihu.data/zhihuContentDetailInclude(com.github.zly2006.zhihu.navigation/NavDestination): kotlin/String // com.github.zly2006.zhihu.data/zhihuContentDetailInclude|zhihuContentDetailInclude(com.github.zly2006.zhihu.navigation.NavDestination){}[0]
+final fun com.github.zly2006.zhihu.data/zhihuContentDetailUrl(com.github.zly2006.zhihu.navigation/NavDestination): kotlin/String? // com.github.zly2006.zhihu.data/zhihuContentDetailUrl|zhihuContentDetailUrl(com.github.zly2006.zhihu.navigation.NavDestination){}[0]
+final fun com.github.zly2006.zhihu.viewmodel.filter/extractTopicIds(com.github.zly2006.zhihu.data/DataHolder.Content): kotlin.collections/List<kotlin/String>? // com.github.zly2006.zhihu.viewmodel.filter/extractTopicIds|extractTopicIds(com.github.zly2006.zhihu.data.DataHolder.Content){}[0]
+final fun com.github.zly2006.zhihu.viewmodel.filter/getFeedAdBlockReason(com.github.zly2006.zhihu.viewmodel.filter/FilterableContent, com.github.zly2006.zhihu.viewmodel.filter/FeedAdBlockSettings): kotlin/String? // com.github.zly2006.zhihu.viewmodel.filter/getFeedAdBlockReason|getFeedAdBlockReason(com.github.zly2006.zhihu.viewmodel.filter.FilterableContent;com.github.zly2006.zhihu.viewmodel.filter.FeedAdBlockSettings){}[0]
+final fun com.github.zly2006.zhihu.viewmodel.local/buildLocalRecommendationEngine(com.github.zly2006.zhihu.viewmodel.local/LocalContentDao, com.github.zly2006.zhihu.viewmodel/ZhihuApiEnvironment): com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationEngine // com.github.zly2006.zhihu.viewmodel.local/buildLocalRecommendationEngine|buildLocalRecommendationEngine(com.github.zly2006.zhihu.viewmodel.local.LocalContentDao;com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment){}[0]
+final fun com.github.zly2006.zhihu.viewmodel.local/buildLocalRecommendationReason(kotlin/String, com.github.zly2006.zhihu.viewmodel.local/LocalReasonPreference?, com.github.zly2006.zhihu.viewmodel.local/LocalContentAffinity?): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/buildLocalRecommendationReason|buildLocalRecommendationReason(kotlin.String;com.github.zly2006.zhihu.viewmodel.local.LocalReasonPreference?;com.github.zly2006.zhihu.viewmodel.local.LocalContentAffinity?){}[0]
+final fun com.github.zly2006.zhihu.viewmodel.local/buildLocalRecommendationSignal(kotlin/Int, kotlin/Int, kotlin/Int, kotlin/Double, kotlin/Double, kotlin/Double, kotlin.ranges/ClosedFloatingPointRange<kotlin/Double>, kotlin/String, kotlin/String): com.github.zly2006.zhihu.viewmodel.local/LocalRecommendationSignal // com.github.zly2006.zhihu.viewmodel.local/buildLocalRecommendationSignal|buildLocalRecommendationSignal(kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Double;kotlin.Double;kotlin.Double;kotlin.ranges.ClosedFloatingPointRange<kotlin.Double>;kotlin.String;kotlin.String){}[0]
+final fun com.github.zly2006.zhihu.viewmodel.local/parseLocalContentIdentity(kotlin/String, kotlin/String): com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity? // com.github.zly2006.zhihu.viewmodel.local/parseLocalContentIdentity|parseLocalContentIdentity(kotlin.String;kotlin.String){}[0]
+final fun com.github.zly2006.zhihu.viewmodel.local/scoreFeedTarget(com.github.zly2006.zhihu.data/Feed.Target): kotlin/Double // com.github.zly2006.zhihu.viewmodel.local/scoreFeedTarget|scoreFeedTarget(com.github.zly2006.zhihu.data.Feed.Target){}[0]
+final fun com.github.zly2006.zhihu.viewmodel.local/stableLocalFeedId(kotlin/String): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/stableLocalFeedId|stableLocalFeedId(kotlin.String){}[0]
+final suspend fun (com.github.zly2006.zhihu.data/ContentDetailCache).com.github.zly2006.zhihu.data/getOrFetchContentDetail(com.github.zly2006.zhihu.navigation/NavDestination, kotlin.coroutines/SuspendFunction2<kotlin/String, kotlin/String, kotlinx.serialization.json/JsonObject?>): com.github.zly2006.zhihu.data/DataHolder.Content? // com.github.zly2006.zhihu.data/getOrFetchContentDetail|getOrFetchContentDetail@com.github.zly2006.zhihu.data.ContentDetailCache(com.github.zly2006.zhihu.navigation.NavDestination;kotlin.coroutines.SuspendFunction2<kotlin.String,kotlin.String,kotlinx.serialization.json.JsonObject?>){}[0]
+final suspend fun (com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDao).com.github.zly2006.zhihu.filter/clearAllData(): com.github.zly2006.zhihu.filter/ContentFilterStats // com.github.zly2006.zhihu.filter/clearAllData|clearAllData@com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDao(){}[0]
+final suspend fun (com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDao).com.github.zly2006.zhihu.filter/loadFilterStats(): com.github.zly2006.zhihu.filter/ContentFilterStats // com.github.zly2006.zhihu.filter/loadFilterStats|loadFilterStats@com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDao(){}[0]
+final suspend fun (io.ktor.client/HttpClient).com.github.zly2006.zhihu.data/fetchDailyStoriesBefore(kotlin/String): com.github.zly2006.zhihu.data/DailyStoriesResponse // com.github.zly2006.zhihu.data/fetchDailyStoriesBefore|fetchDailyStoriesBefore@io.ktor.client.HttpClient(kotlin.String){}[0]
+final suspend fun (io.ktor.client/HttpClient).com.github.zly2006.zhihu.data/fetchLatestDailyStories(): com.github.zly2006.zhihu.data/DailyStoriesResponse // com.github.zly2006.zhihu.data/fetchLatestDailyStories|fetchLatestDailyStories@io.ktor.client.HttpClient(){}[0]
+final suspend fun com.github.zly2006.zhihu.data/fetchHighestQualityZhihuVideoUrl(io.ktor.client/HttpClient, kotlin/String, kotlin/String, kotlin/String = ..., kotlin/String? = ..., kotlin/Function1<io.ktor.client.request/HttpRequestBuilder, kotlin/Unit> = ...): kotlin/String? // com.github.zly2006.zhihu.data/fetchHighestQualityZhihuVideoUrl|fetchHighestQualityZhihuVideoUrl(io.ktor.client.HttpClient;kotlin.String;kotlin.String;kotlin.String;kotlin.String?;kotlin.Function1<io.ktor.client.request.HttpRequestBuilder,kotlin.Unit>){}[0]
+final suspend fun com.github.zly2006.zhihu.data/fetchZhihuContentDetail(com.github.zly2006.zhihu.navigation/NavDestination, kotlin.coroutines/SuspendFunction2<kotlin/String, kotlin/String, kotlinx.serialization.json/JsonObject?>): com.github.zly2006.zhihu.data/DataHolder.Content? // com.github.zly2006.zhihu.data/fetchZhihuContentDetail|fetchZhihuContentDetail(com.github.zly2006.zhihu.navigation.NavDestination;kotlin.coroutines.SuspendFunction2<kotlin.String,kotlin.String,kotlinx.serialization.json.JsonObject?>){}[0]
+final suspend fun com.github.zly2006.zhihu.viewmodel.filter/encodeBlocklistBackup(com.github.zly2006.zhihu.viewmodel.filter/BlockedKeywordDao, com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao, com.github.zly2006.zhihu.viewmodel.filter/BlockedQuestionAuthorDao, com.github.zly2006.zhihu.viewmodel.filter/BlockedTopicDao): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/encodeBlocklistBackup|encodeBlocklistBackup(com.github.zly2006.zhihu.viewmodel.filter.BlockedKeywordDao;com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao;com.github.zly2006.zhihu.viewmodel.filter.BlockedQuestionAuthorDao;com.github.zly2006.zhihu.viewmodel.filter.BlockedTopicDao){}[0]
+final suspend fun com.github.zly2006.zhihu.viewmodel.filter/importBlocklistBackupFromJsonText(com.github.zly2006.zhihu.viewmodel.filter/BlockedKeywordDao, com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao, com.github.zly2006.zhihu.viewmodel.filter/BlockedQuestionAuthorDao, com.github.zly2006.zhihu.viewmodel.filter/BlockedTopicDao, kotlin/String): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/importBlocklistBackupFromJsonText|importBlocklistBackupFromJsonText(com.github.zly2006.zhihu.viewmodel.filter.BlockedKeywordDao;com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao;com.github.zly2006.zhihu.viewmodel.filter.BlockedQuestionAuthorDao;com.github.zly2006.zhihu.viewmodel.filter.BlockedTopicDao;kotlin.String){}[0]
+final suspend fun com.github.zly2006.zhihu.viewmodel.filter/saveBlockedFeedRecords(com.github.zly2006.zhihu.viewmodel.filter/BlockedFeedRecordDao, kotlin.collections/List<kotlin/Pair<com.github.zly2006.zhihu.viewmodel.filter/FilterableContent, kotlin/String>>) // com.github.zly2006.zhihu.viewmodel.filter/saveBlockedFeedRecords|saveBlockedFeedRecords(com.github.zly2006.zhihu.viewmodel.filter.BlockedFeedRecordDao;kotlin.collections.List<kotlin.Pair<com.github.zly2006.zhihu.viewmodel.filter.FilterableContent,kotlin.String>>){}[0]
