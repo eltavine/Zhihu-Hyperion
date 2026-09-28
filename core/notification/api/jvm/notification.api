@@ -1,0 +1,151 @@
+public abstract interface class com/github/zly2006/zhihu/notification/NotificationSettingsStore {
+	public abstract fun getAutoMarkAsReadEnabled ()Z
+	public abstract fun getDisplayInAppEnabled (Lcom/github/zly2006/zhihu/notification/NotificationType;)Z
+	public abstract fun getSystemNotificationEnabled (Lcom/github/zly2006/zhihu/notification/NotificationType;)Z
+	public abstract fun getUnreadBadgeEnabled ()Z
+	public abstract fun setAutoMarkAsReadEnabled (Z)V
+	public abstract fun setDisplayInAppEnabled (Lcom/github/zly2006/zhihu/notification/NotificationType;Z)V
+	public abstract fun setSystemNotificationEnabled (Lcom/github/zly2006/zhihu/notification/NotificationType;Z)V
+	public abstract fun setUnreadBadgeEnabled (Z)V
+}
+
+public final class com/github/zly2006/zhihu/notification/NotificationSettingsStore_jvmKt {
+	public static final fun desktopNotificationSettingsStore ()Lcom/github/zly2006/zhihu/notification/NotificationSettingsStore;
+}
+
+public final class com/github/zly2006/zhihu/notification/NotificationType : java/lang/Enum {
+	public static final field INVITE_ANSWER Lcom/github/zly2006/zhihu/notification/NotificationType;
+	public static final field LIKE_ANSWER Lcom/github/zly2006/zhihu/notification/NotificationType;
+	public static final field LIKE_COMMENT Lcom/github/zly2006/zhihu/notification/NotificationType;
+	public static final field REPLY_COMMENT Lcom/github/zly2006/zhihu/notification/NotificationType;
+	public final fun getDefaultValue ()Z
+	public final fun getDisplayName ()Ljava/lang/String;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getRegex ()Lkotlin/text/Regex;
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/zly2006/zhihu/notification/NotificationType;
+	public static fun values ()[Lcom/github/zly2006/zhihu/notification/NotificationType;
+}
+
+public final class com/github/zly2006/zhihu/notification/NotificationTypesKt {
+	public static final fun matchNotificationType (Ljava/lang/String;)Lcom/github/zly2006/zhihu/notification/NotificationType;
+}
+
+public final class com/github/zly2006/zhihu/notification/OnlineHomeNotification {
+	public static final field Companion Lcom/github/zly2006/zhihu/notification/OnlineHomeNotification$Companion;
+	public fun <init> (Ljava/lang/String;JLjava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationAccept;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;JLjava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationAccept;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationAccept;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;JLjava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationAccept;Ljava/lang/String;)Lcom/github/zly2006/zhihu/notification/OnlineHomeNotification;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/notification/OnlineHomeNotification;Ljava/lang/String;JLjava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationAccept;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/notification/OnlineHomeNotification;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAccept ()Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationAccept;
+	public final fun getContent ()Ljava/lang/String;
+	public final fun getDismiss ()Ljava/lang/String;
+	public final fun getExpiresAt ()J
+	public final fun getTitle ()Ljava/lang/String;
+	public final fun getUuid ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/notification/OnlineHomeNotification$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/notification/OnlineHomeNotification$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/notification/OnlineHomeNotification;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/notification/OnlineHomeNotification;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/notification/OnlineHomeNotification$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/notification/OnlineHomeNotificationAccept {
+	public static final field Companion Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationAccept$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lkotlinx/serialization/json/JsonElement;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;)Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationAccept;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationAccept;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationAccept;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getText ()Ljava/lang/String;
+	public final fun getValue ()Lkotlinx/serialization/json/JsonElement;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/notification/OnlineHomeNotificationAccept$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationAccept$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationAccept;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationAccept;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/notification/OnlineHomeNotificationAccept$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/notification/OnlineHomeNotificationKt {
+	public static final field HOME_NOTIFICATION_ACTION_OPEN_ANSWER Ljava/lang/String;
+	public static final field HOME_NOTIFICATION_ACTION_OPEN_ARTICLE Ljava/lang/String;
+	public static final field HOME_NOTIFICATION_ACTION_OPEN_PIN Ljava/lang/String;
+	public static final field HOME_NOTIFICATION_ACTION_OPEN_UPDATE_SETTINGS Ljava/lang/String;
+	public static final field HOME_NOTIFICATION_ACTION_OPEN_URL Ljava/lang/String;
+	public static final field HOME_NOTIFICATION_ACTION_OPEN_WEBVIEW Ljava/lang/String;
+	public static final field HOME_NOTIFICATION_ACTION_SET_SETTING Ljava/lang/String;
+	public static final field HOME_NOTIFICATION_READ_UUIDS_PREFERENCE_KEY Ljava/lang/String;
+	public static final field HOME_NOTIFICATION_REFRESH_INTERVAL_MILLIS J
+	public static final field ZHIHU_PLUS_PLUS_HOME_NOTIFICATIONS_URL Ljava/lang/String;
+	public static final fun fetchOnlineHomeNotifications (Lio/ktor/client/HttpClient;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/notification/OnlineHomeNotificationRepository {
+	public fun <init> (Lcom/github/zly2006/zhihu/platform/SettingsStore;)V
+	public final fun load (Ljava/lang/String;Lio/ktor/client/HttpClient;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun markRead (Lcom/github/zly2006/zhihu/notification/OnlineHomeNotification;)V
+}
+
+public final class com/github/zly2006/zhihu/notification/OnlineHomeNotificationResponse {
+	public static final field Companion Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationResponse$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationResponse;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationResponse;Ljava/util/List;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationResponse;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getNotifications ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/notification/OnlineHomeNotificationResponse$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationResponse$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationResponse;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/notification/OnlineHomeNotificationResponse;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/notification/OnlineHomeNotificationResponse$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+

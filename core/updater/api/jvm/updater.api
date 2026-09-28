@@ -1,0 +1,103 @@
+public final class com/github/zly2006/zhihu/updater/GithubAsset {
+	public static final field Companion Lcom/github/zly2006/zhihu/updater/GithubAsset$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/github/zly2006/zhihu/updater/GithubAsset;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/updater/GithubAsset;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/updater/GithubAsset;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBrowserDownloadUrl ()Ljava/lang/String;
+	public final fun getCnDownloadUrl ()Ljava/lang/String;
+	public final fun getContentType ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/updater/GithubAsset$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/updater/GithubAsset$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/updater/GithubAsset;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/updater/GithubAsset;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/updater/GithubAsset$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/updater/GithubRelease {
+	public static final field Companion Lcom/github/zly2006/zhihu/updater/GithubRelease$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Lcom/github/zly2006/zhihu/updater/GithubRelease;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/updater/GithubRelease;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/updater/GithubRelease;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAssets ()Ljava/util/List;
+	public final fun getBody ()Ljava/lang/String;
+	public final fun getHtmlUrl ()Ljava/lang/String;
+	public final fun getTagName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/updater/GithubRelease$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/updater/GithubRelease$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/updater/GithubRelease;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/updater/GithubRelease;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/updater/GithubRelease$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/updater/GithubReleaseKt {
+	public static final field ZHIHU_PLUS_PLUS_GITHUB_LATEST_RELEASE_URL Ljava/lang/String;
+	public static final field ZHIHU_PLUS_PLUS_GITHUB_NIGHTLY_RELEASE_URL Ljava/lang/String;
+	public static final field ZHIHU_PLUS_PLUS_REDEN_LATEST_RELEASE_URL Ljava/lang/String;
+	public static final fun extractGithubReleaseNotes (Ljava/lang/String;)Ljava/lang/String;
+	public static final fun fetchLatestZhihuRelease (Lio/ktor/client/HttpClient;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun fetchNightlyZhihuRelease (Lio/ktor/client/HttpClient;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/zly2006/zhihu/updater/SemanticVersion : java/lang/Comparable {
+	public static final field Companion Lcom/github/zly2006/zhihu/updater/SemanticVersion$Companion;
+	public fun <init> (Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)V
+	public fun compareTo (Lcom/github/zly2006/zhihu/updater/SemanticVersion;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public final fun compareTo (Ljava/lang/String;)I
+	public final fun getAllComponents ()Ljava/util/List;
+	public final fun getBuild ()Ljava/lang/String;
+	public final fun getMajor ()I
+	public final fun getMinor ()I
+	public final fun getPatch ()I
+	public final fun getPreRelease ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/updater/SemanticVersion$Companion : kotlinx/serialization/KSerializer {
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/updater/SemanticVersion;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun fromString (Ljava/lang/String;)Lcom/github/zly2006/zhihu/updater/SemanticVersion;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/updater/SemanticVersion;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+

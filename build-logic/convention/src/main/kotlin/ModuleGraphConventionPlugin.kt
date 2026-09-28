@@ -25,13 +25,15 @@ class ModuleGraphConventionPlugin : Plugin<Project> {
                     ":feature:.* -X> :feature:.*",
                     ":shared -X> :($APPLICATIONS)",
                     // Foundation layers of :core, bottom first.
-                    ":core:(common|settings) -X> :.*",
+                    ":core:(common|settings|nlp) -X> :.*",
                     ":core:model -X> :(?!core:common$).*",
                     ":core:(navigation|network) -X> :(?!core:(common|model)$).*",
                     ":core:account -X> :(?!core:(common|model|network)$).*",
                     ":core:database -X> :(?!core:common$).*",
                     ":core:designsystem -X> :(?!core:settings$).*",
                     ":core:platform -X> :(?!core:(common|model|network|account|settings)$).*",
+                    ":core:notification -X> :(?!core:(common|model|network|settings|platform)$).*",
+                    ":core:updater -X> :(?!core:(common|model|network|account|settings|platform)$).*",
                 )
             }
         }

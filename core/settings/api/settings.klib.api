@@ -25,6 +25,25 @@ abstract interface com.github.zly2006.zhihu.platform/SettingsStore { // com.gith
     open fun removeByPrefix(kotlin/String) // com.github.zly2006.zhihu.platform/SettingsStore.removeByPrefix|removeByPrefix(kotlin.String){}[0]
 }
 
+final class com.github.zly2006.zhihu.platform/MapSettingsStore : com.github.zly2006.zhihu.platform/SettingsStore { // com.github.zly2006.zhihu.platform/MapSettingsStore|null[0]
+    constructor <init>(kotlin.collections/MutableMap<kotlin/String, kotlin/Any> = ...) // com.github.zly2006.zhihu.platform/MapSettingsStore.<init>|<init>(kotlin.collections.MutableMap<kotlin.String,kotlin.Any>){}[0]
+
+    final fun getBoolean(kotlin/String, kotlin/Boolean): kotlin/Boolean // com.github.zly2006.zhihu.platform/MapSettingsStore.getBoolean|getBoolean(kotlin.String;kotlin.Boolean){}[0]
+    final fun getFloat(kotlin/String, kotlin/Float): kotlin/Float // com.github.zly2006.zhihu.platform/MapSettingsStore.getFloat|getFloat(kotlin.String;kotlin.Float){}[0]
+    final fun getInt(kotlin/String, kotlin/Int): kotlin/Int // com.github.zly2006.zhihu.platform/MapSettingsStore.getInt|getInt(kotlin.String;kotlin.Int){}[0]
+    final fun getLong(kotlin/String, kotlin/Long): kotlin/Long // com.github.zly2006.zhihu.platform/MapSettingsStore.getLong|getLong(kotlin.String;kotlin.Long){}[0]
+    final fun getString(kotlin/String, kotlin/String): kotlin/String // com.github.zly2006.zhihu.platform/MapSettingsStore.getString|getString(kotlin.String;kotlin.String){}[0]
+    final fun getStringOrNull(kotlin/String): kotlin/String? // com.github.zly2006.zhihu.platform/MapSettingsStore.getStringOrNull|getStringOrNull(kotlin.String){}[0]
+    final fun getStringSet(kotlin/String, kotlin.collections/Set<kotlin/String>): kotlin.collections/Set<kotlin/String> // com.github.zly2006.zhihu.platform/MapSettingsStore.getStringSet|getStringSet(kotlin.String;kotlin.collections.Set<kotlin.String>){}[0]
+    final fun putBoolean(kotlin/String, kotlin/Boolean) // com.github.zly2006.zhihu.platform/MapSettingsStore.putBoolean|putBoolean(kotlin.String;kotlin.Boolean){}[0]
+    final fun putFloat(kotlin/String, kotlin/Float) // com.github.zly2006.zhihu.platform/MapSettingsStore.putFloat|putFloat(kotlin.String;kotlin.Float){}[0]
+    final fun putInt(kotlin/String, kotlin/Int) // com.github.zly2006.zhihu.platform/MapSettingsStore.putInt|putInt(kotlin.String;kotlin.Int){}[0]
+    final fun putLong(kotlin/String, kotlin/Long) // com.github.zly2006.zhihu.platform/MapSettingsStore.putLong|putLong(kotlin.String;kotlin.Long){}[0]
+    final fun putString(kotlin/String, kotlin/String) // com.github.zly2006.zhihu.platform/MapSettingsStore.putString|putString(kotlin.String;kotlin.String){}[0]
+    final fun putStringSet(kotlin/String, kotlin.collections/Set<kotlin/String>) // com.github.zly2006.zhihu.platform/MapSettingsStore.putStringSet|putStringSet(kotlin.String;kotlin.collections.Set<kotlin.String>){}[0]
+    final fun remove(kotlin/String) // com.github.zly2006.zhihu.platform/MapSettingsStore.remove|remove(kotlin.String){}[0]
+}
+
 final fun com.github.zly2006.zhihu.platform/noopSettingsStore(): com.github.zly2006.zhihu.platform/SettingsStore // com.github.zly2006.zhihu.platform/noopSettingsStore|noopSettingsStore(){}[0]
 
 // Targets: [macosArm64]

@@ -8,6 +8,28 @@ public final class com/github/zly2006/zhihu/platform/DesktopSettingsStoreKt {
 	public static final fun desktopSettingsStore (Ljava/io/File;)Lcom/github/zly2006/zhihu/platform/SettingsStore;
 }
 
+public final class com/github/zly2006/zhihu/platform/MapSettingsStore : com/github/zly2006/zhihu/platform/SettingsStore {
+	public fun <init> ()V
+	public fun <init> (Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getBoolean (Ljava/lang/String;Z)Z
+	public fun getFloat (Ljava/lang/String;F)F
+	public fun getInt (Ljava/lang/String;I)I
+	public fun getLong (Ljava/lang/String;J)J
+	public fun getString (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun getStringOrNull (Ljava/lang/String;)Ljava/lang/String;
+	public fun getStringSet (Ljava/lang/String;Ljava/util/Set;)Ljava/util/Set;
+	public fun observeKeyChanges (Lkotlin/jvm/functions/Function1;)Ljava/lang/AutoCloseable;
+	public fun putBoolean (Ljava/lang/String;Z)V
+	public fun putFloat (Ljava/lang/String;F)V
+	public fun putInt (Ljava/lang/String;I)V
+	public fun putLong (Ljava/lang/String;J)V
+	public fun putString (Ljava/lang/String;Ljava/lang/String;)V
+	public fun putStringSet (Ljava/lang/String;Ljava/util/Set;)V
+	public fun remove (Ljava/lang/String;)V
+	public fun removeByPrefix (Ljava/lang/String;)V
+}
+
 public final class com/github/zly2006/zhihu/platform/NoopSettingsStoreKt {
 	public static final fun noopSettingsStore ()Lcom/github/zly2006/zhihu/platform/SettingsStore;
 }
