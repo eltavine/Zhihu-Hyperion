@@ -78,8 +78,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isPageTurnSupported
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.ui.rememberObservedSetting
 import com.github.zly2006.zhihu.ui.subscreens.DEFAULT_FAB_OPACITY
 import com.github.zly2006.zhihu.ui.subscreens.DEFAULT_PAGE_TURN_PERCENT
@@ -92,6 +92,7 @@ import com.github.zly2006.zhihu.ui.subscreens.PREF_SHOW_PAGE_TURN_FAB
 import com.github.zly2006.zhihu.ui.subscreens.PREF_SHOW_PAGE_TURN_GUIDE
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
+import org.koin.compose.koinInject
 import kotlin.math.roundToInt
 
 enum class PageTurnCommand {
@@ -160,7 +161,7 @@ internal class PageTurnRuntimeState(
 @Composable
 internal fun rememberPageTurnRuntimeState(): PageTurnRuntimeState {
     val dispatcher = LocalPageTurnDispatcher.current
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val guideColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.45f)
     val state = remember(dispatcher, guideColor) {
         PageTurnRuntimeState(
@@ -230,7 +231,7 @@ fun DraggablePageTurnButtons(
 ) {
     val density = LocalDensity.current
     val screenSize = LocalWindowInfo.current.containerSize
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val buttonSize = 56.dp
     val gap = 4.dp
     val columnHeight = buttonSize * 2 + gap
@@ -337,7 +338,7 @@ fun PageTurnFab(
     modifier: Modifier = Modifier,
     preferenceName: String = "fabPageTurn",
 ) {
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val showFab by rememberObservedSetting(settings, PREF_SHOW_PAGE_TURN_FAB) {
         getBoolean(PREF_SHOW_PAGE_TURN_FAB, false)
     }
@@ -355,7 +356,7 @@ fun PageTurnFab(
 /** A real layout item placed after the final piece of content, so the marker never overlaps it. */
 @Composable
 fun ContentEndMarker(modifier: Modifier = Modifier) {
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val visible by rememberObservedSetting(settings, PREF_SHOW_CONTENT_END_MARKER) {
         getBoolean(PREF_SHOW_CONTENT_END_MARKER, DEFAULT_SHOW_CONTENT_END_MARKER)
     }

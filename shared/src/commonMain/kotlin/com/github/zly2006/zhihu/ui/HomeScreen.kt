@@ -123,15 +123,14 @@ import com.github.zly2006.zhihu.notification.HOME_NOTIFICATION_ACTION_OPEN_URL
 import com.github.zly2006.zhihu.notification.HOME_NOTIFICATION_ACTION_OPEN_WEBVIEW
 import com.github.zly2006.zhihu.notification.HOME_NOTIFICATION_ACTION_SET_SETTING
 import com.github.zly2006.zhihu.notification.HOME_NOTIFICATION_REFRESH_INTERVAL_MILLIS
+import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.notification.OnlineHomeNotification
 import com.github.zly2006.zhihu.notification.OnlineHomeNotificationRepository
-import com.github.zly2006.zhihu.notification.rememberNotificationSettingsStore
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageDuration
 import com.github.zly2006.zhihu.platform.rememberAppPrivateDirectory
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
 import com.github.zly2006.zhihu.platform.rememberIsLiteVariant
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.platform.rememberWebViewUrlOpener
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
@@ -183,6 +182,7 @@ import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import org.koin.compose.koinInject
 import kotlin.time.Clock
 
 const val PREFERENCE_NAME = "com.github.zly2006.zhihu_preferences"
@@ -240,12 +240,12 @@ fun HomeScreen(
     val readingPlayerOverlayPadding = LocalReadingPlayerOverlayPadding.current
     val navigator = LocalNavigator.current
     val baseEnvironment = rememberPaginationEnvironment(allowGuestAccess = true)
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val homeState: HomeScreenState = viewModel { HomeScreenState(settings) }
     val remoteHistory = homeState.remoteHistory
     val paginationEnvironment = remember(baseEnvironment, remoteHistory) { remoteHistory.feedEnvironment(baseEnvironment) }
     val appPrivateDirectory = rememberAppPrivateDirectory()
-    val notificationSettings = rememberNotificationSettingsStore()
+    val notificationSettings = koinInject<NotificationSettingsStore>()
     val userMessages = rememberUserMessageSink()
     val openExternalUrl = rememberExternalUrlOpener()
     val openWebViewUrl = rememberWebViewUrlOpener()

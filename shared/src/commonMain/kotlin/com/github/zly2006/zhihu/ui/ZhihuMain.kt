@@ -141,8 +141,8 @@ import com.github.zly2006.zhihu.navigation.WriteAnswer
 import com.github.zly2006.zhihu.navigation.WritePin
 import com.github.zly2006.zhihu.navigation.loginNavigationRequestFlow
 import com.github.zly2006.zhihu.platform.PlatformBackHandler
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.platformName
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.reading.rememberReadingPlayerController
 import com.github.zly2006.zhihu.reading.saveReadingPlaybackSpeed
 import com.github.zly2006.zhihu.ui.components.CompactReadingPlayerButton
@@ -161,6 +161,7 @@ import com.github.zly2006.zhihu.ui.subscreens.SettingsSearchScreen
 import com.github.zly2006.zhihu.ui.subscreens.SystemAndUpdateSettingsScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
 
@@ -249,7 +250,7 @@ fun ZhihuMain(
     val reloadBottomBarPreferences = preferenceState::reload
     val readingPlayer = rememberReadingPlayerController()
     val readingPlayerState by readingPlayer.state
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
 
     /** 右侧详情独立持有返回栈；栏内导航保留上级，从左侧重新选项时清空。 */
     val paneStateHolder = rememberSaveableStateHolder()

@@ -63,11 +63,11 @@ import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.SegmentCommentHolder
 import com.github.zly2006.zhihu.navigation.Video
 import com.github.zly2006.zhihu.navigation.resolveContent
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
 import com.github.zly2006.zhihu.platform.rememberImageGalleryOpener
 import com.github.zly2006.zhihu.platform.rememberImageSaver
 import com.github.zly2006.zhihu.platform.rememberImageSharer
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.ui.components.CommentScreenComponent
 import com.github.zly2006.zhihu.ui.components.LocalSegmentActionSheetHost
 import com.github.zly2006.zhihu.ui.components.LocalSegmentCommentHost
@@ -82,6 +82,7 @@ import com.hrm.markdown.parser.ast.Document
 import com.hrm.markdown.renderer.Markdown
 import com.hrm.markdown.renderer.MarkdownImageData
 import com.hrm.markdown.renderer.MarkdownTheme
+import org.koin.compose.koinInject
 
 @Composable
 fun RenderImage(
@@ -318,7 +319,7 @@ private fun RenderMarkdownDocument(
     val previewImageUrls = remember(document) { document.previewImageUrls() }
     val navigator = LocalNavigator.current
     val openExternalUrl = rememberExternalUrlOpener()
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val fontSize = settings.getInt(PREF_FONT_SIZE, 100)
     val lineHeight = settings.getInt(PREF_LINE_HEIGHT, 160)
     val blockSpacing = settings.getInt(PREF_BLOCK_SPACING, 100)

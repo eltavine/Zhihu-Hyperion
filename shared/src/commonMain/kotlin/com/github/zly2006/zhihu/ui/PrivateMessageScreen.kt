@@ -68,7 +68,7 @@ import com.github.zly2006.zhihu.data.ZhihuPrivateMessage
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Notification
 import com.github.zly2006.zhihu.navigation.resolveContent
-import com.github.zly2006.zhihu.notification.rememberNotificationSettingsStore
+import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.platform.rememberZhihuWebUrlOpener
 import com.github.zly2006.zhihu.ui.components.PaginatedList
@@ -76,12 +76,13 @@ import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.util.formatRelativeTime
 import com.github.zly2006.zhihu.viewmodel.PrivateMessageViewModel
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PrivateMessageScreen(destination: Notification.Message) {
     val navigator = LocalNavigator.current
-    val environment = rememberNotificationEnvironment(rememberNotificationSettingsStore())
+    val environment = rememberNotificationEnvironment(koinInject<NotificationSettingsStore>())
     val viewModel = viewModel(key = "private_message_${destination.peerId}") {
         PrivateMessageViewModel(destination.peerId)
     }

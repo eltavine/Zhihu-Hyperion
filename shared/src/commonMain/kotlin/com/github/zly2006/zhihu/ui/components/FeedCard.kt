@@ -80,14 +80,15 @@ import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.navigation.Navigator
 import com.github.zly2006.zhihu.navigation.withReadingQueueSource
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageDuration
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.LocalSelectedContentDestination
 import com.github.zly2006.zhihu.ui.subscreens.PREF_FONT_SIZE
 import com.github.zly2006.zhihu.ui.subscreens.PREF_LINE_HEIGHT
 import com.github.zly2006.zhihu.util.parseEmphasizedHtmlTextWithTheme
 import com.github.zly2006.zhihu.viewmodel.QUALITY_FILTER_MODE_PREFERENCE_KEY
+import org.koin.compose.koinInject
 
 /**
  * 信息流卡片的 Material 3 实现。
@@ -117,7 +118,7 @@ fun FeedCard(
     val navigator = LocalNavigator.current
     val uriHandler = LocalUriHandler.current
     val userMessages = rememberUserMessageSink()
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val selectedDestination = LocalSelectedContentDestination.current
     var showMenu by remember { mutableStateOf(false) }
     val showFeedThumbnail = remember {
@@ -303,7 +304,7 @@ private fun FeedCardContent(
     duo3CardLargeTitle: Boolean,
     showSourceLabel: Boolean,
 ) {
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val fontSizePercent = remember { settings.getInt(PREF_FONT_SIZE, 100) }
     val lineHeightPercent = remember { settings.getInt(PREF_LINE_HEIGHT, 160) }
     val navigator = LocalNavigator.current

@@ -95,7 +95,6 @@ import com.github.zly2006.zhihu.navigation.Search
 import com.github.zly2006.zhihu.navigation.Topic
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageDuration
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
 import com.github.zly2006.zhihu.ui.components.AuthorBadge
@@ -131,6 +130,7 @@ import kotlinx.coroutines.yield
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.JsonArray
+import org.koin.compose.koinInject
 
 @Serializable
 private data class HotSearchItem(
@@ -169,7 +169,7 @@ fun SearchScreen(
 ) {
     val navigator = LocalNavigator.current
     val userMessages = rememberUserMessageSink()
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val viewModel = viewModel { SearchViewModel(search.query, search.restrictedMemberHashId) }
     val readingQueueSourceId = buildString {
         append("search:")

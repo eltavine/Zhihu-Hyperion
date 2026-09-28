@@ -20,6 +20,9 @@ package com.github.zly2006.zhihu
 import android.content.Context
 import com.github.zly2006.zhihu.account.accountModule
 import com.github.zly2006.zhihu.data.databaseModule
+import com.github.zly2006.zhihu.notification.AndroidNotificationSettingsStore
+import com.github.zly2006.zhihu.notification.NotificationSettingsStore
+import com.github.zly2006.zhihu.platform.androidSettingsStore
 import com.github.zly2006.zhihu.ui.AndroidArticleNavigationHandoff
 import kotlinx.io.files.Path
 import org.koin.core.module.Module
@@ -31,5 +34,9 @@ fun androidZhihuModules(context: Context): List<Module> = listOf(
     accountModule(Path(File(context.filesDir, "account.json").path)),
     databaseModule(context),
     zhihuSharedModule,
-    module { single { AndroidArticleNavigationHandoff() } },
+    module {
+        single { AndroidArticleNavigationHandoff() }
+        single { androidSettingsStore(context) }
+        single<NotificationSettingsStore> { AndroidNotificationSettingsStore(context.applicationContext) }
+    },
 )

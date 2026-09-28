@@ -92,8 +92,8 @@ import com.github.zly2006.zhihu.markdown.rememberMarkdownImageModel
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.WritePin
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.components.MarkdownShortcut
 import com.github.zly2006.zhihu.ui.components.WriteContentFabColumn
@@ -114,6 +114,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
+import org.koin.compose.koinInject
 import kotlin.time.Duration.Companion.milliseconds
 
 const val WRITE_PIN_TITLE_TAG = "WritePinTitle"
@@ -213,7 +214,7 @@ fun WritePinScreen(destination: WritePin = WritePin()) {
     val userMessages = rememberUserMessageSink()
     val coroutineScope = rememberCoroutineScope()
     val copyToClipboard = rememberPlainTextClipboard()
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val environment = rememberPaginationEnvironment(false)

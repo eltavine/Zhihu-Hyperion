@@ -43,9 +43,10 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.ui.subscreens.DEFAULT_FAB_OPACITY
 import com.github.zly2006.zhihu.ui.subscreens.PREF_FAB_OPACITY
+import org.koin.compose.koinInject
 import kotlin.math.roundToInt
 
 /**
@@ -68,7 +69,7 @@ fun DraggableRefreshButton(
 ) {
     val density = LocalDensity.current
     val screenSize = LocalWindowInfo.current.containerSize
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
 
     var offsetX by remember(preferenceName, initiallyOnLeft) {
         mutableFloatStateOf(

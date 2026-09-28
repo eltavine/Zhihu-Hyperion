@@ -56,7 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.reading.ReadingContentType
 import com.github.zly2006.zhihu.reading.ReadingQueueItem
 import com.github.zly2006.zhihu.reading.ReadingQueueSourceRegistry
@@ -127,7 +127,7 @@ fun ArticleActionsMenu(
     val toggleSpeech = rememberArticleSpeechToggler()
     val readingPlayer = rememberReadingPlayerController()
     val readingPlayerState by readingPlayer.state
-    val readingSettings = rememberSettingsStore()
+    val readingSettings = koinInject<SettingsStore>()
     val openArticleInBrowser = rememberArticleBrowserOpener()
     val executeShareAction = rememberShareActionExecutor()
     val coroutineScope = rememberCoroutineScope()

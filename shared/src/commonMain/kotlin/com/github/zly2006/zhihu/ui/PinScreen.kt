@@ -87,8 +87,8 @@ import com.github.zly2006.zhihu.navigation.Person
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.resolveContent
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.reading.ReadingPlaybackStatus
 import com.github.zly2006.zhihu.reading.ReadingQueueSourceRegistry
 import com.github.zly2006.zhihu.reading.ReadingStartRequest
@@ -213,7 +213,7 @@ fun PinScreen(
     val readingQueueSources = koinInject<ReadingQueueSourceRegistry>()
     val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
 
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val readingPreferences = loadReadingPreferences(settings)
     val readingPlaybackSpeed = loadReadingPlaybackSpeed(settings)
     val readingPlayer = rememberReadingPlayerController()

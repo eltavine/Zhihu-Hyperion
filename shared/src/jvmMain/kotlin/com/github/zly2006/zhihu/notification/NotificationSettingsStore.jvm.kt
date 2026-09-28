@@ -21,10 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.github.zly2006.zhihu.desktop.DesktopPropertiesFile
 
-@Composable
-actual fun rememberNotificationSettingsStore(): NotificationSettingsStore = remember { desktopNotificationSettingsStore() }
-
-fun desktopNotificationSettingsStore(): NotificationSettingsStore = DesktopNotificationSettingsStore()
+internal fun desktopNotificationSettingsStore(): NotificationSettingsStore = DesktopNotificationSettingsStore()
 
 private class DesktopNotificationSettingsStore : NotificationSettingsStore {
     private val propertiesFile = DesktopPropertiesFile("notification_settings.properties", "Zhihu++ desktop notification settings")

@@ -88,7 +88,7 @@ import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Topic
 import com.github.zly2006.zhihu.navigation.WritePin
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.components.FeedCard
 import com.github.zly2006.zhihu.ui.components.PaginatedList
@@ -112,6 +112,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonPrimitive
+import org.koin.compose.koinInject
 
 const val TOPIC_SCREEN_TAG = "topic_screen"
 const val TOPIC_SHARE_BUTTON_TAG = "topic_share_button"
@@ -434,7 +435,7 @@ fun TopicScreen(topic: Topic) {
     val navigator = LocalNavigator.current
     val environment = rememberPaginationEnvironment(allowGuestAccess = false)
     val messages = rememberUserMessageSink()
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val executeShareAction = rememberShareActionExecutor()
     val scope = androidx.compose.runtime.rememberCoroutineScope()
     var showShareDialog by androidx.compose.runtime.remember { mutableStateOf(false) }

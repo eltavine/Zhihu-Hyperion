@@ -36,8 +36,7 @@ import com.github.zly2006.zhihu.filter.TrackedContentIdentity
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.notification.NotificationSettingsStore
-import com.github.zly2006.zhihu.notification.desktopNotificationSettingsStore
-import com.github.zly2006.zhihu.platform.desktopSettingsStore
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.buildArticleExportFileName
 import com.github.zly2006.zhihu.util.buildCollectionExportZipFileName
@@ -80,12 +79,12 @@ import com.github.zly2006.zhihu.util.buildOfflineArticleExportHtml as buildShare
 import io.ktor.http.ContentType as KtorContentType
 
 class DesktopPaginationEnvironment(
-    override val notificationSettingsStore: NotificationSettingsStore = desktopNotificationSettingsStore(),
+    override val notificationSettingsStore: NotificationSettingsStore = KoinPlatform.getKoin().get(),
 ) : PaginationEnvironment,
     CollectionContentEnvironment,
     NotificationEnvironment {
     private val store = KoinPlatform.getKoin().get<ZhihuAccountStore>()
-    private val settingsStore = desktopSettingsStore()
+    private val settingsStore: SettingsStore = KoinPlatform.getKoin().get()
     private val historyStorage = DesktopHistoryStorage()
     private val contentFilterDb: ContentFilterDatabase = KoinPlatform.getKoin().get()
     private val localRecommendationEngine by lazy {

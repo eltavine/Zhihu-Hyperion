@@ -50,7 +50,7 @@ import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.CommentHolder
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.navigation.Pin
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.theme.Typography
 import com.github.zly2006.zhihu.ui.CommentScreen
 import com.github.zly2006.zhihu.ui.commentThreadKey
@@ -58,6 +58,7 @@ import com.github.zly2006.zhihu.ui.consumePendingCommentId
 import com.github.zly2006.zhihu.viewmodel.CommentItem
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
+import org.koin.compose.koinInject
 
 /**
  * 最好不要在 if 或者其他条件语句中使用，这会导致本组件内部状态丢失。
@@ -70,7 +71,7 @@ fun CommentScreenComponent(
     content: NavDestination,
     isZhPlusAuthorContent: Boolean = false,
 ) {
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val initialPendingCommentId = consumePendingCommentId(content)
     var pendingCommentId by remember(content) {
         mutableStateOf(initialPendingCommentId)

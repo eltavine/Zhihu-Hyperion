@@ -64,10 +64,11 @@ import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.github.zly2006.zhihu.platform.PlatformPredictiveBackHandler
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.exportTestTagsForUiAutomation
 import com.github.zly2006.zhihu.platform.platformName
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 const val DISABLE_BOTTOM_SHEET_ROUNDED_CORNERS_PREFERENCE_KEY = "disableBottomSheetRoundedCorners"
 
@@ -92,7 +93,7 @@ fun MyModalBottomSheet(
     usePlatformWindow: Boolean = true,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val bottomSheetShape = if (settings.getBoolean(DISABLE_BOTTOM_SHEET_ROUNDED_CORNERS_PREFERENCE_KEY, false)) {
         RectangleShape
     } else {

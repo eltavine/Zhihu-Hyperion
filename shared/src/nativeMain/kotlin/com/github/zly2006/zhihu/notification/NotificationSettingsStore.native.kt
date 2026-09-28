@@ -22,11 +22,6 @@ import androidx.compose.runtime.remember
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.nativeSettingsStore
 
-@Composable
-actual fun rememberNotificationSettingsStore(): NotificationSettingsStore = remember {
-    nativeNotificationSettingsStore()
-}
-
 internal fun nativeNotificationSettingsStore(): NotificationSettingsStore =
     NativeNotificationSettingsStore(nativeSettingsStore("notification_settings.properties"))
 

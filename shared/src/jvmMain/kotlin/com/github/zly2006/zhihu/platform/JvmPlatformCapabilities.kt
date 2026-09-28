@@ -33,15 +33,12 @@ import kotlinx.coroutines.launch
 import kotlinx.io.files.Path
 import org.koin.compose.koinInject
 
-@Composable
-actual fun rememberSettingsStore(): SettingsStore = remember { desktopSettingsStore() }
-
 actual fun Modifier.exportTestTagsForUiAutomation(): Modifier = this
 
 @Composable
 actual fun rememberAppPrivateDirectory(): Path = remember { Path(desktopZhihuDataDir().absolutePath) }
 
-fun desktopSettingsStore(): SettingsStore {
+internal fun desktopSettingsStore(): SettingsStore {
     val propertiesFile = DesktopPropertiesFile("settings.properties", "Zhihu++ desktop settings")
     val properties = propertiesFile.properties
 

@@ -46,7 +46,6 @@ import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.TopLevelDestination
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageSink
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.ui.subscreens.DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel.CachedAnswerContent
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
@@ -122,7 +121,7 @@ internal fun JsonObject?.booleanCompat(vararg keys: String): Boolean {
  */
 @Composable
 fun PinHtmlContent(html: String) {
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     if (settings.getBoolean(ARTICLE_USE_WEBVIEW_PREFERENCE_KEY, false) &&
         isLegacyWebViewSupported
     ) {
@@ -189,7 +188,7 @@ fun QuestionDetailContent(
     questionId: Long,
     html: String,
 ) {
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     if (settings.getBoolean(ARTICLE_USE_WEBVIEW_PREFERENCE_KEY, false) &&
         isLegacyWebViewSupported
     ) {

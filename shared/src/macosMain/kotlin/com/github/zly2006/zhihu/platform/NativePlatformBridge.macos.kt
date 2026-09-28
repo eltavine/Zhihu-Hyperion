@@ -24,6 +24,7 @@ import com.github.zly2006.zhihu.data.macosBackgroundUiDebugDataDirectoryPath
 import com.github.zly2006.zhihu.ui.subscreens.MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.channels.Channel
+import org.koin.mp.KoinPlatform
 import platform.AppKit.NSModalResponseOK
 import platform.AppKit.NSOpenPanel
 import platform.AppKit.NSPasteboard
@@ -37,7 +38,7 @@ internal actual val nativeIsDesktop: Boolean = true
 actual val platformName: String = "macOS"
 
 fun isMacosQuitOnWindowCloseEnabled(): Boolean =
-    nativeSettingsStore("settings.properties").getBoolean(MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY, false)
+    KoinPlatform.getKoin().get<SettingsStore>().getBoolean(MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY, false)
 
 actual val isAigcVoteSupported: Boolean = false
 

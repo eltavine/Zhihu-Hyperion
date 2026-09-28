@@ -31,9 +31,8 @@ import com.github.zly2006.zhihu.filter.TrackedContentIdentity
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.notification.NotificationSettingsStore
-import com.github.zly2006.zhihu.notification.nativeNotificationSettingsStore
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.copyNativePlainText
-import com.github.zly2006.zhihu.platform.nativeSettingsStore
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedKeywordService
@@ -66,12 +65,12 @@ actual fun rememberPaginationEnvironment(allowGuestAccess: Boolean): PaginationE
     remember(allowGuestAccess) { NativePaginationEnvironment() }
 
 internal class NativePaginationEnvironment(
-    override val notificationSettingsStore: NotificationSettingsStore = nativeNotificationSettingsStore(),
+    override val notificationSettingsStore: NotificationSettingsStore = KoinPlatform.getKoin().get(),
 ) : PaginationEnvironment,
     CollectionContentEnvironment,
     NotificationEnvironment {
     private val accountStore = KoinPlatform.getKoin().get<ZhihuAccountStore>()
-    private val settingsStore = nativeSettingsStore("settings.properties")
+    private val settingsStore: SettingsStore = KoinPlatform.getKoin().get()
     private val historyStorage = NativeHistoryStorage()
     private val contentFilterDatabase: ContentFilterDatabase = KoinPlatform.getKoin().get()
     private val localRecommendationEngine by lazy {

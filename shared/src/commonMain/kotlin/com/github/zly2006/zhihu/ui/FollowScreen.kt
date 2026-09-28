@@ -77,8 +77,8 @@ import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Person
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageDuration
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
 import com.github.zly2006.zhihu.ui.TopLevelReselectAction
@@ -100,6 +100,7 @@ import com.github.zly2006.zhihu.viewmodel.feed.FollowViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.RecentMomentsViewModel
 import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 class FollowScreenData : ViewModel() {
     var selectedTabIndex by mutableIntStateOf(0)
@@ -357,7 +358,7 @@ fun FollowRecommendScreen(
         )
     }
     val environment = rememberPaginationEnvironment(allowGuestAccess = viewModel.allowGuestAccess)
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val userMessages = rememberUserMessageSink()
     val showRefreshFab = remember { settings.getBoolean("showRefreshFab", true) }
     val listState = rememberLazyListState()
@@ -517,7 +518,7 @@ fun FollowDynamicScreen(
         )
     }
     val environment = rememberPaginationEnvironment(allowGuestAccess = viewModel.allowGuestAccess)
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val userMessages = rememberUserMessageSink()
     val showRefreshFab = remember { settings.getBoolean("showRefreshFab", true) }
     val listState = rememberLazyListState()

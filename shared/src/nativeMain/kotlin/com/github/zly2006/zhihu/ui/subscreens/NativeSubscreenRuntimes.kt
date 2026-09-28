@@ -20,12 +20,12 @@ package com.github.zly2006.zhihu.ui.subscreens
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.nativeAppVersionName
 import com.github.zly2006.zhihu.platform.nativeBundledResourcePath
 import com.github.zly2006.zhihu.platform.nativeIsDesktop
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.ui.NativeArticleSpeechController
 import com.github.zly2006.zhihu.ui.TtsState
 import com.github.zly2006.zhihu.updater.SemanticVersion
@@ -52,7 +52,7 @@ actual fun rememberSystemUpdateState(): StateFlow<SystemUpdateState> = nativeSys
 
 @Composable
 actual fun rememberSystemUpdateChecker(): SystemUpdateChecker {
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val accountStore = koinInject<ZhihuAccountStore>()
     return remember(settings, accountStore) {
         object : SystemUpdateChecker {
@@ -70,7 +70,7 @@ actual fun rememberSystemUpdateChecker(): SystemUpdateChecker {
 
 @Composable
 actual fun rememberSystemUpdateVersionSkipper(): SystemUpdateVersionSkipper {
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     return remember(settings) {
         object : SystemUpdateVersionSkipper {
             override fun skip(version: String) {

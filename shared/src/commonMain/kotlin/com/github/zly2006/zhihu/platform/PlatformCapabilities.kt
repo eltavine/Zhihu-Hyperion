@@ -139,9 +139,6 @@ interface PlainTextClipboard {
     operator fun invoke(label: String, text: String)
 }
 
-@Composable
-expect fun rememberSettingsStore(): SettingsStore
-
 expect fun Modifier.exportTestTagsForUiAutomation(): Modifier
 
 @Composable

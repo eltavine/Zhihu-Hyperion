@@ -21,8 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.desktop.openDesktopExternalUrl
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.platformName
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.updater.SemanticVersion
 import com.github.zly2006.zhihu.updater.extractGithubReleaseNotes
 import com.github.zly2006.zhihu.updater.fetchLatestZhihuRelease
@@ -42,7 +42,7 @@ actual fun rememberSystemUpdateState(): StateFlow<SystemUpdateState> = desktopSy
 
 @Composable
 actual fun rememberSystemUpdateChecker(): SystemUpdateChecker {
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val accountStore = koinInject<ZhihuAccountStore>()
     return remember(settings, accountStore) {
         object : SystemUpdateChecker {
@@ -61,7 +61,7 @@ actual fun rememberSystemUpdateChecker(): SystemUpdateChecker {
 
 @Composable
 actual fun rememberSystemUpdateVersionSkipper(): SystemUpdateVersionSkipper {
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     return remember(settings) {
         object : SystemUpdateVersionSkipper {
             override fun skip(version: String) {

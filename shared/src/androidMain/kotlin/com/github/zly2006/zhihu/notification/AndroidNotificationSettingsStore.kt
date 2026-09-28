@@ -23,12 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.edit
 
-@Composable
-actual fun rememberNotificationSettingsStore(): NotificationSettingsStore {
-    val context = LocalContext.current
-    return remember(context) { AndroidNotificationSettingsStore(context.applicationContext) }
-}
-
 class AndroidNotificationSettingsStore(
     context: Context,
 ) : NotificationSettingsStore {

@@ -180,12 +180,6 @@ actual fun rememberPlainTextClipboard(): PlainTextClipboard {
     }
 }
 
-@Composable
-actual fun rememberSettingsStore(): SettingsStore {
-    val context = LocalContext.current.applicationContext
-    return remember(context) { androidSettingsStore(context) }
-}
-
 actual fun Modifier.exportTestTagsForUiAutomation(): Modifier = semantics { testTagsAsResourceId = true }
 
 @Composable

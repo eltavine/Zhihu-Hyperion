@@ -63,7 +63,7 @@ import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.WriteAnswer
 import com.github.zly2006.zhihu.navigation.resolveContent
-import com.github.zly2006.zhihu.notification.rememberNotificationSettingsStore
+import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
@@ -74,6 +74,7 @@ import com.github.zly2006.zhihu.viewmodel.NotificationTimelineViewModel
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
+import org.koin.compose.koinInject
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
@@ -85,7 +86,7 @@ fun NotificationTimelineScreen(
     title: String,
 ) {
     val navigator = LocalNavigator.current
-    val settingsStore = rememberNotificationSettingsStore()
+    val settingsStore = koinInject<NotificationSettingsStore>()
     val environment = rememberNotificationEnvironment(settingsStore)
     val userMessages = rememberUserMessageSink()
     val viewModel = viewModel(key = "notification_timeline_$entryName") {

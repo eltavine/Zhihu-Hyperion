@@ -38,8 +38,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.zly2006.zhihu.data.HotListFeed
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageDuration
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
@@ -51,6 +51,7 @@ import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.viewmodel.feed.HotListViewModel
 import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
+import org.koin.compose.koinInject
 
 const val HOT_LIST_LIST_TAG = "hot_list_list"
 const val HOT_LIST_REFRESH_BUTTON_TAG = "hot_list_refresh_button"
@@ -77,7 +78,7 @@ fun HotListScreen(
     }
     val environment = rememberPaginationEnvironment(viewModel.allowGuestAccess)
     val userMessages = rememberUserMessageSink()
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val listState = rememberLazyListState()
     val pageTurnTarget = rememberPageTurnTarget(listState = listState, enabled = isActive)
     var cachedScrollToTopTrigger by remember { mutableIntStateOf(scrollToTopTrigger) }

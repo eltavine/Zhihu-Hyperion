@@ -37,9 +37,6 @@ interface NotificationSettingsStore {
     fun setUnreadBadgeEnabled(enabled: Boolean)
 }
 
-@Composable
-expect fun rememberNotificationSettingsStore(): NotificationSettingsStore
-
 enum class NotificationType(
     val displayName: String,
     val defaultValue: Boolean,

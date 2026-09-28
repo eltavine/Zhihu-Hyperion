@@ -55,10 +55,10 @@ import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.navigation.Notification
 import com.github.zly2006.zhihu.notification.NotificationType
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isAnswerSwipeSupported
 import com.github.zly2006.zhihu.platform.isPageTurnSupported
 import com.github.zly2006.zhihu.platform.platformName
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.ui.ANSWER_DOUBLE_TAP_ACTION_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.ARTICLE_USE_WEBVIEW_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.components.DISABLE_BOTTOM_SHEET_ROUNDED_CORNERS_PREFERENCE_KEY
@@ -67,6 +67,7 @@ import com.github.zly2006.zhihu.ui.components.SettingItemGroup
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.viewmodel.QUALITY_FILTER_MODE_PREFERENCE_KEY
+import org.koin.compose.koinInject
 
 const val SETTINGS_SEARCH_INPUT_TAG = "settingsSearch.input"
 const val SETTINGS_SEARCH_RESULTS_TAG = "settingsSearch.results"
@@ -308,7 +309,7 @@ private val settingsSearchEntries = buildList {
 @Composable
 fun SettingsSearchScreen() {
     val navigator = LocalNavigator.current
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     var query by rememberSaveable { mutableStateOf("") }
     var developerModeEnabled by remember {
         mutableStateOf(settings.getBoolean("developer", false))

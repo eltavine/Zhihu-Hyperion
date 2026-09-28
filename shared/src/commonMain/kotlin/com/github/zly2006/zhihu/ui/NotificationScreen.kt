@@ -84,7 +84,6 @@ import com.github.zly2006.zhihu.navigation.Notification
 import com.github.zly2006.zhihu.navigation.Person
 import com.github.zly2006.zhihu.navigation.resolveContent
 import com.github.zly2006.zhihu.notification.NotificationSettingsStore
-import com.github.zly2006.zhihu.notification.rememberNotificationSettingsStore
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.components.PaginatedList
@@ -97,6 +96,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
+import org.koin.compose.koinInject
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -113,7 +113,7 @@ expect fun rememberNotificationEnvironment(
 @Composable
 fun NotificationScreen() {
     val navigator = LocalNavigator.current
-    val settingsStore = rememberNotificationSettingsStore()
+    val settingsStore = koinInject<NotificationSettingsStore>()
     val viewModel = viewModel { NotificationViewModel() }
     val environment = rememberNotificationEnvironment(settingsStore)
     val coroutineScope = rememberCoroutineScope()

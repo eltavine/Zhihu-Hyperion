@@ -141,9 +141,6 @@ actual fun PlatformPredictiveBackHandler(
     onBack: () -> Unit,
 ) = PlatformBackHandler(enabled = enabled, onBack = onBack)
 
-@Composable
-actual fun rememberSettingsStore(): SettingsStore = remember { nativeSettingsStore("settings.properties") }
-
 actual fun Modifier.exportTestTagsForUiAutomation(): Modifier = this
 
 @Composable

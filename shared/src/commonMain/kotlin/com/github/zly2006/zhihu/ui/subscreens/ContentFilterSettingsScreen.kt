@@ -68,7 +68,7 @@ import com.github.zly2006.zhihu.filter.clearAllData
 import com.github.zly2006.zhihu.filter.loadFilterStats
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.LocalNavigator
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.AUTO_REFRESH_HOME_ON_STARTUP_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.components.SettingItem
@@ -107,7 +107,7 @@ fun ContentFilterSettingsScreen(
 ) {
     val navigator = LocalNavigator.current
     val coroutineScope = rememberCoroutineScope()
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val contentFilterDao = koinInject<ContentFilterDatabase>().contentFilterDao()
     val userMessages = rememberUserMessageSink()
     val highlightedSetting = setting.orEmpty()

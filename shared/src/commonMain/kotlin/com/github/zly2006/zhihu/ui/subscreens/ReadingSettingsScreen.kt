@@ -58,7 +58,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.github.zly2006.zhihu.navigation.LocalNavigator
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.reading.ReadingCommentOrder
 import com.github.zly2006.zhihu.reading.ReadingPreferences
 import com.github.zly2006.zhihu.reading.ReadingPublishedTimeMode
@@ -73,6 +73,7 @@ import com.github.zly2006.zhihu.ui.components.SettingItemWithSwitch
 import com.github.zly2006.zhihu.ui.components.SwitchWithIcon
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
+import org.koin.compose.koinInject
 
 const val READING_SETTINGS_SCROLL_TAG = "readingSettings.scroll"
 const val READING_SETTINGS_FIELD_TAG_PREFIX = "readingSettings.field."
@@ -102,7 +103,7 @@ fun ReadingSettingsScreen() {
     val scrollState = rememberScrollState()
     val pageTurnTarget = rememberPageTurnTarget(scrollState, enabled = true)
     val navigator = LocalNavigator.current
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     var preferences by remember { mutableStateOf(loadReadingPreferences(settings)) }
     var commentCountText by remember { mutableStateOf(preferences.commentCount.toString()) }
     var customQueueLimitText by remember {

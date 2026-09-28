@@ -95,10 +95,10 @@ import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.MyCollections
 import com.github.zly2006.zhihu.navigation.OnlineHistory
 import com.github.zly2006.zhihu.navigation.TopLevelDestination
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isAnswerSwipeSupported
 import com.github.zly2006.zhihu.platform.isPageTurnSupported
 import com.github.zly2006.zhihu.platform.platformBottomBarItemLimit
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.theme.ThemeManager
 import com.github.zly2006.zhihu.theme.ThemeMode
@@ -120,6 +120,7 @@ import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.ui.isLegacyWebViewSupported
 import kotlinx.coroutines.delay
+import org.koin.compose.koinInject
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.milliseconds
@@ -311,7 +312,7 @@ fun AppearanceSettingsScreen(
     onExit: () -> Unit,
 ) {
     val settingKey = setting.orEmpty()
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val userMessages = rememberUserMessageSink()
 
     val scrollState = rememberScrollState()

@@ -67,10 +67,10 @@ import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.SentenceSimilarityTest
 import com.github.zly2006.zhihu.notification.HOME_NOTIFICATION_READ_UUIDS_PREFERENCE_KEY
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isSentenceSimilaritySupported
 import com.github.zly2006.zhihu.platform.rememberIsLiteVariant
 import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.HOME_PIN_ANNOUNCEMENT_READ_KEY_PREFIX
 import com.github.zly2006.zhihu.ui.TtsState
@@ -102,7 +102,7 @@ fun DeveloperSettingsScreen() {
     val copyPlainText = rememberPlainTextClipboard()
     val userMessages = rememberUserMessageSink()
     val coroutineScope = rememberCoroutineScope()
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     var developerModeEnabled by remember {
         mutableStateOf(settings.getBoolean("developer", false))
     }

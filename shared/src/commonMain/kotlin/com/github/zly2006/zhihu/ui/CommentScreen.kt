@@ -145,11 +145,11 @@ import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.SegmentCommentHolder
 import com.github.zly2006.zhihu.navigation.resolveContent
 import com.github.zly2006.zhihu.platform.PlatformBackHandler
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
 import com.github.zly2006.zhihu.platform.rememberImagePreviewOpener
 import com.github.zly2006.zhihu.platform.rememberImageSaver
 import com.github.zly2006.zhihu.platform.rememberImageSharer
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.reading.ReadingCommentOrder
 import com.github.zly2006.zhihu.reading.loadReadingPreferences
 import com.github.zly2006.zhihu.reading.saveReadingPreferences
@@ -173,6 +173,7 @@ import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
+import org.koin.compose.koinInject
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.time.Clock
@@ -450,7 +451,7 @@ fun CommentScreen(
     showPageTurnFab: Boolean = false,
 ) {
     val paginationEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
-    val readingSettings = rememberSettingsStore()
+    val readingSettings = koinInject<SettingsStore>()
     val initialReadingCommentOrder = remember(readingSettings) {
         loadReadingPreferences(readingSettings).commentOrder
     }
@@ -1364,7 +1365,7 @@ private fun CommentItem(
                 val inlineContent = rememberCommentEmojiInlineContent(emojisUsed)
 
                 Column {
-                    val settings = rememberSettingsStore()
+                    val settings = koinInject<SettingsStore>()
                     val fontSizePercent = remember { settings.getInt(PREF_FONT_SIZE, 100) }
                     val lineHeightPercent = remember { settings.getInt(PREF_LINE_HEIGHT, 160) }
                     SelectionContainer(

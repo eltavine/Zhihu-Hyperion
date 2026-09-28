@@ -83,8 +83,8 @@ import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.WriteAnswer
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
-import com.github.zly2006.zhihu.platform.rememberSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.components.MyModalBottomSheet
 import com.github.zly2006.zhihu.ui.components.SettingItemWithSwitch
@@ -104,6 +104,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
+import org.koin.compose.koinInject
 
 const val WRITE_ANSWER_CONTENT_TAG = "WriteAnswerContent"
 const val WRITE_ANSWER_FAB_PREVIEW_TAG = "WriteAnswerFabPreview"
@@ -120,7 +121,7 @@ fun WriteAnswerScreen(
     val environment = rememberPaginationEnvironment(false)
     val coroutineScope = rememberCoroutineScope()
     val copyToClipboard = rememberPlainTextClipboard()
-    val settings = rememberSettingsStore()
+    val settings = koinInject<SettingsStore>()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     var editorActionsVisible by remember { mutableStateOf(true) }
