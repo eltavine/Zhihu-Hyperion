@@ -62,7 +62,6 @@ import io.ktor.http.Url
 import com.fleeksoft.ksoup.nodes.Node as HtmlNode
 import com.hrm.markdown.parser.ast.Node as MarkdownNode
 
-private var parsingDocument: Document? = null
 private const val ZHIHU_EQUATION_URL_PREFIX = "https://www.zhihu.com/equation?tex="
 
 fun htmlToMdAst(
@@ -70,20 +69,21 @@ fun htmlToMdAst(
     noNativeBlock: Boolean = false,
 ): Document {
     val document = Document()
-    parsingDocument = document
-    Ksoup
-        .parseBodyFragment(html)
-        .body()
-        .childNodes()
-        .convertNodesToBlocks(noNativeBlock)
+    HtmlToMdAstConversion(document, noNativeBlock)
+        .convertNodesToBlocks(Ksoup.parseBodyFragment(html).body().childNodes())
         .forEach(document::appendChild)
     document.footnoteDefinitions.forEach { (_, definition) ->
         document.appendChild(definition)
     }
-    parsingDocument = null
     document.assignStableLineRanges()
     return document
 }
+
+/** 单次 HTML 转换的状态：脚注定义写入正在构建的 [document]，并发的转换之间互不共享。 */
+private class HtmlToMdAstConversion(
+    val document: Document,
+    val noNativeBlock: Boolean,
+)
 
 fun markdownToMdAst(markdown: String): Document = MarkdownParser().parse(markdown)
 
@@ -110,7 +110,7 @@ private fun MarkdownNode.collectPreviewImageUrls(): List<String> = when (this) {
     else -> emptyList()
 }
 
-private fun List<HtmlNode>.convertNodesToBlocks(noNativeBlock: Boolean): List<MarkdownNode> {
+private fun HtmlToMdAstConversion.convertNodesToBlocks(nodes: List<HtmlNode>): List<MarkdownNode> {
     val blocks = mutableListOf<MarkdownNode>()
     var currentParagraph: Paragraph? = null
     // 公式 img 的判定在预扫描与主循环各触发一次；按 Element 缓存避免重复解析。
@@ -123,9 +123,9 @@ private fun List<HtmlNode>.convertNodesToBlocks(noNativeBlock: Boolean): List<Ma
         } else {
             extractEquationNode().also { equationNodeCache[this] = it }
         }
-    val hasNextInlineContent = BooleanArray(size + 1)
-    for (index in lastIndex downTo 0) {
-        val node = this[index]
+    val hasNextInlineContent = BooleanArray(nodes.size + 1)
+    for (index in nodes.lastIndex downTo 0) {
+        val node = nodes[index]
         hasNextInlineContent[index] = when {
             node is Element && node.isBlockBoundary { it.cachedEquationNode() } -> false
             node.hasInlineContent() -> true
@@ -138,7 +138,7 @@ private fun List<HtmlNode>.convertNodesToBlocks(noNativeBlock: Boolean): List<Ma
         currentParagraph = it
     }
 
-    for ((index, node) in this.withIndex()) {
+    for ((index, node) in nodes.withIndex()) {
         when (node) {
             is TextNode -> {
                 val text = node.text().trimInlineBoundary(
@@ -165,7 +165,7 @@ private fun List<HtmlNode>.convertNodesToBlocks(noNativeBlock: Boolean): List<Ma
                     }
                 }
 
-                val blockNode = convertElementToBlock(node, noNativeBlock)
+                val blockNode = convertElementToBlock(node)
                 if (blockNode.isNotEmpty()) {
                     blocks.addAll(blockNode)
                     currentParagraph = null
@@ -230,10 +230,7 @@ private fun Element.isBlockBoundary(
     else -> false
 }
 
-private fun convertElementToBlock(
-    element: Element,
-    noNativeBlock: Boolean,
-): List<MarkdownNode> = when (element.tagName().lowercase()) {
+private fun HtmlToMdAstConversion.convertElementToBlock(element: Element): List<MarkdownNode> = when (element.tagName().lowercase()) {
     "h1", "h2", "h3", "h4", "h5", "h6" -> {
         listOf(
             Heading(level = element.tagName()[1].digitToInt()).apply {
@@ -272,7 +269,7 @@ private fun convertElementToBlock(
     "blockquote" -> {
         listOf(
             BlockQuote().apply {
-                element.childNodes().convertNodesToBlocks(noNativeBlock).forEach(::appendChild)
+                convertNodesToBlocks(element.childNodes()).forEach(::appendChild)
             },
         )
     }
@@ -282,11 +279,11 @@ private fun convertElementToBlock(
     }
 
     "ul" -> {
-        listOf(createListBlock(element, ordered = false, noNativeBlock = noNativeBlock))
+        listOf(createListBlock(element, ordered = false))
     }
 
     "ol" -> {
-        listOf(createListBlock(element, ordered = true, noNativeBlock = noNativeBlock))
+        listOf(createListBlock(element, ordered = true))
     }
 
     "hr" -> {
@@ -306,7 +303,7 @@ private fun convertElementToBlock(
     }
 
     "div" -> {
-        element.childNodes().convertNodesToBlocks(noNativeBlock)
+        convertNodesToBlocks(element.childNodes())
     }
 
     "a" -> {
@@ -346,10 +343,9 @@ private fun parseLanguageFromClassName(classNames: Set<String>): String? {
     return classNames.firstOrNull { it.startsWith(prefix) }?.removePrefix(prefix)
 }
 
-private fun createListBlock(
+private fun HtmlToMdAstConversion.createListBlock(
     element: Element,
     ordered: Boolean,
-    noNativeBlock: Boolean,
 ): ListBlock = ListBlock(
     ordered = ordered,
     startNumber = element.attr("start").toIntOrNull() ?: 1,
@@ -359,7 +355,7 @@ private fun createListBlock(
         when (childElement.tagName().lowercase()) {
             "li" -> {
                 val listItem = ListItem().apply {
-                    val children = childElement.childNodes().convertNodesToBlocks(noNativeBlock)
+                    val children = convertNodesToBlocks(childElement.childNodes())
                     if (children.isEmpty()) {
                         appendChild(
                             Paragraph().apply {
@@ -378,7 +374,6 @@ private fun createListBlock(
                 val nestedList = createListBlock(
                     childElement,
                     ordered = childElement.tagName().equals("ol", ignoreCase = true),
-                    noNativeBlock = noNativeBlock,
                 )
                 if (precedingListItem != null) {
                     precedingListItem.appendChild(nestedList)
@@ -405,7 +400,7 @@ private fun createBlockImage(element: Element): MarkdownNode? {
     )
 }
 
-private fun createFigureBlock(element: Element): MarkdownNode? {
+private fun HtmlToMdAstConversion.createFigureBlock(element: Element): MarkdownNode? {
     element.selectFirst("img")?.let { image ->
         val src = extractImageUrl(image::attr) ?: return@let null
         val caption = element.selectFirst("figcaption")?.text()?.ifBlank { null } ?: ""
@@ -465,7 +460,7 @@ private fun createVideoBoxLinkBlock(element: Element): MarkdownNode? {
     }
 }
 
-private fun createTableBlock(element: Element): Table = Table().apply {
+private fun HtmlToMdAstConversion.createTableBlock(element: Element): Table = Table().apply {
     val directRows = element.select("> tr")
     val headRows = element.select("> thead > tr")
     val bodyRows = element.select("> tbody > tr")
@@ -498,7 +493,7 @@ private fun createTableBlock(element: Element): Table = Table().apply {
         .orEmpty()
 }
 
-private fun createTableRow(
+private fun HtmlToMdAstConversion.createTableRow(
     row: Element,
     isHeader: Boolean,
 ): TableRow = TableRow().apply {
@@ -521,7 +516,7 @@ private fun Element.toAlignment(): Table.Alignment = when (attr("align").lowerca
     else -> Table.Alignment.NONE
 }
 
-private fun extractInlineChildren(
+private fun HtmlToMdAstConversion.extractInlineChildren(
     element: Element,
     segmentHighlightsEnabled: Boolean = true,
 ): List<MarkdownNode> {
@@ -713,7 +708,7 @@ internal fun String.zhihuEquationSemantics(): ZhihuEquationSemantics {
  *
  * > 注意：由于知乎的bug，MathBlock在<p>里面。
  */
-private fun extractInlineNode(
+private fun HtmlToMdAstConversion.extractInlineNode(
     node: HtmlNode,
     segmentHighlightsEnabled: Boolean = true,
 ): List<MarkdownNode> = when (node) {
@@ -776,7 +771,7 @@ private fun extractInlineNode(
             "sup" -> {
                 if (node.attr("data-draft-type") == "reference") {
                     val index = node.attr("data-numero").toInt()
-                    parsingDocument!!.footnoteDefinitions[node.attr("data-numero")] = FootnoteDefinition(index.toString(), index).apply {
+                    document.footnoteDefinitions[node.attr("data-numero")] = FootnoteDefinition(index.toString(), index).apply {
                         appendChild(
                             Paragraph().apply {
                                 appendChild(Text(node.attr("data-text")))

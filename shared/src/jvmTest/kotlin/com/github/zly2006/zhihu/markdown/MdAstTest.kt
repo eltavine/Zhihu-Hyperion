@@ -37,6 +37,7 @@ import org.jsoup.Jsoup
 import java.io.File
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import java.util.concurrent.Executors
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -504,6 +505,27 @@ class MdAstTest {
         assertTrue(nodes.any { it is InlineMath && it.literal == "1/2" })
         assertEquals(blockEquationCount, nodes.count { it is MathBlock })
         assertFalse(nodes.any { it is Figure && it.imageUrl.contains("/equation?tex=") })
+    }
+
+    @Test
+    fun concurrent_conversions_should_keep_footnotes_in_their_own_document() {
+        val pool = Executors.newFixedThreadPool(8)
+        try {
+            val footnotesByDocument = (0 until 400)
+                .map { index ->
+                    pool.submit<List<String>> {
+                        htmlToMdAst(
+                            """<p>正文$index<sup data-draft-type="reference" data-numero="1" data-text="脚注$index" data-url="">[1]</sup></p>""",
+                        ).children.filterIsInstance<FootnoteDefinition>().map { it.plainText() }
+                    }
+                }.map { it.get() }
+
+            footnotesByDocument.forEachIndexed { index, footnotes ->
+                assertEquals(listOf("脚注$index"), footnotes)
+            }
+        } finally {
+            pool.shutdownNow()
+        }
     }
 
     private fun Node.plainText(): String = when (this) {
