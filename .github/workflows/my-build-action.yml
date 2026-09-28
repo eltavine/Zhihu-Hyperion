@@ -38,10 +38,10 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set Up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: 'zulu'
           java-version: '17'
@@ -147,7 +147,7 @@ jobs:
 
       - name: Upload desktop package
         if: runner.os != 'macOS'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: zhihu++-desktop-${{ steps.desktop_suffix.outputs.suffix }}
           path: desktopApp/build/upload/*
@@ -175,7 +175,7 @@ jobs:
 
       - name: Upload macOS Kotlin/Native app
         if: runner.os == 'macOS'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: zhihu++-desktop-${{ steps.desktop_suffix.outputs.suffix }}
           path: desktopApp/build/upload/zhihu++-desktop-${{ steps.desktop_suffix.outputs.suffix }}.app.zip
@@ -185,7 +185,7 @@ jobs:
     needs: build-desktop
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       # Set Current Date As Env Variable
       - name: Set current date as env variable
         run: echo "date_today=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
@@ -195,13 +195,13 @@ jobs:
         run: echo "repository_name=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
 
       - name: Set Up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: 'zulu' # See 'Supported distributions' for available options
           java-version: '17'
           cache: 'gradle'
       - name: Setup rust
-        uses: actions-rust-lang/setup-rust-toolchain@v1
+        uses: actions-rust-lang/setup-rust-toolchain@v2
         with:
           override: true
 
@@ -218,7 +218,7 @@ jobs:
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
       - name: Cache Rust
-        uses: actions/cache@v3
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cargo/bin/
@@ -230,7 +230,7 @@ jobs:
           restore-keys: |
             rust-cache-
       - name: Cache Gradle
-        uses: actions/cache@v3
+        uses: actions/cache@v6
         with:
           path: |
             ~/.gradle/caches
@@ -239,9 +239,9 @@ jobs:
             ./.gradle
             ./**/.gradle
           # dont invalidate cache if only gradle.properties is changed -- they
-          key: gradle-cache-${{ hashFiles('**/*.gradle.kts', '**/gradle-wrapper.properties') }}
+          key: gradle-cache-${{ hashFiles('**/*.gradle.kts', '**/gradle-wrapper.properties', 'gradle/libs.versions.toml', 'build-logic/**/*.kt') }}
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
         with:
           # 默认的 tools 包已无法安装；失败记录：https://github.com/zly2006/zhihu-plus-plus/actions/runs/35182179380/job/105076511639
           packages: platform-tools
@@ -272,7 +272,7 @@ jobs:
           mv app/build/outputs/apk/full/release/app-full-release.apk app/build/upload/zhihu++-full.apk
           mv app/build/outputs/apk/lite/release/app-lite-release.apk app/build/upload/zhihu++-lite.apk
       - name: Download desktop apps
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: zhihu++-desktop-*
           path: app/build/upload
@@ -284,7 +284,7 @@ jobs:
           zip app/build/upload/mapping-lite.zip app/build/outputs/mapping/liteRelease/mapping.txt
 
       - name: Upload APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.date_today }} - ${{ env.repository_name }} - ${{ inputs.name }}
           path: app/build/upload/
@@ -292,7 +292,7 @@ jobs:
       # Delete existing nightly release
       - name: Delete existing nightly release
         if: ${{ inputs.minify && inputs.nightly_release }}
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const owner = context.repo.owner;
@@ -333,7 +333,7 @@ jobs:
       - name: Generate nightly changelog
         if: ${{ inputs.minify && inputs.nightly_release }}
         id: nightly_changelog
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const { data: tags } = await github.rest.repos.listTags({
@@ -386,7 +386,7 @@ jobs:
       - name: Create Nightly Release
         if: ${{ inputs.minify && inputs.nightly_release }}
         id: nightly_release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: nightly
           name: Nightly Build (${{ env.date_today }})
@@ -406,7 +406,7 @@ jobs:
       - name: Generate release notes
         if: ${{ inputs.release && startsWith(github.ref, 'refs/tags/') }}
         id: release_notes
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const { data } = await github.rest.repos.generateReleaseNotes({
@@ -421,7 +421,7 @@ jobs:
       - name: Create Release
         if: ${{ inputs.release && startsWith(github.ref, 'refs/tags/') }}
         id: release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.ref_name }}
           name: ${{ github.ref_name }}

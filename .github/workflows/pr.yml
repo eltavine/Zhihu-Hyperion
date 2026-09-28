@@ -13,10 +13,10 @@ jobs:
     name: KtLint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set Up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: zulu
           java-version: "17"
@@ -25,8 +25,8 @@ jobs:
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
 
-      - name: Run KtLint
-        run: ./gradlew ktlintCheck
+      - name: Run KtLint and module graph assertions
+        run: ./gradlew ktlintCheck :app:assertModuleGraph :desktopApp:assertModuleGraph :macosApp:assertModuleGraph :macosUiDebug:assertModuleGraph
 
   build_pr:
     name: Build PR
@@ -34,7 +34,7 @@ jobs:
     outputs:
       run_instrumented_tests: ${{ steps.instrumented_changes.outputs.required }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -50,14 +50,14 @@ jobs:
             exit 0
           fi
 
-          if git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -Eq '^(app/|shared/|\.github/scripts/run-instrumented-shard\.sh$|\.github/workflows/(instrument-test|pr)\.yml$|build\.gradle\.kts$|settings\.gradle\.kts$|gradle\.properties$|gradle/)'; then
+          if git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -Eq '^(app/|shared/|shared-local-db/|core/|feature/|third_party/|build-logic/|\.github/scripts/run-instrumented-shard\.sh$|\.github/workflows/(instrument-test|pr)\.yml$|build\.gradle\.kts$|settings\.gradle\.kts$|gradle\.properties$|gradle/)'; then
             echo "required=true" >> "$GITHUB_OUTPUT"
           else
             echo "required=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Set Up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: zulu
           java-version: "17"
@@ -67,7 +67,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
         with:
           # 默认的 tools 包已无法安装；失败记录：https://github.com/zly2006/zhihu-plus-plus/actions/runs/35182179380/job/105076511639
           packages: platform-tools
@@ -84,7 +84,7 @@ jobs:
           ./gradlew "${tasks[@]}" --max-workers=2
 
       - name: Upload Gradle build cache
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: PR Gradle build cache
           path: .gradle/build-cache/
@@ -97,7 +97,7 @@ jobs:
           cp app/build/outputs/apk/lite/debug/app-lite-debug.apk app/build/upload/zhihu++-lite-debug.apk
 
       - name: Upload Lite debug APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: PR Debug artifacts
           path: app/build/upload/
@@ -111,7 +111,7 @@ jobs:
 
       - name: Upload instrumented test APKs
         if: steps.instrumented_changes.outputs.required == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Instrumented test APKs
           path: app/build/instrument-apks/
@@ -121,10 +121,10 @@ jobs:
     name: Desktop Release Package
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set Up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: zulu
           java-version: "17"
@@ -140,10 +140,10 @@ jobs:
     name: Unit Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set Up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: zulu
           java-version: "23"
@@ -155,9 +155,18 @@ jobs:
       - name: Run unit tests
         run: ./gradlew :shared:jvmTest :app:testLiteDebugUnitTest --max-workers=2
 
+      - name: Verify committed Room schemas
+        run: |
+          changes="$(git status --porcelain -- '*/schemas')"
+          if [[ -n "$changes" ]]; then
+            echo "Room schemas changed; commit the regenerated files under */schemas:" >&2
+            echo "$changes" >&2
+            exit 1
+          fi
+
       - name: Upload test reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: PR Test Reports
           path: |
@@ -188,16 +197,16 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Download instrumented test APKs
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: Instrumented test APKs
           path: app/build/instrument-apks
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
         with:
           # 默认的 tools 包已无法安装；失败记录：https://github.com/zly2006/zhihu-plus-plus/actions/runs/35182179380/job/105076511639
           packages: platform-tools
@@ -224,7 +233,7 @@ jobs:
 
       - name: Upload shard test reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mock-instrumented-shard-${{ matrix.shard_label }}
           path: app/build/outputs/androidTest-results/**
