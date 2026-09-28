@@ -26,13 +26,15 @@ import android.provider.MediaStore
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.zly2006.zhihu.data.DataHolder
+import com.github.zly2006.zhihu.viewmodel.AndroidContentExporter
 import com.github.zly2006.zhihu.viewmodel.AndroidPreparedExportWebView
-import com.github.zly2006.zhihu.viewmodel.SharedAndroidPaginationEnvironment
+import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.mp.KoinPlatform
 import java.io.ByteArrayOutputStream
 import java.io.File
 import kotlin.math.roundToInt
@@ -46,12 +48,12 @@ class ArticleExportEnvironmentInstrumentedTest {
     @Test
     fun androidEnvironmentBuildsOfflineArticleExportHtml() = runBlocking {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
-        val environment = SharedAndroidPaginationEnvironment(context, allowGuestAccess = true)
+        val exporter = AndroidContentExporter(context)
 
-        val html = environment.buildOfflineArticleExportHtml(
+        val html = exporter.buildOfflineArticleExportHtml(
             content = sampleArticleContent(),
             includeAppAttribution = true,
-            httpClient = environment.httpClient(),
+            httpClient = KoinPlatform.getKoin().get<ZhihuApiEnvironment>().httpClient(),
         )
 
         assertTrue(html.contains("导出环境回归"))
@@ -67,10 +69,10 @@ class ArticleExportEnvironmentInstrumentedTest {
     @Test
     fun articleImageRendererUsesStableContentHeightBeforeFullLayout() = runBlocking {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
-        val environment = SharedAndroidPaginationEnvironment(context, allowGuestAccess = true)
-        val renderer = environment.articleImageExportRenderer()
+        val exporter = AndroidContentExporter(context)
+        val renderer = exporter.articleImageExportRenderer()
         val prepared = renderer.prepareExportWebView(
-            htmlContent = environment.buildArticleExportHtml(
+            htmlContent = exporter.buildArticleExportHtml(
                 content = sampleLongAnswerContent(),
                 includeAppAttribution = true,
                 extraSectionsHtml = "",

@@ -55,21 +55,6 @@ data class CollectionHtmlExportResult(
     val zipFilePath: String?,
 )
 
-interface CollectionExportEnvironment {
-    suspend fun exportCollectionItemsToHtmlZip(
-        collectionTitle: String,
-        items: List<CollectionItem>,
-        includeImages: Boolean,
-        onProgress: suspend (CollectionHtmlExportProgress) -> Unit,
-    ): CollectionHtmlExportResult
-
-    suspend fun handleCollectionExportFailure(error: Exception)
-}
-
-interface CollectionContentEnvironment :
-    PaginationEnvironment,
-    CollectionExportEnvironment
-
 suspend fun ZhihuApiEnvironment.fetchCollection(collectionId: String): Collection {
     val json = fetchJson("https://www.zhihu.com/api/v4/collections/$collectionId", "") ?: error("收藏夹信息为空")
     return ZhihuJson.decodeJson<Collection>(json["collection"] ?: throw IllegalStateException("收藏夹信息为空"))
@@ -187,7 +172,8 @@ class CollectionContentViewModel(
     }
 
     fun exportAllToHtmlZip(
-        environment: CollectionContentEnvironment,
+        environment: PaginationEnvironment,
+        exporter: CollectionExporter,
         includeImages: Boolean,
     ) {
         if (exportDialogState?.isCompleted == false) return
@@ -220,7 +206,8 @@ class CollectionContentViewModel(
                 }
 
                 val exportTitle = title
-                val result = environment.exportCollectionItemsToHtmlZip(
+                val result = exporter.exportCollectionItemsToHtmlZip(
+                    environment = environment,
                     collectionTitle = exportTitle,
                     items = items,
                     includeImages = includeImages,
@@ -267,7 +254,7 @@ class CollectionContentViewModel(
                     isCompleted = true,
                     resultMessage = e.message ?: "未知错误",
                 )
-                environment.handleCollectionExportFailure(e)
+                exporter.handleCollectionExportFailure(e)
             }
         }
     }
@@ -276,7 +263,7 @@ class CollectionContentViewModel(
         exportDialogState = null
     }
 
-    private suspend fun ensureAllCollectionItemsLoaded(environment: CollectionContentEnvironment): List<CollectionItem> {
+    private suspend fun ensureAllCollectionItemsLoaded(environment: PaginationEnvironment): List<CollectionItem> {
         if (collection == null) {
             collection = environment.fetchCollection(collectionId)
         }

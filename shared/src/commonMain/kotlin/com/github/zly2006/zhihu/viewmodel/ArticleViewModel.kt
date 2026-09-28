@@ -914,12 +914,14 @@ class ArticleViewModel(
 
     // 导出为图片 - 使用WebView渲染
     suspend fun exportToImage(
-        environment: ArticleExportContentEnvironment,
+        environment: ZhihuApiEnvironment,
+        exporter: ArticleExporter,
         includeAppAttribution: Boolean,
         onComplete: (Boolean) -> Unit,
     ) {
         exportToImageInternal(
             environment = environment,
+            exporter = exporter,
             includeComments = false,
             commentCount = 0,
             includeAppAttribution = includeAppAttribution,
@@ -930,13 +932,15 @@ class ArticleViewModel(
 
     // 导出为带评论的图片 - 使用WebView渲染
     suspend fun exportToImageWithComments(
-        environment: ArticleExportContentEnvironment,
+        environment: ZhihuApiEnvironment,
+        exporter: ArticleExporter,
         commentCount: Int,
         includeAppAttribution: Boolean,
         onComplete: (Boolean) -> Unit,
     ) {
         exportToImageInternal(
             environment = environment,
+            exporter = exporter,
             includeComments = true,
             commentCount = commentCount,
             includeAppAttribution = includeAppAttribution,
@@ -946,7 +950,8 @@ class ArticleViewModel(
     }
 
     suspend fun exportToHtml(
-        environment: ArticleExportContentEnvironment,
+        environment: ZhihuApiEnvironment,
+        exporter: ArticleExporter,
         includeAppAttribution: Boolean,
         onComplete: (Boolean) -> Unit,
     ) {
@@ -958,9 +963,9 @@ class ArticleViewModel(
             return
         }
 
-        if (environment.requiresHtmlExportPermission() && !environment.hasImageExportPermission()) {
+        if (exporter.requiresHtmlExportPermission() && !exporter.hasImageExportPermission()) {
             withContext(Dispatchers.Main) {
-                environment.requestImageExportPermission()
+                exporter.requestImageExportPermission()
                 permissionRequestCount++
                 userMessages.showShortMessage("需要存储权限才能导出 HTML，正在请求权限")
                 onComplete(false)
@@ -970,14 +975,14 @@ class ArticleViewModel(
 
         try {
             val htmlContent = withContext(Dispatchers.Default) {
-                environment.buildOfflineArticleExportHtml(
+                exporter.buildOfflineArticleExportHtml(
                     content = requireExportSourceContent(),
                     includeAppAttribution = includeAppAttribution,
                     httpClient = httpClient ?: environment.httpClient(),
                 )
             }
             val savedLocation = withContext(Dispatchers.Default) {
-                environment.saveHtmlToDownloads(
+                exporter.saveHtmlToDownloads(
                     displayName = buildArticleExportFileName(
                         content = requireExportSourceContent(),
                         extension = "html",
@@ -1001,7 +1006,8 @@ class ArticleViewModel(
     }
 
     private suspend fun exportToImageInternal(
-        environment: ArticleExportContentEnvironment,
+        environment: ZhihuApiEnvironment,
+        exporter: ArticleExporter,
         includeComments: Boolean,
         commentCount: Int,
         includeAppAttribution: Boolean,
@@ -1016,9 +1022,9 @@ class ArticleViewModel(
             return
         }
 
-        if (!environment.hasImageExportPermission()) {
+        if (!exporter.hasImageExportPermission()) {
             withContext(Dispatchers.Main) {
-                environment.requestImageExportPermission()
+                exporter.requestImageExportPermission()
                 permissionRequestCount++
                 userMessages.showShortMessage("需要存储权限才能导出图片，正在请求权限")
                 onComplete(false)
@@ -1028,11 +1034,12 @@ class ArticleViewModel(
 
         var preparedWebView: PreparedArticleExportContent? = null
         var bitmap: Any? = null
-        val renderer = environment.articleImageExportRenderer()
+        val renderer = exporter.articleImageExportRenderer()
         try {
             preparedWebView = renderer.prepareExportWebView(
                 htmlContent = createHtmlContent(
                     environment = environment,
+                    exporter = exporter,
                     includeComments = includeComments,
                     commentCount = commentCount,
                     includeAppAttribution = includeAppAttribution,
@@ -1042,7 +1049,7 @@ class ArticleViewModel(
             val capturedBitmap = renderer.captureExportBitmap(preparedWebView)
             bitmap = capturedBitmap
             withContext(Dispatchers.Default) {
-                environment.saveImageToMediaStore(
+                exporter.saveImageToMediaStore(
                     displayName = buildArticleExportFileName(
                         content = requireExportSourceContent(),
                         extension = "jpg",
@@ -1071,7 +1078,8 @@ class ArticleViewModel(
 
     // 创建HTML内容
     private suspend fun createHtmlContent(
-        environment: ArticleExportContentEnvironment,
+        environment: ZhihuApiEnvironment,
+        exporter: ArticleExporter,
         includeComments: Boolean,
         commentCount: Int,
         includeAppAttribution: Boolean,
@@ -1085,7 +1093,7 @@ class ArticleViewModel(
             ""
         }
 
-        return environment.buildArticleExportHtml(
+        return exporter.buildArticleExportHtml(
             content = requireExportSourceContent(),
             includeAppAttribution = includeAppAttribution,
             extraSectionsHtml = commentsHtml,
@@ -1093,7 +1101,7 @@ class ArticleViewModel(
     }
 
     private suspend fun fetchExportComments(
-        environment: ArticleExportContentEnvironment,
+        environment: ZhihuApiEnvironment,
         requestedCount: Int,
     ): List<ArticleExportComment> {
         val safeRequestedCount = requestedCount.coerceAtLeast(0)

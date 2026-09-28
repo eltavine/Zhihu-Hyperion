@@ -68,7 +68,6 @@ import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
-import com.github.zly2006.zhihu.viewmodel.CollectionContentEnvironment
 import com.github.zly2006.zhihu.viewmodel.CollectionContentViewModel
 import com.github.zly2006.zhihu.viewmodel.CollectionsViewModel
 import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
@@ -93,7 +92,6 @@ fun CollectionBrowseScreen(
 ) {
     val navigator = LocalNavigator.current
     val environment = rememberPaginationEnvironment(allowGuestAccess = false)
-    val contentEnvironment = environment as CollectionContentEnvironment
     val useLocalCollections = urlToken == null
     val collectionsViewModel: CollectionsViewModel = viewModel(key = urlToken) {
         CollectionsViewModel(urlToken.orEmpty())
@@ -161,12 +159,12 @@ fun CollectionBrowseScreen(
         if (isActive && !useLocalCollections && contentViewModel != null) {
             if (randomMode) {
                 contentViewModel.refreshRandom(
-                    environment = contentEnvironment,
+                    environment = environment,
                     itemCount = selectedCollectionItemCount,
                     randomSeed = randomSeed,
                 )
             } else {
-                contentViewModel.refresh(contentEnvironment)
+                contentViewModel.refresh(environment)
             }
         }
     }
@@ -183,7 +181,7 @@ fun CollectionBrowseScreen(
                     if (randomMode) {
                         randomSeed = Random.nextInt()
                     } else {
-                        contentViewModel?.refresh(contentEnvironment)
+                        contentViewModel?.refresh(environment)
                     }
                 }
             }
@@ -336,7 +334,7 @@ fun CollectionBrowseScreen(
                             if (randomMode) {
                                 randomSeed = Random.nextInt()
                             } else {
-                                contentViewModel.refresh(contentEnvironment)
+                                contentViewModel.refresh(environment)
                             }
                         }
                     },
@@ -358,7 +356,7 @@ fun CollectionBrowseScreen(
                     } else {
                         CollectionContentBody(
                             viewModel = contentViewModel,
-                            environment = contentEnvironment,
+                            environment = environment,
                             collectionId = selectedCollectionId.orEmpty(),
                             modifier = Modifier.fillMaxSize(),
                             listState = listState,

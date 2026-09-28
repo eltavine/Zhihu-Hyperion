@@ -19,23 +19,19 @@ package com.github.zly2006.zhihu.viewmodel
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.navDestination
 import com.github.zly2006.zhihu.desktop.desktopZhihuDataFile
 import com.github.zly2006.zhihu.desktop.desktopZhihuDownloadsDir
 import com.github.zly2006.zhihu.navigation.Article
-import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.buildArticleExportFileName
 import com.github.zly2006.zhihu.util.buildCollectionExportZipFileName
 import com.github.zly2006.zhihu.util.sanitizeArticleExportFileNamePart
-import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.koin.mp.KoinPlatform
 import java.awt.image.BufferedImage
 import java.io.File
 import java.util.zip.ZipEntry
@@ -48,30 +44,8 @@ import javax.swing.SwingUtilities
 import com.github.zly2006.zhihu.util.buildArticleExportHtml as buildSharedArticleExportHtml
 import com.github.zly2006.zhihu.util.buildOfflineArticleExportHtml as buildSharedOfflineArticleExportHtml
 
-class DesktopPaginationEnvironment :
-    PaginationEnvironment,
-    CollectionContentEnvironment {
-    private val store = KoinPlatform.getKoin().get<ZhihuAccountStore>()
-    private val settingsStore: SettingsStore = KoinPlatform.getKoin().get()
-    private val contentFilterDb: ContentFilterDatabase = KoinPlatform.getKoin().get()
-
-    override fun httpClient(): HttpClient = store.client.httpClient()
-
-    override fun xsrfToken(): String = store.session.cookies["_xsrf"] ?: ""
-
-    override fun authenticatedCookies(): Map<String, String> = store.session.cookies
-
-    override suspend fun <T> withAuthenticatedClient(
-        block: suspend (client: HttpClient, cookies: Map<String, String>) -> T,
-    ): T = store.client.withAuthenticatedClient(block)
-
-    override suspend fun handleFetchFailure(
-        tag: String?,
-        error: Exception,
-    ) {
-        Log.e(tag ?: "PaginationViewModel", "Failed to fetch feeds", error)
-    }
-
+/** 桌面的文章与收藏夹导出：写入用户下载目录，长图由 Swing 渲染导出 HTML。 */
+class DesktopContentExporter : ContentExporter {
     override fun hasImageExportPermission(): Boolean = true
 
     override fun requiresHtmlExportPermission(): Boolean = false
@@ -129,6 +103,7 @@ class DesktopPaginationEnvironment :
         DesktopArticleExportRenderer()
 
     override suspend fun exportCollectionItemsToHtmlZip(
+        environment: ZhihuApiEnvironment,
         collectionTitle: String,
         items: List<CollectionItem>,
         includeImages: Boolean,
@@ -151,7 +126,7 @@ class DesktopPaginationEnvironment :
         }
 
         val outputDir = desktopZhihuDownloadsDir("无法创建导出 ZIP 目录")
-        val exportHttpClient = httpClient()
+        val exportHttpClient = environment.httpClient()
 
         var processedCount = 0
         var successCount = 0
@@ -177,7 +152,7 @@ class DesktopPaginationEnvironment :
         items.forEach { item ->
             currentTitle = item.content.title
             try {
-                val content = item.resolveDesktopExportContent(this)
+                val content = item.resolveDesktopExportContent(environment)
                 if (content == null) {
                     skippedCount++
                 } else {
@@ -229,6 +204,9 @@ class DesktopPaginationEnvironment :
         Log.e("CollectionContentViewModel", "Failed to export collection HTML zip", error)
     }
 }
+
+@Composable
+actual fun rememberContentExporter(): ContentExporter = remember { DesktopContentExporter() }
 
 private data class DesktopPreparedExportContent(
     val htmlContent: String,
@@ -336,7 +314,7 @@ private fun <T> runOnSwingThread(block: () -> T): T {
 }
 
 private suspend fun CollectionItem.resolveDesktopExportContent(
-    environment: DesktopPaginationEnvironment,
+    environment: ZhihuApiEnvironment,
 ): DataHolder.Content? {
     val destination = content.navDestination as? Article ?: return null
     return environment.fetchContentDetail(destination)

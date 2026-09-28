@@ -161,6 +161,7 @@ import com.github.zly2006.zhihu.viewmodel.AigcVoteService
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel
 import com.github.zly2006.zhihu.viewmodel.addReadHistory
 import com.github.zly2006.zhihu.viewmodel.formatArticleDateTime
+import com.github.zly2006.zhihu.viewmodel.rememberContentExporter
 import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 import com.materialkolor.ktx.harmonize
@@ -209,6 +210,7 @@ fun ArticleScreen(
     val contentOpens = koinInject<ContentOpenTracker>()
     val aigcVote = koinInject<AigcVoteService>()
     val clipboard = rememberPlainTextClipboard()
+    val exporter = rememberContentExporter()
     val isTitleAutoHide by rememberObservedSetting(settings, "titleAutoHide") { getBoolean("titleAutoHide", false) }
     val autoHideArticleBottomBar by rememberObservedSetting(settings, "autoHideArticleBottomBar") {
         getBoolean("autoHideArticleBottomBar", false)
@@ -1401,16 +1403,16 @@ fun ArticleScreen(
         isImageExportSupported = isArticleImageExportSupported,
         onDismiss = { showExportDialog = false },
         onExportHtml = { includeAppAttribution, onComplete ->
-            viewModel.exportToHtml(environment, includeAppAttribution, onComplete)
+            viewModel.exportToHtml(environment, exporter, includeAppAttribution, onComplete)
         },
         onExportImage = { includeAppAttribution, onComplete ->
-            viewModel.exportToImage(environment, includeAppAttribution, onComplete)
+            viewModel.exportToImage(environment, exporter, includeAppAttribution, onComplete)
         },
         onExportMarkdown = {
             viewModel.exportToClipboard(clipboard)
         },
         onExportImageWithComments = { commentCount, includeAppAttribution, onComplete ->
-            viewModel.exportToImageWithComments(environment, commentCount, includeAppAttribution, onComplete)
+            viewModel.exportToImageWithComments(environment, exporter, commentCount, includeAppAttribution, onComplete)
         },
     )
 }

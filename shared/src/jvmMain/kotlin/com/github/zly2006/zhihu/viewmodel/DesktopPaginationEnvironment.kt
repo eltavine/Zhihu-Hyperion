@@ -17,40 +17,32 @@
 
 package com.github.zly2006.zhihu.viewmodel
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import io.ktor.client.HttpClient
-import kotlinx.serialization.json.JsonElement
 import org.koin.mp.KoinPlatform
 
-@Composable
-actual fun rememberPaginationEnvironment(allowGuestAccess: Boolean): PaginationEnvironment =
-    remember(allowGuestAccess) { NativePaginationEnvironment() }
-
-internal class NativePaginationEnvironment : PaginationEnvironment {
-    private val accountStore = KoinPlatform.getKoin().get<ZhihuAccountStore>()
+class DesktopPaginationEnvironment : PaginationEnvironment {
+    private val store = KoinPlatform.getKoin().get<ZhihuAccountStore>()
     private val settingsStore: SettingsStore = KoinPlatform.getKoin().get()
-    private val contentFilterDatabase: ContentFilterDatabase = KoinPlatform.getKoin().get()
+    private val contentFilterDb: ContentFilterDatabase = KoinPlatform.getKoin().get()
 
-    override fun httpClient(): HttpClient = accountStore.client.httpClient()
+    override fun httpClient(): HttpClient = store.client.httpClient()
 
-    override fun authenticatedCookies(): Map<String, String> = accountStore.session.cookies
+    override fun xsrfToken(): String = store.session.cookies["_xsrf"] ?: ""
+
+    override fun authenticatedCookies(): Map<String, String> = store.session.cookies
 
     override suspend fun <T> withAuthenticatedClient(
         block: suspend (client: HttpClient, cookies: Map<String, String>) -> T,
-    ): T = accountStore.client.withAuthenticatedClient(block)
+    ): T = store.client.withAuthenticatedClient(block)
 
-    override fun xsrfToken(): String = accountStore.session.cookies["_xsrf"].orEmpty()
-
-    override fun logDecodeFailure(tag: String?, item: JsonElement, error: Exception) {
-        Log.e(tag ?: "PaginationViewModel", "Failed to decode item: $item", error)
-    }
-
-    override suspend fun handleFetchFailure(tag: String?, error: Exception) {
+    override suspend fun handleFetchFailure(
+        tag: String?,
+        error: Exception,
+    ) {
         Log.e(tag ?: "PaginationViewModel", "Failed to fetch feeds", error)
     }
 }

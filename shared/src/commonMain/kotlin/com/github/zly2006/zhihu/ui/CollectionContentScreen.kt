@@ -68,10 +68,11 @@ import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
-import com.github.zly2006.zhihu.viewmodel.CollectionContentEnvironment
 import com.github.zly2006.zhihu.viewmodel.CollectionContentViewModel
 import com.github.zly2006.zhihu.viewmodel.CollectionHtmlExportDialogState
+import com.github.zly2006.zhihu.viewmodel.PaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.formatArticleDateTime
+import com.github.zly2006.zhihu.viewmodel.rememberContentExporter
 import com.github.zly2006.zhihu.viewmodel.rememberPaginationEnvironment
 import com.github.zly2006.zhihu.viewmodel.sharedArticleAnswerSwitchState
 
@@ -82,7 +83,8 @@ fun CollectionContentScreen(
 ) {
     val navigator = LocalNavigator.current
     val screenViewModel = viewModel { CollectionContentViewModel(collectionId) }
-    val collectionEnvironment = rememberPaginationEnvironment(allowGuestAccess = false) as CollectionContentEnvironment
+    val collectionEnvironment = rememberPaginationEnvironment(allowGuestAccess = false)
+    val exporter = rememberContentExporter()
     val listState = rememberLazyListState()
     var showActionsMenu by remember { mutableStateOf(false) }
     var showExportOptionsDialog by remember { mutableStateOf(false) }
@@ -161,6 +163,7 @@ fun CollectionContentScreen(
                     showExportOptionsDialog = false
                     screenViewModel.exportAllToHtmlZip(
                         environment = collectionEnvironment,
+                        exporter = exporter,
                         includeImages = includeImages,
                     )
                 },
@@ -189,7 +192,7 @@ fun CollectionContentScreen(
 @Composable
 internal fun CollectionContentBody(
     viewModel: CollectionContentViewModel,
-    environment: CollectionContentEnvironment,
+    environment: PaginationEnvironment,
     collectionId: String,
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState(),

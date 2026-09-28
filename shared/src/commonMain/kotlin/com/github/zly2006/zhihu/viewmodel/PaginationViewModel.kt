@@ -37,13 +37,11 @@ import com.github.zly2006.zhihu.navigation.AnswerNavigator
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isFeedQualityFilterSupported
-import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.ui.ArticleAnswerSwitchState
 import com.github.zly2006.zhihu.ui.ArticleAnswerTransitionDirection
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.signZhihuFetchRequest
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel.CachedAnswerContent
-import io.ktor.client.HttpClient
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.delete
@@ -333,50 +331,10 @@ interface LocalRecommendationEnvironment : ZhihuApiEnvironment {
     suspend fun showLocalRecommendationDatabaseError() = Unit
 }
 
-interface ArticleExportEnvironment {
-    fun hasImageExportPermission(): Boolean = false
-
-    fun requiresHtmlExportPermission(): Boolean = false
-
-    fun requestImageExportPermission() = Unit
-
-    fun loadExportAssetText(fileName: String): String = ""
-
-    fun buildArticleExportHtml(
-        content: DataHolder.Content,
-        includeAppAttribution: Boolean,
-        extraSectionsHtml: String,
-    ): String = ""
-
-    suspend fun buildOfflineArticleExportHtml(
-        content: DataHolder.Content,
-        includeAppAttribution: Boolean,
-        httpClient: HttpClient,
-    ): String = ""
-
-    fun saveHtmlToDownloads(
-        displayName: String,
-        htmlContent: String,
-    ): String = ""
-
-    fun saveImageToMediaStore(
-        displayName: String,
-        bitmap: Any,
-    ) = Unit
-
-    fun articleImageExportRenderer(): ArticleImageExportRenderer =
-        error("$platformName 暂不支持文章图片导出")
-}
-
-interface ArticleExportContentEnvironment :
-    ArticleExportEnvironment,
-    ZhihuApiEnvironment
-
 interface PaginationEnvironment :
     ZhihuApiEnvironment,
     MobileHomeFeedEnvironment,
-    LocalRecommendationEnvironment,
-    ArticleExportContentEnvironment
+    LocalRecommendationEnvironment
 
 data class FeedDisplaySettings(
     val qualityFilterMode: QualityFilterMode = QualityFilterMode.RULES,
