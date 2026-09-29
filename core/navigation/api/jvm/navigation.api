@@ -179,6 +179,15 @@ public final class com/github/zly2006/zhihu/navigation/Account$SystemAndUpdateSe
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public final class com/github/zly2006/zhihu/navigation/Account$WebDavSync : com/github/zly2006/zhihu/navigation/NavDestination {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/navigation/Account$WebDavSync;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/github/zly2006/zhihu/navigation/Article : com/github/zly2006/zhihu/navigation/NavDestination {
 	public static final field $stable I
 	public static final field Companion Lcom/github/zly2006/zhihu/navigation/Article$Companion;

@@ -149,6 +149,9 @@ data object Account : TopLevelDestination {
     ) : NavDestination
 
     @Serializable
+    data object WebDavSync : NavDestination
+
+    @Serializable
     data object SettingsSearch : NavDestination
 
     @Serializable

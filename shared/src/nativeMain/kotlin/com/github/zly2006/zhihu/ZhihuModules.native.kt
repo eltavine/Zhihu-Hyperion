@@ -24,8 +24,10 @@ import com.github.zly2006.zhihu.notification.nativeNotificationSettingsStore
 import com.github.zly2006.zhihu.platform.nativeAccountFilePath
 import com.github.zly2006.zhihu.platform.nativeAppPrivateDirectoryPath
 import com.github.zly2006.zhihu.platform.nativeSettingsStore
+import com.github.zly2006.zhihu.util.AtomicTextFile
 import com.github.zly2006.zhihu.viewmodel.AccountWebClientProvider
 import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
+import com.github.zly2006.zhihu.viewmodel.WebDavConfigFile
 import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
 import kotlinx.io.files.Path
 import org.koin.core.module.Module
@@ -39,6 +41,7 @@ fun nativeZhihuModules(): List<Module> = listOf(
     zhihuSharedModule,
     module {
         single { nativeSettingsStore("settings.properties") }
+        single { WebDavConfigFile(AtomicTextFile(Path("${nativeAppPrivateDirectoryPath()}/webdav.json"))) }
         single { nativeNotificationSettingsStore() }
         single { HomeFeedFilter(get(), get(), get()) }
         single<MobileClientProvider> { AccountWebClientProvider(get()) }

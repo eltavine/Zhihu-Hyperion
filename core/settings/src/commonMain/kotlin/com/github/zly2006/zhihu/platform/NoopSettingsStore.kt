@@ -46,4 +46,6 @@ fun noopSettingsStore(): SettingsStore = object : SettingsStore {
     override fun putFloat(key: String, value: Float) = Unit
 
     override fun remove(key: String) = Unit
+
+    override fun contains(key: String) = false
 }

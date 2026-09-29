@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-   Android 12+ backup rules. Login cookies in files/account.json never go to cloud backup;
-   device-to-device transfer keeps the default (everything), so a phone migration stays signed in.
+   Android 12+ backup rules. Login cookies in files/account.json and the WebDAV password in
+   files/webdav.json never go to cloud backup; device-to-device transfer keeps the default (everything),
+   so a phone migration stays signed in.
    See https://developer.android.com/about/versions/12/backup-restore#xml-changes
 -->
 <data-extraction-rules>
     <cloud-backup>
         <exclude domain="file" path="account.json"/>
+        <exclude domain="file" path="webdav.json"/>
     </cloud-backup>
 </data-extraction-rules>

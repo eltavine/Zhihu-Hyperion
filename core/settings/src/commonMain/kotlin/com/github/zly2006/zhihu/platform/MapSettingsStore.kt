@@ -63,4 +63,6 @@ class MapSettingsStore(
     override fun remove(key: String) {
         values.remove(key)
     }
+
+    override fun contains(key: String) = key in values
 }

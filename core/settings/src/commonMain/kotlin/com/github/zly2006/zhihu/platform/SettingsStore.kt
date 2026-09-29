@@ -47,6 +47,8 @@ interface SettingsStore {
 
     fun remove(key: String)
 
+    fun contains(key: String): Boolean
+
     fun removeByPrefix(prefix: String) = Unit
 
     fun observeKeyChanges(onChanged: (String) -> Unit): AutoCloseable = AutoCloseable { }
