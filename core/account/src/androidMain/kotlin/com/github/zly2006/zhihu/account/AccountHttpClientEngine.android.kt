@@ -18,6 +18,16 @@
 package com.github.zly2006.zhihu.account
 
 import io.ktor.client.engine.HttpClientEngineFactory
-import io.ktor.client.engine.android.Android
+import io.ktor.client.engine.okhttp.OkHttp
 
-internal actual val accountHttpClientEngineFactory: HttpClientEngineFactory<*> = Android
+/**
+ * Android uses OkHttp instead of Ktor's HttpURLConnection-based `Android` engine. Since Ktor 3.5.1
+ * (https://youtrack.jetbrains.com/issue/KTOR-9629) cancelling a response body closes its `HttpURLConnection` stream on
+ * the cancelling thread, and closing drains the stream: it throws `NetworkOnMainThreadException` when Compose cancels a
+ * disposed image on the main thread, or `IllegalStateException: Unbalanced enter/exit` while another thread is blocked
+ * reading. Either escapes as an uncaught coroutine exception and kills the app
+ * (https://github.com/eltavine/Zhihu-Hyperion/actions/runs/36450667729). OkHttp cancels the call instead.
+ * Coil's default network fetcher and the other `HttpClient()` callers pick the engine on the classpath, so no Android
+ * module may depend on `ktor-client-android`.
+ */
+internal actual val accountHttpClientEngineFactory: HttpClientEngineFactory<*> = OkHttp

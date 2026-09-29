@@ -20,7 +20,7 @@ package com.github.zly2006.zhihu.nlp
 import android.content.Context
 import android.util.Log
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.android.Android
+import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.onDownload
 import io.ktor.client.request.head
 import io.ktor.client.request.prepareGet
@@ -37,7 +37,7 @@ import java.security.MessageDigest
 
 object ModelManager {
     private const val TAG = "ModelManager"
-    private val client = HttpClient(Android)
+    private val client = HttpClient(OkHttp)
 
     data class RemoteFile(
         val url: String,

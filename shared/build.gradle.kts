@@ -89,7 +89,7 @@ kotlin {
                 implementation(libs.zxing.core)
                 implementation(libs.coil.gif)
                 implementation(libs.coil.network.ktor3)
-                implementation(libs.ktor.client.android)
+                implementation(libs.ktor.client.okhttp)
                 implementation(libs.telephoto.zoomable.image.coil3)
                 implementation(libs.jsoup)
             }
