@@ -5,29 +5,31 @@ public final class com/github/zly2006/zhihu/platform/AndroidPlatformCapabilities
 	public static final fun exportTestTagsForUiAutomation (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
 	public static final fun getPlatformBottomBarItemLimit ()Ljava/lang/Integer;
 	public static final fun isAigcVoteSupported ()Z
-	public static final fun isAndroidLiteVariantPackageName (Ljava/lang/String;)Z
 	public static final fun isAnswerSwipeSupported ()Z
 	public static final fun isArticleHtmlExportSupported ()Z
 	public static final fun isArticleImageExportSupported ()Z
-	public static final fun isBlocklistNlpSupported ()Z
 	public static final fun isFeedQualityFilterSupported ()Z
 	public static final fun isJvm ()Z
 	public static final fun isLegacyWebViewSupported ()Z
 	public static final fun isNative ()Z
 	public static final fun isPageTurnSupported ()Z
-	public static final fun isSentenceSimilaritySupported ()Z
 	public static final fun rememberAppPrivateDirectory (Landroidx/compose/runtime/Composer;I)Lkotlinx/io/files/Path;
 	public static final fun rememberExternalUrlOpener (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/ExternalUrlOpener;
 	public static final fun rememberImageGalleryOpener (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/ImageGalleryOpener;
 	public static final fun rememberImagePreviewOpener (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/ImagePreviewOpener;
 	public static final fun rememberImageSaver (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/ImageSaver;
 	public static final fun rememberImageSharer (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/ImageSharer;
-	public static final fun rememberIsLiteVariant (Landroidx/compose/runtime/Composer;I)Z
 	public static final fun rememberPlainTextClipboard (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/PlainTextClipboard;
 	public static final fun rememberSystemUrlOpener (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/SystemUrlOpener;
 	public static final fun rememberUserMessageSink (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/UserMessageSink;
 	public static final fun rememberWebViewUrlOpener (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/WebViewUrlOpener;
 	public static final fun rememberZhihuWebUrlOpener (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/ZhihuWebUrlOpener;
+}
+
+public final class com/github/zly2006/zhihu/platform/AndroidVariantCapabilitiesKt {
+	public static final fun isBlocklistNlpSupported ()Z
+	public static final fun isLiteVariant ()Z
+	public static final fun isSentenceSimilaritySupported ()Z
 }
 
 public abstract interface class com/github/zly2006/zhihu/platform/ExternalUrlOpener : com/github/zly2006/zhihu/platform/ImagePreviewOpener, com/github/zly2006/zhihu/platform/SystemUrlOpener, com/github/zly2006/zhihu/platform/ZhihuWebUrlOpener {

@@ -264,7 +264,7 @@ Compose 页面需要在进入前台时刷新数据，应优先让协程直接跟
 
 ## 项目结构
 
-- **依赖与构建逻辑**：所有版本集中在 `gradle/libs.versions.toml`；模块通过 `build-logic` 的约定插件（`zhihu.kmp.library`、`zhihu.kmp.compose`、`zhihu.android.application`、`zhihu.macos.app`、`zhihu.room`、`zhihu.aboutlibraries`、`zhihu.module.graph`、`zhihu.ktlint`）获得统一配置，不要在模块脚本里重复写 SDK、JVM target 或版本号。
+- **依赖与构建逻辑**：所有版本集中在 `gradle/libs.versions.toml`；模块通过 `build-logic` 的约定插件（`zhihu.kmp.library`、`zhihu.kmp.compose`、`zhihu.kmp.android.variants`、`zhihu.android.application`、`zhihu.macos.app`、`zhihu.room`、`zhihu.aboutlibraries`、`zhihu.module.graph`、`zhihu.ktlint`）获得统一配置，不要在模块脚本里重复写 SDK、JVM target 或版本号。
 - **core 层**（只能依赖更底层的 core 模块，由 `zhihu.module.graph` 在 CI 中强制）：
     - `:core:common`：日志（Kermit）与基础格式化工具
     - `:core:model`：知乎数据模型与 `ZhihuJson`
@@ -289,6 +289,7 @@ Compose 页面需要在进入前台时刷新数据，应优先让协程直接跟
 ### Build Variants
 - **lite**: 轻量版 (~4MB)，无 ML 功能，包名 `com.github.zly2006.zhplus.lite`
 - **full**: 完整版，含 HanLP NLP，包名 `com.github.zly2006.zhplus`
+- 两版的 KMP `actual` 按任务名选择，Full 和 Lite 必须分两次 Gradle 调用构建，见 `docs/kmp-android-variants.md`
 
 ## 关键约定
 

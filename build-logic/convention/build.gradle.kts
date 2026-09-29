@@ -30,6 +30,10 @@ gradlePlugin {
             id = "zhihu.kmp.compose"
             implementationClass = "KmpComposeConventionPlugin"
         }
+        register("kmpAndroidVariants") {
+            id = "zhihu.kmp.android.variants"
+            implementationClass = "KmpAndroidVariantsConventionPlugin"
+        }
         register("androidApplication") {
             id = "zhihu.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"

@@ -132,7 +132,6 @@ import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageDuration
 import com.github.zly2006.zhihu.platform.rememberAppPrivateDirectory
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
-import com.github.zly2006.zhihu.platform.rememberIsLiteVariant
 import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.platform.rememberWebViewUrlOpener
@@ -294,7 +293,6 @@ fun HomeScreen(
     }
     var onlineNotifications by homeState.onlineNotifications
     val isDebuggable = rememberHomeIsDebuggable()
-    val isLiteVariant = rememberIsLiteVariant()
     val viewModel: BaseFeedViewModel = when (currentRecommendationMode) {
         RecommendationMode.WEB -> viewModel { HomeFeedViewModel(settings, homeFeedFilter) }
         RecommendationMode.ANDROID -> viewModel { AndroidHomeFeedViewModel(settings, homeFeedFilter, mobileClient) }
@@ -893,7 +891,7 @@ fun HomeScreen(
                             else -> null
                         },
                         menuItems = { dismissMenu ->
-                            if (!isLiteVariant && feedKeywordExtractionAvailable) {
+                            if (feedKeywordExtractionAvailable) {
                                 DropdownMenuItem(
                                     text = { Text("按关键词屏蔽") },
                                     onClick = {

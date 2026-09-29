@@ -14,13 +14,6 @@ public final class com/github/zly2006/zhihu/markdown/ComposableSingletons$Segmen
 	public final fun getLambda$-1738073678$Zhihu_core_markdown ()Lkotlin/jvm/functions/Function2;
 }
 
-public final class com/github/zly2006/zhihu/markdown/ComposableSingletons$TiqianMarkdownRendererKt {
-	public static final field INSTANCE Lcom/github/zly2006/zhihu/markdown/ComposableSingletons$TiqianMarkdownRendererKt;
-	public fun <init> ()V
-	public final fun getLambda$-1161489014$Zhihu_core_markdown ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-661435199$Zhihu_core_markdown ()Lkotlin/jvm/functions/Function2;
-}
-
 public final class com/github/zly2006/zhihu/markdown/DownloadedFonts {
 	public static final field $stable I
 	public fun <init> (Lcom/hrm/latex/renderer/model/LatexFontFamilies;Lcom/hrm/latex/renderer/font/MathFont;)V
@@ -97,7 +90,7 @@ public final class com/github/zly2006/zhihu/markdown/SegmentHighlightKt {
 	public static final fun updateSegmentMetaAfterUnlike (Lcom/github/zly2006/zhihu/util/SegmentHighlightSpan;)Lcom/github/zly2006/zhihu/data/SegmentInfoMeta;
 }
 
-public final class com/github/zly2006/zhihu/markdown/TiqianMarkdownRendererKt {
+public final class com/github/zly2006/zhihu/markdown/TiqianMarkdownRenderer_androidLiteKt {
 	public static final fun TiqianBrandTitle (Ljava/lang/String;Ljava/lang/String;Landroidx/compose/runtime/Composer;I)V
 	public static final fun isTiqianMarkdownRendererAvailable ()Z
 }

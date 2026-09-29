@@ -17,6 +17,22 @@ internal fun VersionCatalog.version(alias: String): String = findVersion(alias).
 
 internal fun VersionCatalog.library(alias: String): Provider<MinimalExternalModuleDependency> = findLibrary(alias).get()
 
+private val androidVariantTaskPattern = Regex("^(?:assemble|bundle|install|test|connected|compile)(Full|Lite)")
+
+/**
+ * App flavor (`Full` or `Lite`) whose Android `actual`s this invocation compiles. The Android KMP library plugin has a
+ * single Android compilation, so the flavor is read from the requested task names; invocations that name no flavor,
+ * such as `jvmUnitTests`, `checkKotlinAbi` or an IDE sync, use Lite, the app's default flavor.
+ */
+internal val Project.selectedAndroidVariant: String
+    get() {
+        val requested = gradle.startParameter.taskNames.mapNotNullTo(mutableSetOf()) { taskName ->
+            androidVariantTaskPattern.find(taskName.substringAfterLast(':'))?.groupValues?.get(1)
+        }
+        require(requested.size <= 1) { "Full and Lite Android tasks require separate Gradle invocations" }
+        return requested.singleOrNull() ?: "Lite"
+    }
+
 /** `:core:model` becomes `com.github.zly2006.zhihu.core.model`. */
 internal fun Project.defaultAndroidNamespace(): String =
     "com.github.zly2006.zhihu." + path.removePrefix(":").split(':').joinToString(".") { it.replace('-', '.') }

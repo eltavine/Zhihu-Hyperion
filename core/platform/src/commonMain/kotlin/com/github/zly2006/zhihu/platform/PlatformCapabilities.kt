@@ -35,6 +35,8 @@ expect val isFeedQualityFilterSupported: Boolean
 /** 旧版 WebView 正文渲染；只有 Android 提供，其他平台始终使用 Compose Markdown。 */
 expect val isLegacyWebViewSupported: Boolean
 
+expect val isLiteVariant: Boolean
+
 expect val isBlocklistNlpSupported: Boolean
 
 expect val isSentenceSimilaritySupported: Boolean
@@ -154,9 +156,6 @@ expect fun PlatformPredictiveBackHandler(
     onCancel: () -> Unit,
     onBack: () -> Unit,
 )
-
-@Composable
-expect fun rememberIsLiteVariant(): Boolean
 
 /** macOS 关闭主窗口时是否退出应用的偏好键，设置页与窗口宿主共用。 */
 const val MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY = "macosQuitOnWindowClose"

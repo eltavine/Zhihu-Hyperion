@@ -3,6 +3,7 @@ import com.github.zly2006.zhihu.buildlogic.javafx
 plugins {
     id("zhihu.kmp.library")
     id("zhihu.kmp.compose")
+    id("zhihu.kmp.android.variants")
 }
 
 kotlin {

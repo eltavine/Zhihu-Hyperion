@@ -1,6 +1,7 @@
 plugins {
     id("zhihu.kmp.library")
     id("zhihu.kmp.compose")
+    id("zhihu.kmp.android.variants")
 }
 
 configurations.configureEach {
@@ -34,7 +35,7 @@ kotlin {
             implementation(libs.ksoup)
             implementation(libs.ktor.client.core)
         }
-        // The Tiqian renderer only publishes Android and JVM artifacts.
+        // The Tiqian renderer only publishes Android and JVM artifacts; Android Lite leaves it out to keep the APK small.
         val tiqianMarkdownMain =
             create("tiqianMarkdownMain") {
                 dependsOn(commonMain.get())
@@ -43,7 +44,7 @@ kotlin {
                     implementation(libs.tiqian.math.font.stix)
                 }
             }
-        androidMain {
+        named("androidFull") {
             dependsOn(tiqianMarkdownMain)
         }
         jvmMain {

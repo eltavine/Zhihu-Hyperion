@@ -1,6 +1,7 @@
 plugins {
     id("zhihu.kmp.library")
     id("zhihu.kmp.compose")
+    id("zhihu.kmp.android.variants")
 }
 
 kotlin {

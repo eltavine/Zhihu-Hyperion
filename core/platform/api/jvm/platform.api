@@ -40,6 +40,7 @@ public final class com/github/zly2006/zhihu/platform/JvmPlatformCapabilitiesKt {
 	public static final fun isFeedQualityFilterSupported ()Z
 	public static final fun isJvm ()Z
 	public static final fun isLegacyWebViewSupported ()Z
+	public static final fun isLiteVariant ()Z
 	public static final fun isNative ()Z
 	public static final fun isPageTurnSupported ()Z
 	public static final fun isSentenceSimilaritySupported ()Z
@@ -49,7 +50,6 @@ public final class com/github/zly2006/zhihu/platform/JvmPlatformCapabilitiesKt {
 	public static final fun rememberImagePreviewOpener (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/ImagePreviewOpener;
 	public static final fun rememberImageSaver (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/ImageSaver;
 	public static final fun rememberImageSharer (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/ImageSharer;
-	public static final fun rememberIsLiteVariant (Landroidx/compose/runtime/Composer;I)Z
 	public static final fun rememberPlainTextClipboard (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/PlainTextClipboard;
 	public static final fun rememberSystemUrlOpener (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/SystemUrlOpener;
 	public static final fun rememberUserMessageSink (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/UserMessageSink;
