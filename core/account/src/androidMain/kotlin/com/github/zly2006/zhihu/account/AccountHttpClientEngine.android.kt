@@ -17,8 +17,9 @@
 
 package com.github.zly2006.zhihu.account
 
-import io.ktor.client.engine.HttpClientEngineFactory
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.okhttp.OkHttp
+import java.util.concurrent.TimeUnit
 
 /**
  * Android uses OkHttp instead of Ktor's HttpURLConnection-based `Android` engine. Since Ktor 3.5.1
@@ -30,4 +31,11 @@ import io.ktor.client.engine.okhttp.OkHttp
  * Coil's default network fetcher and the other `HttpClient()` callers pick the engine on the classpath, so no Android
  * module may depend on `ktor-client-android`.
  */
-internal actual val accountHttpClientEngineFactory: HttpClientEngineFactory<*> = OkHttp
+internal actual fun createAccountHttpClientEngine(): HttpClientEngine = OkHttp.create {
+    config {
+        // The Android engine's 100 s defaults; OkHttp's 10 s could cut off the AI summary event stream while the model
+        // has not produced its first token.
+        connectTimeout(100, TimeUnit.SECONDS)
+        readTimeout(100, TimeUnit.SECONDS)
+    }
+}
