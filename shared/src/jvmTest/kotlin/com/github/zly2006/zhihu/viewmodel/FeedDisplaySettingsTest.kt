@@ -17,6 +17,7 @@
 
 package com.github.zly2006.zhihu.viewmodel
 
+import com.github.zly2006.zhihu.data.ANSWER_VOTEUP_THRESHOLD_PREFERENCE_KEY
 import com.github.zly2006.zhihu.data.QUALITY_FILTER_MODE_PREFERENCE_KEY
 import com.github.zly2006.zhihu.data.QualityFilterMode
 import com.github.zly2006.zhihu.platform.MapSettingsStore
@@ -26,15 +27,17 @@ import kotlin.test.assertTrue
 
 class FeedDisplaySettingsTest {
     @Test
-    fun desktopIgnoresSavedQualityFilterModeButKeepsReverseBlock() {
+    fun desktopAppliesSavedQualityFilterSettings() {
         val settings = MapSettingsStore().apply {
             putString(QUALITY_FILTER_MODE_PREFERENCE_KEY, QualityFilterMode.HIDE.name)
+            putInt(ANSWER_VOTEUP_THRESHOLD_PREFERENCE_KEY, 42)
             putBoolean("reverseBlock", true)
         }
 
         val display = settings.toFeedDisplaySettings()
 
-        assertEquals(QualityFilterMode.OFF, display.qualityFilterMode)
+        assertEquals(QualityFilterMode.HIDE, display.qualityFilterMode)
+        assertEquals(42, display.qualityFilter.answerVoteupCount)
         assertTrue(display.reverseBlock)
     }
 }

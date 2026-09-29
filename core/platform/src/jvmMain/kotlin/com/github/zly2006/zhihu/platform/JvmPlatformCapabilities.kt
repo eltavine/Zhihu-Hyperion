@@ -178,9 +178,9 @@ actual val isJvm: Boolean = true
 
 actual val isNative: Boolean = false
 
-actual val isAigcVoteSupported: Boolean = false
+actual val isAigcVoteSupported: Boolean = true
 
-actual val isFeedQualityFilterSupported: Boolean = false
+actual val isFeedQualityFilterSupported: Boolean = true
 
 actual val isLegacyWebViewSupported: Boolean = false
 

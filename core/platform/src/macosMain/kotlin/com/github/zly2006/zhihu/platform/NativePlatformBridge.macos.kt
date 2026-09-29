@@ -37,9 +37,9 @@ actual val nativeIsDesktop: Boolean = true
 fun isMacosQuitOnWindowCloseEnabled(): Boolean =
     KoinPlatform.getKoin().get<SettingsStore>().getBoolean(MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY, false)
 
-actual val isAigcVoteSupported: Boolean = false
+actual val isAigcVoteSupported: Boolean = true
 
-actual val isFeedQualityFilterSupported: Boolean = false
+actual val isFeedQualityFilterSupported: Boolean = true
 
 actual val isLegacyWebViewSupported: Boolean = false
 
