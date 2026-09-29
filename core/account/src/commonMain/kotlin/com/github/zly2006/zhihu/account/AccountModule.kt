@@ -29,7 +29,7 @@ import org.koin.dsl.onClose
  * 测试只需覆盖 [HttpClientEngine] 与 [ZhihuAccountStore] 两个绑定。
  */
 fun accountModule(accountFile: Path) = module {
-    single<HttpClientEngine> { accountHttpClientEngineFactory.create() } onClose { it?.close() }
+    single<HttpClientEngine> { createAccountHttpClientEngine() } onClose { it?.close() }
     single { ZhihuAccountRepository(AtomicTextFile(accountFile)) }
     single { ZhihuAccountStore(get(), get()) } onClose { it?.close() }
     single<ZhihuApiEnvironment> { ZhihuAccountApiEnvironment(get()) }

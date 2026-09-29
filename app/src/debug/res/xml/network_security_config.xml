@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Debug builds only: instrumented tests serve HTTP fixtures from a loopback server, which the default
+   network security policy would reject as cleartext. Every other host keeps the platform defaults.
+-->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">127.0.0.1</domain>
+    </domain-config>
+</network-security-config>
