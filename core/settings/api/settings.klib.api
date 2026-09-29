@@ -7,6 +7,7 @@
 
 // Library unique name: <Zhihu.core:settings>
 abstract interface com.github.zly2006.zhihu.platform/SettingsStore { // com.github.zly2006.zhihu.platform/SettingsStore|null[0]
+    abstract fun contains(kotlin/String): kotlin/Boolean // com.github.zly2006.zhihu.platform/SettingsStore.contains|contains(kotlin.String){}[0]
     abstract fun getBoolean(kotlin/String, kotlin/Boolean): kotlin/Boolean // com.github.zly2006.zhihu.platform/SettingsStore.getBoolean|getBoolean(kotlin.String;kotlin.Boolean){}[0]
     abstract fun getFloat(kotlin/String, kotlin/Float): kotlin/Float // com.github.zly2006.zhihu.platform/SettingsStore.getFloat|getFloat(kotlin.String;kotlin.Float){}[0]
     abstract fun getInt(kotlin/String, kotlin/Int): kotlin/Int // com.github.zly2006.zhihu.platform/SettingsStore.getInt|getInt(kotlin.String;kotlin.Int){}[0]
@@ -28,6 +29,7 @@ abstract interface com.github.zly2006.zhihu.platform/SettingsStore { // com.gith
 final class com.github.zly2006.zhihu.platform/MapSettingsStore : com.github.zly2006.zhihu.platform/SettingsStore { // com.github.zly2006.zhihu.platform/MapSettingsStore|null[0]
     constructor <init>(kotlin.collections/MutableMap<kotlin/String, kotlin/Any> = ...) // com.github.zly2006.zhihu.platform/MapSettingsStore.<init>|<init>(kotlin.collections.MutableMap<kotlin.String,kotlin.Any>){}[0]
 
+    final fun contains(kotlin/String): kotlin/Boolean // com.github.zly2006.zhihu.platform/MapSettingsStore.contains|contains(kotlin.String){}[0]
     final fun getBoolean(kotlin/String, kotlin/Boolean): kotlin/Boolean // com.github.zly2006.zhihu.platform/MapSettingsStore.getBoolean|getBoolean(kotlin.String;kotlin.Boolean){}[0]
     final fun getFloat(kotlin/String, kotlin/Float): kotlin/Float // com.github.zly2006.zhihu.platform/MapSettingsStore.getFloat|getFloat(kotlin.String;kotlin.Float){}[0]
     final fun getInt(kotlin/String, kotlin/Int): kotlin/Int // com.github.zly2006.zhihu.platform/MapSettingsStore.getInt|getInt(kotlin.String;kotlin.Int){}[0]

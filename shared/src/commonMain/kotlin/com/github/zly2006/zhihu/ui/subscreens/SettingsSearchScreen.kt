@@ -267,6 +267,16 @@ private val settingsSearchEntries = buildList {
     add(systemEntry("system.allowTelemetry", "允许发送遥测统计数据", "控制匿名使用统计。", "allowTelemetry", listOf("统计", "隐私", "数据收集", "使用数据")))
     add(systemEntry("system.aigcMarking", "启用 AIGC 标记", "开启后可查看其他用户对内容是否疑似 AIGC 的标记。", AIGC_MARKING_ENABLED_PREFERENCE_KEY, listOf("AI", "AIGC")))
     add(systemEntry("system.reminder", "防沉迷提醒", "设置连续使用提醒的间隔。", CONTINUOUS_USAGE_REMINDER_INTERVAL_MINUTES_KEY, listOf("连续使用", "休息提醒")))
+    add(
+        SettingsSearchEntry(
+            id = "webdav.sync",
+            title = "WebDAV 同步",
+            section = "WebDAV 同步",
+            description = "把屏蔽列表和设置备份到自己的 WebDAV 服务，或从中恢复。",
+            destination = Account.WebDavSync,
+            keywords = listOf("备份", "恢复", "同步", "坚果云", "Nextcloud", "导入", "导出"),
+        ),
+    )
     if (platformName == "macOS") {
         add(
             systemEntry(

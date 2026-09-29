@@ -71,6 +71,8 @@ fun macosSettingsStore(filePath: String): SettingsStore {
         }
 
         override fun remove(key: String) = propertiesFile.remove(key)
+
+        override fun contains(key: String) = propertiesFile[key] != null
     }
 }
 

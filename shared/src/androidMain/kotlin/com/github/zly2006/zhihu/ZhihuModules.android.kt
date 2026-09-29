@@ -26,8 +26,10 @@ import com.github.zly2006.zhihu.notification.AndroidNotificationSettingsStore
 import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.androidSettingsStore
 import com.github.zly2006.zhihu.platform.androidUserMessageSink
+import com.github.zly2006.zhihu.util.AtomicTextFile
 import com.github.zly2006.zhihu.viewmodel.AndroidMobileClientProvider
 import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
+import com.github.zly2006.zhihu.viewmodel.WebDavConfigFile
 import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
 import com.github.zly2006.zhihu.viewmodel.filter.KeywordSemanticMatcher
 import kotlinx.io.files.Path
@@ -44,6 +46,7 @@ fun androidZhihuModules(context: Context): List<Module> = listOf(
     module {
         single { AndroidArticleNavigationHandoff() }
         single { androidSettingsStore(context) }
+        single { WebDavConfigFile(AtomicTextFile(Path(File(context.filesDir, "webdav.json").path))) }
         single<NotificationSettingsStore> { AndroidNotificationSettingsStore(context.applicationContext) }
         single<MobileClientProvider> { AndroidMobileClientProvider(get(), get(), get()) }
         single {

@@ -12,6 +12,7 @@ public final class com/github/zly2006/zhihu/platform/MapSettingsStore : com/gith
 	public fun <init> ()V
 	public fun <init> (Ljava/util/Map;)V
 	public synthetic fun <init> (Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun contains (Ljava/lang/String;)Z
 	public fun getBoolean (Ljava/lang/String;Z)Z
 	public fun getFloat (Ljava/lang/String;F)F
 	public fun getInt (Ljava/lang/String;I)I
@@ -35,6 +36,7 @@ public final class com/github/zly2006/zhihu/platform/NoopSettingsStoreKt {
 }
 
 public abstract interface class com/github/zly2006/zhihu/platform/SettingsStore {
+	public abstract fun contains (Ljava/lang/String;)Z
 	public abstract fun getBoolean (Ljava/lang/String;Z)Z
 	public abstract fun getFloat (Ljava/lang/String;F)F
 	public abstract fun getInt (Ljava/lang/String;I)I

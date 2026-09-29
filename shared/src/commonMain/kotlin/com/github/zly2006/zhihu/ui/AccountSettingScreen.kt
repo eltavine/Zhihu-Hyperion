@@ -44,6 +44,7 @@ import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.ArrowOutward
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.Groups
@@ -127,6 +128,7 @@ const val ACCOUNT_SETTINGS_READING_TAG = "accountSettings.reading"
 const val ACCOUNT_SETTINGS_RECOMMEND_TAG = "accountSettings.recommend"
 const val ACCOUNT_SETTINGS_SEARCH_TAG = "accountSettings.search"
 const val ACCOUNT_SETTINGS_SYSTEM_TAG = "accountSettings.system"
+const val ACCOUNT_SETTINGS_WEBDAV_TAG = "accountSettings.webdav"
 const val ACCOUNT_SETTINGS_DEVELOPER_TAG = "accountSettings.developer"
 const val ACCOUNT_SETTINGS_LICENSES_TAG = "accountSettings.licenses"
 const val ACCOUNT_SETTINGS_IDENTITY_MANAGEMENT_TAG = "accountSettings.identityManagement"
@@ -519,6 +521,14 @@ fun AccountSettingScreen(
                     icon = { Icon(Icons.Default.Settings, null) },
                     modifier = Modifier.testTag(ACCOUNT_SETTINGS_SYSTEM_TAG),
                     onClick = { navigator.onNavigate(Account.SystemAndUpdateSettings()) },
+                )
+
+                SettingItem(
+                    title = { Text("WebDAV 同步") },
+                    description = { Text("备份和恢复屏蔽列表与设置") },
+                    icon = { Icon(Icons.Default.CloudSync, null) },
+                    modifier = Modifier.testTag(ACCOUNT_SETTINGS_WEBDAV_TAG),
+                    onClick = { navigator.onNavigate(Account.WebDavSync) },
                 )
 
                 AnimatedVisibility(isDeveloper) {

@@ -162,6 +162,7 @@ import com.github.zly2006.zhihu.ui.subscreens.OpenSourceLicensesScreen
 import com.github.zly2006.zhihu.ui.subscreens.ReadingSettingsScreen
 import com.github.zly2006.zhihu.ui.subscreens.SettingsSearchScreen
 import com.github.zly2006.zhihu.ui.subscreens.SystemAndUpdateSettingsScreen
+import com.github.zly2006.zhihu.ui.subscreens.WebDavSyncScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -1084,6 +1085,7 @@ private fun NavDestination.isAccountDetailDestination(): Boolean = when (this) {
     Account.RecommendSettings.BlockedFeedHistory,
     Account.IdentityManagement,
     is Account.SystemAndUpdateSettings,
+    Account.WebDavSync,
     Account.SettingsSearch,
     Account.OpenSourceLicenses,
     Account.DeveloperSettings,
@@ -1141,6 +1143,9 @@ private fun NavGraphBuilder.accountSettings(
     }
     composable<Account.ReadingSettings> {
         ReadingSettingsScreen()
+    }
+    composable<Account.WebDavSync> {
+        WebDavSyncScreen()
     }
     composable<Account.SettingsSearch> {
         SettingsSearchScreen()

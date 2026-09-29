@@ -24,8 +24,10 @@ import com.github.zly2006.zhihu.desktop.desktopZhihuDataFile
 import com.github.zly2006.zhihu.desktop.desktopZhihuLegacyAccountFile
 import com.github.zly2006.zhihu.notification.desktopNotificationSettingsStore
 import com.github.zly2006.zhihu.platform.desktopSettingsStore
+import com.github.zly2006.zhihu.util.AtomicTextFile
 import com.github.zly2006.zhihu.viewmodel.AccountWebClientProvider
 import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
+import com.github.zly2006.zhihu.viewmodel.WebDavConfigFile
 import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
 import com.github.zly2006.zhihu.viewmodel.filter.desktopContentFilterDatabaseFile
 import kotlinx.io.files.Path
@@ -40,6 +42,7 @@ fun desktopZhihuModules(): List<Module> = listOf(
     zhihuSharedModule,
     module {
         single { desktopSettingsStore(desktopZhihuDataFile("settings.properties")) }
+        single { WebDavConfigFile(AtomicTextFile(Path(desktopZhihuDataFile("webdav.json").path))) }
         single { desktopNotificationSettingsStore() }
         single { HomeFeedFilter(get(), get(), get()) }
         single<MobileClientProvider> { AccountWebClientProvider(get()) }

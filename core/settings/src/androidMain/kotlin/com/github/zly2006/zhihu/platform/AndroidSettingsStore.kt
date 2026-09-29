@@ -54,6 +54,8 @@ fun androidSettingsStore(context: Context): SettingsStore {
 
         override fun remove(key: String) = preferences.edit { remove(key) }
 
+        override fun contains(key: String) = preferences.contains(key)
+
         override fun removeByPrefix(prefix: String) = preferences.edit {
             preferences.all.keys
                 .filter { it.startsWith(prefix) }
