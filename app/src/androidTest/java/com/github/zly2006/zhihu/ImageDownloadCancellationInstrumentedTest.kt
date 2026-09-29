@@ -21,21 +21,24 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import coil3.ImageLoader
+import coil3.request.ErrorResult
 import coil3.request.ImageRequest
+import coil3.request.ImageResult
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.net.InetAddress
 import java.net.ServerSocket
+import java.net.SocketException
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.thread
@@ -46,20 +49,26 @@ class ImageDownloadCancellationInstrumentedTest {
      * Regression: https://github.com/eltavine/Zhihu-Hyperion/actions/runs/36450667729
      * Fixed by: https://github.com/eltavine/Zhihu-Hyperion/pull/2
      *
-     * 图片下载在响应体读取阻塞时被取消（滚动离开或页面销毁），取消过程不能产生未捕获的协程异常：
-     * 生产上这类异常会交给线程默认处理器直接结束进程。这里经由 Coil 默认网络抓取器请求一个发完首块数据
-     * 就停住的本地服务器，读取线程停在 socket 读上后再取消。
+     * 列表滑走或页面销毁时，Compose 会在主线程取消仍在下载的 AsyncImage 请求；取消过程不能产生未捕获的协程异常，
+     * 否则生产上会交给线程默认处理器直接结束进程。这里经由 Coil 默认网络抓取器请求一个发完首块数据就停住的本地服务器，
+     * 等响应体读取停在 socket 上后，在主线程取消下载。
      */
     @Test
     fun cancellingBlockedImageDownloadRaisesNoUncaughtException() = runBlocking {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        ServerSocket(0, 1, InetAddress.getLoopbackAddress()).use { server ->
+        // Android's getLoopbackAddress() is ::1, which a request to 127.0.0.1 cannot reach.
+        ServerSocket(0, 1, InetAddress.getByName("127.0.0.1")).use { server ->
             val releaseServer = CountDownLatch(1)
-            thread(name = "stalled-image-server") {
-                server.accept().use { socket ->
-                    val request = socket.getInputStream().bufferedReader()
+            thread(name = "stalled-image-server", isDaemon = true) {
+                val socket = try {
+                    server.accept()
+                } catch (_: SocketException) {
+                    return@thread
+                }
+                socket.use {
+                    val request = it.getInputStream().bufferedReader()
                     while (!request.readLine().isNullOrEmpty()) Unit
-                    socket.getOutputStream().run {
+                    it.getOutputStream().run {
                         write("HTTP/1.1 200 OK\r\nContent-Type: image/jpeg\r\nContent-Length: 1048576\r\n\r\n".toByteArray())
                         write(ByteArray(1024))
                         flush()
@@ -73,21 +82,24 @@ class ImageDownloadCancellationInstrumentedTest {
                 .memoryCache(null)
                 .diskCache(null)
                 .build()
+            var result: ImageResult? = null
             val download = CoroutineScope(SupervisorJob() + Dispatchers.IO + CoroutineExceptionHandler { _, e -> uncaught.set(e) }).launch {
-                imageLoader.execute(ImageRequest.Builder(context).data("http://127.0.0.1:${server.localPort}/stalled.jpg").build())
+                result = imageLoader.execute(ImageRequest.Builder(context).data("http://127.0.0.1:${server.localPort}/stalled.jpg").build())
             }
-            // Cancelling before a reader is parked in the socket read would only close an idle stream, which never raced.
+            // Cancelling before the body read starts would leave no response stream to close.
             withTimeout(10_000) {
                 while (
                     Thread.getAllStackTraces().values.none { stack ->
-                        stack.any { it.className == "java.net.SocketInputStream" } &&
+                        stack.any { it.className.endsWith("SocketInputStream") } &&
                             stack.any { it.className.startsWith("com.android.okhttp.") || it.className.startsWith("okhttp3.") }
                     }
                 ) {
+                    check(download.isActive) { "The download ended before its body read blocked: ${(result as? ErrorResult)?.throwable}" }
                     delay(20)
                 }
             }
-            download.cancelAndJoin()
+            withContext(Dispatchers.Main) { download.cancel() }
+            download.join()
             releaseServer.countDown()
             imageLoader.shutdown()
 
