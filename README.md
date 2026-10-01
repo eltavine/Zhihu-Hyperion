@@ -130,7 +130,6 @@ Zhihu-Hyperion 是一个第三方知乎客户端。它把广告、推广软文�
 - 账号凭据、浏览历史、屏蔽规则和本地推荐数据都只保存在本机；WebDAV 备份只发往你自己配置的服务器。
 - 除知乎外，应用只会在以下场景访问其他服务：
   - 检查更新：GitHub。
-  - 首页公告：上游 Zhihu++ 的公告接口（redenmc.com）。
   - AIGC 标记与崩溃日志上报：默认关闭，开启后连接 AIGC 标记服务（aigc-vote.ai.fintechedu.cn）。
   - 按需下载：数学公式字体（npmmirror 与 CTAN 镜像），以及 Full 版的语义模型（Hugging Face）。
 

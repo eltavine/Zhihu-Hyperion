@@ -17,6 +17,5 @@
 
 package com.github.zly2006.zhihu.viewmodel.feed
 
-// 首页偏好：首页读取；内容过滤设置页写入启动刷新开关，开发者设置页清除置顶公告已读记录。
+// 首页偏好：首页读取；内容过滤设置页写入启动刷新开关。
 const val AUTO_REFRESH_HOME_ON_STARTUP_PREFERENCE_KEY = "autoRefreshHomeOnStartup"
-const val HOME_PIN_ANNOUNCEMENT_READ_KEY_PREFIX = "readHomePinAnnouncement_"

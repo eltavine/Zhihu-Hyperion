@@ -18,7 +18,6 @@
 package com.github.zly2006.zhihu.test
 
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
-import com.github.zly2006.zhihu.notification.ZHIHU_PLUS_PLUS_HOME_NOTIFICATIONS_URL
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope
@@ -162,11 +161,6 @@ object ZhihuMockApi {
                   ]
                 }
                 """.trimIndent(),
-        )
-        mockJsonPrefix(
-            method = HttpMethod.Get,
-            urlPrefix = "$ZHIHU_PLUS_PLUS_HOME_NOTIFICATIONS_URL?version=",
-            body = """{"notifications":[]}""",
         )
         mockJson(
             method = HttpMethod.Get,
