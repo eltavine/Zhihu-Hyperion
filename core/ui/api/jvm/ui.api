@@ -57,6 +57,10 @@ public final class com/github/zly2006/zhihu/ui/components/AnswerVerticalOverscro
 	public static final fun AnswerVerticalOverscroll (Lcom/github/zly2006/zhihu/ui/components/AnswerPreview;Lcom/github/zly2006/zhihu/ui/components/AnswerPreview;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/foundation/ScrollState;FZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;III)V
 }
 
+public final class com/github/zly2006/zhihu/ui/components/AppLoadingIndicatorKt {
+	public static final fun AppLoadingIndicator (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class com/github/zly2006/zhihu/ui/components/AuthorBadgeKt {
 	public static final fun AuthorBadge (Lcom/github/zly2006/zhihu/data/OfficialBadge;Landroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;II)V
 }
@@ -89,6 +93,20 @@ public final class com/github/zly2006/zhihu/ui/components/BlockedFeedAuthor {
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/github/zly2006/zhihu/ui/components/ChoiceButtonGroupKt {
+	public static final fun ChoiceButtonGroup (Ljava/util/List;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/github/zly2006/zhihu/ui/components/ChoiceOption {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/Object;Ljava/lang/String;Lcom/github/zly2006/zhihu/icons/AppIcon;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/Object;Ljava/lang/String;Lcom/github/zly2006/zhihu/icons/AppIcon;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getIcon ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getTestTag ()Ljava/lang/String;
+	public final fun getValue ()Ljava/lang/Object;
+}
+
 public final class com/github/zly2006/zhihu/ui/components/CollectionDialogComponentKt {
 	public static final fun CollectionDialogComponent (ZLkotlin/jvm/functions/Function0;Ljava/util/List;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;I)V
 }
@@ -100,6 +118,7 @@ public final class com/github/zly2006/zhihu/ui/components/ColorPickerDialogKt {
 public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$BlockByKeywordsDialogContentKt {
 	public static final field INSTANCE Lcom/github/zly2006/zhihu/ui/components/ComposableSingletons$BlockByKeywordsDialogContentKt;
 	public fun <init> ()V
+	public final fun getLambda$-1218248675$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$-146125962$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda$-339103645$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda$1107857112$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function3;
@@ -110,6 +129,7 @@ public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$B
 public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$BlockUserDialogKt {
 	public static final field INSTANCE Lcom/github/zly2006/zhihu/ui/components/ComposableSingletons$BlockUserDialogKt;
 	public fun <init> ()V
+	public final fun getLambda$1624113216$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$2120176196$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda$500535923$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function3;
 }
@@ -124,6 +144,7 @@ public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$C
 	public static final field INSTANCE Lcom/github/zly2006/zhihu/ui/components/ComposableSingletons$ColorPickerDialogKt;
 	public fun <init> ()V
 	public final fun getLambda$-1247129981$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1248113281$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$1153503429$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function3;
 }
 
@@ -165,7 +186,9 @@ public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$F
 	public fun <init> ()V
 	public final fun getLambda$-1487038049$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function4;
 	public final fun getLambda$-187149017$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-779291569$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$-816286772$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1349799402$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$1638330147$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
 }
 
@@ -375,9 +398,9 @@ public final class com/github/zly2006/zhihu/ui/components/QuestionAuthorActivity
 }
 
 public final class com/github/zly2006/zhihu/ui/components/SettingItemKt {
-	public static final fun SettingItem (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/graphics/Shape;Landroidx/compose/material3/CardColors;ZLjava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Landroidx/compose/foundation/relocation/BringIntoViewRequester;Landroidx/compose/runtime/Composer;III)V
+	public static final fun SettingItem (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;ZLjava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Landroidx/compose/foundation/relocation/BringIntoViewRequester;Landroidx/compose/runtime/Composer;III)V
 	public static final fun SettingItemGroup (Landroidx/compose/ui/Modifier;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Landroidx/compose/foundation/relocation/BringIntoViewRequester;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
-	public static final fun SettingItemOverall (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;ZLkotlin/jvm/functions/Function1;ZLjava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Landroidx/compose/foundation/relocation/BringIntoViewRequester;Landroidx/compose/runtime/Composer;III)V
+	public static final fun SettingItemOverall (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;ZLkotlin/jvm/functions/Function1;ZLjava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Landroidx/compose/foundation/relocation/BringIntoViewRequester;Landroidx/compose/runtime/Composer;III)V
 	public static final fun SettingItemWithSwitch (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;ZLkotlin/jvm/functions/Function1;ZLjava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Landroidx/compose/foundation/relocation/BringIntoViewRequester;Landroidx/compose/runtime/Composer;III)V
 	public static final fun SwitchWithIcon (ZLkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;ZLandroidx/compose/material3/SwitchColors;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/runtime/Composer;II)V
 	public static final fun highlightSetting-Z-9qirU (Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Landroidx/compose/foundation/relocation/BringIntoViewRequester;Landroidx/compose/ui/graphics/Shape;Landroidx/compose/ui/graphics/Color;)Landroidx/compose/ui/Modifier;

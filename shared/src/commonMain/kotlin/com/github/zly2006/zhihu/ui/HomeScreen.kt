@@ -50,7 +50,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -114,6 +113,7 @@ import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
 import com.github.zly2006.zhihu.ui.components.AnnouncementCard
 import com.github.zly2006.zhihu.ui.components.AnnouncementCardDefaults
+import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
 import com.github.zly2006.zhihu.ui.components.BlockByKeywordsDialog
 import com.github.zly2006.zhihu.ui.components.DEFAULT_FAB_OPACITY
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
@@ -229,6 +229,7 @@ fun HomeScreen(
     if (account.login && !account.hasRequiredCookie) {
         AlertDialog(
             onDismissRequest = {},
+            icon = { Icon(AppIcons.Cookie, contentDescription = null) },
             title = { Text("Cookie 不完整") },
             text = { Text("当前登录信息缺少必要的 Cookie d_c0，请重新登录。") },
             confirmButton = {
@@ -251,6 +252,7 @@ fun HomeScreen(
     if (localHomeViewModel?.showDatabaseError == true) {
         AlertDialog(
             onDismissRequest = { localHomeViewModel.showDatabaseError = false },
+            icon = { Icon(AppIcons.Database, contentDescription = null) },
             title = { Text("数据库错误") },
             text = { Text("本地推荐系统的数据库未正确初始化。请尝试重启应用或清除应用数据。") },
             confirmButton = {
@@ -665,6 +667,7 @@ fun HomeScreen(
                             if (feedKeywordExtractionAvailable) {
                                 DropdownMenuItem(
                                     text = { Text("按关键词屏蔽") },
+                                    leadingIcon = { Icon(AppIcons.MatchWord, contentDescription = null) },
                                     onClick = {
                                         dismissMenu()
                                         viewModel.handleBlockByKeywords(paginationEnvironment, userMessages, item) { (_, contentInfo) ->
@@ -676,6 +679,7 @@ fun HomeScreen(
                             }
                             DropdownMenuItem(
                                 text = { Text("屏蔽用户") },
+                                leadingIcon = { Icon(AppIcons.PersonOff, contentDescription = null) },
                                 onClick = {
                                     dismissMenu()
                                     viewModel.handleBlockUser(paginationEnvironment, userMessages, item) { authorInfo ->
@@ -694,6 +698,7 @@ fun HomeScreen(
                             if (canBlockQuestionAuthor) {
                                 DropdownMenuItem(
                                     text = { Text("屏蔽提问者") },
+                                    leadingIcon = { Icon(AppIcons.PersonOff, contentDescription = null) },
                                     onClick = {
                                         dismissMenu()
                                         viewModel.handleBlockQuestionAuthor(paginationEnvironment, userMessages, item) { authorInfo ->
@@ -716,6 +721,7 @@ fun HomeScreen(
                             topics.forEach { topic ->
                                 DropdownMenuItem(
                                     text = { Text("屏蔽「${topic.name}」") },
+                                    leadingIcon = { Icon(AppIcons.Tag, contentDescription = null) },
                                     onClick = {
                                         dismissMenu()
                                         viewModel.handleBlockTopic(userMessages, topic.id, topic.name)
@@ -758,7 +764,7 @@ fun HomeScreen(
                         onClick = { viewModel.refresh(paginationEnvironment) },
                     ) {
                         if (viewModel.isLoading) {
-                            CircularProgressIndicator(modifier = Modifier.size(30.dp))
+                            AppLoadingIndicator(modifier = Modifier.size(30.dp))
                         } else {
                             Icon(AppIcons.Refresh, contentDescription = "刷新")
                         }

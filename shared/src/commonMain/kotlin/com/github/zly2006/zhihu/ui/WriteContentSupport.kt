@@ -23,6 +23,8 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.util.HttpStatusException
 
 @Composable
@@ -35,6 +37,7 @@ internal fun WriteOperationErrorDialog(
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
+        icon = { Icon(AppIcons.Error, contentDescription = null) },
         title = { Text("操作失败") },
         text = {
             Text(

@@ -5,7 +5,10 @@
 #   solid   use only the fill=1 glyph under the plain token, for glyphs that are always drawn solid (media controls)
 
 account_circle
+ad_off
 add
+add_reaction
+android
 archive
 arrow_back
 arrow_circle_up
@@ -13,28 +16,53 @@ arrow_downward
 arrow_forward
 arrow_outward
 arrow_upward
+article
+auto_awesome
+auto_stories
+autorenew
+bar_chart
+block
+bolt
 bookmark
 bookmark filled
 bookmarks
 bookmarks filled
+bottom_navigation
+brightness_auto
+calendar_today
+call_to_action
+category
+chat
 chat_bubble
 check
+check_circle
 close
 cloud_download
 cloud_sync
 cloud_upload
 code
+collections_bookmark
 comment
 contact_page
+contact_support
 content_copy
+contrast
+cookie
 copy_all
+dark_mode
 data_object
+database
 date_range
 delete
+delete_sweep
 desktop_windows
+developer_mode
+dns
+done_all
 download
 edit
 error
+event
 expand_less
 expand_more
 favorite
@@ -45,68 +73,142 @@ filter_list
 flag
 folder
 folder_open
+font_download
+format_align_justify
+format_color_fill
+format_line_spacing
 format_list_bulleted
+format_list_numbered
+format_paint
+format_paragraph
+format_size
+forum
+fullscreen
+function
+gavel
 graphic_eq
 group
 group filled
 groups
 headphones
+height
 help
+high_quality
 history
 history filled
 home
 home filled
+horizontal_rule
+hourglass_top
+how_to_reg
+html
 image
 info
+instant_mix
 keyboard
 keyboard_arrow_down
 keyboard_arrow_right
 keyboard_arrow_up
+keyboard_double_arrow_down
+language
+last_page
+license
+light_mode
+linear_scale
+link_off
 lock
 lock_open
 login
 logout
 manage_accounts
 manage_accounts filled
+manage_history
 mark_chat_read
 mark_unread_chat_alt
+match_word
 memory
+merge
 mood
 more_vert
+navigation
 network_check
 newspaper
 newspaper filled
+nightlight
 notifications
+notifications_unread
+opacity
+open_in_browser
+paid
 palette
 pause solid
 pause_circle solid
+person
 person_add
+person_off
+person_remove
 photo_camera
 picture_as_pdf
 play_arrow solid
+playlist_remove
+power_settings_new
+psychology
 qr_code_scanner
 queue_music
+recommend
+record_voice_over
 refresh
 reply
+rocket_launch
+rounded_corner
 save
 schedule
+school
 search
 send
 sentiment_satisfied
 settings
 share
+short_text
 shuffle
 skip_next solid
 skip_previous solid
+smart_button
+smart_display
+smart_toy
+sort
 speed
 stop solid
+style
+subject
+swap_horiz
+swap_vert
+swipe
+swipe_left
+swipe_vertical
 switch_account
 tag
+text_increase
+text_snippet
 thumb_up
 thumb_up filled
+timer
+title
+toc
+touch_app
+tune
+vertical_align_top
+vertical_split
+view_agenda
+view_day
+view_headline
+view_quilt
 visibility
 visibility_off
 volume_off
 volume_up
+wallpaper
+web
+web_asset
 whatshot
 whatshot filled

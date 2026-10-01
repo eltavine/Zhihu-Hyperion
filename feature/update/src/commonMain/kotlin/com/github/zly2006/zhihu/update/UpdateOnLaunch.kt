@@ -27,6 +27,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import org.koin.compose.koinInject
 
 /**
@@ -43,6 +45,7 @@ fun UpdateOnLaunch() {
     } else if (!offerDismissed) {
         AlertDialog(
             onDismissRequest = { offerDismissed = true },
+            icon = { Icon(AppIcons.Bolt, contentDescription = null) },
             title = { Text("开启 GitHub 加速？") },
             text = {
                 Text(

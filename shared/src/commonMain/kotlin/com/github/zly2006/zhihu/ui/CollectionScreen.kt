@@ -224,6 +224,7 @@ fun CollectionScreen(
                     collectionPendingDeletion = null
                 }
             },
+            icon = { Icon(AppIcons.Delete, contentDescription = null) },
             title = { Text("删除收藏夹") },
             text = {
                 Column {

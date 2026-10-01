@@ -47,6 +47,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import kotlin.math.roundToInt
 
 @Composable
@@ -72,6 +74,7 @@ fun ColorPickerDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        icon = { Icon(AppIcons.Palette, contentDescription = null) },
         title = { Text(title) },
         text = {
             Column {

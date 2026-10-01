@@ -424,6 +424,23 @@ fun SettingsSearchScreen() {
                             description = {
                                 Text(entry.description)
                             },
+                            icon = {
+                                Icon(
+                                    when (entry.destination) {
+                                        is Account.AppearanceSettings -> AppIcons.Palette
+                                        is Account.RecommendSettings -> AppIcons.FilterAlt
+                                        Account.RecommendSettings.Blocklist -> AppIcons.PlaylistRemove
+                                        Account.RecommendSettings.BlockedFeedHistory -> AppIcons.ManageHistory
+                                        is Account.SystemAndUpdateSettings -> AppIcons.Settings
+                                        Account.WebDavSync -> AppIcons.CloudSync
+                                        Account.DeveloperSettings -> AppIcons.Code
+                                        Account.OpenSourceLicenses -> AppIcons.License
+                                        is Notification.NotificationSettings -> AppIcons.Notifications
+                                        else -> AppIcons.Settings
+                                    },
+                                    contentDescription = null,
+                                )
+                            },
                             onClick = {
                                 if (entry.id != "developer.page" || settings.getBoolean("developer", false)) {
                                     navigator.onNavigate(entry.destination)

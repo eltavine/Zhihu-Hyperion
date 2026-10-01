@@ -143,6 +143,7 @@ fun CollectionContentScreen(
                             DropdownMenuItem(
                                 modifier = Modifier.testTag("collection_content_export_action"),
                                 text = { Text("全部导出HTML") },
+                                leadingIcon = { Icon(AppIcons.Html, contentDescription = null) },
                                 enabled = screenViewModel.exportDialogState?.isCompleted != false,
                                 onClick = {
                                     showActionsMenu = false
@@ -271,6 +272,7 @@ private fun CollectionHtmlExportOptionsDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        icon = { Icon(AppIcons.Html, contentDescription = null) },
         title = { Text("导出收藏夹 HTML") },
         text = {
             Column {
@@ -329,6 +331,7 @@ private fun CollectionHtmlExportDialog(
                 onDismiss()
             }
         },
+        icon = { Icon(AppIcons.Html, contentDescription = null) },
         title = {
             Text(if (state.isCompleted) state.phaseText else "正在导出收藏夹")
         },

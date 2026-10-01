@@ -776,6 +776,7 @@ fun AddKeywordDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        icon = { Icon(AppIcons.MatchWord, contentDescription = null) },
         title = { Text("添加屏蔽关键词") },
         text = {
             Column(
@@ -861,6 +862,7 @@ fun AddUserDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        icon = { Icon(AppIcons.PersonOff, contentDescription = null) },
         title = { Text(title) },
         text = {
             Column {
@@ -992,6 +994,7 @@ fun BlockedTopicsList(
     if (showClearConfirmDialog) {
         AlertDialog(
             onDismissRequest = { showClearConfirmDialog = false },
+            icon = { Icon(AppIcons.DeleteSweep, contentDescription = null) },
             title = { Text("确认清空") },
             text = { Text("确定要清空所有屏蔽主题吗？此操作不可撤销。") },
             confirmButton = {
@@ -1030,6 +1033,7 @@ fun AddTopicDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        icon = { Icon(AppIcons.Tag, contentDescription = null) },
         title = { Text("添加屏蔽主题") },
         text = {
             Column {

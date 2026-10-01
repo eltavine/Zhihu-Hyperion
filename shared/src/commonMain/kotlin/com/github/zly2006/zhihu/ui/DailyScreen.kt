@@ -38,7 +38,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -81,6 +80,7 @@ import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.resolveContent
 import com.github.zly2006.zhihu.platform.isLiteVariant
+import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.util.formatDailyDate
@@ -229,6 +229,7 @@ fun DailyScreen(
     missingOriginStoryUrl?.let { storyUrl ->
         AlertDialog(
             onDismissRequest = { missingOriginStoryUrl = null },
+            icon = { Icon(AppIcons.LinkOff, contentDescription = null) },
             text = { Text("由于知乎的 Bug，无法找到原文") },
             confirmButton = {
                 TextButton(onClick = {
@@ -305,7 +306,7 @@ fun DailyScreen(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
                         ) {
-                            CircularProgressIndicator()
+                            AppLoadingIndicator()
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
                                 "正在加载...",
@@ -407,7 +408,7 @@ fun DailyScreen(
                                         .padding(16.dp),
                                     contentAlignment = Alignment.Center,
                                 ) {
-                                    CircularProgressIndicator(
+                                    AppLoadingIndicator(
                                         modifier = Modifier.size(24.dp),
                                     )
                                 }

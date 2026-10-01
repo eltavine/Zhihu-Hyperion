@@ -39,7 +39,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -91,6 +90,7 @@ import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageDuration
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
+import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
 import com.github.zly2006.zhihu.ui.components.AuthorBadge
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockConfirmDialog
@@ -280,6 +280,7 @@ fun SearchScreen(
                     if (showClearAction) {
                         DropdownMenuItem(
                             text = { Text("清空搜索历史") },
+                            leadingIcon = { Icon(AppIcons.DeleteSweep, contentDescription = null) },
                             onClick = {
                                 historyMoreMenuExpanded = false
                                 searchHistoryItems.clear()
@@ -289,6 +290,7 @@ fun SearchScreen(
                     }
                     DropdownMenuItem(
                         text = { Text("前往设置关闭搜索历史") },
+                        leadingIcon = { Icon(AppIcons.Settings, contentDescription = null) },
                         onClick = {
                             historyMoreMenuExpanded = false
                             navigator.onNavigate(Account.AppearanceSettings("showSearchHistory"))
@@ -585,6 +587,7 @@ fun SearchScreen(
                                         ) {
                                             DropdownMenuItem(
                                                 text = { Text("关闭热搜显示") },
+                                                leadingIcon = { Icon(AppIcons.VisibilityOff, contentDescription = null) },
                                                 onClick = {
                                                     hotSearchMoreMenuExpanded = false
                                                     navigator.onNavigate(Account.AppearanceSettings("showSearchHotSearch"))
@@ -800,6 +803,7 @@ fun SearchScreen(
                                 menuItems = { dismissMenu ->
                                     DropdownMenuItem(
                                         text = { Text("屏蔽用户") },
+                                        leadingIcon = { Icon(AppIcons.PersonOff, contentDescription = null) },
                                         onClick = {
                                             dismissMenu()
                                             viewModel.handleBlockUser(
@@ -841,7 +845,7 @@ fun SearchScreen(
                             },
                         ) {
                             if (viewModel.isLoading) {
-                                CircularProgressIndicator(modifier = Modifier.size(36.dp))
+                                AppLoadingIndicator(modifier = Modifier.size(36.dp))
                             } else {
                                 Icon(AppIcons.Refresh, contentDescription = "刷新")
                             }

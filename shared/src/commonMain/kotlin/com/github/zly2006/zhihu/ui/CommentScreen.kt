@@ -144,6 +144,7 @@ import com.github.zly2006.zhihu.reading.loadReadingPreferences
 import com.github.zly2006.zhihu.reading.saveReadingPreferences
 import com.github.zly2006.zhihu.theme.PREF_FONT_SIZE
 import com.github.zly2006.zhihu.theme.PREF_LINE_HEIGHT
+import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
 import com.github.zly2006.zhihu.ui.components.PageTurnFab
 import com.github.zly2006.zhihu.ui.components.pageTurnContentEndMarker
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
@@ -386,6 +387,7 @@ private fun ClickableImageWithMenu(
             DropdownMenuItem(
                 modifier = Modifier.testTag(COMMENT_IMAGE_MENU_OPEN_TAG),
                 text = { Text("查看图片") },
+                leadingIcon = { Icon(AppIcons.Image, contentDescription = null) },
                 onClick = {
                     handleAction(CommentImageMenuAction.Open)
                     showContextMenu = false
@@ -394,6 +396,7 @@ private fun ClickableImageWithMenu(
             DropdownMenuItem(
                 modifier = Modifier.testTag(COMMENT_IMAGE_MENU_BROWSER_TAG),
                 text = { Text("在浏览器中打开") },
+                leadingIcon = { Icon(AppIcons.OpenInBrowser, contentDescription = null) },
                 onClick = {
                     handleAction(CommentImageMenuAction.OpenInBrowser)
                     showContextMenu = false
@@ -402,6 +405,7 @@ private fun ClickableImageWithMenu(
             DropdownMenuItem(
                 modifier = Modifier.testTag(COMMENT_IMAGE_MENU_SAVE_TAG),
                 text = { Text("保存图片") },
+                leadingIcon = { Icon(AppIcons.Download, contentDescription = null) },
                 onClick = {
                     handleAction(CommentImageMenuAction.Save)
                     showContextMenu = false
@@ -410,6 +414,7 @@ private fun ClickableImageWithMenu(
             DropdownMenuItem(
                 modifier = Modifier.testTag(COMMENT_IMAGE_MENU_SHARE_TAG),
                 text = { Text("分享图片") },
+                leadingIcon = { Icon(AppIcons.Share, contentDescription = null) },
                 onClick = {
                     showContextMenu = false
                     handleAction(CommentImageMenuAction.Share)
@@ -560,6 +565,7 @@ fun CommentScreen(
                     deleteCommentError = null
                 }
             },
+            icon = { Icon(AppIcons.Delete, contentDescription = null) },
             title = { Text("删除评论") },
             text = {
                 Column {
@@ -688,7 +694,7 @@ fun CommentScreen(
                     when {
                         viewModel.isLoading && viewModel.allData.isEmpty() -> {
                             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                CircularProgressIndicator()
+                                AppLoadingIndicator()
                             }
                         }
 
@@ -985,7 +991,7 @@ fun CommentScreen(
                                                 .padding(8.dp),
                                             contentAlignment = Alignment.Center,
                                         ) {
-                                            CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                                            AppLoadingIndicator(modifier = Modifier.size(24.dp))
                                         }
                                     }
                                 }

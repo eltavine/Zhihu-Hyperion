@@ -150,6 +150,7 @@ fun RenderImage(
             ) {
                 DropdownMenuItem(
                     text = { Text("查看图片") },
+                    leadingIcon = { Icon(AppIcons.Image, contentDescription = null) },
                     onClick = {
                         expanded = false
                         openGallery()
@@ -157,6 +158,7 @@ fun RenderImage(
                 )
                 DropdownMenuItem(
                     text = { Text("在浏览器中打开") },
+                    leadingIcon = { Icon(AppIcons.OpenInBrowser, contentDescription = null) },
                     onClick = {
                         expanded = false
                         openExternalUrl(data.url)
@@ -164,6 +166,7 @@ fun RenderImage(
                 )
                 DropdownMenuItem(
                     text = { Text("保存图片") },
+                    leadingIcon = { Icon(AppIcons.Download, contentDescription = null) },
                     onClick = {
                         expanded = false
                         saveImage(data.url)
@@ -171,6 +174,7 @@ fun RenderImage(
                 )
                 DropdownMenuItem(
                     text = { Text("分享图片") },
+                    leadingIcon = { Icon(AppIcons.Share, contentDescription = null) },
                     onClick = {
                         expanded = false
                         shareImage(data.url)

@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,6 +40,7 @@ import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageDuration
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
+import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
 import com.github.zly2006.zhihu.ui.components.FeedCard
 import com.github.zly2006.zhihu.ui.components.PaginatedList
@@ -143,7 +143,7 @@ fun HotListScreen(
                     },
                 ) {
                     if (viewModel.isLoading) {
-                        CircularProgressIndicator(modifier = Modifier.size(36.dp))
+                        AppLoadingIndicator(modifier = Modifier.size(36.dp))
                     } else {
                         Icon(AppIcons.Refresh, contentDescription = "刷新")
                     }

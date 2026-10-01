@@ -139,6 +139,7 @@ fun BlockedFeedHistoryScreen() {
     if (showClearDialog) {
         AlertDialog(
             onDismissRequest = { showClearDialog = false },
+            icon = { Icon(AppIcons.DeleteSweep, contentDescription = null) },
             title = { Text("清空屏蔽记录") },
             text = { Text("确定要清空所有屏蔽记录吗？此操作不可撤销。") },
             confirmButton = {

@@ -187,11 +187,22 @@ internal val LocalReadingPlayerOverlayPadding = staticCompositionLocalOf { 0.dp 
 internal val LocalArticleNavController = staticCompositionLocalOf<NavHostController?> { null }
 
 /** 底栏中的一项；选中时显示 [selectedIcon]（填充版本），符合 Material 导航栏的选中态规范。 */
-private data class BottomBarItem(
+internal data class BottomBarItem(
     val destination: TopLevelDestination,
     val label: String,
     val icon: AppIcon,
     val selectedIcon: AppIcon,
+)
+
+/** 所有可以放进底栏的一级页面，按默认顺序排列；底栏本身和外观设置里的底栏选项都从这里取标题与图标。 */
+internal val allBottomBarItems = listOf(
+    BottomBarItem(Home, "主页", AppIcons.Home, AppIcons.HomeFilled),
+    BottomBarItem(Follow, "关注", AppIcons.Group, AppIcons.GroupFilled),
+    BottomBarItem(HotList, "热榜", AppIcons.Whatshot, AppIcons.WhatshotFilled),
+    BottomBarItem(Daily, "日报", AppIcons.Newspaper, AppIcons.NewspaperFilled),
+    BottomBarItem(OnlineHistory, "历史", AppIcons.History, AppIcons.HistoryFilled),
+    BottomBarItem(MyCollections, "收藏夹", AppIcons.Bookmarks, AppIcons.BookmarksFilled),
+    BottomBarItem(Account, "账号", AppIcons.ManageAccounts, AppIcons.ManageAccountsFilled),
 )
 
 /**
@@ -384,15 +395,6 @@ fun ZhihuMain(
         }
     }
 
-    val allBottomBarItems = listOf(
-        BottomBarItem(Home, "主页", AppIcons.Home, AppIcons.HomeFilled),
-        BottomBarItem(Follow, "关注", AppIcons.Group, AppIcons.GroupFilled),
-        BottomBarItem(HotList, "热榜", AppIcons.Whatshot, AppIcons.WhatshotFilled),
-        BottomBarItem(Daily, "日报", AppIcons.Newspaper, AppIcons.NewspaperFilled),
-        BottomBarItem(OnlineHistory, "历史", AppIcons.History, AppIcons.HistoryFilled),
-        BottomBarItem(MyCollections, "收藏夹", AppIcons.Bookmarks, AppIcons.BookmarksFilled),
-        BottomBarItem(Account, "账号", AppIcons.ManageAccounts, AppIcons.ManageAccountsFilled),
-    )
     val bottomBarItems = selectedBottomBarItemKeys.mapNotNull { key ->
         allBottomBarItems.firstOrNull { it.destination.name == key }
     }

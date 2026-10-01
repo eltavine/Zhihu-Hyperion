@@ -127,7 +127,7 @@ fun VotersSheet(
                                 .padding(vertical = 32.dp),
                             contentAlignment = Alignment.Center,
                         ) {
-                            CircularProgressIndicator()
+                            AppLoadingIndicator()
                         }
                     }
                 } else if (voters.isEmpty()) {

@@ -44,6 +44,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.DpOffset
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.platform.rememberImageSaver
 import com.github.zly2006.zhihu.platform.rememberImageSharer
 import kotlinx.coroutines.launch
@@ -154,6 +156,7 @@ fun OpenImagePreviewContent(
         ) {
             DropdownMenuItem(
                 text = { Text("保存图片") },
+                leadingIcon = { Icon(AppIcons.Download, contentDescription = null) },
                 onClick = {
                     showMenu = false
                     onSaveImage(imageUrls[pagerState.currentPage])
@@ -161,6 +164,7 @@ fun OpenImagePreviewContent(
             )
             DropdownMenuItem(
                 text = { Text("分享图片") },
+                leadingIcon = { Icon(AppIcons.Share, contentDescription = null) },
                 onClick = {
                     showMenu = false
                     onShareImage(imageUrls[pagerState.currentPage])
@@ -168,6 +172,7 @@ fun OpenImagePreviewContent(
             )
             DropdownMenuItem(
                 text = { Text("在浏览器中打开") },
+                leadingIcon = { Icon(AppIcons.OpenInBrowser, contentDescription = null) },
                 onClick = {
                     showMenu = false
                     onOpenInBrowser(imageUrls[pagerState.currentPage])

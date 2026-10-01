@@ -32,6 +32,8 @@ import androidx.compose.ui.unit.dp
 import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.questionAuthor
 import com.github.zly2006.zhihu.data.target
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import kotlin.math.roundToInt
 
 enum class FeedAuthorBlockType {
@@ -69,6 +71,7 @@ fun FeedAuthorBlockConfirmDialogContent(
     val isQuestionAuthor = request.type == FeedAuthorBlockType.QUESTION_AUTHOR
     AlertDialog(
         onDismissRequest = onDismiss,
+        icon = { Icon(AppIcons.PersonOff, contentDescription = null) },
         title = { Text(if (isQuestionAuthor) "屏蔽提问者" else "屏蔽用户") },
         text = {
             Column {

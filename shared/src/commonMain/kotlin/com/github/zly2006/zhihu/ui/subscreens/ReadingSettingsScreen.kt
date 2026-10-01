@@ -17,7 +17,6 @@
 
 package com.github.zly2006.zhihu.ui.subscreens
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,7 +31,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeTopAppBar
@@ -64,6 +62,8 @@ import com.github.zly2006.zhihu.reading.ReadingTemplateField
 import com.github.zly2006.zhihu.reading.buildReadingTemplatePreview
 import com.github.zly2006.zhihu.reading.loadReadingPreferences
 import com.github.zly2006.zhihu.reading.saveReadingPreferences
+import com.github.zly2006.zhihu.ui.components.ChoiceButtonGroup
+import com.github.zly2006.zhihu.ui.components.ChoiceOption
 import com.github.zly2006.zhihu.ui.components.SettingItem
 import com.github.zly2006.zhihu.ui.components.SettingItemGroup
 import com.github.zly2006.zhihu.ui.components.SettingItemWithSwitch
@@ -181,6 +181,20 @@ fun ReadingSettingsScreen() {
                     val enabled = field in preferences.enabledFields
                     SettingItem(
                         title = { Text(field.displayName) },
+                        icon = {
+                            Icon(
+                                when (field) {
+                                    ReadingTemplateField.ContentType -> AppIcons.Category
+                                    ReadingTemplateField.Title -> AppIcons.Title
+                                    ReadingTemplateField.Author -> AppIcons.Person
+                                    ReadingTemplateField.Body -> AppIcons.Subject
+                                    ReadingTemplateField.PublishedAt -> AppIcons.Schedule
+                                    ReadingTemplateField.VoteUpCount -> AppIcons.ThumbUp
+                                    ReadingTemplateField.Comments -> AppIcons.Comment
+                                },
+                                contentDescription = null,
+                            )
+                        },
                         description = { Text(field.description) },
                         modifier = Modifier.testTag(READING_SETTINGS_FIELD_TAG_PREFIX + field.name),
                         onClick = {
@@ -228,55 +242,53 @@ fun ReadingSettingsScreen() {
             ) {
                 SettingItem(
                     title = { Text("时间形式") },
+                    icon = { Icon(AppIcons.Event, contentDescription = null) },
                     description = {
                         Text("绝对时间沿用当前发布时间；相对时间朗读当前时间到最后编辑时间的间隔。")
                     },
                     enabled = publishedTimeEnabled,
                     bottomAction = {
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            ReadingPublishedTimeMode.entries.forEach { mode ->
-                                FilterChip(
-                                    selected = preferences.publishedTimeMode == mode,
-                                    onClick = { persist(preferences.copy(publishedTimeMode = mode)) },
-                                    label = { Text(mode.displayName) },
-                                    enabled = publishedTimeEnabled,
-                                    modifier = Modifier.testTag(
-                                        READING_SETTINGS_PUBLISHED_TIME_MODE_TAG_PREFIX + mode.name,
-                                    ),
+                        ChoiceButtonGroup(
+                            options = ReadingPublishedTimeMode.entries.map { mode ->
+                                ChoiceOption(
+                                    value = mode,
+                                    label = mode.displayName,
+                                    icon = when (mode) {
+                                        ReadingPublishedTimeMode.Absolute -> AppIcons.Event
+                                        ReadingPublishedTimeMode.Relative -> AppIcons.History
+                                    },
+                                    testTag = READING_SETTINGS_PUBLISHED_TIME_MODE_TAG_PREFIX + mode.name,
                                 )
-                            }
-                        }
+                            },
+                            selected = preferences.publishedTimeMode,
+                            onSelect = { persist(preferences.copy(publishedTimeMode = it)) },
+                            enabled = publishedTimeEnabled,
+                            modifier = Modifier.padding(top = 12.dp),
+                        )
                     },
                 )
 
                 SettingItem(
                     title = { Text("相对时间精度") },
+                    icon = { Icon(AppIcons.Timer, contentDescription = null) },
                     description = { Text("保留到所选的最小时间单位，更细的部分会省略。") },
                     enabled = publishedTimeEnabled &&
                         preferences.publishedTimeMode == ReadingPublishedTimeMode.Relative,
                     bottomAction = {
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            ReadingRelativeTimePrecision.entries.forEach { precision ->
-                                FilterChip(
-                                    selected = preferences.relativeTimePrecision == precision,
-                                    onClick = {
-                                        persist(preferences.copy(relativeTimePrecision = precision))
-                                    },
-                                    label = { Text(precision.displayName) },
-                                    enabled = publishedTimeEnabled &&
-                                        preferences.publishedTimeMode == ReadingPublishedTimeMode.Relative,
-                                    modifier = Modifier.testTag(
-                                        READING_SETTINGS_RELATIVE_TIME_PRECISION_TAG_PREFIX + precision.name,
-                                    ),
+                        ChoiceButtonGroup(
+                            options = ReadingRelativeTimePrecision.entries.map { precision ->
+                                ChoiceOption(
+                                    value = precision,
+                                    label = precision.displayName,
+                                    testTag = READING_SETTINGS_RELATIVE_TIME_PRECISION_TAG_PREFIX + precision.name,
                                 )
-                            }
-                        }
+                            },
+                            selected = preferences.relativeTimePrecision,
+                            onSelect = { persist(preferences.copy(relativeTimePrecision = it)) },
+                            enabled = publishedTimeEnabled &&
+                                preferences.publishedTimeMode == ReadingPublishedTimeMode.Relative,
+                            modifier = Modifier.padding(top = 12.dp),
+                        )
                     },
                 )
             }
@@ -288,6 +300,7 @@ fun ReadingSettingsScreen() {
             ) {
                 SettingItem(
                     title = { Text("朗读评论数量") },
+                    icon = { Icon(AppIcons.FormatListNumbered, contentDescription = null) },
                     description = { Text("设置每条内容最多朗读多少条评论，范围为 0-50；0 表示不加载评论。") },
                     enabled = commentsEnabled,
                     bottomAction = {
@@ -318,6 +331,7 @@ fun ReadingSettingsScreen() {
 
                 SettingItemWithSwitch(
                     title = { Text("朗读评论作者") },
+                    icon = { Icon(AppIcons.RecordVoiceOver, contentDescription = null) },
                     description = { Text("关闭后，每条评论只朗读序号和正文。") },
                     checked = preferences.readCommentAuthor,
                     onCheckedChange = {
@@ -329,23 +343,27 @@ fun ReadingSettingsScreen() {
 
                 SettingItem(
                     title = { Text("评论排序") },
+                    icon = { Icon(AppIcons.Sort, contentDescription = null) },
                     description = { Text("按当前选择的热度或发布时间顺序读取评论。") },
                     enabled = commentsEnabled && preferences.commentCount > 0,
                     bottomAction = {
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            ReadingCommentOrder.entries.forEach { order ->
-                                FilterChip(
-                                    selected = preferences.commentOrder == order,
-                                    onClick = { persist(preferences.copy(commentOrder = order)) },
-                                    label = { Text(order.displayName) },
-                                    enabled = commentsEnabled && preferences.commentCount > 0,
-                                    modifier = Modifier.testTag(READING_SETTINGS_COMMENT_ORDER_TAG_PREFIX + order.name),
+                        ChoiceButtonGroup(
+                            options = ReadingCommentOrder.entries.map { order ->
+                                ChoiceOption(
+                                    value = order,
+                                    label = order.displayName,
+                                    icon = when (order) {
+                                        ReadingCommentOrder.Score -> AppIcons.Whatshot
+                                        ReadingCommentOrder.Time -> AppIcons.Schedule
+                                    },
+                                    testTag = READING_SETTINGS_COMMENT_ORDER_TAG_PREFIX + order.name,
                                 )
-                            }
-                        }
+                            },
+                            selected = preferences.commentOrder,
+                            onSelect = { persist(preferences.copy(commentOrder = it)) },
+                            enabled = commentsEnabled && preferences.commentCount > 0,
+                            modifier = Modifier.padding(top = 12.dp),
+                        )
                     },
                 )
             }
@@ -355,24 +373,24 @@ fun ReadingSettingsScreen() {
             ) {
                 SettingItem(
                     title = { Text("单次队列上限") },
+                    icon = { Icon(AppIcons.QueueMusic, contentDescription = null) },
                     description = { Text("数量包含当前内容。播放器到达队尾后会停止，不会无限加载后续页面。") },
                     bottomAction = {
                         Column(modifier = Modifier.fillMaxWidth().padding(top = 12.dp)) {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            ) {
-                                queueLimitPresets.forEach { limit ->
-                                    FilterChip(
-                                        selected = preferences.queueLimit == limit,
-                                        onClick = {
-                                            customQueueLimitText = ""
-                                            persist(preferences.copy(queueLimit = limit))
-                                        },
-                                        label = { Text("$limit 条") },
-                                        modifier = Modifier.testTag(READING_SETTINGS_QUEUE_LIMIT_TAG_PREFIX + limit),
+                            ChoiceButtonGroup(
+                                options = queueLimitPresets.map { limit ->
+                                    ChoiceOption(
+                                        value = limit,
+                                        label = "$limit 条",
+                                        testTag = READING_SETTINGS_QUEUE_LIMIT_TAG_PREFIX + limit,
                                     )
-                                }
-                            }
+                                },
+                                selected = preferences.queueLimit,
+                                onSelect = {
+                                    customQueueLimitText = ""
+                                    persist(preferences.copy(queueLimit = it))
+                                },
+                            )
                             Spacer(Modifier.height(8.dp))
                             OutlinedTextField(
                                 value = customQueueLimitText,
@@ -402,6 +420,7 @@ fun ReadingSettingsScreen() {
             ) {
                 SettingItem(
                     title = { Text("内容之间的过渡文本") },
+                    icon = { Icon(AppIcons.ShortText, contentDescription = null) },
                     description = { Text("仅在相邻条目之间朗读；留空即可关闭。") },
                     bottomAction = {
                         Column(modifier = Modifier.fillMaxWidth().padding(top = 12.dp)) {
@@ -430,6 +449,7 @@ fun ReadingSettingsScreen() {
             ) {
                 SettingItem(
                     title = { Text("当前朗读模板") },
+                    icon = { Icon(AppIcons.TextSnippet, contentDescription = null) },
                     description = { Text("随上方设置实时更新；大括号表示朗读时替换的动态内容，不包含条目过渡文本。") },
                     bottomAction = {
                         SelectionContainer {
