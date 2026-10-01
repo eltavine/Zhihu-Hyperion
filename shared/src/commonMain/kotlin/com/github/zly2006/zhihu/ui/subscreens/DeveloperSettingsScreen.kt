@@ -147,6 +147,7 @@ fun DeveloperSettingsScreen() {
             SettingItemOverall(
                 modifier = Modifier.testTag(DEVELOPER_SETTINGS_MODE_TAG),
                 title = { Text("开发者模式") },
+                icon = { Icon(AppIcons.DeveloperMode, contentDescription = null) },
                 checked = developerModeEnabled,
                 onCheckedChange = {
                     developerModeEnabled = it
@@ -396,6 +397,7 @@ fun DeveloperSettingsScreen() {
                 responseText = ""
                 isLoading = false
             },
+            icon = { Icon(AppIcons.Code, contentDescription = null) },
             title = { Text("签名GET请求") },
             text = {
                 Column {

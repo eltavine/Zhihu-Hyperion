@@ -865,6 +865,7 @@ fun AddPhraseDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        icon = { Icon(AppIcons.Add, contentDescription = null) },
         title = { Text("手动添加NLP短语") },
         text = {
             Column(
@@ -918,6 +919,7 @@ fun EditPhraseDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        icon = { Icon(AppIcons.Edit, contentDescription = null) },
         title = { Text("编辑NLP短语") },
         text = {
             Column(

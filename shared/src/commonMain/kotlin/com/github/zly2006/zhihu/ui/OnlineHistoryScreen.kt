@@ -152,6 +152,7 @@ fun OnlineHistoryScreen(
                         ) {
                             DropdownMenuItem(
                                 text = { Text("查看本地历史记录") },
+                                leadingIcon = { Icon(AppIcons.History, contentDescription = null) },
                                 onClick = {
                                     showActionsMenu = false
                                     navigator.onNavigate(History)
@@ -159,6 +160,7 @@ fun OnlineHistoryScreen(
                             )
                             DropdownMenuItem(
                                 text = { Text("清除历史记录") },
+                                leadingIcon = { Icon(AppIcons.DeleteSweep, contentDescription = null) },
                                 onClick = {
                                     showActionsMenu = false
                                     showClearHistoryDialog = true
@@ -173,6 +175,7 @@ fun OnlineHistoryScreen(
         if (showClearHistoryDialog) {
             AlertDialog(
                 onDismissRequest = { showClearHistoryDialog = false },
+                icon = { Icon(AppIcons.DeleteSweep, contentDescription = null) },
                 title = { Text("确认清除历史记录") },
                 text = { Text("此操作会清除当前账号的在线和本地的全部历史记录。") },
                 confirmButton = {
@@ -216,6 +219,7 @@ fun OnlineHistoryScreen(
                     menuItems = { dismissMenu ->
                         DropdownMenuItem(
                             text = { Text("删除该条历史记录") },
+                            leadingIcon = { Icon(AppIcons.Delete, contentDescription = null) },
                             onClick = {
                                 dismissMenu()
                                 coroutineScope.launch {

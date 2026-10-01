@@ -15,32 +15,40 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
+
 package com.github.zly2006.zhihu.ui.components
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CardColors
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.ListItemColors
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.ListItemShapes
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -51,9 +59,15 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.toggleableState
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
 import com.github.zly2006.zhihu.icons.AppIcons
 import com.github.zly2006.zhihu.icons.Icon
@@ -116,7 +130,10 @@ fun Modifier.highlightSetting(
         modifier = modifier.drawWithContent {
             drawContent()
             if (highlightAlpha.value > 0f) {
-                drawRect(highlightColor.copy(alpha = highlightAlpha.value))
+                drawOutline(
+                    shape.createOutline(size, layoutDirection, this),
+                    highlightColor.copy(alpha = highlightAlpha.value),
+                )
             }
         }
     }
@@ -129,6 +146,7 @@ fun Modifier.highlightSetting(
  *
  * 每组可以包含标题、顶部总控件、底部说明和多个设置项。内部使用自定义 Layout 压缩动画隐藏项之间的间距，
  * 让 `AnimatedVisibility` 展开/收起时不会留下突兀空白。视觉上它是设置页的主要节奏单位，新增设置页时优先用它组织内容。
+ * 组按 Material 3 Expressive 分段列表的规格裁出大圆角外轮廓，组内各项之间留出分段间隙。
  */
 @Composable
 fun SettingItemGroup(
@@ -166,10 +184,10 @@ fun SettingItemGroup(
 
         Layout(
             content = content,
-            modifier = modifier.clip(RoundedCornerShape(16.dp)),
+            modifier = modifier.clip(MaterialTheme.shapes.large),
         ) { measurables, constraints ->
             val placeables = measurables.map { it.measure(constraints) }
-            val spacing = 2.dp.roundToPx()
+            val spacing = ListItemDefaults.SegmentedGap.roundToPx()
             val baseItemHeight = 48.dp.toPx()
 
             var yPosition = 0
@@ -224,7 +242,6 @@ fun SettingItemGroup(
 @Composable
 fun SettingItemOverall(
     modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier,
     title: @Composable () -> Unit,
     description: (@Composable () -> Unit)? = null,
     icon: (@Composable () -> Unit)? = null,
@@ -236,9 +253,9 @@ fun SettingItemOverall(
     onPositioned: ((rootY: Int) -> Unit)? = null,
     bringIntoViewRequester: BringIntoViewRequester? = null,
 ) {
-    SettingItem(
+    val colorScheme = MaterialTheme.colorScheme
+    SettingRow(
         modifier = modifier.padding(bottom = 16.dp),
-        contentModifier = contentModifier.padding(horizontal = 8.dp),
         title = title,
         description = description,
         icon = icon,
@@ -250,18 +267,23 @@ fun SettingItemOverall(
                 enabled = enabled,
             )
         },
-        shape = RoundedCornerShape(50),
-        colors = CardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-            disabledContentColor = MaterialTheme.colorScheme.outlineVariant,
-        ),
+        bottomAction = null,
         enabled = enabled,
         settingKey = settingKey,
         highlightedKey = highlightedKey,
         onPositioned = onPositioned,
         bringIntoViewRequester = bringIntoViewRequester,
+        checked = checked,
+        shapes = ListItemDefaults.shapes(shape = CircleShape),
+        colors = ListItemDefaults.segmentedColors(
+            containerColor = colorScheme.primaryContainer,
+            contentColor = colorScheme.onPrimaryContainer,
+            supportingContentColor = colorScheme.onPrimaryContainer,
+            trailingContentColor = colorScheme.onPrimaryContainer,
+        ),
+        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
+        iconContainerColor = colorScheme.primary,
+        iconContentColor = colorScheme.onPrimary,
     )
 }
 
@@ -285,7 +307,7 @@ fun SettingItemWithSwitch(
     onPositioned: ((rootY: Int) -> Unit)? = null,
     bringIntoViewRequester: BringIntoViewRequester? = null,
 ) {
-    SettingItem(
+    SettingRow(
         modifier = modifier,
         title = title,
         description = description,
@@ -298,11 +320,13 @@ fun SettingItemWithSwitch(
                 enabled = enabled,
             )
         },
+        bottomAction = null,
         enabled = enabled,
         settingKey = settingKey,
         highlightedKey = highlightedKey,
         onPositioned = onPositioned,
         bringIntoViewRequester = bringIntoViewRequester,
+        checked = checked,
     )
 }
 
@@ -356,115 +380,172 @@ fun SwitchWithIcon(
  *
  * 一行由左侧可选图标、标题/说明、右侧动作和底部扩展内容组成，可表示普通导航入口、数值配置、下拉选择或开关行的底层布局。
  * 它同时接入高亮跳转、禁用态和统一圆角/背景色，是所有设置项视觉一致性的基础。
+ * 图标放在色调圆形容器中；有整行动作的行使用 Material 3 Expressive 分段列表项，按下时圆角会形变。
  */
 @Composable
 fun SettingItem(
     modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier,
     title: @Composable () -> Unit,
     description: (@Composable () -> Unit)? = null,
     icon: (@Composable () -> Unit)? = null,
     onClick: (() -> Unit)? = null,
     endAction: (@Composable () -> Unit)? = null,
     bottomAction: (@Composable () -> Unit)? = null,
-    shape: Shape = RoundedCornerShape(4.dp),
-    colors: CardColors = CardColors(
-        containerColor = MaterialTheme.colorScheme.surfaceBright,
-        contentColor = MaterialTheme.colorScheme.onSurface,
-        disabledContainerColor = MaterialTheme.colorScheme.surfaceBright,
-        disabledContentColor = MaterialTheme.colorScheme.outlineVariant,
-    ),
     enabled: Boolean = true,
     settingKey: String? = null,
     highlightedKey: String = "",
     onPositioned: ((rootY: Int) -> Unit)? = null,
     bringIntoViewRequester: BringIntoViewRequester? = null,
 ) {
-    Surface(
-        modifier = if (onClick != null) {
-            modifier
-                .clip(shape)
-                .highlightSetting(
-                    settingKey = settingKey,
-                    highlightedKey = highlightedKey,
-                    onPositioned = onPositioned,
-                    bringIntoViewRequester = bringIntoViewRequester,
-                    shape = shape,
-                ).clickable(
-                    enabled = enabled,
-                    onClick = onClick,
-                )
-        } else {
-            modifier
-                .clip(shape)
-                .highlightSetting(
-                    settingKey = settingKey,
-                    highlightedKey = highlightedKey,
-                    onPositioned = onPositioned,
-                    bringIntoViewRequester = bringIntoViewRequester,
-                    shape = shape,
-                )
-        },
-        shape = shape,
-        color = colors.containerColor,
-        contentColor = if (enabled) {
-            colors.contentColor
-        } else {
-            colors.disabledContentColor
-        },
-    ) {
-        Column(contentModifier.padding(16.dp, 12.dp)) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+    SettingRow(
+        modifier = modifier,
+        title = title,
+        description = description,
+        icon = icon,
+        onClick = onClick,
+        endAction = endAction,
+        bottomAction = bottomAction,
+        enabled = enabled,
+        settingKey = settingKey,
+        highlightedKey = highlightedKey,
+        onPositioned = onPositioned,
+        bringIntoViewRequester = bringIntoViewRequester,
+    )
+}
+
+/**
+ * 三种设置行的共同实现。
+ *
+ * Material 3 Expressive 的列表类型仍是实验 API，只在这里使用，公开的设置行组件不暴露这些类型；
+ * 上游 API 变化时只需改这一处，调用方不受影响。
+ */
+@Composable
+private fun SettingRow(
+    modifier: Modifier,
+    title: @Composable () -> Unit,
+    description: (@Composable () -> Unit)?,
+    icon: (@Composable () -> Unit)?,
+    onClick: (() -> Unit)?,
+    endAction: (@Composable () -> Unit)?,
+    bottomAction: (@Composable () -> Unit)?,
+    enabled: Boolean,
+    settingKey: String?,
+    highlightedKey: String,
+    onPositioned: ((rootY: Int) -> Unit)?,
+    bringIntoViewRequester: BringIntoViewRequester?,
+    checked: Boolean? = null,
+    shapes: ListItemShapes = ListItemDefaults.shapes(),
+    colors: ListItemColors = ListItemDefaults.segmentedColors(),
+    contentPadding: PaddingValues = ListItemDefaults.ContentPadding,
+    iconContainerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
+    iconContentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
+) {
+    val colorScheme = MaterialTheme.colorScheme
+    val rowModifier = modifier
+        .highlightSetting(
+            settingKey = settingKey,
+            highlightedKey = highlightedKey,
+            onPositioned = onPositioned,
+            bringIntoViewRequester = bringIntoViewRequester,
+            shape = shapes.shape,
+        ).then(
+            if (checked != null) {
+                Modifier.semantics {
+                    role = Role.Switch
+                    toggleableState = ToggleableState(checked)
+                }
+            } else {
+                Modifier
+            },
+        )
+    val leading: (@Composable () -> Unit)? = icon?.let {
+        {
+            Box(
+                Modifier
+                    .size(40.dp)
+                    .background(if (enabled) iconContainerColor else colorScheme.onSurface.copy(alpha = 0.12f), CircleShape),
+                contentAlignment = Alignment.Center,
             ) {
-                icon?.let {
-                    Box(
-                        Modifier.size(40.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Surface(
-                            color = Color.Transparent,
-                            contentColor = if (enabled) {
-                                MaterialTheme.colorScheme.onSurfaceVariant
-                            } else {
-                                MaterialTheme.colorScheme.outlineVariant
-                            },
-                        ) { icon() }
+                CompositionLocalProvider(
+                    LocalContentColor provides if (enabled) iconContentColor else colorScheme.onSurface.copy(alpha = 0.38f),
+                    content = it,
+                )
+            }
+        }
+    }
+    // 分段列表项默认把尾部当作 labelSmall 辅助文字；设置行尾部放的是数值、开关和跳转箭头，沿用正文字号。
+    val trailing: (@Composable () -> Unit)? = endAction?.let {
+        { ProvideTextStyle(MaterialTheme.typography.bodyLarge, it) }
+    }
+    // 底部内容是滑杆、输入框、按钮组等控件，按正文样式而不是说明文字样式显示。
+    val bottom: (@Composable () -> Unit)? = bottomAction?.let {
+        {
+            ProvideContentColorTextStyle(
+                contentColor = colors.contentColor(enabled = enabled, selected = false, dragged = false),
+                textStyle = MaterialTheme.typography.bodyLarge,
+                content = it,
+            )
+        }
+    }
+    if (onClick != null) {
+        SegmentedListItem(
+            onClick = onClick,
+            shapes = shapes,
+            modifier = rowModifier,
+            enabled = enabled,
+            leadingContent = leading,
+            trailingContent = trailing,
+            supportingContent = if (description == null && bottom == null) {
+                null
+            } else {
+                {
+                    Column {
+                        description?.invoke()
+                        bottom?.invoke()
                     }
                 }
-                Column(
-                    modifier = Modifier
-                        .heightIn(min = 48.dp)
-                        .weight(1f),
-                    verticalArrangement = Arrangement.Center,
-                ) {
+            },
+            colors = colors,
+            contentPadding = contentPadding,
+            content = title,
+        )
+    } else {
+        // material3 1.12.0-alpha03 的 SegmentedListItem 只有可点击、单选和多选重载，没有整行动作的行（滑杆、输入框等）
+        // 不能用它；旧版 ListItem 会合并子节点语义并使用另一套间距，因此按分段列表项的 token 排出同样的一行：
+        // 最小高度 56dp（ItemOneLineContainerHeight），图标、文字与尾部之间 12dp（ItemBetweenSpace）。
+        // 底部控件横跨整行宽度，不挤在文字列里。
+        Column(
+            rowModifier
+                .background(colors.containerColor(enabled = enabled, selected = false, dragged = false), shapes.shape)
+                .heightIn(min = 56.dp)
+                .padding(contentPadding),
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                leading?.let { Box(Modifier.padding(end = 12.dp)) { it() } }
+                Column(Modifier.weight(1f)) {
                     ProvideContentColorTextStyle(
-                        textStyle = MaterialTheme.typography.titleMedium,
-                        contentColor = if (enabled) {
-                            colors.contentColor
-                        } else {
-                            colors.disabledContentColor
-                        },
-                    ) {
-                        title()
-                    }
+                        contentColor = colors.contentColor(enabled = enabled, selected = false, dragged = false),
+                        textStyle = MaterialTheme.typography.bodyLarge,
+                        content = title,
+                    )
                     description?.let {
                         ProvideContentColorTextStyle(
+                            contentColor = colors.supportingContentColor(enabled = enabled, selected = false, dragged = false),
                             textStyle = MaterialTheme.typography.bodyMedium,
-                            contentColor = if (enabled) {
-                                MaterialTheme.colorScheme.onSurfaceVariant
-                            } else {
-                                colors.disabledContentColor
-                            },
-                        ) {
-                            description()
-                        }
+                            content = it,
+                        )
                     }
                 }
-                endAction?.let { it() }
+                trailing?.let {
+                    Box(Modifier.padding(start = 12.dp)) {
+                        CompositionLocalProvider(
+                            LocalContentColor provides colors.trailingContentColor(enabled = enabled, selected = false, dragged = false),
+                            content = it,
+                        )
+                    }
+                }
             }
-            bottomAction?.let { it() }
+            bottom?.invoke()
         }
     }
 }

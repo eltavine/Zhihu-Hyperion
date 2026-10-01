@@ -38,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.icons.AppIcon
 import com.github.zly2006.zhihu.icons.AppIcons
 import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
@@ -127,6 +128,7 @@ fun NotificationSettingsScreen(
             SettingItemGroup(title = "阅读行为") {
                 SettingItemWithSwitch(
                     title = { Text("打开通知自动已读") },
+                    icon = { Icon(AppIcons.DoneAll, contentDescription = null) },
                     description = { Text("进入通知板块后，自动把当前查看的板块标记为已读") },
                     checked = autoMarkAsRead,
                     onCheckedChange = { checked ->
@@ -138,6 +140,7 @@ fun NotificationSettingsScreen(
                 )
                 SettingItemWithSwitch(
                     title = { Text("显示未读红点") },
+                    icon = { Icon(AppIcons.NotificationsUnread, contentDescription = null) },
                     checked = unreadBadgeEnabled,
                     onCheckedChange = { checked ->
                         unreadBadgeEnabled = checked
@@ -156,6 +159,7 @@ fun NotificationSettingsScreen(
                 NotificationType.entries.forEach { type ->
                     SettingItemWithSwitch(
                         title = { Text(type.displayName) },
+                        icon = { Icon(type.settingIcon(), contentDescription = null) },
                         checked = systemNotificationSettings[type] ?: false,
                         onCheckedChange = { checked ->
                             systemNotificationSettings = systemNotificationSettings.toMutableMap().apply {
@@ -176,6 +180,7 @@ fun NotificationSettingsScreen(
                 NotificationType.entries.forEach { type ->
                     SettingItemWithSwitch(
                         title = { Text(type.displayName) },
+                        icon = { Icon(type.settingIcon(), contentDescription = null) },
                         checked = displayInAppSettings[type] ?: true,
                         onCheckedChange = { checked ->
                             displayInAppSettings = displayInAppSettings.toMutableMap().apply {
@@ -188,4 +193,11 @@ fun NotificationSettingsScreen(
             }
         }
     }
+}
+
+private fun NotificationType.settingIcon(): AppIcon = when (this) {
+    NotificationType.LIKE_ANSWER -> AppIcons.Favorite
+    NotificationType.LIKE_COMMENT -> AppIcons.AddReaction
+    NotificationType.REPLY_COMMENT -> AppIcons.Reply
+    NotificationType.INVITE_ANSWER -> AppIcons.ContactSupport
 }

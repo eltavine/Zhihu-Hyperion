@@ -96,7 +96,6 @@ import org.koin.compose.koinInject
 import zhihu.shared.generated.resources.Res
 import zhihu.shared.generated.resources.app_icon
 import zhihu.shared.generated.resources.ic_github_24dp
-import zhihu.shared.generated.resources.ic_license_24dp
 
 const val ACCOUNT_SETTINGS_SCROLL_TAG = "accountSettings.scroll"
 const val ACCOUNT_SETTINGS_LOGIN_ITEM_TAG = "accountSettings.loginItem"
@@ -591,7 +590,7 @@ fun AccountSettingScreen(
                 SettingItem(
                     title = { Text("项目协议") },
                     description = { Text("AGPL-3.0-only") },
-                    icon = { Icon(painterResource(Res.drawable.ic_license_24dp), null) },
+                    icon = { Icon(AppIcons.Gavel, null) },
                     onClick = {
                         openSystemUrl("https://github.com/eltavine/Zhihu-Hyperion/blob/master/LICENSE")
                     },
@@ -606,7 +605,7 @@ fun AccountSettingScreen(
                 SettingItem(
                     title = { Text("开源许可") },
                     description = { Text("查看第三方组件许可证") },
-                    icon = { Icon(painterResource(Res.drawable.ic_license_24dp), null) },
+                    icon = { Icon(AppIcons.License, null) },
                     modifier = Modifier.testTag(ACCOUNT_SETTINGS_LICENSES_TAG),
                     onClick = { navigator.onNavigate(Account.OpenSourceLicenses) },
                 )
@@ -617,6 +616,7 @@ fun AccountSettingScreen(
     if (showLogoutDialog) {
         AlertDialog(
             onDismissRequest = { showLogoutDialog = false },
+            icon = { Icon(AppIcons.Logout, contentDescription = null) },
             title = { Text("退出登录") },
             text = {
                 Text(

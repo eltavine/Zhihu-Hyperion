@@ -464,6 +464,7 @@ fun WriteAnswerScreen(
             Spacer(Modifier.height(16.dp))
             SettingItemWithSwitch(
                 title = { Text("生成目录") },
+                icon = { Icon(AppIcons.Toc, contentDescription = null) },
                 description = {
                     Text("适合长回答，知乎会根据标题生成目录结构。")
                 },

@@ -52,7 +52,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -140,6 +139,7 @@ import com.github.zly2006.zhihu.ui.components.ANSWER_SWITCH_SENSITIVITY_PREFEREN
 import com.github.zly2006.zhihu.ui.components.AnswerHorizontalOverscroll
 import com.github.zly2006.zhihu.ui.components.AnswerPreview
 import com.github.zly2006.zhihu.ui.components.AnswerVerticalOverscroll
+import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
 import com.github.zly2006.zhihu.ui.components.AuthorBadge
 import com.github.zly2006.zhihu.ui.components.CollectionDialogComponent
 import com.github.zly2006.zhihu.ui.components.ContentEndMarker
@@ -1233,7 +1233,7 @@ fun ArticleScreen(
                 preferenceName = "buttonSkipAnswer",
             ) {
                 if (answerNavigationState.navigatingToNextAnswer) {
-                    CircularProgressIndicator(modifier = Modifier.size(30.dp))
+                    AppLoadingIndicator(modifier = Modifier.size(30.dp))
                 } else {
                     Icon(AppIcons.SkipNext, contentDescription = "下一个回答")
                 }

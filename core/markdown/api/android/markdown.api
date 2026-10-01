@@ -1,10 +1,14 @@
 public final class com/github/zly2006/zhihu/markdown/ComposableSingletons$RenderMarkdownKt {
 	public static final field INSTANCE Lcom/github/zly2006/zhihu/markdown/ComposableSingletons$RenderMarkdownKt;
 	public fun <init> ()V
+	public final fun getLambda$-1632540389$Zhihu_Hyperion_core_markdown ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1735836583$Zhihu_Hyperion_core_markdown ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$-357616834$Zhihu_Hyperion_core_markdown ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$-460913028$Zhihu_Hyperion_core_markdown ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$1003078997$Zhihu_Hyperion_core_markdown ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$1738218717$Zhihu_Hyperion_core_markdown ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1739181682$Zhihu_Hyperion_core_markdown ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$463295162$Zhihu_Hyperion_core_markdown ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$821701668$Zhihu_Hyperion_core_markdown ()Lkotlin/jvm/functions/Function2;
 }
 

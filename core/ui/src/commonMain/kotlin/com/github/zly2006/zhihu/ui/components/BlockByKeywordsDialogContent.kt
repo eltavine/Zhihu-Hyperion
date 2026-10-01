@@ -102,7 +102,7 @@ fun BlockByKeywordsDialogContent(
                                 .padding(32.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
-                            CircularProgressIndicator()
+                            AppLoadingIndicator()
                             Spacer(modifier = Modifier.height(16.dp))
                             Text("正在提取关键词...")
                         }
@@ -260,6 +260,7 @@ fun KeywordDetailDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        icon = { Icon(AppIcons.MatchWord, contentDescription = null) },
         title = { Text("关键词详细信息") },
         text = {
             Column(

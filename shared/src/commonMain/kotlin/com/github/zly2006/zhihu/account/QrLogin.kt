@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -45,6 +44,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.withTimeoutOrNull
 
@@ -195,7 +195,7 @@ fun SharedQrLoginPane(
             )
             Spacer(modifier = Modifier.size(16.dp))
         } else if (isWorking) {
-            CircularProgressIndicator(
+            AppLoadingIndicator(
                 modifier = Modifier.testTag("qr_login_loading"),
             )
             Spacer(modifier = Modifier.size(16.dp))

@@ -266,6 +266,7 @@ private fun FeedCardMenuBox(
             menuItems { onShowMenuChange(false) }
             DropdownMenuItem(
                 text = { Text("外观设置") },
+                leadingIcon = { Icon(AppIcons.Palette, contentDescription = null) },
                 onClick = {
                     onShowMenuChange(false)
                     navigator.onNavigate(Account.AppearanceSettings())
@@ -274,6 +275,7 @@ private fun FeedCardMenuBox(
             if (item.isQualityFiltered) {
                 DropdownMenuItem(
                     text = { Text("调整质量屏蔽") },
+                    leadingIcon = { Icon(AppIcons.HighQuality, contentDescription = null) },
                     onClick = {
                         onShowMenuChange(false)
                         navigator.onNavigate(Account.RecommendSettings(QUALITY_FILTER_MODE_PREFERENCE_KEY))

@@ -42,6 +42,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
 
 enum class LoginMethod(
@@ -120,6 +122,7 @@ fun LoginScreen(onLoginComplete: () -> Unit) {
     loggedInUsername?.let { username ->
         AlertDialog(
             onDismissRequest = onLoginComplete,
+            icon = { Icon(AppIcons.CheckCircle, contentDescription = null) },
             title = { Text("登录成功") },
             text = { Text("欢迎回来，$username") },
             confirmButton = {

@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
@@ -284,6 +283,7 @@ fun SystemAndUpdateSettingsScreen(
                 val acceleration by updateController.acceleration.collectAsState()
                 SettingItemWithSwitch(
                     title = { Text("GitHub 加速") },
+                    icon = { Icon(AppIcons.Bolt, contentDescription = null) },
                     description = { Text("通过第三方加速服务 gh-proxy.com 检查和下载更新，适合直连 GitHub 很慢或失败的网络") },
                     checked = acceleration == GitHubAcceleration.ENABLED,
                     onCheckedChange = {
@@ -299,6 +299,7 @@ fun SystemAndUpdateSettingsScreen(
                     }
                     SettingItemWithSwitch(
                         title = { Text("关闭窗口时退出应用") },
+                        icon = { Icon(AppIcons.PowerSettingsNew, contentDescription = null) },
                         description = { Text("关闭最后一个窗口时同时退出 macOS 应用；默认关闭") },
                         checked = quitOnWindowClose,
                         onCheckedChange = {
@@ -313,6 +314,7 @@ fun SystemAndUpdateSettingsScreen(
                 var checkNightlyUpdates by remember { mutableStateOf(settings.getBoolean(CHECK_NIGHTLY_UPDATES_PREFERENCE_KEY, false)) }
                 SettingItemWithSwitch(
                     title = { Text("检查 Nightly 版本更新") },
+                    icon = { Icon(AppIcons.Nightlight, contentDescription = null) },
                     description = { Text("检查每日构建版本 (可能不稳定)") },
                     checked = checkNightlyUpdates,
                     onCheckedChange = {
@@ -329,6 +331,7 @@ fun SystemAndUpdateSettingsScreen(
                 SettingItemWithSwitch(
                     modifier = Modifier.testTag(SYSTEM_SETTINGS_AIGC_MARKING_TAG),
                     title = { Text("启用 AIGC 标记") },
+                    icon = { Icon(AppIcons.SmartToy, contentDescription = null) },
                     description = {
                         Text(
                             "如果启用，会把你正在浏览的内容发送到我们的服务器，这样你可以知道其他用户是否认为其疑似 AIGC。默认关闭，不会发送隐私信息。",
@@ -392,13 +395,15 @@ fun SystemAndUpdateSettingsScreen(
             ) {
                 SettingItem(
                     title = { Text("防沉迷提醒") },
+                    icon = { Icon(AppIcons.HourglassTop, contentDescription = null) },
                     description = { Text("你已经连续浏览知乎 N 小时 M 分钟了，休息一下吧。退出后 5 分钟内重开仍视为连续使用。") },
                     settingKey = CONTINUOUS_USAGE_REMINDER_INTERVAL_MINUTES_KEY,
                     highlightedKey = highlightedSetting,
-                    endAction = {
+                    bottomAction = {
                         ExposedDropdownMenuBox(
                             expanded = reminderExpanded,
                             onExpandedChange = { reminderExpanded = it },
+                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                         ) {
                             OutlinedTextField(
                                 value = reminderOptions
@@ -411,7 +416,7 @@ fun SystemAndUpdateSettingsScreen(
                                 },
                                 modifier = Modifier
                                     .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                                    .width(160.dp),
+                                    .fillMaxWidth(),
                                 colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
                             )
                             ExposedDropdownMenu(

@@ -41,7 +41,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -80,6 +79,7 @@ import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageDuration
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
+import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockConfirmDialog
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockRequest
@@ -422,6 +422,7 @@ fun FollowRecommendScreen(
                     menuItems = { dismissMenu ->
                         DropdownMenuItem(
                             text = { Text("屏蔽用户") },
+                            leadingIcon = { Icon(AppIcons.PersonOff, contentDescription = null) },
                             onClick = {
                                 dismissMenu()
                                 viewModel.handleBlockUser(environment, userMessages, item) { authorInfo ->
@@ -440,6 +441,7 @@ fun FollowRecommendScreen(
                         if (canBlockQuestionAuthor) {
                             DropdownMenuItem(
                                 text = { Text("屏蔽提问者") },
+                                leadingIcon = { Icon(AppIcons.PersonOff, contentDescription = null) },
                                 onClick = {
                                     dismissMenu()
                                     viewModel.handleBlockQuestionAuthor(environment, userMessages, item) { authorInfo ->
@@ -462,6 +464,7 @@ fun FollowRecommendScreen(
                         topics.forEach { topic ->
                             DropdownMenuItem(
                                 text = { Text("屏蔽「${topic.name}」") },
+                                leadingIcon = { Icon(AppIcons.Tag, contentDescription = null) },
                                 onClick = {
                                     dismissMenu()
                                     viewModel.handleBlockTopic(userMessages, topic.id, topic.name)
@@ -480,7 +483,7 @@ fun FollowRecommendScreen(
                     },
                 ) {
                     if (viewModel.isLoading) {
-                        CircularProgressIndicator(modifier = Modifier.size(36.dp))
+                        AppLoadingIndicator(modifier = Modifier.size(36.dp))
                     } else {
                         Icon(AppIcons.Refresh, contentDescription = "刷新")
                     }
@@ -583,6 +586,7 @@ fun FollowDynamicScreen(
                     menuItems = { dismissMenu ->
                         DropdownMenuItem(
                             text = { Text("屏蔽用户") },
+                            leadingIcon = { Icon(AppIcons.PersonOff, contentDescription = null) },
                             onClick = {
                                 dismissMenu()
                                 viewModel.handleBlockUser(environment, userMessages, item) { authorInfo ->
@@ -601,6 +605,7 @@ fun FollowDynamicScreen(
                         if (canBlockQuestionAuthor) {
                             DropdownMenuItem(
                                 text = { Text("屏蔽提问者") },
+                                leadingIcon = { Icon(AppIcons.PersonOff, contentDescription = null) },
                                 onClick = {
                                     dismissMenu()
                                     viewModel.handleBlockQuestionAuthor(environment, userMessages, item) { authorInfo ->
@@ -623,6 +628,7 @@ fun FollowDynamicScreen(
                         topics.forEach { topic ->
                             DropdownMenuItem(
                                 text = { Text("屏蔽「${topic.name}」") },
+                                leadingIcon = { Icon(AppIcons.Tag, contentDescription = null) },
                                 onClick = {
                                     dismissMenu()
                                     viewModel.handleBlockTopic(userMessages, topic.id, topic.name)
@@ -641,7 +647,7 @@ fun FollowDynamicScreen(
                     },
                 ) {
                     if (viewModel.isLoading) {
-                        CircularProgressIndicator(modifier = Modifier.size(36.dp))
+                        AppLoadingIndicator(modifier = Modifier.size(36.dp))
                     } else {
                         Icon(AppIcons.Refresh, contentDescription = "刷新")
                     }

@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -60,6 +59,7 @@ import com.github.zly2006.zhihu.icons.AppIcons
 import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
+import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
 import com.github.zly2006.zhihu.viewmodel.CollectionContentViewModel
 import com.github.zly2006.zhihu.viewmodel.CollectionsViewModel
@@ -231,6 +231,7 @@ fun CollectionBrowseScreen(
                             collections.forEach { collection ->
                                 DropdownMenuItem(
                                     text = { Text(collection.title) },
+                                    leadingIcon = { Icon(AppIcons.Folder, contentDescription = null) },
                                     trailingIcon = {
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             if (collection.id == selectedCollectionId) {
@@ -314,7 +315,7 @@ fun CollectionBrowseScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center,
                 ) {
-                    CircularProgressIndicator(modifier = Modifier.testTag(COLLECTION_BROWSE_LOADING_COLLECTIONS_TAG))
+                    AppLoadingIndicator(modifier = Modifier.testTag(COLLECTION_BROWSE_LOADING_COLLECTIONS_TAG))
                 }
             }
 
@@ -366,7 +367,7 @@ fun CollectionBrowseScreen(
                             },
                         ) {
                             if (contentViewModel.isLoading) {
-                                CircularProgressIndicator(modifier = Modifier.size(30.dp))
+                                AppLoadingIndicator(modifier = Modifier.size(30.dp))
                             } else {
                                 Icon(AppIcons.Refresh, contentDescription = "重新随机加载")
                             }
@@ -386,6 +387,7 @@ fun CollectionBrowseScreen(
                     collectionPendingDeletion = null
                 }
             },
+            icon = { Icon(AppIcons.Delete, contentDescription = null) },
             title = { Text("删除收藏夹") },
             text = {
                 Column {

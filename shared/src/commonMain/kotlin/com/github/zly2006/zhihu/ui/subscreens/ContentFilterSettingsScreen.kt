@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -77,6 +76,8 @@ import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
+import com.github.zly2006.zhihu.ui.components.ChoiceButtonGroup
+import com.github.zly2006.zhihu.ui.components.ChoiceOption
 import com.github.zly2006.zhihu.ui.components.SettingItem
 import com.github.zly2006.zhihu.ui.components.SettingItemGroup
 import com.github.zly2006.zhihu.ui.components.SettingItemWithSwitch
@@ -159,9 +160,10 @@ fun ContentFilterSettingsScreen(
             SettingItemGroup {
                 SettingItem(
                     title = { Text("推荐算法") },
+                    icon = { Icon(AppIcons.Recommend, contentDescription = null) },
                     settingKey = "recommendationMode",
                     highlightedKey = highlightedSetting,
-                    endAction = {
+                    bottomAction = {
                         // 推荐模式
                         val currentRecommendationMode = remember {
                             mutableStateOf(
@@ -175,7 +177,7 @@ fun ContentFilterSettingsScreen(
                         ExposedDropdownMenuBox(
                             expanded = expanded,
                             onExpandedChange = { expanded = !expanded },
-                            modifier = Modifier.width(256.dp),
+                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                         ) {
                             OutlinedTextField(
                                 value = currentRecommendationMode.value.displayName,
@@ -183,6 +185,7 @@ fun ContentFilterSettingsScreen(
                                 readOnly = true,
                                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                                 modifier = Modifier
+                                    .fillMaxWidth()
                                     .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true)
                                     .testTag("contentFilterSettings:recommendationModeField"),
                             )
@@ -197,6 +200,17 @@ fun ContentFilterSettingsScreen(
                                                 Text(mode.displayName)
                                                 Text(mode.description, style = MaterialTheme.typography.bodySmall)
                                             }
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                when (mode) {
+                                                    RecommendationMode.WEB -> AppIcons.Language
+                                                    RecommendationMode.ANDROID -> AppIcons.Android
+                                                    RecommendationMode.LOCAL -> AppIcons.Database
+                                                    RecommendationMode.MIXED -> AppIcons.Merge
+                                                },
+                                                contentDescription = null,
+                                            )
                                         },
                                         onClick = {
                                             currentRecommendationMode.value = mode
@@ -216,6 +230,7 @@ fun ContentFilterSettingsScreen(
                 SettingItemWithSwitch(
                     modifier = Modifier.testTag("contentFilterSettings:loginForRecommendation"),
                     title = { Text("推荐内容时登录") },
+                    icon = { Icon(AppIcons.Login, contentDescription = null) },
                     description = { Text("获取推荐内容时携带登录凭证") },
                     checked = isLoginForRecommendation.value,
                     onCheckedChange = { checked ->
@@ -232,6 +247,7 @@ fun ContentFilterSettingsScreen(
                 SettingItemWithSwitch(
                     modifier = Modifier.testTag("contentFilterSettings:autoRefreshHomeOnStartup"),
                     title = { Text("启动时自动刷新首页") },
+                    icon = { Icon(AppIcons.Autorenew, contentDescription = null) },
                     description = { Text("关闭后优先显示上次获取的一批首页推荐；没有缓存时仍会加载新推荐") },
                     checked = autoRefreshHomeOnStartup.value,
                     onCheckedChange = { checked ->
@@ -245,7 +261,6 @@ fun ContentFilterSettingsScreen(
 
             val enableContentFilter = remember { mutableStateOf(settings.getBoolean("enableContentFilter", true)) }
             SettingItemGroup {
-                var qualityFilterModeExpanded by remember { mutableStateOf(false) }
                 val qualityFilterMode = remember {
                     mutableStateOf(
                         QualityFilterMode.entries.firstOrNull {
@@ -253,49 +268,26 @@ fun ContentFilterSettingsScreen(
                         } ?: QualityFilterMode.RULES,
                     )
                 }
-                val qualityFilterModeOptions = listOf(
-                    QualityFilterMode.OFF to "不屏蔽",
-                    QualityFilterMode.RULES to "屏蔽规则",
-                    QualityFilterMode.HIDE to "隐藏",
-                )
                 SettingItem(
                     title = { Text("质量屏蔽") },
+                    icon = { Icon(AppIcons.HighQuality, contentDescription = null) },
                     description = { Text("根据赞同数、关注数等指标处理低质量内容") },
                     settingKey = QUALITY_FILTER_MODE_PREFERENCE_KEY,
                     highlightedKey = highlightedSetting,
-                    endAction = {
-                        ExposedDropdownMenuBox(
-                            expanded = qualityFilterModeExpanded,
-                            onExpandedChange = { qualityFilterModeExpanded = it },
-                        ) {
-                            OutlinedTextField(
-                                value = qualityFilterModeOptions.first { it.first == qualityFilterMode.value }.second,
-                                onValueChange = {},
-                                readOnly = true,
-                                trailingIcon = {
-                                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = qualityFilterModeExpanded)
-                                },
-                                modifier = Modifier
-                                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                                    .width(160.dp),
-                                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                            )
-                            ExposedDropdownMenu(
-                                expanded = qualityFilterModeExpanded,
-                                onDismissRequest = { qualityFilterModeExpanded = false },
-                            ) {
-                                qualityFilterModeOptions.forEach { (mode, label) ->
-                                    DropdownMenuItem(
-                                        text = { Text(label) },
-                                        onClick = {
-                                            qualityFilterMode.value = mode
-                                            settings.putString(QUALITY_FILTER_MODE_PREFERENCE_KEY, mode.name)
-                                            qualityFilterModeExpanded = false
-                                        },
-                                    )
-                                }
-                            }
-                        }
+                    bottomAction = {
+                        ChoiceButtonGroup(
+                            options = listOf(
+                                ChoiceOption(QualityFilterMode.OFF, "不屏蔽"),
+                                ChoiceOption(QualityFilterMode.RULES, "屏蔽规则"),
+                                ChoiceOption(QualityFilterMode.HIDE, "隐藏"),
+                            ),
+                            selected = qualityFilterMode.value,
+                            onSelect = { mode ->
+                                qualityFilterMode.value = mode
+                                settings.putString(QUALITY_FILTER_MODE_PREFERENCE_KEY, mode.name)
+                            },
+                            modifier = Modifier.padding(top = 8.dp),
+                        )
                     },
                 )
 
@@ -313,6 +305,7 @@ fun ContentFilterSettingsScreen(
                 var thresholdKey by remember { mutableStateOf<String?>(null) }
                 SettingItem(
                     title = { Text("回答最低赞数") },
+                    icon = { Icon(AppIcons.ThumbUp, contentDescription = null) },
                     description = { Text("低于此赞同数的未关注作者回答会被过滤") },
                     settingKey = ANSWER_VOTEUP_THRESHOLD_PREFERENCE_KEY,
                     highlightedKey = highlightedSetting,
@@ -321,6 +314,7 @@ fun ContentFilterSettingsScreen(
                 )
                 SettingItem(
                     title = { Text("文章最低赞数") },
+                    icon = { Icon(AppIcons.Article, contentDescription = null) },
                     description = { Text("低于此赞数或作者粉丝低于对应阈值的文章会被过滤") },
                     settingKey = ARTICLE_VOTEUP_THRESHOLD_PREFERENCE_KEY,
                     highlightedKey = highlightedSetting,
@@ -340,6 +334,7 @@ fun ContentFilterSettingsScreen(
                 }
                 SettingItem(
                     title = { Text("其他质量过滤阈值") },
+                    icon = { Icon(AppIcons.InstantMix, contentDescription = null) },
                     description = { Text("文章粉丝数、视频和问题规则") },
                     endAction = { Text(if (advancedThresholdsExpanded) "收起" else "展开", modifier = Modifier.padding(horizontal = 16.dp)) },
                     onClick = { advancedThresholdsExpanded = !advancedThresholdsExpanded },
@@ -347,14 +342,15 @@ fun ContentFilterSettingsScreen(
                 AnimatedVisibility(visible = advancedThresholdsExpanded) {
                     Column {
                         listOf(
-                            ARTICLE_FOLLOWERS_THRESHOLD_PREFERENCE_KEY to "文章最低粉丝数",
-                            VIDEO_VOTE_THRESHOLD_PREFERENCE_KEY to "视频最低赞数",
-                            VIDEO_FOLLOWERS_THRESHOLD_PREFERENCE_KEY to "视频最低粉丝数",
-                            QUESTION_ANSWER_THRESHOLD_PREFERENCE_KEY to "问题最低回答数",
-                            QUESTION_FOLLOWERS_THRESHOLD_PREFERENCE_KEY to "问题最低关注数",
-                        ).forEach { (key, title) ->
+                            Triple(ARTICLE_FOLLOWERS_THRESHOLD_PREFERENCE_KEY, "文章最低粉丝数", AppIcons.Group),
+                            Triple(VIDEO_VOTE_THRESHOLD_PREFERENCE_KEY, "视频最低赞数", AppIcons.SmartDisplay),
+                            Triple(VIDEO_FOLLOWERS_THRESHOLD_PREFERENCE_KEY, "视频最低粉丝数", AppIcons.Groups),
+                            Triple(QUESTION_ANSWER_THRESHOLD_PREFERENCE_KEY, "问题最低回答数", AppIcons.Forum),
+                            Triple(QUESTION_FOLLOWERS_THRESHOLD_PREFERENCE_KEY, "问题最低关注数", AppIcons.PersonAdd),
+                        ).forEach { (key, title, icon) ->
                             SettingItem(
                                 title = { Text(title) },
+                                icon = { Icon(icon, contentDescription = null) },
                                 settingKey = key,
                                 highlightedKey = highlightedSetting,
                                 endAction = { Text(thresholdValues[key].toString(), modifier = Modifier.padding(horizontal = 16.dp)) },
@@ -379,6 +375,7 @@ fun ContentFilterSettingsScreen(
                     }
                     AlertDialog(
                         onDismissRequest = { thresholdKey = null },
+                        icon = { Icon(AppIcons.Tune, contentDescription = null) },
                         title = { Text("设置$thresholdTitle") },
                         text = { OutlinedTextField(value = input, onValueChange = { input = it }, label = { Text("阈值") }, singleLine = true) },
                         confirmButton = {
@@ -397,6 +394,7 @@ fun ContentFilterSettingsScreen(
                 SettingItemWithSwitch(
                     modifier = Modifier.testTag("contentFilterSettings:enableContentFilter"),
                     title = { Text("启用智能内容过滤") },
+                    icon = { Icon(AppIcons.Psychology, contentDescription = null) },
                     description = { Text("自动过滤首页展示超过2次但用户未点击的内容，减少重复推荐") },
                     checked = enableContentFilter.value,
                     onCheckedChange = {
@@ -411,6 +409,7 @@ fun ContentFilterSettingsScreen(
                 SettingItemWithSwitch(
                     modifier = Modifier.testTag("contentFilterSettings:filterFollowedUserContent"),
                     title = { Text("过滤已关注用户内容") },
+                    icon = { Icon(AppIcons.HowToReg, contentDescription = null) },
                     description = { Text("是否对已关注用户的内容也应用过滤规则。关闭此选项可确保关注用户的内容始终显示") },
                     checked = filterFollowedUserContent.value,
                     onCheckedChange = {
@@ -427,6 +426,7 @@ fun ContentFilterSettingsScreen(
                 val enableKeywordBlocking = remember { mutableStateOf(settings.getBoolean("enableKeywordBlocking", true)) }
                 SettingItemWithSwitch(
                     title = { Text("启用关键词屏蔽") },
+                    icon = { Icon(AppIcons.MatchWord, contentDescription = null) },
                     description = { Text("屏蔽包含特定关键词的内容") },
                     checked = enableKeywordBlocking.value,
                     onCheckedChange = {
@@ -440,6 +440,7 @@ fun ContentFilterSettingsScreen(
                 val enableUserBlocking = remember { mutableStateOf(settings.getBoolean("enableUserBlocking", true)) }
                 SettingItemWithSwitch(
                     title = { Text("启用用户屏蔽") },
+                    icon = { Icon(AppIcons.PersonOff, contentDescription = null) },
                     description = { Text("屏蔽特定用户发布的内容，或由特定用户提出的问题") },
                     checked = enableUserBlocking.value,
                     onCheckedChange = {
@@ -453,6 +454,7 @@ fun ContentFilterSettingsScreen(
                 val enableTopicBlocking = remember { mutableStateOf(settings.getBoolean("enableTopicBlocking", true)) }
                 SettingItemWithSwitch(
                     title = { Text("启用主题屏蔽") },
+                    icon = { Icon(AppIcons.Tag, contentDescription = null) },
                     description = { Text("屏蔽包含特定主题的内容") },
                     checked = enableTopicBlocking.value,
                     onCheckedChange = {
@@ -469,6 +471,7 @@ fun ContentFilterSettingsScreen(
 
                     SettingItem(
                         title = { Text("主题屏蔽阈值") },
+                        icon = { Icon(AppIcons.LinearScale, contentDescription = null) },
                         description = {
                             Text(
                                 "当回答的问题包含 >= ${topicThreshold.value} 个被屏蔽主题时，屏蔽该内容",
@@ -491,6 +494,7 @@ fun ContentFilterSettingsScreen(
 
                         AlertDialog(
                             onDismissRequest = { showThresholdDialog = false },
+                            icon = { Icon(AppIcons.LinearScale, contentDescription = null) },
                             title = { Text("设置主题屏蔽阈值") },
                             text = {
                                 Column {
@@ -534,6 +538,7 @@ fun ContentFilterSettingsScreen(
                 val blockZhihuAdPlatform = remember { mutableStateOf(settings.getBoolean("blockZhihuAdPlatform", true)) }
                 SettingItemWithSwitch(
                     title = { Text("屏蔽知乎广告平台内容") },
+                    icon = { Icon(AppIcons.AdOff, contentDescription = null) },
                     description = { Text("匹配并屏蔽包含 xg.zhihu.com 的推广内容") },
                     checked = blockZhihuAdPlatform.value,
                     onCheckedChange = {
@@ -547,6 +552,7 @@ fun ContentFilterSettingsScreen(
                 val blockZhihuSchool = remember { mutableStateOf(settings.getBoolean("blockZhihuSchool", true)) }
                 SettingItemWithSwitch(
                     title = { Text("屏蔽知乎学堂内容") },
+                    icon = { Icon(AppIcons.School, contentDescription = null) },
                     description = { Text("匹配并屏蔽包含 d.zhihu.com 或 data-edu-card-id 的内容") },
                     checked = blockZhihuSchool.value,
                     onCheckedChange = {
@@ -560,6 +566,7 @@ fun ContentFilterSettingsScreen(
                 val blockWeChatOfficialAccount = remember { mutableStateOf(settings.getBoolean("blockWeChatOfficialAccount", true)) }
                 SettingItemWithSwitch(
                     title = { Text("屏蔽微信公众号文章") },
+                    icon = { Icon(AppIcons.Chat, contentDescription = null) },
                     description = { Text("匹配并屏蔽包含 mp.weixin.qq.com 的外链文章") },
                     checked = blockWeChatOfficialAccount.value,
                     onCheckedChange = {
@@ -573,6 +580,7 @@ fun ContentFilterSettingsScreen(
                 val blockPaidContent = remember { mutableStateOf(settings.getBoolean("blockPaidContent", true)) }
                 SettingItemWithSwitch(
                     title = { Text("屏蔽知乎盐选付费内容") },
+                    icon = { Icon(AppIcons.Paid, contentDescription = null) },
                     description = { Text("屏蔽知乎盐选会员专享的付费回答和文章") },
                     checked = blockPaidContent.value,
                     onCheckedChange = {
@@ -586,6 +594,7 @@ fun ContentFilterSettingsScreen(
                 val reverseBlock = remember { mutableStateOf(settings.getBoolean("reverseBlock", false)) }
                 SettingItemWithSwitch(
                     title = { Text("反向屏蔽（吃\uD83D\uDCA9模式）") },
+                    icon = { Icon(AppIcons.SwapHoriz, contentDescription = null) },
                     description = { Text("开启后，首页将只保留广告和付费内容，屏蔽其余所有内容") },
                     checked = reverseBlock.value,
                     onCheckedChange = {
@@ -601,6 +610,7 @@ fun ContentFilterSettingsScreen(
                 SettingItem(
                     modifier = Modifier.testTag("contentFilterSettings:blocklist"),
                     title = { Text("管理屏蔽列表") },
+                    icon = { Icon(AppIcons.PlaylistRemove, contentDescription = null) },
                     onClick = { navigator.onNavigate(Account.RecommendSettings.Blocklist) },
                     endAction = {
                         Icon(
@@ -616,6 +626,7 @@ fun ContentFilterSettingsScreen(
                 SettingItem(
                     modifier = Modifier.testTag("contentFilterSettings:blockedFeedHistory"),
                     title = { Text("屏蔽记录") },
+                    icon = { Icon(AppIcons.ManageHistory, contentDescription = null) },
                     onClick = { navigator.onNavigate(Account.RecommendSettings.BlockedFeedHistory) },
                     endAction = {
                         Icon(
@@ -643,6 +654,7 @@ fun ContentFilterSettingsScreen(
                 AnimatedVisibility(visible = enableContentFilter.value && filterStats != null) {
                     SettingItem(
                         title = { Text("过滤统计") },
+                        icon = { Icon(AppIcons.BarChart, contentDescription = null) },
                         description = {
                             Text(
                                 "已累计过滤 ${filterStats?.filteredCount ?: 0} 条内容，点击查看详情",
@@ -656,6 +668,7 @@ fun ContentFilterSettingsScreen(
             if (showStatsDialog && filterStats != null) {
                 AlertDialog(
                     onDismissRequest = { showStatsDialog = false },
+                    icon = { Icon(AppIcons.BarChart, contentDescription = null) },
                     title = { Text("过滤统计详情") },
                     text = {
                         Column {

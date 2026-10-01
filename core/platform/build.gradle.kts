@@ -11,6 +11,7 @@ kotlin {
             implementation(projects.core.common)
             implementation(projects.core.model)
             implementation(projects.core.account)
+            implementation(projects.core.icons)
             api(libs.kotlinx.io.core)
             implementation(libs.compose.ui)
             implementation(libs.compose.foundation)

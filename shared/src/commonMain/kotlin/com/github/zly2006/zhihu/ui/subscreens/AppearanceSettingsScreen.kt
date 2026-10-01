@@ -39,7 +39,6 @@ import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,7 +49,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
@@ -105,10 +103,13 @@ import com.github.zly2006.zhihu.theme.PREF_FONT_SIZE
 import com.github.zly2006.zhihu.theme.PREF_LINE_HEIGHT
 import com.github.zly2006.zhihu.theme.ThemeManager
 import com.github.zly2006.zhihu.theme.ThemeMode
+import com.github.zly2006.zhihu.ui.allBottomBarItems
 import com.github.zly2006.zhihu.ui.article.ANSWER_DOUBLE_TAP_ACTION_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.article.ARTICLE_USE_WEBVIEW_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.article.AnswerDoubleTapAction
 import com.github.zly2006.zhihu.ui.components.ANSWER_SWITCH_SENSITIVITY_PREFERENCE_KEY
+import com.github.zly2006.zhihu.ui.components.ChoiceButtonGroup
+import com.github.zly2006.zhihu.ui.components.ChoiceOption
 import com.github.zly2006.zhihu.ui.components.ColorPickerDialog
 import com.github.zly2006.zhihu.ui.components.DEFAULT_ANSWER_SWITCH_SENSITIVITY
 import com.github.zly2006.zhihu.ui.components.DEFAULT_FAB_OPACITY
@@ -403,51 +404,33 @@ fun AppearanceSettingsScreen(
             ) {
                 SettingItem(
                     title = { Text("主题模式") },
+                    icon = { Icon(AppIcons.Contrast, contentDescription = null) },
                     description = { Text("设置应用的显示主题。") },
                     settingKey = "nightMode",
                     highlightedKey = settingKey,
                     bringIntoViewRequester = requesterFor("nightMode"),
                     bottomAction = {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                        ) {
-                            val themeModes = listOf(
-                                ThemeMode.SYSTEM to "自动",
-                                ThemeMode.LIGHT to "亮色",
-                                ThemeMode.DARK to "暗色",
-                            )
-                            themeModes.forEach { (mode, label) ->
-                                val isSelected = currentThemeMode == mode
-                                OutlinedButton(
-                                    onClick = {
-                                        ThemeManager.setThemeMode(mode)
-                                        settings.putString("themeMode", mode.name)
-                                        userMessages.showShortMessage("已切换到$label")
-                                    },
-                                    colors = ButtonDefaults.outlinedButtonColors(
-                                        containerColor = if (isSelected) {
-                                            MaterialTheme.colorScheme.primaryContainer
-                                        } else {
-                                            Color.Transparent
-                                        },
-                                        contentColor = if (isSelected) {
-                                            MaterialTheme.colorScheme.onPrimaryContainer
-                                        } else {
-                                            MaterialTheme.colorScheme.onSurface
-                                        },
-                                    ),
-                                    modifier = Modifier.weight(1f),
-                                ) {
-                                    Text(label)
-                                }
-                            }
-                        }
+                        val themeModes = listOf(
+                            ChoiceOption(ThemeMode.SYSTEM, "自动", AppIcons.BrightnessAuto),
+                            ChoiceOption(ThemeMode.LIGHT, "亮色", AppIcons.LightMode),
+                            ChoiceOption(ThemeMode.DARK, "暗色", AppIcons.DarkMode),
+                        )
+                        ChoiceButtonGroup(
+                            options = themeModes,
+                            selected = currentThemeMode,
+                            onSelect = { mode ->
+                                ThemeManager.setThemeMode(mode)
+                                settings.putString("themeMode", mode.name)
+                                userMessages.showShortMessage("已切换到${themeModes.first { it.value == mode }.label}")
+                            },
+                            modifier = Modifier.padding(top = 8.dp),
+                        )
                     },
                 )
 
                 SettingItemWithSwitch(
                     title = { Text("使用 Material You 动态取色") },
+                    icon = { Icon(AppIcons.Wallpaper, contentDescription = null) },
                     description = { Text("根据系统壁纸自动提取主题色（Android 12+ 可用）。\n关闭后可以自己设定主题颜色。") },
                     checked = useDynamicColor,
                     onCheckedChange = {
@@ -466,6 +449,7 @@ fun AppearanceSettingsScreen(
                 AnimatedVisibility(visible = !useDynamicColor) {
                     SettingItem(
                         title = { Text("自定义主题色") },
+                        icon = { Icon(AppIcons.Palette, contentDescription = null) },
                         description = { Text("点击选择您喜欢的主题颜色") },
                         onClick = { showColorPicker = true },
                         endAction = {
@@ -500,6 +484,7 @@ fun AppearanceSettingsScreen(
 
                 SettingItem(
                     title = { Text("唤起浏览器主题色") },
+                    icon = { Icon(AppIcons.FormatColorFill, contentDescription = null) },
                     description = { Text("应用内浏览器的工具栏颜色") },
                     onClick = { showLuotianYiColorPicker = true },
                     endAction = {
@@ -540,6 +525,7 @@ fun AppearanceSettingsScreen(
 
                 SettingItem(
                     title = { Text("自定义背景颜色") },
+                    icon = { Icon(AppIcons.FormatPaint, contentDescription = null) },
                     description = { Text(if (currentIsDarkTheme) "深色模式背景色" else "浅色模式背景色") },
                     onClick = { showBackgroundColorPicker = true },
                     endAction = {
@@ -581,6 +567,7 @@ fun AppearanceSettingsScreen(
                 SettingItemWithSwitch(
                     modifier = Modifier.testTag(APPEARANCE_SETTINGS_DISABLE_BOTTOM_SHEET_ROUNDED_CORNERS_TAG),
                     title = { Text("禁用 popup 圆角") },
+                    icon = { Icon(AppIcons.RoundedCorner, contentDescription = null) },
                     description = { Text("开启后，评论等 popup 顶部不再显示圆角。") },
                     checked = disableBottomSheetRoundedCorners.value,
                     onCheckedChange = {
@@ -597,6 +584,7 @@ fun AppearanceSettingsScreen(
                 }
                 SettingItem(
                     title = { Text("悬浮按钮透明度") },
+                    icon = { Icon(AppIcons.Opacity, contentDescription = null) },
                     description = { Text("控制所有悬浮按钮的透明度 ($fabOpacity%)。") },
                     bottomAction = {
                         Slider(
@@ -619,6 +607,7 @@ fun AppearanceSettingsScreen(
                 SettingItemWithSwitch(
                     modifier = Modifier.testTag(APPEARANCE_SETTINGS_LANDSCAPE_LIST_DETAIL_TAG),
                     title = { Text("横屏双栏布局") },
+                    icon = { Icon(AppIcons.VerticalSplit, contentDescription = null) },
                     description = { Text("在平板和电脑横屏时同时显示列表与详情。手机横屏始终使用单栏。") },
                     checked = landscapeListDetailEnabled.value,
                     onCheckedChange = {
@@ -648,6 +637,7 @@ fun AppearanceSettingsScreen(
                 }
                 SettingItem(
                     title = { Text("字号") },
+                    icon = { Icon(AppIcons.FormatSize, contentDescription = null) },
                     description = { Text("调整内容文字大小 ($fontSize%)") },
                     settingKey = "fontScale",
                     highlightedKey = settingKey,
@@ -670,6 +660,7 @@ fun AppearanceSettingsScreen(
                 var lineHeight by remember { mutableIntStateOf(settings.getInt(PREF_LINE_HEIGHT, 160)) }
                 SettingItem(
                     title = { Text("行高") },
+                    icon = { Icon(AppIcons.FormatLineSpacing, contentDescription = null) },
                     description = { Text("调整内容行间距 (${lineHeight / 100f})") },
                     bottomAction = {
                         Slider(
@@ -688,6 +679,7 @@ fun AppearanceSettingsScreen(
                 var blockSpacing by remember { mutableIntStateOf(settings.getInt(PREF_BLOCK_SPACING, 100)) }
                 SettingItem(
                     title = { Text("段间距") },
+                    icon = { Icon(AppIcons.FormatParagraph, contentDescription = null) },
                     description = { Text("调整正文段落和块级内容间距 ($blockSpacing%)") },
                     settingKey = PREF_BLOCK_SPACING,
                     highlightedKey = settingKey,
@@ -716,6 +708,7 @@ fun AppearanceSettingsScreen(
                 val showFeedThumbnail = remember { mutableStateOf(settings.getBoolean("showFeedThumbnail", true)) }
                 SettingItemWithSwitch(
                     title = { Text("显示 Feed 卡片缩略图") },
+                    icon = { Icon(AppIcons.Image, contentDescription = null) },
                     description = { Text("在信息流卡片中显示文章缩略图。") },
                     checked = showFeedThumbnail.value,
                     onCheckedChange = {
@@ -729,6 +722,7 @@ fun AppearanceSettingsScreen(
 
                 SettingItemWithSwitch(
                     title = { Text("显示刷新悬浮按钮") },
+                    icon = { Icon(AppIcons.Refresh, contentDescription = null) },
                     description = { Text("在页面上显示可拖动的刷新按钮。") },
                     checked = showRefreshFab.value,
                     onCheckedChange = {
@@ -740,52 +734,31 @@ fun AppearanceSettingsScreen(
                     bringIntoViewRequester = requesterFor("showRefreshFab"),
                 )
 
-                var feedCardStyleExpanded by remember { mutableStateOf(false) }
                 val feedCardStyle = remember {
                     mutableStateOf(settings.getString("feedCardStyle", "divider"))
                 }
-                val feedCardStyleOptions = listOf(
-                    "card" to "卡片样式",
-                    "divider" to "分割线样式",
-                )
                 SettingItem(
                     title = { Text("信息流样式") },
+                    icon = { Icon(AppIcons.ViewAgenda, contentDescription = null) },
                     description = { Text("卡片样式使用圆角卡片展示，分割线样式使用细线分隔条目。") },
                     settingKey = "feedCardStyle",
                     highlightedKey = settingKey,
                     bringIntoViewRequester = requesterFor("feedCardStyle"),
-                    endAction = {
-                        ExposedDropdownMenuBox(
-                            expanded = feedCardStyleExpanded,
-                            onExpandedChange = { feedCardStyleExpanded = it },
-                        ) {
-                            OutlinedTextField(
-                                value = feedCardStyleOptions.find { it.first == feedCardStyle.value }?.second ?: "卡片样式",
-                                onValueChange = {},
-                                readOnly = true,
-                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = feedCardStyleExpanded) },
-                                modifier = Modifier
-                                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                                    .width(160.dp),
-                                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                            )
-                            ExposedDropdownMenu(
-                                expanded = feedCardStyleExpanded,
-                                onDismissRequest = { feedCardStyleExpanded = false },
-                            ) {
-                                feedCardStyleOptions.forEach { (mode, label) ->
-                                    DropdownMenuItem(
-                                        text = { Text(label) },
-                                        onClick = {
-                                            feedCardStyle.value = mode
-                                            settings.putString("feedCardStyle", mode)
-                                            feedCardStyleExpanded = false
-                                            userMessages.showShortMessage("已设置为：$label")
-                                        },
-                                    )
-                                }
-                            }
-                        }
+                    bottomAction = {
+                        val feedCardStyleOptions = listOf(
+                            ChoiceOption("card", "卡片样式", AppIcons.ViewDay),
+                            ChoiceOption("divider", "分割线样式", AppIcons.ViewHeadline),
+                        )
+                        ChoiceButtonGroup(
+                            options = feedCardStyleOptions,
+                            selected = feedCardStyle.value,
+                            onSelect = { mode ->
+                                feedCardStyle.value = mode
+                                settings.putString("feedCardStyle", mode)
+                                userMessages.showShortMessage("已设置为：${feedCardStyleOptions.first { it.value == mode }.label}")
+                            },
+                            modifier = Modifier.padding(top = 8.dp),
+                        )
                     },
                 )
             }
@@ -801,6 +774,7 @@ fun AppearanceSettingsScreen(
                 SettingItemWithSwitch(
                     modifier = Modifier.testTag(APPEARANCE_SETTINGS_USE_WEBVIEW_TAG),
                     title = { Text("使用 WebView 显示文章") },
+                    icon = { Icon(AppIcons.Web, contentDescription = null) },
                     description = { Text("关闭后使用 Compose 渲染，支持代码高亮等高级功能。警告：这个渲染模式不再推荐，非专业人士请不要开启！") },
                     checked = articleUseWebview.value,
                     enabled = isLegacyWebViewSupported,
@@ -830,6 +804,7 @@ fun AppearanceSettingsScreen(
                                         modifier = Modifier.testTag(APPEARANCE_SETTINGS_WEBVIEW_FONT_TAG),
                                     )
                                 },
+                                icon = { Icon(AppIcons.FontDownload, contentDescription = null) },
                                 description = { Text(customFontName ?: "未设置") },
                                 bottomAction = {
                                     WebViewCustomFontSettings(
@@ -850,6 +825,7 @@ fun AppearanceSettingsScreen(
                         val useHardwareAcceleration = remember { mutableStateOf(settings.getBoolean("webviewHardwareAcceleration", true)) }
                         SettingItemWithSwitch(
                             title = { Text("WebView 硬件加速") },
+                            icon = { Icon(AppIcons.Speed, contentDescription = null) },
                             description = { Text("提高渲染性能，可能导致兼容性问题。") },
                             checked = useHardwareAcceleration.value,
                             onCheckedChange = {
@@ -863,6 +839,7 @@ fun AppearanceSettingsScreen(
                 val isTitleAutoHide = remember { mutableStateOf(settings.getBoolean("titleAutoHide", false)) }
                 SettingItemWithSwitch(
                     title = { Text("自动隐藏回答标题") },
+                    icon = { Icon(AppIcons.Title, contentDescription = null) },
                     description = { Text("滚动时自动隐藏回答标题栏。") },
                     checked = isTitleAutoHide.value,
                     onCheckedChange = {
@@ -879,6 +856,7 @@ fun AppearanceSettingsScreen(
                 }
                 SettingItemWithSwitch(
                     title = { Text("自动隐藏回答底部按钮") },
+                    icon = { Icon(AppIcons.CallToAction, contentDescription = null) },
                     description = { Text("上划时隐藏回答底部操作按钮，下划时重新显示。") },
                     checked = autoHideArticleBottomBar.value,
                     onCheckedChange = {
@@ -892,6 +870,7 @@ fun AppearanceSettingsScreen(
 
                 SettingItemWithSwitch(
                     title = { Text("显示跳转下一个回答按钮") },
+                    icon = { Icon(AppIcons.KeyboardDoubleArrowDown, contentDescription = null) },
                     description = { Text("在回答页面显示可拖动的快速跳转按钮。") },
                     checked = buttonSkipAnswer.value,
                     onCheckedChange = {
@@ -907,6 +886,7 @@ fun AppearanceSettingsScreen(
                 AnimatedVisibility(buttonSkipAnswer.value) {
                     SettingItemWithSwitch(
                         title = { Text("滚动时自动隐藏跳转按钮") },
+                        icon = { Icon(AppIcons.SwipeVertical, contentDescription = null) },
                         description = { Text("上划时淡出「下一个回答」按钮，下划时淡入显示。") },
                         checked = autoHideSkipAnswerButton.value,
                         onCheckedChange = {
@@ -919,6 +899,7 @@ fun AppearanceSettingsScreen(
                 val pinAnswerDate = remember { mutableStateOf(settings.getBoolean("pinAnswerDate", false)) }
                 SettingItemWithSwitch(
                     title = { Text("置顶回答日期") },
+                    icon = { Icon(AppIcons.CalendarToday, contentDescription = null) },
                     description = { Text("将回答的发布日期和编辑日期移动到内容最前面显示。") },
                     checked = pinAnswerDate.value,
                     onCheckedChange = {
@@ -930,54 +911,33 @@ fun AppearanceSettingsScreen(
                     bringIntoViewRequester = requesterFor("pinAnswerDate"),
                 )
 
-                var answerSwitchExpanded by remember { mutableStateOf(false) }
                 val answerSwitchMode = remember {
                     mutableStateOf(settings.getString("answerSwitchMode", "vertical"))
                 }
-                val answerSwitchOptions = listOf(
-                    "off" to "关闭",
-                    "vertical" to "上下滑动",
-                    "horizontal" to "左右滑动",
-                )
                 if (isAnswerSwipeSupported) {
                     SettingItem(
                         title = { Text("回答切换手势") },
+                        icon = { Icon(AppIcons.Swipe, contentDescription = null) },
                         description = { Text("在回答页面通过手势切换同一问题下的其他回答。") },
                         settingKey = "answerSwitchMode",
                         highlightedKey = settingKey,
                         bringIntoViewRequester = requesterFor("answerSwitchMode"),
-                        endAction = {
-                            ExposedDropdownMenuBox(
-                                expanded = answerSwitchExpanded,
-                                onExpandedChange = { answerSwitchExpanded = it },
-                            ) {
-                                OutlinedTextField(
-                                    value = answerSwitchOptions.find { it.first == answerSwitchMode.value }?.second ?: "上下滑动切换",
-                                    onValueChange = {},
-                                    readOnly = true,
-                                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = answerSwitchExpanded) },
-                                    modifier = Modifier
-                                        .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                                        .width(160.dp),
-                                    colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                                )
-                                ExposedDropdownMenu(
-                                    expanded = answerSwitchExpanded,
-                                    onDismissRequest = { answerSwitchExpanded = false },
-                                ) {
-                                    answerSwitchOptions.forEach { (mode, label) ->
-                                        DropdownMenuItem(
-                                            text = { Text(label) },
-                                            onClick = {
-                                                answerSwitchMode.value = mode
-                                                settings.putString("answerSwitchMode", mode)
-                                                answerSwitchExpanded = false
-                                                userMessages.showShortMessage("已设置为：$label")
-                                            },
-                                        )
-                                    }
-                                }
-                            }
+                        bottomAction = {
+                            val answerSwitchOptions = listOf(
+                                ChoiceOption("off", "关闭"),
+                                ChoiceOption("vertical", "上下滑动"),
+                                ChoiceOption("horizontal", "左右滑动"),
+                            )
+                            ChoiceButtonGroup(
+                                options = answerSwitchOptions,
+                                selected = answerSwitchMode.value,
+                                onSelect = { mode ->
+                                    answerSwitchMode.value = mode
+                                    settings.putString("answerSwitchMode", mode)
+                                    userMessages.showShortMessage("已设置为：${answerSwitchOptions.first { it.value == mode }.label}")
+                                },
+                                modifier = Modifier.padding(top = 8.dp),
+                            )
                         },
                     )
                 }
@@ -995,6 +955,7 @@ fun AppearanceSettingsScreen(
                 AnimatedVisibility(isAnswerSwipeSupported && answerSwitchMode.value != "off") {
                     SettingItem(
                         title = { Text("回答切换灵敏度") },
+                        icon = { Icon(AppIcons.Tune, contentDescription = null) },
                         description = {
                             Text("当前 ${(answerSwitchSensitivity * 10).roundToInt() / 10f}x，数值越高，滑动越短；同时作用于上下和左右切换。")
                         },
@@ -1033,14 +994,16 @@ fun AppearanceSettingsScreen(
                 }
                 SettingItem(
                     title = { Text("双击回答动作") },
+                    icon = { Icon(AppIcons.TouchApp, contentDescription = null) },
                     description = { Text("双击回答正文时执行的动作。默认弹窗询问。") },
                     settingKey = ANSWER_DOUBLE_TAP_ACTION_PREFERENCE_KEY,
                     highlightedKey = settingKey,
                     bringIntoViewRequester = requesterFor(ANSWER_DOUBLE_TAP_ACTION_PREFERENCE_KEY),
-                    endAction = {
+                    bottomAction = {
                         ExposedDropdownMenuBox(
                             expanded = answerDoubleTapExpanded,
                             onExpandedChange = { answerDoubleTapExpanded = it },
+                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                         ) {
                             OutlinedTextField(
                                 value = answerDoubleTapAction.value.label,
@@ -1049,7 +1012,7 @@ fun AppearanceSettingsScreen(
                                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = answerDoubleTapExpanded) },
                                 modifier = Modifier
                                     .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                                    .width(160.dp)
+                                    .fillMaxWidth()
                                     .testTag(APPEARANCE_SETTINGS_ANSWER_DOUBLE_TAP_TAG),
                                 colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
                             )
@@ -1060,6 +1023,18 @@ fun AppearanceSettingsScreen(
                                 AnswerDoubleTapAction.entries.forEach { action ->
                                     DropdownMenuItem(
                                         text = { Text(action.label) },
+                                        leadingIcon = {
+                                            Icon(
+                                                when (action) {
+                                                    AnswerDoubleTapAction.None -> AppIcons.Block
+                                                    AnswerDoubleTapAction.Ask -> AppIcons.Help
+                                                    AnswerDoubleTapAction.VoteUp -> AppIcons.ThumbUp
+                                                    AnswerDoubleTapAction.OpenComments -> AppIcons.Comment
+                                                    AnswerDoubleTapAction.ToggleImmersive -> AppIcons.Fullscreen
+                                                },
+                                                contentDescription = null,
+                                            )
+                                        },
                                         onClick = {
                                             answerDoubleTapAction.value = action
                                             settings.putString(
@@ -1078,22 +1053,13 @@ fun AppearanceSettingsScreen(
             }
 
             // ── 底部导航栏 ──────────────────────────────────────────────────────
-            val allBottomBarItems = listOf(
-                Home.name to "主页",
-                Follow.name to "关注",
-                HotList.name to "热榜",
-                Daily.name to "日报",
-                OnlineHistory.name to "历史",
-                MyCollections.name to "收藏夹",
-                Account.name to "账号设置",
-            )
-            val bottomBarItemLabels = allBottomBarItems.toMap()
+            val bottomBarItemsByKey = allBottomBarItems.associateBy { it.destination.name }
             var startDestinationExpanded by remember { mutableStateOf(false) }
             var startDestinationKey by remember {
                 mutableStateOf(
                     resolveValidStartDestinationKey(
                         settings.getString(START_DESTINATION_PREFERENCE_KEY, Home.name),
-                        allBottomBarItems.map { it.first }.filter { it in selectedBottomBarItemKeys.value },
+                        allBottomBarItems.map { it.destination.name }.filter { it in selectedBottomBarItemKeys.value },
                     ),
                 )
             }
@@ -1141,17 +1107,15 @@ fun AppearanceSettingsScreen(
                 bringIntoViewRequester = requesterFor(APPEARANCE_SETTINGS_BOTTOM_BAR_SECTION_KEY),
             ) {
                 val selectedBottomBarItemKeySet = selectedBottomBarItemKeys.value.toSet()
-                val startDestinationItems = selectedBottomBarItemKeys.value.mapNotNull { key ->
-                    bottomBarItemLabels[key]?.let { label -> key to label }
-                }
-                val orderedSettingItems = selectedBottomBarItemKeys.value.mapNotNull { key ->
-                    bottomBarItemLabels[key]?.let { label -> key to label }
-                } + allBottomBarItems.filter { it.first !in selectedBottomBarItemKeySet }
+                val startDestinationItems = selectedBottomBarItemKeys.value.mapNotNull { bottomBarItemsByKey[it] }
+                val orderedSettingItems = startDestinationItems +
+                    allBottomBarItems.filter { it.destination.name !in selectedBottomBarItemKeySet }
 
                 SettingItem(
                     title = { Text("应用启动默认页面") },
+                    icon = { Icon(AppIcons.RocketLaunch, contentDescription = null) },
                     description = { Text("仅可选择已在底部导航栏中显示的页面。") },
-                    endAction = {
+                    bottomAction = {
                         ExposedDropdownMenuBox(
                             expanded = startDestinationExpanded,
                             onExpandedChange = {
@@ -1159,16 +1123,17 @@ fun AppearanceSettingsScreen(
                                     startDestinationExpanded = it
                                 }
                             },
+                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                         ) {
                             OutlinedTextField(
-                                value = startDestinationItems.find { it.first == startDestinationKey }?.second ?: "主页",
+                                value = startDestinationItems.find { it.destination.name == startDestinationKey }?.label ?: "主页",
                                 onValueChange = {},
                                 readOnly = true,
                                 enabled = startDestinationItems.isNotEmpty(),
                                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = startDestinationExpanded) },
                                 modifier = Modifier
                                     .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                                    .width(160.dp)
+                                    .fillMaxWidth()
                                     .testTag(APPEARANCE_SETTINGS_START_DESTINATION_TAG),
                                 colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
                             )
@@ -1176,15 +1141,17 @@ fun AppearanceSettingsScreen(
                                 expanded = startDestinationExpanded,
                                 onDismissRequest = { startDestinationExpanded = false },
                             ) {
-                                startDestinationItems.forEach { (key, label) ->
+                                startDestinationItems.forEach { item ->
+                                    val key = item.destination.name
                                     DropdownMenuItem(
                                         modifier = Modifier.testTag("appearanceSettings:startDestination:option:$key"),
-                                        text = { Text(label) },
+                                        text = { Text(item.label) },
+                                        leadingIcon = { Icon(item.icon, contentDescription = null) },
                                         onClick = {
                                             startDestinationKey = key
                                             settings.putString(START_DESTINATION_PREFERENCE_KEY, key)
                                             startDestinationExpanded = false
-                                            userMessages.showShortMessage("已设置启动页：$label，重启后生效")
+                                            userMessages.showShortMessage("已设置启动页：${item.label}，重启后生效")
                                         },
                                     )
                                 }
@@ -1195,6 +1162,7 @@ fun AppearanceSettingsScreen(
 
                 SettingItem(
                     title = { Text("选择要在底部栏显示的页面") },
+                    icon = { Icon(AppIcons.BottomNavigation, contentDescription = null) },
                     description = {
                         Text("建议选择 3-5 项，可用箭头调整显示和滑动顺序。")
                     },
@@ -1212,8 +1180,10 @@ fun AppearanceSettingsScreen(
                         ) {
                             items(
                                 items = orderedSettingItems,
-                                key = { it.first },
-                            ) { (key, label) ->
+                                key = { it.destination.name },
+                            ) { item ->
+                                val key = item.destination.name
+                                val label = item.label
                                 val isChecked = selectedBottomBarItemKeys.value.contains(key)
                                 val selectedIndex = selectedBottomBarItemKeys.value.indexOf(key)
                                 val candidateOrderKeys = if (isChecked) {
@@ -1264,6 +1234,16 @@ fun AppearanceSettingsScreen(
                                             onCheckedChange = null,
                                             enabled = isEnabled,
                                         )
+                                        Icon(
+                                            item.icon,
+                                            contentDescription = null,
+                                            modifier = Modifier.padding(start = 8.dp, end = 12.dp),
+                                            tint = if (isEnabled) {
+                                                MaterialTheme.colorScheme.onSurfaceVariant
+                                            } else {
+                                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                            },
+                                        )
                                         Text(
                                             text = label,
                                             style = MaterialTheme.typography.bodyLarge,
@@ -1308,6 +1288,7 @@ fun AppearanceSettingsScreen(
                 SettingItemWithSwitch(
                     modifier = Modifier.testTag(APPEARANCE_SETTINGS_COLLECTION_DIRECT_BROWSE_TAG),
                     title = { Text("收藏直达浏览（测试）") },
+                    icon = { Icon(AppIcons.CollectionsBookmark, contentDescription = null) },
                     description = {
                         Text("测试功能，请谨慎开启，可能存在问题。开启后支持收藏夹直览、顺序模式与随机模式，欢迎提交 Issue。")
                     },
@@ -1324,6 +1305,7 @@ fun AppearanceSettingsScreen(
                 val tapToRefresh = remember { mutableStateOf(settings.getBoolean("bottomBarTapScrollToTop", true)) }
                 SettingItemWithSwitch(
                     title = { Text("点击底部导航栏回到顶部/刷新") },
+                    icon = { Icon(AppIcons.VerticalAlignTop, contentDescription = null) },
                     description = { Text("点击底部导航栏当前页面按钮回到顶部，已在顶部时则刷新页面。双击可直接刷新。") },
                     checked = tapToRefresh.value,
                     onCheckedChange = {
@@ -1335,6 +1317,7 @@ fun AppearanceSettingsScreen(
                 val autoHideBottomBar = remember { mutableStateOf(settings.getBoolean("autoHideBottomBar", false)) }
                 SettingItemWithSwitch(
                     title = { Text("滚动时自动隐藏底部导航栏") },
+                    icon = { Icon(AppIcons.VisibilityOff, contentDescription = null) },
                     description = { Text("上划时隐藏底部导航栏，下划时重新显示。") },
                     checked = autoHideBottomBar.value,
                     onCheckedChange = {
@@ -1361,6 +1344,7 @@ fun AppearanceSettingsScreen(
                     }
                     SettingItemWithSwitch(
                         title = { Text("音量键翻页") },
+                        icon = { Icon(AppIcons.VolumeUp, contentDescription = null) },
                         description = { Text("短按翻页，长按跳到顶部或底部。") },
                         checked = volumeKeyPageTurn,
                         onCheckedChange = {
@@ -1377,6 +1361,7 @@ fun AppearanceSettingsScreen(
                     }
                     SettingItemWithSwitch(
                         title = { Text("翻页切换回答") },
+                        icon = { Icon(AppIcons.AutoStories, contentDescription = null) },
                         description = { Text("默认开启。在回答顶部继续上翻进入上一个回答，在底部继续下翻进入下一个回答。") },
                         checked = pageTurnSwitchAnswer,
                         onCheckedChange = {
@@ -1393,6 +1378,7 @@ fun AppearanceSettingsScreen(
                     }
                     SettingItemWithSwitch(
                         title = { Text("显示翻页悬浮按钮") },
+                        icon = { Icon(AppIcons.SwapVert, contentDescription = null) },
                         description = { Text("只在支持翻页的可滚动页面显示。") },
                         checked = showPageTurnFab,
                         onCheckedChange = {
@@ -1409,6 +1395,7 @@ fun AppearanceSettingsScreen(
                     }
                     SettingItem(
                         title = { Text("翻页距离") },
+                        icon = { Icon(AppIcons.Height, contentDescription = null) },
                         description = { Text("每次滚动可见区域的 $pageTurnPercent%。") },
                         bottomAction = {
                             Slider(
@@ -1432,6 +1419,7 @@ fun AppearanceSettingsScreen(
                     }
                     SettingItemWithSwitch(
                         title = { Text("显示翻页位置线") },
+                        icon = { Icon(AppIcons.HorizontalRule, contentDescription = null) },
                         description = { Text("翻页后标记上一页与下一页的重叠位置。") },
                         checked = showGuide,
                         onCheckedChange = {
@@ -1453,6 +1441,7 @@ fun AppearanceSettingsScreen(
                     }
                     SettingItemWithSwitch(
                         title = { Text("显示内容结束标记") },
+                        icon = { Icon(AppIcons.LastPage, contentDescription = null) },
                         description = { Text("方便电纸书用户确定内容结束了，再向下翻页将跳转下一个内容或无效果。") },
                         checked = showContentEndMarker,
                         onCheckedChange = {
@@ -1475,20 +1464,22 @@ fun AppearanceSettingsScreen(
                     mutableStateOf(settings.getString("shareActionMode", "ask"))
                 }
                 val shareActionOptions = listOf(
-                    "ask" to "询问",
-                    "copy" to "复制链接",
-                    "share" to "Android分享",
+                    Triple("ask", "询问", AppIcons.Help),
+                    Triple("copy", "复制链接", AppIcons.ContentCopy),
+                    Triple("share", "Android分享", AppIcons.Share),
                 )
                 SettingItem(
                     title = { Text("分享操作") },
+                    icon = { Icon(AppIcons.Share, contentDescription = null) },
                     description = { Text("点击分享按钮时的默认行为。") },
                     settingKey = "shareAction",
                     highlightedKey = settingKey,
                     bringIntoViewRequester = requesterFor("shareAction"),
-                    endAction = {
+                    bottomAction = {
                         ExposedDropdownMenuBox(
                             expanded = shareActionExpanded,
                             onExpandedChange = { shareActionExpanded = it },
+                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                         ) {
                             OutlinedTextField(
                                 value = shareActionOptions.find { it.first == shareActionMode.value }?.second ?: "询问",
@@ -1497,16 +1488,17 @@ fun AppearanceSettingsScreen(
                                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = shareActionExpanded) },
                                 modifier = Modifier
                                     .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                                    .width(160.dp),
+                                    .fillMaxWidth(),
                                 colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
                             )
                             ExposedDropdownMenu(
                                 expanded = shareActionExpanded,
                                 onDismissRequest = { shareActionExpanded = false },
                             ) {
-                                shareActionOptions.forEach { (mode, label) ->
+                                shareActionOptions.forEach { (mode, label, icon) ->
                                     DropdownMenuItem(
                                         text = { Text(label) },
+                                        leadingIcon = { Icon(icon, contentDescription = null) },
                                         onClick = {
                                             shareActionMode.value = mode
                                             settings.putString("shareActionMode", mode)
@@ -1528,6 +1520,7 @@ fun AppearanceSettingsScreen(
                 val showSearchHotSearch = remember { mutableStateOf(settings.getBoolean("showSearchHotSearch", true)) }
                 SettingItemWithSwitch(
                     title = { Text("搜索界面显示热搜") },
+                    icon = { Icon(AppIcons.Whatshot, contentDescription = null) },
                     description = { Text("在搜索界面空白时显示知乎热搜关键词。") },
                     checked = showSearchHotSearch.value,
                     onCheckedChange = {
@@ -1541,6 +1534,7 @@ fun AppearanceSettingsScreen(
                 val showSearchHistory = remember { mutableStateOf(settings.getBoolean("showSearchHistory", true)) }
                 SettingItemWithSwitch(
                     title = { Text("记录并显示搜索历史") },
+                    icon = { Icon(AppIcons.History, contentDescription = null) },
                     description = { Text("在搜索界面显示最近搜索过的关键词，关闭后不再记录新的搜索。") },
                     checked = showSearchHistory.value,
                     onCheckedChange = {
@@ -1560,6 +1554,7 @@ fun AppearanceSettingsScreen(
                 val useCustomNavHost = remember { mutableStateOf(settings.getBoolean("use_custom_nav_host", true)) }
                 SettingItemWithSwitch(
                     title = { Text("使用自定义导航") },
+                    icon = { Icon(AppIcons.Navigation, contentDescription = null) },
                     description = { Text("使用自定义导航替代系统默认的导航组件，可能部分提升国产手机上的操作手感，请视情况开启。") },
                     checked = useCustomNavHost.value,
                     onCheckedChange = {
@@ -1575,6 +1570,7 @@ fun AppearanceSettingsScreen(
                 val enablePredictiveBack = remember { mutableStateOf(settings.getBoolean("enable_predictive_back", true)) }
                 SettingItemWithSwitch(
                     title = { Text("启用预测性返回") },
+                    icon = { Icon(AppIcons.SwipeLeft, contentDescription = null) },
                     description = { Text("开启 Android 14+ 的预测性返回手势动画。") },
                     checked = enablePredictiveBack.value,
                     onCheckedChange = {
@@ -1658,6 +1654,7 @@ fun AppearanceSettingsScreen(
                 header = {
                     SettingItemOverall(
                         title = { Text("启用所有修改并关闭浮动按钮") },
+                        icon = { Icon(AppIcons.AutoAwesome, contentDescription = null) },
                         checked = duo3All.value,
                         onCheckedChange = {
                             duo3All.value = it
@@ -1695,6 +1692,7 @@ fun AppearanceSettingsScreen(
                     SettingItemWithSwitch(
                         modifier = Modifier.testTag(APPEARANCE_SETTINGS_TIQIAN_MARKDOWN_TAG),
                         title = { TiqianBrandTitle(prefix = "正文：使用", suffix = " Markdown 渲染器") },
+                        icon = { Icon(AppIcons.FormatAlignJustify, contentDescription = null) },
                         description = { Text("使用「提椠」段落书写器排版正文：段落两端对齐，改进中西混排间距、代码、表格、公式与脚注等样式，接近纸质书的排版效果。作用于文章、想法与问题详情。实验功能。") },
                         checked = duo3TiqianMarkdown.value,
                         onCheckedChange = {
@@ -1708,6 +1706,7 @@ fun AppearanceSettingsScreen(
                     AnimatedVisibility(visible = duo3TiqianMarkdown.value) {
                         SettingItemWithSwitch(
                             title = { Text("正文：使用非衬线数学字体") },
+                            icon = { Icon(AppIcons.Function, contentDescription = null) },
                             description = { Text("默认公式使用非衬线的 Lete Sans Math；关闭后改用衬线的 STIX Two Math。") },
                             checked = duo3TiqianMathFont.value == "lete",
                             onCheckedChange = {
@@ -1721,6 +1720,7 @@ fun AppearanceSettingsScreen(
 
                 SettingItemWithSwitch(
                     title = { Text("主页：账号入口迁移至顶部头像") },
+                    icon = { Icon(AppIcons.AccountCircle, contentDescription = null) },
                     description = { Text("搜索栏样式变更；点击头像弹出账号与设置；「历史」入口可挪入账号设置页。") },
                     checked = duo3HomeAccount.value,
                     onCheckedChange = {
@@ -1737,6 +1737,7 @@ fun AppearanceSettingsScreen(
 
                 SettingItemWithSwitch(
                     title = { Text("信息流卡片：外观更改") },
+                    icon = { Icon(AppIcons.Style, contentDescription = null) },
                     description = { Text("卡片圆角增大，移除阴影；修改背景与卡片颜色。") },
                     checked = duo3CardAppearance.value,
                     onCheckedChange = {
@@ -1747,6 +1748,7 @@ fun AppearanceSettingsScreen(
 
                 SettingItemWithSwitch(
                     title = { Text("信息流卡片：更改内容排版") },
+                    icon = { Icon(AppIcons.ViewQuilt, contentDescription = null) },
                     description = { Text("作者移至底部；图片不与底部小字并列；摘要最多显示 4 行（原 3 行），规范字体样式。") },
                     checked = duo3CardLayout.value,
                     onCheckedChange = {
@@ -1758,6 +1760,7 @@ fun AppearanceSettingsScreen(
                 AnimatedVisibility(visible = duo3CardLayout.value) {
                     SettingItemWithSwitch(
                         title = { Text("信息流卡片：使用更大的标题字体") },
+                        icon = { Icon(AppIcons.TextIncrease, contentDescription = null) },
                         description = { Text("默认启用；关闭后标题会缩小一档。") },
                         checked = duo3CardLargeTitle.value,
                         onCheckedChange = {
@@ -1769,6 +1772,7 @@ fun AppearanceSettingsScreen(
 
                 SettingItemWithSwitch(
                     title = { Text("文章阅读页：更改整体顶/底栏框架") },
+                    icon = { Icon(AppIcons.WebAsset, contentDescription = null) },
                     description = { Text("更改标题栏样式；优化顶/底栏隐藏逻辑。") },
                     checked = duo3ArticleBar.value,
                     onCheckedChange = {
@@ -1780,6 +1784,7 @@ fun AppearanceSettingsScreen(
                 AnimatedVisibility(visible = duo3ArticleBar.value) {
                     SettingItemWithSwitch(
                         title = { Text("文章阅读页：更改操作栏样式") },
+                        icon = { Icon(AppIcons.SmartButton, contentDescription = null) },
                         description = { Text("底栏操作按钮用药丸包裹；分隔赞同/反对按钮并添加动画。") },
                         checked = duo3ArticleActions.value,
                         onCheckedChange = {

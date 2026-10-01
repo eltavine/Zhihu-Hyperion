@@ -74,6 +74,7 @@ import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.requestLoginNavigation
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
+import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
 import com.github.zly2006.zhihu.ui.components.SettingItem
 import com.github.zly2006.zhihu.ui.components.SettingItemGroup
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
@@ -284,7 +285,7 @@ fun IdentityManagementScreen() {
                         .height(160.dp),
                     contentAlignment = Alignment.Center,
                 ) {
-                    CircularProgressIndicator()
+                    AppLoadingIndicator()
                 }
             }
 
@@ -430,6 +431,7 @@ fun IdentityManagementScreen() {
             onDismissRequest = {
                 if (!state.busy) switchTarget = null
             },
+            icon = { Icon(AppIcons.SwitchAccount, contentDescription = null) },
             title = { Text("切换账号") },
             text = {
                 Text("将切换到“${account.name}”。之后的推荐、内容和互动行为都属于该账号。")
@@ -496,6 +498,7 @@ fun IdentityManagementScreen() {
             onDismissRequest = {
                 if (!state.busy) showCreateDialog = false
             },
+            icon = { Icon(AppIcons.Info, contentDescription = null) },
             title = { Text("新账号使用规则") },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -580,6 +583,7 @@ fun IdentityManagementScreen() {
     switchLoginAccount?.let { account ->
         AlertDialog(
             onDismissRequest = { switchLoginAccount = null },
+            icon = { Icon(AppIcons.SwitchAccount, contentDescription = null) },
             title = { Text("切换登录账号") },
             text = { Text("将切换到“${account.session.profile?.name ?: account.session.username}”。") },
             confirmButton = {
@@ -613,6 +617,7 @@ fun IdentityManagementScreen() {
     removeLoginAccount?.let { account ->
         AlertDialog(
             onDismissRequest = { removeLoginAccount = null },
+            icon = { Icon(AppIcons.PersonRemove, contentDescription = null) },
             title = { Text("移除登录账号") },
             text = { Text("将从本机删除“${account.session.profile?.name ?: account.session.username}”的登录凭据，不会注销知乎账号。") },
             confirmButton = {

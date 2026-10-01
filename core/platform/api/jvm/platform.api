@@ -102,7 +102,10 @@ public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$O
 	public static final field INSTANCE Lcom/github/zly2006/zhihu/ui/components/ComposableSingletons$OpenImagePreviewContentKt;
 	public fun <init> ()V
 	public final fun getLambda$-1741611983$Zhihu_Hyperion_core_platform ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-204663564$Zhihu_Hyperion_core_platform ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$-959804743$Zhihu_Hyperion_core_platform ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1803802684$Zhihu_Hyperion_core_platform ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1951463859$Zhihu_Hyperion_core_platform ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$414515440$Zhihu_Hyperion_core_platform ()Lkotlin/jvm/functions/Function2;
 }
 

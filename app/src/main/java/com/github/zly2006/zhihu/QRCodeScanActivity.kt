@@ -248,6 +248,7 @@ private fun QRResultDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
+        icon = { Icon(AppIcons.QrCodeScanner, contentDescription = null) },
         title = {
             Text("扫描结果")
         },

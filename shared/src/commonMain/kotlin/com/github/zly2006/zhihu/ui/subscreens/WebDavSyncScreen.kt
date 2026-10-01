@@ -128,6 +128,7 @@ fun WebDavSyncScreen() {
             ) {
                 SettingItem(
                     title = { Text("服务器地址") },
+                    icon = { Icon(AppIcons.Dns, contentDescription = null) },
                     bottomAction = {
                         OutlinedTextField(
                             value = viewModel.config.url,
@@ -141,6 +142,7 @@ fun WebDavSyncScreen() {
                 )
                 SettingItem(
                     title = { Text("用户名") },
+                    icon = { Icon(AppIcons.Person, contentDescription = null) },
                     bottomAction = {
                         OutlinedTextField(
                             value = viewModel.config.username,
@@ -223,6 +225,7 @@ fun WebDavSyncScreen() {
     if (confirmRestore) {
         AlertDialog(
             onDismissRequest = { confirmRestore = false },
+            icon = { Icon(AppIcons.CloudDownload, contentDescription = null) },
             title = { Text("从 WebDAV 恢复？") },
             text = { Text("备份里的屏蔽条目会合并到本机，本机多出的条目不会删除；同名设置会被备份里的值覆盖。") },
             confirmButton = {
