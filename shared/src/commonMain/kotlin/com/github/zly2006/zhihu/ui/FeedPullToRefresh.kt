@@ -22,16 +22,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.ui.components.AppPullToRefreshBox
 import com.github.zly2006.zhihu.ui.components.LocalPullToRefreshInProgress
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
@@ -61,28 +57,16 @@ fun FeedPullToRefresh(
     padding: PaddingValues = PaddingValues(0.dp),
     content: @Composable BoxScope.() -> Unit,
 ) {
-    val state = rememberPullToRefreshState()
     val scope = rememberCoroutineScope()
-    PullToRefreshBox(
+    AppPullToRefreshBox(
         isRefreshing = viewModel.isPullToRefresh && viewModel.isLoading,
         onRefresh = {
             scope.launch {
                 viewModel.pullToRefresh(environment)
             }
         },
-        indicator = {
-            PullToRefreshDefaults.Indicator(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(padding),
-                isRefreshing = viewModel.isPullToRefresh && viewModel.isLoading,
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                state = state,
-            )
-        },
-        state = state,
         modifier = Modifier.fillMaxSize(),
+        indicatorPadding = padding,
     ) {
         CompositionLocalProvider(LocalPullToRefreshInProgress provides viewModel.isPullToRefresh) {
             content()

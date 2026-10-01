@@ -49,11 +49,11 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
+import androidx.compose.material3.ShortNavigationBar
+import androidx.compose.material3.ShortNavigationBarItem
+import androidx.compose.material3.ShortNavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -608,47 +608,38 @@ fun ZhihuMain(
                                 enter = slideInVertically(tween(200)) { it },
                                 exit = slideOutVertically(tween(200)) { it },
                             ) {
-                                NavigationBar(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                    modifier = Modifier.height(
-                                        64.dp + bottomPadding,
-                                    ),
-                                ) {
-                                    @Composable
-                                    fun Item(item: BottomBarItem) {
+                                ShortNavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh) {
+                                    val itemColors = if (!isDarkTheme) {
+                                        ShortNavigationBarItemDefaults.colors(
+                                            selectedIndicatorColor =
+                                                MaterialTheme.colorScheme.secondaryContainer
+                                                    .copy(alpha = 0.92f)
+                                                    .compositeOver(MaterialTheme.colorScheme.secondary),
+                                        )
+                                    } else {
+                                        ShortNavigationBarItemDefaults.colors()
+                                    }
+                                    bottomBarItems.forEach { item ->
                                         val destination = item.destination
-                                        val tag = "nav_tab_${destination.name.lowercase()}"
                                         val selected = currentBottomDestination?.let { it::class == destination::class } == true
-                                        NavigationBarItem(
-                                            selected,
+                                        ShortNavigationBarItem(
+                                            selected = selected,
                                             onClick = {
                                                 isReadingPlayerExpandedByUser = false
-                                                if (currentBottomDestination?.let { it::class == destination::class } != true) {
+                                                if (!selected) {
                                                     navigateTopLevel(destination)
                                                 } else if (tapToScrollToTopEnabled) {
                                                     scrollToTopTrigger++
                                                 }
                                             },
-                                            label = { Text(item.label) },
-                                            alwaysShowLabel = true,
-                                            colors = if (!isDarkTheme) {
-                                                NavigationBarItemDefaults.colors().copy(
-                                                    selectedIndicatorColor =
-                                                        MaterialTheme.colorScheme.secondaryContainer
-                                                            .copy(alpha = 0.92f)
-                                                            .compositeOver(MaterialTheme.colorScheme.secondary),
-                                                )
-                                            } else {
-                                                NavigationBarItemDefaults.colors()
-                                            },
                                             icon = {
                                                 Icon(if (selected) item.selectedIcon else item.icon, contentDescription = item.label)
                                             },
-                                            modifier = Modifier.padding(top = 4.dp).testTag(tag),
+                                            label = { Text(item.label) },
+                                            colors = itemColors,
+                                            modifier = Modifier.testTag("nav_tab_${destination.name.lowercase()}"),
                                         )
                                     }
-
-                                    bottomBarItems.forEach { item -> Item(item) }
                                 }
                             }
                         }

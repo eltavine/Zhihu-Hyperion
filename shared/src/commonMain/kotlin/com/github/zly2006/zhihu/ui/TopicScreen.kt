@@ -86,6 +86,8 @@ import com.github.zly2006.zhihu.navigation.Topic
 import com.github.zly2006.zhihu.navigation.WritePin
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
+import com.github.zly2006.zhihu.ui.components.EmptyState
+import com.github.zly2006.zhihu.ui.components.EmptyStateAction
 import com.github.zly2006.zhihu.ui.components.FeedCard
 import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
@@ -482,10 +484,14 @@ fun TopicScreen(topic: Topic) {
                 if (viewModel.errorMessage == null) {
                     ProgressIndicatorFooter(listState)
                 } else {
-                    TextButton(
-                        onClick = { viewModel.retry(environment) },
-                        modifier = Modifier.fillMaxWidth().padding(8.dp).testTag(TOPIC_RETRY_BUTTON_TAG),
-                    ) { Text("加载失败：${viewModel.errorMessage}，点击重试") }
+                    EmptyState(
+                        icon = AppIcons.Error,
+                        title = "加载失败：${viewModel.errorMessage}",
+                        modifier = Modifier.fillMaxWidth(),
+                        action = EmptyStateAction("重试", AppIcons.Refresh, TOPIC_RETRY_BUTTON_TAG) {
+                            viewModel.retry(environment)
+                        },
+                    )
                 }
             },
             topContent = {
