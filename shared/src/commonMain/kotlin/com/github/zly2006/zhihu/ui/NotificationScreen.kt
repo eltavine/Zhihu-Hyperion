@@ -32,22 +32,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.outlined.Comment
-import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.MarkChatRead
-import androidx.compose.material.icons.filled.PersonAddAlt1
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.ContactPage
-import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -63,7 +52,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -78,6 +66,9 @@ import coil3.compose.AsyncImage
 import com.fleeksoft.ksoup.Ksoup
 import com.github.zly2006.zhihu.data.MobileNotificationColumnHead
 import com.github.zly2006.zhihu.data.MobileNotificationTimelineItem
+import com.github.zly2006.zhihu.icons.AppIcon
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.navigation.Notification
@@ -130,7 +121,7 @@ fun NotificationScreen() {
                 title = { Text("消息") },
                 navigationIcon = {
                     IconButton(onClick = navigator.onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(AppIcons.ArrowBack, contentDescription = "返回")
                     }
                 },
                 actions = {
@@ -144,11 +135,11 @@ fun NotificationScreen() {
                                 }
                             }
                         }) {
-                            Icon(Icons.Default.MarkChatRead, contentDescription = "已读")
+                            Icon(AppIcons.MarkChatRead, contentDescription = "已读")
                         }
                     }
                     IconButton(onClick = { navigator.onNavigate(Notification.NotificationSettings()) }) {
-                        Icon(Icons.Default.Settings, contentDescription = "设置")
+                        Icon(AppIcons.Settings, contentDescription = "设置")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -246,7 +237,7 @@ private fun NotificationCategoryRow(
                     },
                 ) {
                     Icon(
-                        imageVector = category.homeIcon(),
+                        icon = category.homeIcon(),
                         contentDescription = category.detailTitle,
                         modifier = Modifier.size(36.dp),
                     )
@@ -284,7 +275,7 @@ private fun NotificationInvitationRow(
             contentColor = MaterialTheme.colorScheme.onPrimary,
         ) {
             Box(contentAlignment = Alignment.Center) {
-                Icon(Icons.Outlined.ContactPage, contentDescription = null, modifier = Modifier.size(28.dp))
+                Icon(AppIcons.ContactPage, contentDescription = null, modifier = Modifier.size(28.dp))
             }
         }
         Spacer(Modifier.width(14.dp))
@@ -344,7 +335,7 @@ private fun NotificationConversationRow(
                 color = MaterialTheme.colorScheme.primaryContainer,
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    Icon(Icons.Outlined.Notifications, contentDescription = null)
+                    Icon(AppIcons.Notifications, contentDescription = null)
                 }
             }
         }
@@ -531,11 +522,11 @@ fun NotificationItemView(
     }
 }
 
-private fun MobileNotificationCategory.homeIcon(): ImageVector = when (this) {
-    MobileNotificationCategory.Comment -> Icons.AutoMirrored.Outlined.Comment
-    MobileNotificationCategory.Like -> Icons.Filled.Favorite
-    MobileNotificationCategory.Favorite -> Icons.Filled.Bookmark
-    MobileNotificationCategory.Follow -> Icons.Filled.PersonAddAlt1
+private fun MobileNotificationCategory.homeIcon(): AppIcon = when (this) {
+    MobileNotificationCategory.Comment -> AppIcons.Comment
+    MobileNotificationCategory.Like -> AppIcons.FavoriteFilled
+    MobileNotificationCategory.Favorite -> AppIcons.BookmarkFilled
+    MobileNotificationCategory.Follow -> AppIcons.PersonAdd
 }
 
 internal fun MobileNotificationTimelineItem.displayTitle(): String =

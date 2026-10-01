@@ -1,0 +1,19 @@
+{
+  "uniqueId": "vendored:material-symbols",
+  "artifactVersion": "bd8cb85",
+  "name": "Material Symbols",
+  "description": "Google's Material Symbols (Rounded style), vendored as vector resources in :core:icons.",
+  "website": "https://fonts.google.com/icons",
+  "developers": [
+    {
+      "name": "Google",
+      "organisationUrl": "https://github.com/google/material-design-icons"
+    }
+  ],
+  "scm": {
+    "url": "https://github.com/google/material-design-icons"
+  },
+  "licenses": [
+    "Apache-2.0"
+  ]
+}

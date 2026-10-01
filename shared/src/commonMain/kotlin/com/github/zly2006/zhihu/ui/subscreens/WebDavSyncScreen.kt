@@ -24,16 +24,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.CloudDownload
-import androidx.compose.material.icons.filled.CloudUpload
-import androidx.compose.material.icons.filled.NetworkCheck
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeTopAppBar
@@ -58,6 +50,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.ui.components.SettingItem
@@ -106,7 +100,7 @@ fun WebDavSyncScreen() {
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         ),
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(AppIcons.ArrowBack, contentDescription = "返回")
                     }
                 },
                 scrollBehavior = scrollBehavior,
@@ -168,7 +162,7 @@ fun WebDavSyncScreen() {
                             trailingIcon = {
                                 IconButton(onClick = { showPassword = !showPassword }) {
                                     Icon(
-                                        imageVector = if (showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                        icon = if (showPassword) AppIcons.Visibility else AppIcons.VisibilityOff,
                                         contentDescription = if (showPassword) "隐藏密码" else "显示密码",
                                     )
                                 }
@@ -190,7 +184,7 @@ fun WebDavSyncScreen() {
             ) {
                 SettingItem(
                     title = { Text("测试连接") },
-                    icon = { Icon(Icons.Default.NetworkCheck, null) },
+                    icon = { Icon(AppIcons.NetworkCheck, null) },
                     enabled = !viewModel.isRunning,
                     onClick = viewModel::testConnection,
                     modifier = Modifier.testTag(WEBDAV_TEST_TAG),
@@ -198,7 +192,7 @@ fun WebDavSyncScreen() {
                 SettingItem(
                     title = { Text("上传到 WebDAV") },
                     description = { Text("用本机的屏蔽列表和设置覆盖 WebDAV 上的备份") },
-                    icon = { Icon(Icons.Default.CloudUpload, null) },
+                    icon = { Icon(AppIcons.CloudUpload, null) },
                     enabled = !viewModel.isRunning,
                     onClick = viewModel::upload,
                     modifier = Modifier.testTag(WEBDAV_UPLOAD_TAG),
@@ -206,7 +200,7 @@ fun WebDavSyncScreen() {
                 SettingItem(
                     title = { Text("从 WebDAV 恢复") },
                     description = { Text("把备份合并到本机") },
-                    icon = { Icon(Icons.Default.CloudDownload, null) },
+                    icon = { Icon(AppIcons.CloudDownload, null) },
                     enabled = !viewModel.isRunning,
                     onClick = { confirmRestore = true },
                     modifier = Modifier.testTag(WEBDAV_RESTORE_TAG),

@@ -38,11 +38,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -50,8 +45,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.icons.AppIcon
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
@@ -131,7 +128,7 @@ fun ShareDialogContent(
                         }
 
                         MenuActionButton(
-                            icon = Icons.Filled.Share,
+                            icon = AppIcons.Share,
                             text = "分享",
                             onClick = onShareClick,
                         )
@@ -139,7 +136,7 @@ fun ShareDialogContent(
                         Spacer(modifier = Modifier.height(12.dp))
 
                         MenuActionButton(
-                            icon = Icons.Filled.ContentCopy,
+                            icon = AppIcons.ContentCopy,
                             text = "复制链接",
                             onClick = onCopyClick,
                         )
@@ -147,7 +144,7 @@ fun ShareDialogContent(
                         Spacer(modifier = Modifier.height(12.dp))
 
                         MenuActionButton(
-                            icon = Icons.Filled.Settings,
+                            icon = AppIcons.Settings,
                             text = "分享设置",
                             onClick = onSettingsClick,
                         )
@@ -162,7 +159,7 @@ fun ShareDialogContent(
 
 @Composable
 private fun MenuActionButton(
-    icon: ImageVector,
+    icon: AppIcon,
     text: String,
     enabled: Boolean = true,
     backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
@@ -184,7 +181,7 @@ private fun MenuActionButton(
         ) {
             Box(modifier = Modifier.size(24.dp)) {
                 Icon(
-                    imageVector = icon,
+                    icon = icon,
                     contentDescription = null,
                     tint = contentColor,
                 )

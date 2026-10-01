@@ -25,20 +25,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.FormatListBulleted
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.IconToggleButton
@@ -65,6 +56,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.zly2006.zhihu.data.Collection
 import com.github.zly2006.zhihu.data.FeedDisplayItem
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
@@ -217,7 +210,7 @@ fun CollectionBrowseScreen(
                             onClick = navigator.onNavigateBack,
                             modifier = Modifier.testTag(COLLECTION_BROWSE_BACK_BUTTON_TAG),
                         ) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                            Icon(AppIcons.ArrowBack, contentDescription = "返回")
                         }
                     }
                 },
@@ -228,7 +221,7 @@ fun CollectionBrowseScreen(
                             enabled = collections.isNotEmpty(),
                             modifier = Modifier.testTag(COLLECTION_BROWSE_FOLDER_SWITCH_BUTTON_TAG),
                         ) {
-                            Icon(Icons.Filled.Folder, contentDescription = "切换收藏夹")
+                            Icon(AppIcons.Folder, contentDescription = "切换收藏夹")
                         }
                         DropdownMenu(
                             expanded = folderMenuExpanded,
@@ -241,7 +234,7 @@ fun CollectionBrowseScreen(
                                     trailingIcon = {
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             if (collection.id == selectedCollectionId) {
-                                                Icon(Icons.Filled.Check, contentDescription = null)
+                                                Icon(AppIcons.Check, contentDescription = null)
                                             }
                                             if (!collection.isDefault) {
                                                 IconButton(
@@ -256,7 +249,7 @@ fun CollectionBrowseScreen(
                                                     ),
                                                 ) {
                                                     Icon(
-                                                        Icons.Filled.Delete,
+                                                        AppIcons.Delete,
                                                         contentDescription = "删除${collection.title}",
                                                     )
                                                 }
@@ -286,10 +279,10 @@ fun CollectionBrowseScreen(
                         ),
                     ) {
                         Icon(
-                            imageVector = if (randomMode) {
-                                Icons.Filled.Shuffle
+                            icon = if (randomMode) {
+                                AppIcons.Shuffle
                             } else {
-                                Icons.AutoMirrored.Filled.FormatListBulleted
+                                AppIcons.FormatListBulleted
                             },
                             contentDescription = if (randomMode) {
                                 "当前为随机模式，点击切换为顺序模式"
@@ -375,7 +368,7 @@ fun CollectionBrowseScreen(
                             if (contentViewModel.isLoading) {
                                 CircularProgressIndicator(modifier = Modifier.size(30.dp))
                             } else {
-                                Icon(Icons.Filled.Refresh, contentDescription = "重新随机加载")
+                                Icon(AppIcons.Refresh, contentDescription = "重新随机加载")
                             }
                         }
                     }

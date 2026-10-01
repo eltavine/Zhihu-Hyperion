@@ -1,0 +1,112 @@
+# Material Symbols Rounded used by the app; symbols.py vendors them and generates AppIcons.kt.
+#
+# One symbol per line, named as on https://fonts.google.com/icons. The token is the symbol name in UpperCamelCase.
+#   filled  also generate `<Token>Filled` from the fill=1 glyph, for selected / liked / bookmarked states
+#   solid   use only the fill=1 glyph under the plain token, for glyphs that are always drawn solid (media controls)
+
+account_circle
+add
+archive
+arrow_back
+arrow_circle_up
+arrow_downward
+arrow_forward
+arrow_outward
+arrow_upward
+bookmark
+bookmark filled
+bookmarks
+bookmarks filled
+chat_bubble
+check
+close
+cloud_download
+cloud_sync
+cloud_upload
+code
+comment
+contact_page
+content_copy
+copy_all
+data_object
+date_range
+delete
+desktop_windows
+download
+edit
+error
+expand_less
+expand_more
+favorite
+favorite filled
+filter_alt
+filter_center_focus
+filter_list
+flag
+folder
+folder_open
+format_list_bulleted
+graphic_eq
+group
+group filled
+groups
+headphones
+help
+history
+history filled
+home
+home filled
+image
+info
+keyboard
+keyboard_arrow_down
+keyboard_arrow_right
+keyboard_arrow_up
+lock
+lock_open
+login
+logout
+manage_accounts
+manage_accounts filled
+mark_chat_read
+mark_unread_chat_alt
+memory
+mood
+more_vert
+network_check
+newspaper
+newspaper filled
+notifications
+palette
+pause solid
+pause_circle solid
+person_add
+photo_camera
+picture_as_pdf
+play_arrow solid
+qr_code_scanner
+queue_music
+refresh
+reply
+save
+schedule
+search
+send
+sentiment_satisfied
+settings
+share
+shuffle
+skip_next solid
+skip_previous solid
+speed
+stop solid
+switch_account
+tag
+thumb_up
+thumb_up filled
+visibility
+visibility_off
+volume_off
+volume_up
+whatshot
+whatshot filled

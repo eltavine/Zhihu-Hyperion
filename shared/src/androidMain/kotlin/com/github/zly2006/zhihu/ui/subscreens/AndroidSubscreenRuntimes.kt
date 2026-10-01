@@ -26,10 +26,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.FolderOpen
-import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +34,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.platform.androidUserMessageSink
 import com.github.zly2006.zhihu.reading.AndroidReadingPlayerBridge
 import com.github.zly2006.zhihu.reading.rememberArticleTtsState
@@ -127,7 +125,7 @@ actual fun WebViewCustomFontSettings(
                 },
                 modifier = Modifier.weight(1f),
             ) {
-                Icon(Icons.Default.FolderOpen, contentDescription = null)
+                Icon(AppIcons.FolderOpen, contentDescription = null)
                 Text("选择", modifier = Modifier.padding(start = 4.dp))
             }
             if (customFontName != null) {
@@ -139,7 +137,7 @@ actual fun WebViewCustomFontSettings(
                     },
                     modifier = Modifier.weight(1f),
                 ) {
-                    Icon(Icons.Default.Clear, contentDescription = null)
+                    Icon(AppIcons.Close, contentDescription = null)
                     Text("清除", modifier = Modifier.padding(start = 4.dp))
                 }
             }

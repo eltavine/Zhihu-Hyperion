@@ -30,26 +30,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.QueueMusic
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.GraphicEq
-import androidx.compose.material.icons.filled.Headphones
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.PauseCircle
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.SkipNext
-import androidx.compose.material.icons.filled.SkipPrevious
-import androidx.compose.material.icons.filled.Speed
-import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -76,6 +62,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.platform.exportTestTagsForUiAutomation
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
 import com.github.zly2006.zhihu.ui.components.MyModalBottomSheet
@@ -186,7 +174,7 @@ fun ReadingPlayerBar(
                         enabled = state.canPlayPrevious,
                         modifier = Modifier.testTag(READING_PLAYER_PREVIOUS_TAG),
                     ) {
-                        Icon(Icons.Default.SkipPrevious, contentDescription = "上一条")
+                        Icon(AppIcons.SkipPrevious, contentDescription = "上一条")
                     }
                     FilledTonalIconButton(
                         onClick = onTogglePlayPause,
@@ -204,9 +192,9 @@ fun ReadingPlayerBar(
                                 strokeWidth = 2.dp,
                             )
 
-                            ReadingPlaybackStatus.Playing -> Icon(Icons.Default.Pause, contentDescription = null)
+                            ReadingPlaybackStatus.Playing -> Icon(AppIcons.Pause, contentDescription = null)
 
-                            else -> Icon(Icons.Default.PlayArrow, contentDescription = null)
+                            else -> Icon(AppIcons.PlayArrow, contentDescription = null)
                         }
                     }
                     IconButton(
@@ -214,19 +202,19 @@ fun ReadingPlayerBar(
                         enabled = state.canPlayNext,
                         modifier = Modifier.testTag(READING_PLAYER_NEXT_TAG),
                     ) {
-                        Icon(Icons.Default.SkipNext, contentDescription = "下一条")
+                        Icon(AppIcons.SkipNext, contentDescription = "下一条")
                     }
                     IconButton(
                         onClick = onStop,
                         modifier = Modifier.testTag(READING_PLAYER_STOP_TAG),
                     ) {
-                        Icon(Icons.Default.Stop, contentDescription = "停止朗读")
+                        Icon(AppIcons.Stop, contentDescription = "停止朗读")
                     }
                     IconButton(
                         onClick = onOpenQueue,
                         modifier = Modifier.testTag(READING_PLAYER_QUEUE_TAG),
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.QueueMusic, contentDescription = "播放列表")
+                        Icon(AppIcons.QueueMusic, contentDescription = "播放列表")
                     }
                 }
             }
@@ -254,7 +242,7 @@ fun CompactReadingPlayerButton(
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(
-                Icons.Default.Headphones,
+                AppIcons.Headphones,
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
             )
@@ -298,7 +286,7 @@ private fun ReadingPlaybackSpeedMenu(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    Icons.Default.Speed,
+                    AppIcons.Speed,
                     contentDescription = null,
                     modifier = Modifier.size(18.dp),
                 )
@@ -331,7 +319,7 @@ private fun ReadingPlaybackSpeedMenu(
                     trailingIcon = if (isSelected) {
                         {
                             Icon(
-                                Icons.Default.Check,
+                                AppIcons.Check,
                                 contentDescription = "当前速度",
                             )
                         }
@@ -387,7 +375,7 @@ fun ReadingQueueSheet(
                 onClick = onOpenSettings,
                 modifier = Modifier.testTag(READING_QUEUE_SETTINGS_TAG),
             ) {
-                Icon(Icons.Default.Settings, contentDescription = null)
+                Icon(AppIcons.Settings, contentDescription = null)
                 Text("朗读设置")
             }
         }
@@ -422,10 +410,10 @@ fun ReadingQueueSheet(
                     leadingContent = {
                         if (isCurrent) {
                             if (state.status == ReadingPlaybackStatus.Paused) {
-                                Icon(Icons.Default.PauseCircle, contentDescription = "当前已暂停")
+                                Icon(AppIcons.PauseCircle, contentDescription = "当前已暂停")
                             } else {
                                 Icon(
-                                    Icons.Default.GraphicEq,
+                                    AppIcons.GraphicEq,
                                     contentDescription = if (state.isActivelyPlaying) "正在朗读" else "当前条目",
                                 )
                             }

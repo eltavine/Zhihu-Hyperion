@@ -53,7 +53,7 @@ kotlin {
             api(projects.core.database)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
-            implementation(libs.compose.material.icons.extended)
+            implementation(projects.core.icons)
             implementation(libs.compose.ui)
             implementation(libs.compose.components.resources)
             implementation(libs.coil.compose)

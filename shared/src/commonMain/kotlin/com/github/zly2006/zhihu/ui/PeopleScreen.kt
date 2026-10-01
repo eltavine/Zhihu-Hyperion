@@ -43,11 +43,8 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -94,6 +91,8 @@ import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.officialBadge
 import com.github.zly2006.zhihu.data.officialBadgeDetails
 import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.CollectionContent
@@ -846,7 +845,7 @@ fun PeopleScreen(
                             .padding(top = lerp(32.dp, 4.dp, collapsedFraction), end = 8.dp)
                             .testTag(PEOPLE_SCREEN_SEARCH_BUTTON_TAG),
                     ) {
-                        Icon(Icons.Default.Search, contentDescription = "搜索 TA 的创作")
+                        Icon(AppIcons.Search, contentDescription = "搜索 TA 的创作")
                     }
                 }
             }

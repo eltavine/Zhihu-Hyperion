@@ -47,17 +47,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.HelpOutline
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowCircleUp
-import androidx.compose.material.icons.filled.CopyAll
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.MarkUnreadChatAlt
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
@@ -66,7 +55,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -107,6 +95,8 @@ import com.github.zly2006.zhihu.data.QualityFilterMode
 import com.github.zly2006.zhihu.data.RecommendationMode
 import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.filter.RemoteHistorySync
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.LocalNavigator
@@ -480,7 +470,7 @@ fun HomeScreen(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Icon(
-                                        Icons.Default.Search,
+                                        AppIcons.Search,
                                         contentDescription = "搜索",
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
@@ -522,7 +512,7 @@ fun HomeScreen(
                                                     )
                                                 } else {
                                                     Icon(
-                                                        Icons.Default.AccountCircle,
+                                                        AppIcons.AccountCircle,
                                                         contentDescription = "账号",
                                                         tint = MaterialTheme.colorScheme.onSurface,
                                                         modifier = Modifier.size(40.dp),
@@ -564,7 +554,7 @@ fun HomeScreen(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Icon(
-                                        Icons.Default.Search,
+                                        AppIcons.Search,
                                         contentDescription = "搜索",
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
@@ -603,7 +593,7 @@ fun HomeScreen(
                                         },
                                     ) {
                                         Icon(
-                                            Icons.Default.Notifications,
+                                            AppIcons.Notifications,
                                             contentDescription = "通知",
                                             tint = MaterialTheme.colorScheme.onSurface,
                                         )
@@ -650,7 +640,7 @@ fun HomeScreen(
                             AnnouncementCard(
                                 visible = availableUpdate != null && dismissedUpdateVersionCode != availableUpdate.versionCode,
                                 title = "发现新版本：${availableUpdate?.displayVersion}",
-                                leadingIcon = { Icon(Icons.Default.ArrowCircleUp, contentDescription = null) },
+                                leadingIcon = { Icon(AppIcons.ArrowCircleUp, contentDescription = null) },
                                 accept = { Text("查看更新") },
                                 onAccept = {
                                     navigator.onNavigate(Account.SystemAndUpdateSettings())
@@ -759,7 +749,7 @@ fun HomeScreen(
                             preferenceName = "copyAll",
                             bottomAvoidance = readingPlayerOverlayPadding,
                         ) {
-                            Icon(Icons.Default.CopyAll, contentDescription = "复制")
+                            Icon(AppIcons.CopyAll, contentDescription = "复制")
                         }
                     }
                     DraggableRefreshButton(
@@ -770,7 +760,7 @@ fun HomeScreen(
                         if (viewModel.isLoading) {
                             CircularProgressIndicator(modifier = Modifier.size(30.dp))
                         } else {
-                            Icon(Icons.Default.Refresh, contentDescription = "刷新")
+                            Icon(AppIcons.Refresh, contentDescription = "刷新")
                         }
                     }
                 }
@@ -836,7 +826,7 @@ fun HomeScreen(
                                 modifier = Modifier.testTag(HOME_WRITE_QUESTION_BUTTON_TAG),
                                 text = { Text("提问题") },
                                 leadingIcon = {
-                                    Icon(Icons.AutoMirrored.Default.HelpOutline, contentDescription = null)
+                                    Icon(AppIcons.Help, contentDescription = null)
                                 },
                                 onClick = {
                                     showCreateMenu = false
@@ -847,7 +837,7 @@ fun HomeScreen(
                                 modifier = Modifier.testTag(HOME_WRITE_ANSWER_BUTTON_TAG),
                                 text = { Text("写回答") },
                                 leadingIcon = {
-                                    Icon(Icons.Default.Edit, contentDescription = null)
+                                    Icon(AppIcons.Edit, contentDescription = null)
                                 },
                                 onClick = {
                                     showCreateMenu = false
@@ -858,7 +848,7 @@ fun HomeScreen(
                                 modifier = Modifier.testTag(HOME_WRITE_PIN_BUTTON_TAG),
                                 text = { Text("发想法") },
                                 leadingIcon = {
-                                    Icon(Icons.Default.MarkUnreadChatAlt, contentDescription = null)
+                                    Icon(AppIcons.MarkUnreadChatAlt, contentDescription = null)
                                 },
                                 onClick = {
                                     showCreateMenu = false
@@ -885,7 +875,7 @@ fun HomeScreen(
                     FloatingActionButtonDefaults.elevation()
                 },
             ) {
-                Icon(Icons.Default.Add, contentDescription = "创作")
+                Icon(AppIcons.Add, contentDescription = "创作")
             }
         }
     }

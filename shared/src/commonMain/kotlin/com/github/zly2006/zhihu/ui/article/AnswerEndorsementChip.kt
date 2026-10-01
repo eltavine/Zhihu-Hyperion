@@ -22,11 +22,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.Tag
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -39,6 +34,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.zly2006.zhihu.data.DataHolder
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.theme.ThemeManager
 
 private data class ZhihuEndorsementColorToken(
@@ -121,12 +118,12 @@ internal fun AnswerEndorsementChip(
         fallback = contentColor.copy(alpha = 0.12f),
     )
     val leadingIcon = when (endorsement.leadingIconKey) {
-        "zhicon_icon_24_chat_bubble_hash_fill" -> Icons.Filled.Tag
+        "zhicon_icon_24_chat_bubble_hash_fill" -> AppIcons.Tag
         else -> null
     }
     val trailingIcon = when (endorsement.trailingIconKey) {
-        "zhicon_icon_16_arrow_right" -> Icons.AutoMirrored.Filled.KeyboardArrowRight
-        "zhicon_icon_16_arrow_down" -> Icons.Filled.KeyboardArrowDown
+        "zhicon_icon_16_arrow_right" -> AppIcons.KeyboardArrowRight
+        "zhicon_icon_16_arrow_down" -> AppIcons.KeyboardArrowDown
         else -> null
     }
     Surface(
@@ -142,7 +139,7 @@ internal fun AnswerEndorsementChip(
         ) {
             if (leadingIcon != null) {
                 Icon(
-                    imageVector = leadingIcon,
+                    icon = leadingIcon,
                     contentDescription = null,
                     tint = zhihuEndorsementColor(
                         color = endorsement.leadingIconColor,
@@ -160,7 +157,7 @@ internal fun AnswerEndorsementChip(
             )
             if (trailingIcon != null) {
                 Icon(
-                    imageVector = trailingIcon,
+                    icon = trailingIcon,
                     contentDescription = null,
                     modifier = Modifier.size(16.dp),
                 )

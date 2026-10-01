@@ -29,17 +29,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -54,6 +49,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.nlp.KeywordWithWeight
 import kotlin.math.roundToInt
 
@@ -152,7 +149,7 @@ fun BlockByKeywordsDialogContent(
                                     label = { Text(keyword) },
                                     leadingIcon = {
                                         Icon(
-                                            imageVector = if (isSelected) Icons.Default.Check else Icons.Default.Add,
+                                            icon = if (isSelected) AppIcons.Check else AppIcons.Add,
                                             contentDescription = if (isSelected) "已选中" else "添加",
                                         )
                                     },
@@ -205,7 +202,7 @@ fun BlockByKeywordsDialogContent(
                         enabled = keywordInfoList.isNotEmpty() && !isLoading,
                     ) {
                         Icon(
-                            Icons.Default.Info,
+                            AppIcons.Info,
                             contentDescription = "详细信息",
                             modifier = Modifier.padding(end = 4.dp),
                         )

@@ -48,15 +48,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bookmarks
-import androidx.compose.material.icons.filled.Group
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.ManageAccounts
-import androidx.compose.material.icons.filled.Newspaper
-import androidx.compose.material.icons.filled.Whatshot
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -84,7 +75,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -109,6 +99,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.github.zly2006.zhihu.account.LoginScreen
 import com.github.zly2006.zhihu.filter.ContentOpenFrom
+import com.github.zly2006.zhihu.icons.AppIcon
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.markdown.LocalSegmentCommentSheet
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.Article
@@ -192,6 +185,14 @@ private sealed class MainTabPage(
 
 internal val LocalReadingPlayerOverlayPadding = staticCompositionLocalOf { 0.dp }
 internal val LocalArticleNavController = staticCompositionLocalOf<NavHostController?> { null }
+
+/** 底栏中的一项；选中时显示 [selectedIcon]（填充版本），符合 Material 导航栏的选中态规范。 */
+private data class BottomBarItem(
+    val destination: TopLevelDestination,
+    val label: String,
+    val icon: AppIcon,
+    val selectedIcon: AppIcon,
+)
 
 /**
  * Zhihu-Hyperion 的共享应用主壳。
@@ -384,21 +385,21 @@ fun ZhihuMain(
     }
 
     val allBottomBarItems = listOf(
-        Triple(Home, "主页", Icons.Filled.Home),
-        Triple(Follow, "关注", Icons.Filled.Group),
-        Triple(HotList, "热榜", Icons.Filled.Whatshot),
-        Triple(Daily, "日报", Icons.Filled.Newspaper),
-        Triple(OnlineHistory, "历史", Icons.Filled.History),
-        Triple(MyCollections, "收藏夹", Icons.Filled.Bookmarks),
-        Triple(Account, "账号", Icons.Filled.ManageAccounts),
+        BottomBarItem(Home, "主页", AppIcons.Home, AppIcons.HomeFilled),
+        BottomBarItem(Follow, "关注", AppIcons.Group, AppIcons.GroupFilled),
+        BottomBarItem(HotList, "热榜", AppIcons.Whatshot, AppIcons.WhatshotFilled),
+        BottomBarItem(Daily, "日报", AppIcons.Newspaper, AppIcons.NewspaperFilled),
+        BottomBarItem(OnlineHistory, "历史", AppIcons.History, AppIcons.HistoryFilled),
+        BottomBarItem(MyCollections, "收藏夹", AppIcons.Bookmarks, AppIcons.BookmarksFilled),
+        BottomBarItem(Account, "账号", AppIcons.ManageAccounts, AppIcons.ManageAccountsFilled),
     )
     val bottomBarItems = selectedBottomBarItemKeys.mapNotNull { key ->
-        allBottomBarItems.firstOrNull { it.first.name == key }
+        allBottomBarItems.firstOrNull { it.destination.name == key }
     }
 
     val mainTabPages = remember(bottomBarItems) {
         bottomBarItems.flatMap { item ->
-            when (item.first) {
+            when (item.destination) {
                 Home -> listOf(MainTabPage.HomePage)
                 Follow -> listOf(MainTabPage.FollowPage)
                 HotList -> listOf(MainTabPage.HotListPage)
@@ -612,14 +613,12 @@ fun ZhihuMain(
                                     ),
                                 ) {
                                     @Composable
-                                    fun Item(
-                                        destination: TopLevelDestination,
-                                        label: String,
-                                        icon: ImageVector,
-                                    ) {
+                                    fun Item(item: BottomBarItem) {
+                                        val destination = item.destination
                                         val tag = "nav_tab_${destination.name.lowercase()}"
+                                        val selected = currentBottomDestination?.let { it::class == destination::class } == true
                                         NavigationBarItem(
-                                            currentBottomDestination?.let { it::class == destination::class } == true,
+                                            selected,
                                             onClick = {
                                                 isReadingPlayerExpandedByUser = false
                                                 if (currentBottomDestination?.let { it::class == destination::class } != true) {
@@ -628,7 +627,7 @@ fun ZhihuMain(
                                                     scrollToTopTrigger++
                                                 }
                                             },
-                                            label = { Text(label) },
+                                            label = { Text(item.label) },
                                             alwaysShowLabel = true,
                                             colors = if (!isDarkTheme) {
                                                 NavigationBarItemDefaults.colors().copy(
@@ -641,15 +640,13 @@ fun ZhihuMain(
                                                 NavigationBarItemDefaults.colors()
                                             },
                                             icon = {
-                                                Icon(icon, contentDescription = label)
+                                                Icon(if (selected) item.selectedIcon else item.icon, contentDescription = item.label)
                                             },
                                             modifier = Modifier.padding(top = 4.dp).testTag(tag),
                                         )
                                     }
 
-                                    bottomBarItems.forEach { item ->
-                                        Item(item.first, item.second, item.third)
-                                    }
+                                    bottomBarItems.forEach { item -> Item(item) }
                                 }
                             }
                         }

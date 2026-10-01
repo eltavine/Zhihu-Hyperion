@@ -18,72 +18,41 @@
 package com.github.zly2006.zhihu.theme
 
 import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialExpressiveTheme
+import androidx.compose.material3.MotionScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.remember
 import com.materialkolor.dynamicColorScheme
+import com.materialkolor.dynamiccolor.ColorSpec
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80,
-)
-
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40,
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-)
-
+/**
+ * 应用的 Material 3 Expressive 主题：弹簧物理的 expressive 动效、Expressive 形状尺度与强调字体样式都来自
+ * [MaterialExpressiveTheme] 的默认值。平台提供壁纸取色时用它，否则（关闭动态取色、桌面、macOS、Android 12 以下）
+ * 用主题色按 2025 版配色规范生成配色，与 Android 16 的 Expressive 配色一致。
+ */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ZhihuTheme(
     content: @Composable () -> Unit,
 ) {
-    val useDynamicColor = ThemeManager.getUseDynamicColor()
-    val customBackgroundColor = ThemeManager.getBackgroundColor()
     val darkTheme = ThemeManager.isDarkTheme()
-    val platformDynamicColorScheme = platformDynamicColorScheme(darkTheme)
-
-    val baseColorScheme = when {
-        useDynamicColor && platformDynamicColorScheme != null -> {
-            platformDynamicColorScheme
-        }
-
-        !useDynamicColor -> {
-            dynamicColorScheme(
-                seedColor = ThemeManager.getCustomColor(),
-                isDark = darkTheme,
-                isAmoled = false,
-            )
-        }
-
-        darkTheme -> {
-            DarkColorScheme
-        }
-
-        else -> {
-            LightColorScheme
-        }
+    val seedColor = ThemeManager.getCustomColor()
+    val platformColorScheme = if (ThemeManager.getUseDynamicColor()) platformDynamicColorScheme(darkTheme) else null
+    val seededColorScheme = remember(seedColor, darkTheme) {
+        dynamicColorScheme(seedColor = seedColor, isDark = darkTheme, specVersion = ColorSpec.SpecVersion.SPEC_2025)
     }
-
-    val colorScheme = baseColorScheme.copy(
+    val customBackgroundColor = ThemeManager.getBackgroundColor()
+    val colorScheme = (platformColorScheme ?: seededColorScheme).copy(
         background = customBackgroundColor,
         surface = customBackgroundColor,
     )
 
     PlatformSystemBarEffect(darkTheme)
 
-    MaterialTheme(
+    MaterialExpressiveTheme(
         colorScheme = colorScheme,
+        motionScheme = MotionScheme.expressive(),
         typography = Typography,
         content = content,
     )

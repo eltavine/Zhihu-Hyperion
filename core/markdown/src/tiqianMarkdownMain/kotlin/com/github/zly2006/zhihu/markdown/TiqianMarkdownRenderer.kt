@@ -22,10 +22,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.FileDownload
-import androidx.compose.material.icons.outlined.Share
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -46,6 +42,8 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.platform.rememberImageSaver
 import com.github.zly2006.zhihu.platform.rememberImageSharer
 import com.hrm.markdown.parser.ast.Document
@@ -130,7 +128,7 @@ internal actual fun PlatformTiqianMarkdown(
         imageViewerActions = { image ->
             ZhihuImageViewerActionButton(onClick = { saveImage(image.destination) }) {
                 Icon(
-                    imageVector = Icons.Outlined.FileDownload,
+                    icon = AppIcons.Download,
                     contentDescription = "下载图片",
                     tint = Color.White,
                 )
@@ -138,7 +136,7 @@ internal actual fun PlatformTiqianMarkdown(
             Spacer(Modifier.width(4.dp))
             ZhihuImageViewerActionButton(onClick = { shareImage(image.destination) }) {
                 Icon(
-                    imageVector = Icons.Outlined.Share,
+                    icon = AppIcons.Share,
                     contentDescription = "分享图片",
                     tint = Color.White,
                 )

@@ -33,11 +33,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.CardColors
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -59,6 +55,8 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.util.ProvideContentColorTextStyle
 import kotlinx.coroutines.delay
 
@@ -330,7 +328,7 @@ fun SwitchWithIcon(
         thumbContent = {
             if (checked) {
                 Icon(
-                    imageVector = Icons.Filled.Check,
+                    icon = AppIcons.Check,
                     contentDescription = null,
                     modifier = Modifier.size(SwitchDefaults.IconSize),
                     tint = if (enabled) {
@@ -341,7 +339,7 @@ fun SwitchWithIcon(
                 )
             } else {
                 Icon(
-                    imageVector = Icons.Filled.Clear,
+                    icon = AppIcons.Close,
                     contentDescription = null,
                     modifier = Modifier.size(SwitchDefaults.IconSize),
                 )

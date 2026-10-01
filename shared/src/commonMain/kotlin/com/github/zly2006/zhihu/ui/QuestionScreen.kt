@@ -43,25 +43,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Comment
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.outlined.ChatBubbleOutline
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -86,7 +72,6 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
@@ -103,6 +88,9 @@ import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.decodeQuestionContentDetail
 import com.github.zly2006.zhihu.filter.ContentOpenTracker
+import com.github.zly2006.zhihu.icons.AppIcon
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.Topic
@@ -398,19 +386,19 @@ private fun QuestionTopBar(
         },
         navigationIcon = {
             IconButton(onClick = onNavigateBack) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                Icon(AppIcons.ArrowBack, contentDescription = "返回")
             }
         },
         actions = {
             IconButton(onClick = onOpenLog, modifier = Modifier.testTag(QUESTION_VIEW_LOG_BUTTON_TAG)) {
-                Icon(Icons.Filled.History, contentDescription = "日志")
+                Icon(AppIcons.History, contentDescription = "日志")
             }
             IconButton(
                 onClick = onShare,
                 enabled = canShare,
                 modifier = Modifier.testTag(QUESTION_SHARE_BUTTON_TAG),
             ) {
-                Icon(Icons.Filled.Share, contentDescription = "分享")
+                Icon(AppIcons.Share, contentDescription = "分享")
             }
         },
     )
@@ -443,15 +431,15 @@ private fun QuestionHeaderSection(
                 horizontalArrangement = Arrangement.spacedBy(16.dp), // 水平间距
                 verticalArrangement = Arrangement.spacedBy(8.dp), // 垂直间距
             ) {
-                StatItem(icon = Icons.Outlined.Visibility, text = "$visitCount 浏览")
-                StatItem(icon = Icons.Outlined.ChatBubbleOutline, text = "$commentCount 评论")
-                StatItem(icon = Icons.Outlined.FavoriteBorder, text = "$followerCount 关注")
+                StatItem(icon = AppIcons.Visibility, text = "$visitCount 浏览")
+                StatItem(icon = AppIcons.ChatBubble, text = "$commentCount 评论")
+                StatItem(icon = AppIcons.Favorite, text = "$followerCount 关注")
             }
             OutlinedButton(
                 onClick = onShowComments,
                 modifier = Modifier.testTag(QUESTION_COMMENTS_BUTTON_TAG),
             ) {
-                Icon(Icons.AutoMirrored.Filled.Comment, contentDescription = "评论")
+                Icon(AppIcons.Comment, contentDescription = "评论")
                 Spacer(Modifier.width(8.dp))
                 Text("$commentCount")
             }
@@ -783,7 +771,7 @@ private fun QuestionDetailToggleButton(
                 .testTag(QUESTION_DETAIL_TOGGLE_TAG),
     ) {
         Icon(
-            imageVector = if (isExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+            icon = if (isExpanded) AppIcons.ExpandLess else AppIcons.ExpandMore,
             contentDescription = null,
         )
         Spacer(Modifier.width(4.dp))
@@ -807,7 +795,7 @@ private fun QuestionPrimaryActions(
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                 ),
         ) {
-            Icon(Icons.Filled.Edit, contentDescription = "写回答")
+            Icon(AppIcons.Edit, contentDescription = "写回答")
             Spacer(Modifier.width(8.dp))
             Text("写回答")
         }
@@ -828,7 +816,7 @@ private fun QuestionPrimaryActions(
                 },
         ) {
             Icon(
-                imageVector = if (isFollowing) Icons.Filled.Check else Icons.Filled.Add,
+                icon = if (isFollowing) AppIcons.Check else AppIcons.Add,
                 contentDescription = if (isFollowing) "取消关注" else "关注问题",
             )
             Spacer(Modifier.width(8.dp))
@@ -838,10 +826,10 @@ private fun QuestionPrimaryActions(
 }
 
 @Composable
-private fun StatItem(icon: ImageVector, text: String, modifier: Modifier = Modifier) {
+private fun StatItem(icon: AppIcon, text: String, modifier: Modifier = Modifier) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
         Icon(
-            imageVector = icon,
+            icon = icon,
             contentDescription = null, // 装饰性图标不需要无障碍描述
             modifier = Modifier.size(16.dp), // 图标稍微小一点，匹配辅助文字
             tint = MaterialTheme.colorScheme.onSurfaceVariant,

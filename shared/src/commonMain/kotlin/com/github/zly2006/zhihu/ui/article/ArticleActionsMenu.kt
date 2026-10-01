@@ -27,20 +27,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Comment
-import androidx.compose.material.icons.automirrored.filled.VolumeOff
-import androidx.compose.material.icons.automirrored.filled.VolumeUp
-import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.FilterCenterFocus
-import androidx.compose.material.icons.filled.Flag
-import androidx.compose.material.icons.filled.GetApp
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.outlined.DesktopWindows
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
@@ -51,9 +40,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
+import com.github.zly2006.zhihu.icons.AppIcon
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.platform.SettingsStore
@@ -187,7 +178,7 @@ fun ArticleActionsMenu(
 
     @Composable
     fun MenuActionButton(
-        icon: ImageVector,
+        icon: AppIcon,
         text: String,
         enabled: Boolean = true,
         backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
@@ -197,7 +188,7 @@ fun ArticleActionsMenu(
         MenuActionButton(
             icon = {
                 Icon(
-                    imageVector = icon,
+                    icon = icon,
                     contentDescription = null,
                     tint = contentColor,
                 )
@@ -216,7 +207,7 @@ fun ArticleActionsMenu(
             icon = {
                 if (isReadingPlayerSupported && hasReadingSession) {
                     Icon(
-                        Icons.AutoMirrored.Filled.VolumeOff,
+                        AppIcons.VolumeOff,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -229,9 +220,9 @@ fun ArticleActionsMenu(
 
                         else -> Icon(
                             if (!isReadingPlayerSupported && ttsState.isSpeaking) {
-                                Icons.AutoMirrored.Filled.VolumeOff
+                                AppIcons.VolumeOff
                             } else {
-                                Icons.AutoMirrored.Filled.VolumeUp
+                                AppIcons.VolumeUp
                             },
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -343,7 +334,7 @@ fun ArticleActionsMenu(
 
         Spacer(modifier = Modifier.height(12.dp))
         MenuActionButton(
-            icon = Icons.Filled.Share,
+            icon = AppIcons.Share,
             text = "分享",
             onClick = {
                 onDismissRequest()
@@ -357,7 +348,7 @@ fun ArticleActionsMenu(
 
         Spacer(modifier = Modifier.height(12.dp))
         MenuActionButton(
-            icon = Icons.AutoMirrored.Filled.Comment,
+            icon = AppIcons.Comment,
             text = "总结本文",
             onClick = {
                 onDismissRequest()
@@ -367,7 +358,7 @@ fun ArticleActionsMenu(
 
         Spacer(modifier = Modifier.height(12.dp))
         MenuActionButton(
-            icon = Icons.Filled.Flag,
+            icon = AppIcons.Flag,
             text = "标记疑似 AIGC",
             onClick = {
                 onDismissRequest()
@@ -377,7 +368,7 @@ fun ArticleActionsMenu(
 
         Spacer(modifier = Modifier.height(12.dp))
         MenuActionButton(
-            icon = Icons.Filled.ContentCopy,
+            icon = AppIcons.ContentCopy,
             text = "复制链接",
             onClick = {
                 onDismissRequest()
@@ -391,7 +382,7 @@ fun ArticleActionsMenu(
 
         Spacer(modifier = Modifier.height(12.dp))
         MenuActionButton(
-            icon = Icons.Filled.FilterCenterFocus,
+            icon = AppIcons.FilterCenterFocus,
             text = "进入沉浸式",
             onClick = {
                 onDismissRequest()
@@ -401,7 +392,7 @@ fun ArticleActionsMenu(
 
         Spacer(modifier = Modifier.height(12.dp))
         MenuActionButton(
-            icon = Icons.Filled.GetApp,
+            icon = AppIcons.Download,
             text = "导出文章 (Markdown、图片、HTML、PDF)",
             onClick = {
                 onDismissRequest()
@@ -411,7 +402,7 @@ fun ArticleActionsMenu(
 
         Spacer(modifier = Modifier.height(12.dp))
         MenuActionButton(
-            icon = Icons.Filled.Share,
+            icon = AppIcons.Share,
             text = "分享 Markdown 正文",
             onClick = {
                 onDismissRequest()
@@ -421,7 +412,7 @@ fun ArticleActionsMenu(
 
         Spacer(modifier = Modifier.height(12.dp))
         MenuActionButton(
-            icon = Icons.Outlined.DesktopWindows,
+            icon = AppIcons.DesktopWindows,
             text = "在电脑中打开（我计划使用浏览器插件实现，还在写，点击后请手动前往收藏夹打开）",
             onClick = {
                 coroutineScope.launch {

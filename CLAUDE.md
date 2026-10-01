@@ -272,6 +272,7 @@ Compose 页面需要在进入前台时刷新数据，应优先让协程直接跟
     - `:core:network`：Ktor 通用配置、签名、鉴权刷新
     - `:core:account`：账户 store、会话文件存储、手机号与二维码登录协议，以及 `accountModule`
     - `:core:database`：Room 数据库、DAO 与各平台 `databaseModule`；schema 提交在 `core/database/schemas`
+    - `:core:icons`：Material Symbols 图标 `AppIcons`；新增图标在 `core/icons/symbols.txt` 登记后运行 `core/icons/symbols.py`
 - **shared**：应用外壳与各页面 UI、ViewModel；每个平台在 `ZhihuModules.*.kt` 汇总本平台的 Koin 模块。
 - **app**: Android 应用（Jetpack Compose UI），`ZhihuKoinInitializer` 是 Android 组合根
     - `src/main`: 共享代码

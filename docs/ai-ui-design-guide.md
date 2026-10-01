@@ -49,6 +49,13 @@ URL 解析集中在 `resolveContent()`。支持知乎问题、回答、文章、
 
 当前主线 UI 以 Material 3 为默认实现。改共同行为时优先放在 common runtime、状态或 shared component；改视觉时先确认影响的是共享组件、单个页面还是平台 adapter，避免只改入口而漏掉复用路径。
 
+### 设计系统：Material 3 Expressive
+
+- 主题：`ZhihuTheme` 用 `MaterialExpressiveTheme`，动效是 `MotionScheme.expressive()` 的弹簧物理，形状和字体用 Expressive 默认尺度（含 `largeIncreased`、`extraLargeIncreased`、`extraExtraLarge` 形状和 `*Emphasized` 字体样式）。自定义动画优先取 `MaterialTheme.motionScheme` 的 spring token，不再手写 tween 时长。
+- 配色：平台壁纸取色可用时用平台配色；否则（关闭动态取色、桌面、macOS、Android 12 以下）用 `customThemeColor` 经 material-kolor 按 2025 版规范生成。
+- 组件：优先用 material3 已提供的 Expressive 组件（分段列表、按钮组、切换按钮、FAB 菜单、浮动工具栏、加载指示器等），不要手写外观相似的替代品；只有承载应用语义时才封装（如设置项）。
+- 图标：界面只用 `:core:icons` 的 `AppIcons.<名称>`，用 `Icon(icon = ...)` 渲染，不依赖任何图标库或直接引用图标资源。图标是 Material Symbols Rounded 的未填充版本；`*Filled` 只用于选中、已赞、已收藏等状态，底栏选中项也用填充版本。新增图标先在 `core/icons/symbols.txt` 登记一行，再运行 `python3 core/icons/symbols.py`，CI 用 `--check` 校验清单、资源和 `AppIcons.kt` 一致。
+
 主题状态集中在 `ThemeManager` 和平台 `ThemeSettingsRuntime`。`themeMode` 控制明暗，`useDynamicColor` 控制 Material You 动态取色，`customThemeColor` 在动态取色关闭后生效，`backgroundColorLight` / `backgroundColorDark` 控制背景色，`luotianyi_color` 控制应用内浏览器工具栏色。
 
 信息流卡片由 `FeedCard` 读取 `showFeedThumbnail`、`feedCardStyle`、`duo3_card_appearance`、`duo3_card_layout`、`duo3_card_large_title`。改这些 key 的语义时要同时查主页、关注、热榜、历史和搜索结果等复用卡片的页面。
@@ -154,7 +161,7 @@ URL 解析集中在 `resolveContent()`。支持知乎问题、回答、文章、
 1. 新 route: 先在 `NavDestination.kt` 定义 typed destination，再在 `ZhihuMain` 注册 route；涉及平台能力时同步补 Android/Desktop adapter。
 2. 新主 tab: 同时改 `TopLevelDestination`、`MainTabPage`、底栏 `allBottomBarItems`、设置页的 `topLevelDestinationsInOrder`、默认选择和测试。
 3. 新设置项: 记录 preference key、默认值、读取点、是否实时生效、是否需要重启、对应 test tag 和从账号页跳转高亮的 `settingKey`。
-4. 新按钮: 优先复用 Material 3 组件和现有图标库，补稳定 test tag，描述点击后影响的状态或导航目标。
+4. 新按钮: 优先复用 Material 3（Expressive）组件和 `AppIcons`，补稳定 test tag，描述点击后影响的状态或导航目标。
 5. 新正文/卡片渲染逻辑: 同时确认 Compose Markdown、WebView、共享组件、平台 adapter、lite/full variant 差异。
 6. 新手势: 明确方向、阈值，以及和现有回答切换、底栏自动隐藏、图片查看的冲突关系。
 
