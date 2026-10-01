@@ -17,5 +17,5 @@
 
 package com.github.zly2006.zhihu.platform
 
-/** 当前运行平台的名称，用于日志、遥测与上报给知乎的设备信息。 */
+/** 当前运行平台的名称，用于日志与上报给知乎的设备信息。 */
 expect val platformName: String

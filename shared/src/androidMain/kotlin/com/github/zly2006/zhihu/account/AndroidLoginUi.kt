@@ -39,12 +39,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.NotificationManagerCompat
 import com.github.zly2006.zhihu.data.AccountData
 import com.github.zly2006.zhihu.ui.components.WebviewComp
 import com.github.zly2006.zhihu.ui.components.setupUpWebviewClient
-import com.github.zly2006.zhihu.util.telemetry
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -80,12 +78,10 @@ actual fun decodePhoneLoginCaptchaImage(content: String) = runCatching {
 
 @Composable
 actual fun QrLoginPane(onLoginSuccess: (String) -> Unit) {
-    val context = LocalContext.current
     val accountStore = koinInject<ZhihuAccountStore>()
     SharedQrLoginPane(
         onLoginSuccess = { cookies ->
             if (accountStore.login(cookies.toMutableMap())) {
-                telemetry(context, "login")
                 onLoginSuccess(accountStore.session.username)
                 true
             } else {
@@ -98,7 +94,6 @@ actual fun QrLoginPane(onLoginSuccess: (String) -> Unit) {
 
 @Composable
 actual fun WebLoginPane(onLoginSuccess: (String) -> Unit) {
-    val context = LocalContext.current
     val accountStore = koinInject<ZhihuAccountStore>()
     val scope = rememberCoroutineScope()
     var isVerifying by remember { mutableStateOf(false) }
@@ -112,7 +107,6 @@ actual fun WebLoginPane(onLoginSuccess: (String) -> Unit) {
                     scope.launch {
                         try {
                             if (accountStore.login(cookies.toMutableMap())) {
-                                telemetry(context, "login")
                                 onLoginSuccess(accountStore.session.username)
                             }
                         } finally {

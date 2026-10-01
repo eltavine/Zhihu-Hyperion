@@ -76,7 +76,6 @@ class WebDavSyncViewModelTest {
         settings.putInt(ANSWER_VOTEUP_THRESHOLD_PREFERENCE_KEY, 42)
         settings.putBoolean("showFeedThumbnail", false)
         settings.putString("githubToken", "ghp_secret")
-        settings.putBoolean("allowTelemetry", false)
         settings.putString("aigcVoteClientId", "install-id")
 
         val viewModel = viewModel { request ->

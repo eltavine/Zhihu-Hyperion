@@ -119,7 +119,7 @@ private enum class SyncedSettingType { BOOLEAN, INT, FLOAT, STRING }
 /**
  * 参与同步的设置及其类型。桌面和 macOS 的设置文件只保存字符串，恢复到 Android 时必须按原类型写回，
  * 否则 SharedPreferences 按类型读取会抛 ClassCastException。这里只登记设置页里的用户偏好：
- * GitHub Token、开发者选项、需要每台设备单独同意的遥测与 AIGC 标记、随平台调整默认值的底栏配置，
+ * GitHub Token、开发者选项、需要每台设备单独同意的 AIGC 标记、随平台调整默认值的底栏配置，
  * 以及引用本机字体文件的 WebView 字体都不同步。
  */
 private val syncedSettings: Map<String, SyncedSettingType> = buildMap {

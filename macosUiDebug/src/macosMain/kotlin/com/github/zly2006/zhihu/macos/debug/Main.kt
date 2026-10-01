@@ -166,10 +166,7 @@ fun main(args: Array<String>) {
                     if (rootName == "login") {
                         ZhihuTheme {
                             MacosUserMessageHost {
-                                LoginScreen(
-                                    onLoginComplete = {},
-                                    onOpenTelemetrySettings = {},
-                                )
+                                LoginScreen(onLoginComplete = {})
                             }
                         }
                     } else {
