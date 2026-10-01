@@ -33,13 +33,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.outlined.Send
-import androidx.compose.material.icons.outlined.SentimentSatisfied
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -65,6 +60,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.github.zly2006.zhihu.data.ZhihuPrivateMessage
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Notification
 import com.github.zly2006.zhihu.navigation.resolveContent
@@ -125,7 +122,7 @@ fun PrivateMessageScreen(destination: Notification.Message) {
                 },
                 navigationIcon = {
                     IconButton(onClick = navigator.onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(AppIcons.ArrowBack, contentDescription = "返回")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -159,7 +156,7 @@ fun PrivateMessageScreen(destination: Notification.Message) {
                     )
                     IconButton(onClick = {}, enabled = false) {
                         Icon(
-                            Icons.Outlined.SentimentSatisfied,
+                            AppIcons.SentimentSatisfied,
                             contentDescription = "表情（暂不可用）",
                             tint = MaterialTheme.colorScheme.outline,
                         )
@@ -179,7 +176,7 @@ fun PrivateMessageScreen(destination: Notification.Message) {
                         modifier = Modifier.testTag("private_message_send"),
                     ) {
                         Icon(
-                            Icons.AutoMirrored.Outlined.Send,
+                            AppIcons.Send,
                             contentDescription = "发送",
                         )
                     }

@@ -39,10 +39,6 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.ArrowUpward
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -76,6 +72,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.github.zly2006.zhihu.icons.AppIcon
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.absoluteValue
@@ -336,7 +335,7 @@ fun AnswerVerticalOverscroll(
                 excerpt = previousAnswer.title,
                 avatarUrl = previousAnswer.authorAvatarUrl,
                 label = "${previousAnswer.sourceLabel}的上一个回答",
-                icon = Icons.Filled.ArrowUpward,
+                icon = AppIcons.ArrowUpward,
                 isTriggered = overscrollOffset.value >= triggerThresholdPx,
                 progress = progress,
                 modifier = Modifier
@@ -354,7 +353,7 @@ fun AnswerVerticalOverscroll(
                 excerpt = nextAnswer.title,
                 avatarUrl = nextAnswer.authorAvatarUrl,
                 label = "${nextAnswer.sourceLabel}的下一个回答",
-                icon = Icons.Filled.ArrowDownward,
+                icon = AppIcons.ArrowDownward,
                 isTriggered = abs(overscrollOffset.value) >= triggerThresholdPx,
                 progress = progress,
                 reverseLayout = true,
@@ -382,7 +381,7 @@ private fun AnswerPreviewCard(
     excerpt: String,
     avatarUrl: String,
     label: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    icon: AppIcon,
     isTriggered: Boolean,
     progress: Float,
     reverseLayout: Boolean = false,
@@ -410,7 +409,7 @@ private fun AnswerPreviewCard(
         val labelRow: @Composable () -> Unit = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    imageVector = icon,
+                    icon = icon,
                     contentDescription = label,
                     tint = contentColor,
                     modifier = Modifier.size(16.dp),

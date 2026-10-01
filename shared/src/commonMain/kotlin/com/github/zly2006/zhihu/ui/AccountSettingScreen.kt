@@ -37,24 +37,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Login
-import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.automirrored.filled.VolumeUp
-import androidx.compose.material.icons.filled.ArrowOutward
-import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.BookmarkBorder
-import androidx.compose.material.icons.filled.CloudSync
-import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.FilterAlt
-import androidx.compose.material.icons.filled.Groups
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.SwitchAccount
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
@@ -82,6 +64,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.Collections
 import com.github.zly2006.zhihu.navigation.LocalNavigator
@@ -253,7 +237,7 @@ fun AccountSettingScreen(
                             onClick = launchQrScanner,
                             modifier = Modifier.size(40.dp).testTag(ACCOUNT_SETTINGS_SCAN_TAG),
                         ) {
-                            Icon(Icons.Default.QrCodeScanner, contentDescription = "扫码登录")
+                            Icon(AppIcons.QrCodeScanner, contentDescription = "扫码登录")
                         }
                         Spacer(Modifier.width(8.dp))
                     }
@@ -268,7 +252,7 @@ fun AccountSettingScreen(
                         ),
                     ) {
                         Icon(
-                            Icons.AutoMirrored.Filled.Logout,
+                            AppIcons.Logout,
                             contentDescription = "退出登录",
                             modifier = Modifier.size(24.dp),
                         )
@@ -278,7 +262,7 @@ fun AccountSettingScreen(
                 SettingItemGroup {
                     SettingItem(
                         title = { Text("登录知乎") },
-                        icon = { Icon(Icons.AutoMirrored.Filled.Login, null) },
+                        icon = { Icon(AppIcons.Login, null) },
                         modifier = Modifier.testTag(ACCOUNT_SETTINGS_LOGIN_ITEM_TAG),
                         onClick = {
                             requestLogin()
@@ -309,7 +293,7 @@ fun AccountSettingScreen(
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Icon(
-                                Icons.Default.Bookmark,
+                                AppIcons.BookmarkFilled,
                                 null,
                                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
                             )
@@ -340,7 +324,7 @@ fun AccountSettingScreen(
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Icon(
-                                Icons.Default.Groups,
+                                AppIcons.Groups,
                                 null,
                                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
                             )
@@ -372,7 +356,7 @@ fun AccountSettingScreen(
                                 },
                             ) {
                                 Icon(
-                                    Icons.Default.Notifications,
+                                    AppIcons.Notifications,
                                     null,
                                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
                                 )
@@ -399,7 +383,7 @@ fun AccountSettingScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
                                 Icon(
-                                    Icons.Default.History,
+                                    AppIcons.History,
                                     null,
                                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
                                 )
@@ -419,7 +403,7 @@ fun AccountSettingScreen(
                     if (data.login) {
                         SettingItem(
                             title = { Text("查看收藏夹") },
-                            icon = { Icon(Icons.Default.BookmarkBorder, null) },
+                            icon = { Icon(AppIcons.Bookmark, null) },
                             onClick = {
                                 data.urlToken?.let { navigator.onNavigate(Collections(it)) }
                             },
@@ -427,7 +411,7 @@ fun AccountSettingScreen(
                         SettingItem(
                             title = { Text("查看关注订阅") },
                             description = { Text("话题、问题、专栏和收藏夹") },
-                            icon = { Icon(Icons.Default.Groups, null) },
+                            icon = { Icon(AppIcons.Groups, null) },
                             modifier = Modifier.testTag(ACCOUNT_SETTINGS_SHORTCUT_SUBSCRIPTIONS_TAG),
                             onClick = {
                                 navigator.onNavigate(
@@ -462,7 +446,7 @@ fun AccountSettingScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
-                            Icons.Default.Search,
+                            AppIcons.Search,
                             contentDescription = "搜索",
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -483,7 +467,7 @@ fun AccountSettingScreen(
                     SettingItem(
                         title = { Text("身份管理") },
                         description = { Text("创建马甲号或切换当前账号") },
-                        icon = { Icon(Icons.Default.SwitchAccount, null) },
+                        icon = { Icon(AppIcons.SwitchAccount, null) },
                         modifier = Modifier.testTag(ACCOUNT_SETTINGS_IDENTITY_MANAGEMENT_TAG),
                         onClick = { navigator.onNavigate(Account.IdentityManagement) },
                     )
@@ -492,7 +476,7 @@ fun AccountSettingScreen(
                 SettingItem(
                     title = { Text("外观与阅读体验") },
                     description = { Text("主题颜色、字体大小等") },
-                    icon = { Icon(Icons.Default.Palette, null) },
+                    icon = { Icon(AppIcons.Palette, null) },
                     modifier = Modifier.testTag(ACCOUNT_SETTINGS_APPEARANCE_TAG),
                     onClick = { navigator.onNavigate(Account.AppearanceSettings()) },
                 )
@@ -501,7 +485,7 @@ fun AccountSettingScreen(
                     SettingItem(
                         title = { Text("朗读与播放") },
                         description = { Text("朗读内容、播放队列与条目过渡") },
-                        icon = { Icon(Icons.AutoMirrored.Filled.VolumeUp, null) },
+                        icon = { Icon(AppIcons.VolumeUp, null) },
                         modifier = Modifier.testTag(ACCOUNT_SETTINGS_READING_TAG),
                         onClick = { navigator.onNavigate(Account.ReadingSettings) },
                     )
@@ -510,7 +494,7 @@ fun AccountSettingScreen(
                 SettingItem(
                     title = { Text("推荐系统与内容过滤") },
                     description = { Text("推荐、智能过滤、关键词屏蔽等") },
-                    icon = { Icon(Icons.Default.FilterAlt, null) },
+                    icon = { Icon(AppIcons.FilterAlt, null) },
                     modifier = Modifier.testTag(ACCOUNT_SETTINGS_RECOMMEND_TAG),
                     onClick = { navigator.onNavigate(Account.RecommendSettings()) },
                 )
@@ -518,7 +502,7 @@ fun AccountSettingScreen(
                 SettingItem(
                     title = { Text("系统与更新") },
                     description = { Text("GitHub、更新设置等") },
-                    icon = { Icon(Icons.Default.Settings, null) },
+                    icon = { Icon(AppIcons.Settings, null) },
                     modifier = Modifier.testTag(ACCOUNT_SETTINGS_SYSTEM_TAG),
                     onClick = { navigator.onNavigate(Account.SystemAndUpdateSettings()) },
                 )
@@ -526,7 +510,7 @@ fun AccountSettingScreen(
                 SettingItem(
                     title = { Text("WebDAV 同步") },
                     description = { Text("备份和恢复屏蔽列表与设置") },
-                    icon = { Icon(Icons.Default.CloudSync, null) },
+                    icon = { Icon(AppIcons.CloudSync, null) },
                     modifier = Modifier.testTag(ACCOUNT_SETTINGS_WEBDAV_TAG),
                     onClick = { navigator.onNavigate(Account.WebDavSync) },
                 )
@@ -534,7 +518,7 @@ fun AccountSettingScreen(
                 AnimatedVisibility(isDeveloper) {
                     SettingItem(
                         title = { Text("开发者选项") },
-                        icon = { Icon(Icons.Default.Code, null) },
+                        icon = { Icon(AppIcons.Code, null) },
                         modifier = Modifier.testTag(ACCOUNT_SETTINGS_DEVELOPER_TAG),
                         onClick = { navigator.onNavigate(Account.DeveloperSettings) },
                     )
@@ -597,7 +581,7 @@ fun AccountSettingScreen(
                     },
                     endAction = {
                         Icon(
-                            Icons.Default.ArrowOutward,
+                            AppIcons.ArrowOutward,
                             null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -613,7 +597,7 @@ fun AccountSettingScreen(
                     },
                     endAction = {
                         Icon(
-                            Icons.Default.ArrowOutward,
+                            AppIcons.ArrowOutward,
                             null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )

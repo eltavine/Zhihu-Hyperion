@@ -46,14 +46,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
@@ -100,6 +94,8 @@ import androidx.media3.ui.compose.material3.indicator.ProgressSlider
 import androidx.media3.ui.compose.state.rememberPlayPauseButtonState
 import androidx.media3.ui.compose.state.rememberPlaybackSpeedState
 import androidx.media3.ui.compose.text.ErrorText
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.util.saveBitmapToGallery
@@ -324,7 +320,7 @@ actual fun InAppVideoPlayer(
                             },
                             modifier = Modifier.size(36.dp),
                         ) {
-                            Icon(Icons.Default.CameraAlt, "截图", tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(AppIcons.PhotoCamera, "截图", tint = Color.White, modifier = Modifier.size(20.dp))
                         }
                         IconButton(
                             onClick = {
@@ -334,7 +330,7 @@ actual fun InAppVideoPlayer(
                             },
                             modifier = Modifier.size(36.dp),
                         ) {
-                            Icon(Icons.Default.LockOpen, "锁定", tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(AppIcons.LockOpen, "锁定", tint = Color.White, modifier = Modifier.size(20.dp))
                         }
                         IconButton(
                             onClick = {
@@ -350,7 +346,7 @@ actual fun InAppVideoPlayer(
                             },
                             modifier = Modifier.size(36.dp),
                         ) {
-                            Icon(Icons.Default.Download, "下载", tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(AppIcons.Download, "下载", tint = Color.White, modifier = Modifier.size(20.dp))
                         }
                         Box {
                             Text(
@@ -401,7 +397,7 @@ actual fun InAppVideoPlayer(
                 color = Color.Black.copy(alpha = 0.45f),
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    Icon(Icons.Default.Lock, "解锁", tint = Color(0xFF4CAF50), modifier = Modifier.size(20.dp))
+                    Icon(AppIcons.Lock, "解锁", tint = Color(0xFF4CAF50), modifier = Modifier.size(20.dp))
                 }
             }
         }

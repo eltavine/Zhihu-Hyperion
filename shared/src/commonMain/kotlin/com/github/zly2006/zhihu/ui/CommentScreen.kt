@@ -61,18 +61,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Reply
-import androidx.compose.material.icons.automirrored.outlined.Comment
-import androidx.compose.material.icons.automirrored.outlined.Send
-import androidx.compose.material.icons.filled.Archive
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.ThumbUp
-import androidx.compose.material.icons.outlined.EmojiEmotions
-import androidx.compose.material.icons.outlined.Keyboard
-import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -81,7 +69,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChip
@@ -105,7 +92,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
@@ -135,6 +121,9 @@ import com.fleeksoft.ksoup.nodes.Node
 import com.fleeksoft.ksoup.nodes.TextNode
 import com.github.zly2006.zhihu.data.CommentSortOrder
 import com.github.zly2006.zhihu.data.DataHolder
+import com.github.zly2006.zhihu.icons.AppIcon
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.CommentHolder
 import com.github.zly2006.zhihu.navigation.LocalNavigator
@@ -212,8 +201,8 @@ fun SwipeToReplyContainer(
     modifier: Modifier = Modifier,
     onArchive: (() -> Unit)? = null, // 向右滑触发，传 null 则禁向右滑
     onReply: (() -> Unit)? = null, // 向左滑触发，传 null 则禁向左滑
-    archiveIcon: ImageVector = Icons.Default.Archive,
-    replyIcon: ImageVector = Icons.AutoMirrored.Filled.Reply,
+    archiveIcon: AppIcon = AppIcons.Archive,
+    replyIcon: AppIcon = AppIcons.Reply,
     content: @Composable () -> Unit,
 ) {
     val offsetX = remember { Animatable(0f) }
@@ -254,7 +243,7 @@ fun SwipeToReplyContainer(
                 contentAlignment = align,
             ) {
                 Icon(
-                    imageVector = icon,
+                    icon = icon,
                     contentDescription = null,
                     tint = iconTint,
                     modifier = Modifier.graphicsLayer {
@@ -814,7 +803,7 @@ fun CommentScreen(
                                                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 0.dp),
                                             ) {
                                                 Icon(
-                                                    Icons.AutoMirrored.Outlined.Comment,
+                                                    AppIcons.Comment,
                                                     contentDescription = "查看子评论",
                                                     modifier = Modifier.size(16.dp),
                                                     tint = actionChipIconColor,
@@ -1032,7 +1021,7 @@ fun CommentScreen(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Icon(
-                                        Icons.AutoMirrored.Filled.Reply,
+                                        AppIcons.Reply,
                                         contentDescription = null,
                                         modifier = Modifier.size(16.dp),
                                         tint = MaterialTheme.colorScheme.onSecondaryContainer,
@@ -1051,7 +1040,7 @@ fun CommentScreen(
                                             .testTag(COMMENT_CANCEL_REPLY_TAG),
                                     ) {
                                         Icon(
-                                            Icons.Default.Close,
+                                            AppIcons.Close,
                                             contentDescription = "取消回复",
                                             modifier = Modifier.size(16.dp),
                                             tint = MaterialTheme.colorScheme.onSecondaryContainer,
@@ -1085,10 +1074,10 @@ fun CommentScreen(
                                     .testTag(COMMENT_EMOJI_BUTTON_TAG),
                             ) {
                                 Icon(
-                                    imageVector = if (showEmojiPicker) {
-                                        Icons.Outlined.Keyboard
+                                    icon = if (showEmojiPicker) {
+                                        AppIcons.Keyboard
                                     } else {
-                                        Icons.Outlined.EmojiEmotions
+                                        AppIcons.Mood
                                     },
                                     contentDescription = if (showEmojiPicker) {
                                         "切换到键盘"
@@ -1154,7 +1143,7 @@ fun CommentScreen(
                                     )
                                 } else {
                                     Icon(
-                                        Icons.AutoMirrored.Outlined.Send,
+                                        AppIcons.Send,
                                         contentDescription = "发送评论",
                                         tint = if (commentFieldValue.text.isNotBlank()) {
                                             MaterialTheme.colorScheme.primary
@@ -1440,7 +1429,7 @@ private fun CommentItem(
                             .testTag("comment_more_button_${commentData.id}"),
                     ) {
                         Icon(
-                            Icons.Default.MoreVert,
+                            AppIcons.MoreVert,
                             contentDescription = "更多操作",
                             modifier = Modifier.size(16.dp),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1455,7 +1444,7 @@ private fun CommentItem(
                             text = { Text("删除", color = MaterialTheme.colorScheme.error) },
                             leadingIcon = {
                                 Icon(
-                                    Icons.Default.Delete,
+                                    AppIcons.Delete,
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.error,
                                 )
@@ -1483,7 +1472,7 @@ private fun CommentItem(
                     verticalArrangement = Arrangement.Center,
                 ) {
                     Icon(
-                        Icons.AutoMirrored.Outlined.Comment,
+                        AppIcons.Comment,
                         contentDescription = "回复",
                         modifier = Modifier.size(16.dp),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1513,9 +1502,9 @@ private fun CommentItem(
                 Spacer(modifier = Modifier.width(4.dp))
                 Icon(
                     if (isLiked) {
-                        Icons.Filled.ThumbUp
+                        AppIcons.ThumbUpFilled
                     } else {
-                        Icons.Outlined.ThumbUp
+                        AppIcons.ThumbUp
                     },
                     contentDescription = "点赞",
                     modifier = Modifier.size(16.dp),

@@ -28,12 +28,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -48,6 +44,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Video
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
@@ -83,7 +81,7 @@ fun VideoScreen(video: Video) {
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Surface(shape = CircleShape, color = Color.Black.copy(alpha = 0.56f)) {
-                            Icon(Icons.Default.PlayArrow, null, tint = Color.White, modifier = Modifier.padding(16.dp))
+                            Icon(AppIcons.PlayArrow, null, tint = Color.White, modifier = Modifier.padding(16.dp))
                         }
                         Text("在浏览器中播放", color = Color.White)
                     }
@@ -98,7 +96,7 @@ fun VideoScreen(video: Video) {
                 color = Color.Black.copy(alpha = 0.5f),
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, "返回", tint = Color.White, modifier = Modifier.size(24.dp))
+                    Icon(AppIcons.ArrowBack, "返回", tint = Color.White, modifier = Modifier.size(24.dp))
                 }
             }
         } else {
@@ -106,7 +104,7 @@ fun VideoScreen(video: Video) {
                 title = { Text("视频播放") },
                 navigationIcon = {
                     IconButton(onClick = navigator.onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "返回")
+                        Icon(AppIcons.ArrowBack, "返回")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(

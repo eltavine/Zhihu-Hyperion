@@ -33,9 +33,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -43,7 +40,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -67,6 +63,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Person
 import com.github.zly2006.zhihu.platform.isBlocklistNlpSupported
@@ -219,7 +217,7 @@ fun BlocklistSettingsScreen(
                         }
                     },
                 ) {
-                    Icon(Icons.Default.Add, contentDescription = "添加")
+                    Icon(AppIcons.Add, contentDescription = "添加")
                 }
             }
         },
@@ -661,7 +659,7 @@ fun BlockedKeywordsList(
                                 onClick = { onDeleteKeyword(keyword) },
                             ) {
                                 Icon(
-                                    Icons.Default.Delete,
+                                    AppIcons.Delete,
                                     contentDescription = "删除",
                                     tint = MaterialTheme.colorScheme.error,
                                 )
@@ -754,7 +752,7 @@ private fun <T> BlockedPeopleList(
                                 onClick = { onDelete(user) },
                             ) {
                                 Icon(
-                                    Icons.Default.Delete,
+                                    AppIcons.Delete,
                                     contentDescription = "删除",
                                     tint = MaterialTheme.colorScheme.error,
                                 )
@@ -979,7 +977,7 @@ fun BlockedTopicsList(
                                 onClick = { onDeleteTopic(topic) },
                             ) {
                                 Icon(
-                                    Icons.Default.Delete,
+                                    AppIcons.Delete,
                                     contentDescription = "删除",
                                     tint = MaterialTheme.colorScheme.error,
                                 )

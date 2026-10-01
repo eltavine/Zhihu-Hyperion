@@ -50,14 +50,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Comment
-import androidx.compose.material.icons.automirrored.filled.VolumeOff
-import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.BookmarkBorder
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -107,6 +99,8 @@ import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.VoteUpState
 import com.github.zly2006.zhihu.filter.ContentOpenTracker
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.markdown.RenderMarkdown
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
@@ -495,7 +489,7 @@ fun ArticleScreen(
                                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                     ),
                                 ) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                                    Icon(AppIcons.ArrowBack, contentDescription = "返回")
                                 }
                             },
                             actions = {
@@ -504,7 +498,7 @@ fun ArticleScreen(
                                         onClick = { showActionsMenu = true },
                                     ) {
                                         Icon(
-                                            Icons.Filled.MoreVert,
+                                            AppIcons.MoreVert,
                                             contentDescription = "更多选项",
                                         )
                                     }
@@ -699,14 +693,14 @@ fun ArticleScreen(
                                             contentColor = if (viewModel.isFavorited) Color.White else MaterialTheme.colorScheme.onSecondaryContainer,
                                         ),
                                     ) {
-                                        Icon(if (viewModel.isFavorited) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder, contentDescription = "收藏")
+                                        Icon(if (viewModel.isFavorited) AppIcons.BookmarkFilled else AppIcons.Bookmark, contentDescription = "收藏")
                                     }
                                     Button(
                                         onClick = { showComments = true },
                                         contentPadding = PaddingValues(start = 8.dp, end = 12.dp),
                                         colors = voteUpNeutralButtonColors(),
                                     ) {
-                                        Icon(Icons.AutoMirrored.Filled.Comment, contentDescription = "评论")
+                                        Icon(AppIcons.Comment, contentDescription = "评论")
                                         Spacer(modifier = Modifier.width(4.dp))
                                         Text(text = "${viewModel.commentCount}")
                                     }
@@ -719,7 +713,7 @@ fun ArticleScreen(
                                         ),
                                     ) {
                                         Icon(
-                                            Icons.Filled.MoreVert,
+                                            AppIcons.MoreVert,
                                             contentDescription = "更多选项",
                                         )
                                     }
@@ -848,7 +842,7 @@ fun ArticleScreen(
                                         ),
                                     ) {
                                         Icon(
-                                            if (viewModel.isFavorited) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder,
+                                            if (viewModel.isFavorited) AppIcons.BookmarkFilled else AppIcons.Bookmark,
                                             contentDescription = "收藏",
                                         )
                                     }
@@ -867,7 +861,7 @@ fun ArticleScreen(
                                                 contentColor = Color.White,
                                             ),
                                         ) {
-                                            Icon(Icons.AutoMirrored.Filled.VolumeOff, contentDescription = "停止朗读")
+                                            Icon(AppIcons.VolumeOff, contentDescription = "停止朗读")
                                         }
                                     }
 
@@ -879,7 +873,7 @@ fun ArticleScreen(
                                             contentColor = MaterialTheme.colorScheme.onSurface,
                                         ),
                                     ) {
-                                        Icon(Icons.AutoMirrored.Filled.Comment, contentDescription = "评论")
+                                        Icon(AppIcons.Comment, contentDescription = "评论")
                                         Spacer(modifier = Modifier.width(4.dp))
                                         Text(text = "${viewModel.commentCount}", style = MaterialTheme.typography.titleMedium)
                                     }
@@ -1241,7 +1235,7 @@ fun ArticleScreen(
                 if (answerNavigationState.navigatingToNextAnswer) {
                     CircularProgressIndicator(modifier = Modifier.size(30.dp))
                 } else {
-                    Icon(Icons.Filled.SkipNext, contentDescription = "下一个回答")
+                    Icon(AppIcons.SkipNext, contentDescription = "下一个回答")
                 }
             }
         }

@@ -24,16 +24,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -53,6 +48,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.zly2006.zhihu.data.Collection
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.CollectionContent
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
@@ -115,7 +112,7 @@ fun CollectionScreen(
                             onClick = navigator.onNavigateBack,
                             modifier = Modifier.testTag(COLLECTION_SCREEN_BACK_BUTTON_TAG),
                         ) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                            Icon(AppIcons.ArrowBack, contentDescription = "返回")
                         }
                     }
                 },
@@ -131,7 +128,7 @@ fun CollectionScreen(
                 },
                 modifier = Modifier.testTag(COLLECTION_SCREEN_CREATE_BUTTON_TAG),
             ) {
-                Icon(Icons.Filled.Add, contentDescription = "新建收藏夹")
+                Icon(AppIcons.Add, contentDescription = "新建收藏夹")
             }
         },
     ) { innerPadding ->
@@ -182,7 +179,7 @@ fun CollectionScreen(
                             modifier = Modifier.testTag("collection_screen_delete_button_${collection.id}"),
                         ) {
                             Icon(
-                                Icons.Filled.Delete,
+                                AppIcons.Delete,
                                 contentDescription = "删除${collection.title}",
                                 tint = MaterialTheme.colorScheme.error,
                             )

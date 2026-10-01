@@ -22,11 +22,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,6 +40,8 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.platform.SettingsStore
 import org.koin.compose.koinInject
 import kotlin.math.roundToInt
@@ -62,7 +61,7 @@ fun DraggableRefreshButton(
     initiallyOnLeft: Boolean = false,
     onClick: () -> Unit,
     content: @Composable () -> Unit = {
-        Icon(Icons.Default.Refresh, contentDescription = "刷新")
+        Icon(AppIcons.Refresh, contentDescription = "刷新")
     },
 ) {
     val density = LocalDensity.current

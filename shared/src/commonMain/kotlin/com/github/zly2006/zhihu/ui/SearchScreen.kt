@@ -39,19 +39,11 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
@@ -88,6 +80,8 @@ import coil3.compose.AsyncImage
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.officialBadge
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Person
@@ -278,7 +272,7 @@ fun SearchScreen(
                     .size(40.dp)
                     .testTag("search_history_more_button"),
             ) {
-                Icon(Icons.Default.MoreVert, contentDescription = "更多", modifier = Modifier.size(18.dp))
+                Icon(AppIcons.MoreVert, contentDescription = "更多", modifier = Modifier.size(18.dp))
                 DropdownMenu(
                     expanded = historyMoreMenuExpanded,
                     onDismissRequest = { historyMoreMenuExpanded = false },
@@ -356,7 +350,7 @@ fun SearchScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Icon(
-                                    Icons.Default.Search,
+                                    AppIcons.Search,
                                     contentDescription = "搜索",
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.size(20.dp),
@@ -400,7 +394,7 @@ fun SearchScreen(
                                             .testTag("search_clear_button"),
                                     ) {
                                         Icon(
-                                            Icons.Default.Clear,
+                                            AppIcons.Close,
                                             contentDescription = "清除",
                                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                             modifier = Modifier.size(20.dp),
@@ -416,7 +410,7 @@ fun SearchScreen(
                         onClick = navigator.onNavigateBack,
                         modifier = Modifier.testTag("search_back_button"),
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(AppIcons.ArrowBack, contentDescription = "返回")
                     }
                 },
                 actions = {
@@ -426,7 +420,7 @@ fun SearchScreen(
                             enabled = search.query.isNotEmpty(),
                             modifier = Modifier.testTag("search_filter_button"),
                         ) {
-                            Icon(Icons.Default.FilterList, contentDescription = "筛选搜索结果")
+                            Icon(AppIcons.FilterList, contentDescription = "筛选搜索结果")
                         }
                         SearchFilterMenu(
                             expanded = filterMenuExpanded,
@@ -477,7 +471,7 @@ fun SearchScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Icon(
-                                    Icons.Default.Search,
+                                    AppIcons.Search,
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier
@@ -534,7 +528,7 @@ fun SearchScreen(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Icon(
-                                        Icons.Default.Search,
+                                        AppIcons.Search,
                                         contentDescription = null,
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier
@@ -575,7 +569,7 @@ fun SearchScreen(
                                             .size(40.dp)
                                             .testTag("search_hot_refresh_button"),
                                     ) {
-                                        Icon(Icons.Default.Refresh, contentDescription = "刷新热搜", modifier = Modifier.size(18.dp))
+                                        Icon(AppIcons.Refresh, contentDescription = "刷新热搜", modifier = Modifier.size(18.dp))
                                     }
                                     Spacer(modifier = Modifier.width(4.dp))
                                     IconButton(
@@ -584,7 +578,7 @@ fun SearchScreen(
                                             .size(40.dp)
                                             .testTag("search_hot_more_button"),
                                     ) {
-                                        Icon(Icons.Default.MoreVert, contentDescription = "更多", modifier = Modifier.size(18.dp))
+                                        Icon(AppIcons.MoreVert, contentDescription = "更多", modifier = Modifier.size(18.dp))
                                         DropdownMenu(
                                             expanded = hotSearchMoreMenuExpanded,
                                             onDismissRequest = { hotSearchMoreMenuExpanded = false },
@@ -849,7 +843,7 @@ fun SearchScreen(
                             if (viewModel.isLoading) {
                                 CircularProgressIndicator(modifier = Modifier.size(36.dp))
                             } else {
-                                Icon(Icons.Default.Refresh, contentDescription = "刷新")
+                                Icon(AppIcons.Refresh, contentDescription = "刷新")
                             }
                         }
                     }

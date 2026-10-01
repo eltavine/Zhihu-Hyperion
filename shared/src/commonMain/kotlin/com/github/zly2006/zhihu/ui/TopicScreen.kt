@@ -36,17 +36,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
@@ -85,6 +79,8 @@ import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.flattenFeeds
 import com.github.zly2006.zhihu.data.toDisplayItem
 import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Topic
 import com.github.zly2006.zhihu.navigation.WritePin
@@ -456,7 +452,7 @@ fun TopicScreen(topic: Topic) {
                 title = { Text(viewModel.detail?.name?.ifBlank { topic.name } ?: topic.name.ifBlank { "话题" }) },
                 navigationIcon = {
                     IconButton(onClick = navigator.onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(AppIcons.ArrowBack, contentDescription = "返回")
                     }
                 },
                 actions = {
@@ -466,7 +462,7 @@ fun TopicScreen(topic: Topic) {
                             val loadedTopic = topic.copy(name = viewModel.detail?.name ?: topic.name)
                             handleShareAction(loadedTopic, settings, executeShareAction) { showShareDialog = true }
                         },
-                    ) { Icon(Icons.Default.Share, contentDescription = "分享") }
+                    ) { Icon(AppIcons.Share, contentDescription = "分享") }
                 },
             )
         },
@@ -718,7 +714,7 @@ private fun TopicIntroduction(
                         .testTag(TOPIC_INTRODUCTION_TOGGLE_TAG),
             ) {
                 Icon(
-                    imageVector = if (isExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                    icon = if (isExpanded) AppIcons.ExpandLess else AppIcons.ExpandMore,
                     contentDescription = null,
                 )
                 Spacer(Modifier.width(4.dp))

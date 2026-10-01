@@ -39,10 +39,6 @@ import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenuItem
@@ -50,7 +46,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeTopAppBar
@@ -84,6 +79,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.markdown.TiqianBrandTitle
 import com.github.zly2006.zhihu.markdown.isTiqianMarkdownRendererAvailable
 import com.github.zly2006.zhihu.navigation.Account
@@ -376,7 +373,7 @@ fun AppearanceSettingsScreen(
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         ),
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(AppIcons.ArrowBack, contentDescription = "返回")
                     }
                 },
                 scrollBehavior = scrollBehavior,
@@ -1288,14 +1285,14 @@ fun AppearanceSettingsScreen(
                                                 enabled = selectedIndex > 0,
                                                 modifier = Modifier.testTag("appearanceSettings:bottomBar:moveUp:$key"),
                                             ) {
-                                                Icon(Icons.Filled.KeyboardArrowUp, contentDescription = "上移$label")
+                                                Icon(AppIcons.KeyboardArrowUp, contentDescription = "上移$label")
                                             }
                                             IconButton(
                                                 onClick = { moveBottomBarItem(key, 1) },
                                                 enabled = selectedIndex in 0 until selectedBottomBarItemKeys.value.lastIndex,
                                                 modifier = Modifier.testTag("appearanceSettings:bottomBar:moveDown:$key"),
                                             ) {
-                                                Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "下移$label")
+                                                Icon(AppIcons.KeyboardArrowDown, contentDescription = "下移$label")
                                             }
                                         }
                                     }

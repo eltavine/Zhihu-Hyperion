@@ -1,0 +1,119 @@
+public final class com/github/zly2006/zhihu/icons/AppIcon {
+	public static final field $stable I
+}
+
+public final class com/github/zly2006/zhihu/icons/AppIconKt {
+	public static final fun Icon-ww6aTOc (Lcom/github/zly2006/zhihu/icons/AppIcon;Ljava/lang/String;Landroidx/compose/ui/Modifier;JLandroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/github/zly2006/zhihu/icons/AppIcons {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/icons/AppIcons;
+	public final fun getAccountCircle ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getAdd ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getArchive ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getArrowBack ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getArrowCircleUp ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getArrowDownward ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getArrowForward ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getArrowOutward ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getArrowUpward ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getBookmark ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getBookmarkFilled ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getBookmarks ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getBookmarksFilled ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getChatBubble ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getCheck ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getClose ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getCloudDownload ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getCloudSync ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getCloudUpload ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getCode ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getComment ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getContactPage ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getContentCopy ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getCopyAll ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getDataObject ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getDateRange ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getDelete ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getDesktopWindows ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getDownload ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getEdit ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getError ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getExpandLess ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getExpandMore ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getFavorite ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getFavoriteFilled ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getFilterAlt ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getFilterCenterFocus ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getFilterList ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getFlag ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getFolder ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getFolderOpen ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getFormatListBulleted ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getGraphicEq ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getGroup ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getGroupFilled ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getGroups ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getHeadphones ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getHelp ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getHistory ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getHistoryFilled ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getHome ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getHomeFilled ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getImage ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getInfo ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getKeyboard ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getKeyboardArrowDown ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getKeyboardArrowRight ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getKeyboardArrowUp ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getLock ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getLockOpen ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getLogin ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getLogout ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getManageAccounts ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getManageAccountsFilled ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getMarkChatRead ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getMarkUnreadChatAlt ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getMemory ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getMood ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getMoreVert ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getNetworkCheck ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getNewspaper ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getNewspaperFilled ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getNotifications ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getPalette ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getPause ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getPauseCircle ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getPersonAdd ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getPhotoCamera ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getPictureAsPdf ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getPlayArrow ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getQrCodeScanner ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getQueueMusic ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getRefresh ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getReply ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getSave ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getSchedule ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getSearch ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getSend ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getSentimentSatisfied ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getSettings ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getShare ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getShuffle ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getSkipNext ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getSkipPrevious ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getSpeed ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getStop ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getSwitchAccount ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getTag ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getThumbUp ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getThumbUpFilled ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getVisibility ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getVisibilityOff ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getVolumeOff ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getVolumeUp ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getWhatshot ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getWhatshotFilled ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+}
+

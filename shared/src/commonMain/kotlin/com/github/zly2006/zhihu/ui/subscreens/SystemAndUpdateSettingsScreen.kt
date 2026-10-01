@@ -31,9 +31,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowOutward
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -71,6 +68,8 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.github.zly2006.zhihu.data.AIGC_MARKING_ENABLED_PREFERENCE_KEY
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.platform.MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY
 import com.github.zly2006.zhihu.platform.SettingsStore
@@ -134,7 +133,7 @@ fun SystemAndUpdateSettingsScreen(
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         ),
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(AppIcons.ArrowBack, contentDescription = "返回")
                     }
                 },
                 scrollBehavior = scrollBehavior,
@@ -228,7 +227,7 @@ fun SystemAndUpdateSettingsScreen(
                                     ) {
                                         Text("查看完整更新日志")
                                         Icon(
-                                            Icons.Default.ArrowOutward,
+                                            AppIcons.ArrowOutward,
                                             null,
                                             Modifier.size(20.dp),
                                         )
@@ -445,7 +444,7 @@ fun SystemAndUpdateSettingsScreen(
                     icon = { Icon(painterResource(Res.drawable.ic_discord_24dp), null) },
                     endAction = {
                         Icon(
-                            Icons.Default.ArrowOutward,
+                            AppIcons.ArrowOutward,
                             null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -459,7 +458,7 @@ fun SystemAndUpdateSettingsScreen(
                     icon = { Icon(painterResource(Res.drawable.ic_telegram_24dp), null) },
                     endAction = {
                         Icon(
-                            Icons.Default.ArrowOutward,
+                            AppIcons.ArrowOutward,
                             null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -473,7 +472,7 @@ fun SystemAndUpdateSettingsScreen(
                     icon = { Icon(painterResource(Res.drawable.ic_github_24dp), null) },
                     endAction = {
                         Icon(
-                            Icons.Default.ArrowOutward,
+                            AppIcons.ArrowOutward,
                             null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )

@@ -31,13 +31,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeTopAppBar
@@ -57,6 +52,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.reading.ReadingCommentOrder
@@ -148,7 +145,7 @@ fun ReadingSettingsScreen() {
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         ),
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(AppIcons.ArrowBack, contentDescription = "返回")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors().copy(
@@ -206,14 +203,14 @@ fun ReadingSettingsScreen() {
                                     enabled = index > 0,
                                     modifier = Modifier.testTag(READING_SETTINGS_FIELD_MOVE_UP_TAG_PREFIX + field.name),
                                 ) {
-                                    Icon(Icons.Filled.KeyboardArrowUp, contentDescription = "上移${field.displayName}")
+                                    Icon(AppIcons.KeyboardArrowUp, contentDescription = "上移${field.displayName}")
                                 }
                                 IconButton(
                                     onClick = { moveField(field, 1) },
                                     enabled = index < preferences.fieldOrder.lastIndex,
                                     modifier = Modifier.testTag(READING_SETTINGS_FIELD_MOVE_DOWN_TAG_PREFIX + field.name),
                                 ) {
-                                    Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "下移${field.displayName}")
+                                    Icon(AppIcons.KeyboardArrowDown, contentDescription = "下移${field.displayName}")
                                 }
                                 SwitchWithIcon(
                                     checked = enabled,

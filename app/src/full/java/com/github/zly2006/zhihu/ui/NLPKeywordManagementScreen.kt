@@ -36,20 +36,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -75,6 +67,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.nlp.ModelState
 import com.github.zly2006.zhihu.nlp.NLPService
 import com.github.zly2006.zhihu.nlp.SentenceEmbeddingManager
@@ -595,7 +589,7 @@ fun NLPPhraseManagementTab(
                         )
                         Row {
                             TextButton(onClick = onShowAddDialog) {
-                                Icon(Icons.Default.Add, contentDescription = null)
+                                Icon(AppIcons.Add, contentDescription = null)
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text("手动添加")
                             }
@@ -657,14 +651,14 @@ fun NLPPhraseManagementTab(
                         Row {
                             IconButton(onClick = { onEditKeyword(keyword) }) {
                                 Icon(
-                                    Icons.Default.Edit,
+                                    AppIcons.Edit,
                                     contentDescription = "编辑",
                                     tint = MaterialTheme.colorScheme.primary,
                                 )
                             }
                             IconButton(onClick = { onDeleteKeyword(keyword) }) {
                                 Icon(
-                                    Icons.Default.Delete,
+                                    AppIcons.Delete,
                                     contentDescription = "删除",
                                     tint = MaterialTheme.colorScheme.error,
                                 )
@@ -792,7 +786,7 @@ fun BlockedRecordItem(
                 }
                 IconButton(onClick = { expanded = !expanded }) {
                     Icon(
-                        if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                        if (expanded) AppIcons.KeyboardArrowUp else AppIcons.KeyboardArrowDown,
                         contentDescription = if (expanded) "收起" else "展开",
                     )
                 }
@@ -853,7 +847,7 @@ fun BlockedRecordItem(
                     onClick = onDelete,
                     modifier = Modifier.align(Alignment.End),
                 ) {
-                    Icon(Icons.Default.Delete, contentDescription = null)
+                    Icon(AppIcons.Delete, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("删除记录")
                 }
@@ -901,7 +895,7 @@ fun AddPhraseDialog(
                 },
                 enabled = phrase.isNotBlank(),
             ) {
-                Icon(Icons.Default.Check, contentDescription = null)
+                Icon(AppIcons.Check, contentDescription = null)
                 Spacer(modifier = Modifier.width(4.dp))
                 Text("添加")
             }
@@ -954,7 +948,7 @@ fun EditPhraseDialog(
                 },
                 enabled = phrase.isNotBlank(),
             ) {
-                Icon(Icons.Default.Check, contentDescription = null)
+                Icon(AppIcons.Check, contentDescription = null)
                 Spacer(modifier = Modifier.width(4.dp))
                 Text("保存")
             }

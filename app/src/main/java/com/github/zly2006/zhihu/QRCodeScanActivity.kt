@@ -36,15 +36,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -62,6 +58,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.github.zly2006.zhihu.QRCodeScanActivity.Companion.LOGIN_PREFIX
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.theme.ZhihuTheme
 import com.github.zly2006.zhihu.util.clipboardManager
@@ -151,7 +149,7 @@ private fun QRCodeScanScreen(
                 title = { Text("扫码登录") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(AppIcons.ArrowBack, contentDescription = "返回")
                     }
                 },
             )
@@ -166,7 +164,7 @@ private fun QRCodeScanScreen(
             verticalArrangement = Arrangement.Center,
         ) {
             Icon(
-                imageVector = Icons.Default.QrCodeScanner,
+                icon = AppIcons.QrCodeScanner,
                 contentDescription = "扫码登录",
                 modifier = Modifier.size(120.dp),
                 tint = MaterialTheme.colorScheme.primary,
@@ -211,7 +209,7 @@ private fun QRCodeScanScreen(
                     .height(56.dp),
             ) {
                 Icon(
-                    imageVector = Icons.Default.QrCodeScanner,
+                    icon = AppIcons.QrCodeScanner,
                     contentDescription = null,
                     modifier = Modifier.size(24.dp),
                 )

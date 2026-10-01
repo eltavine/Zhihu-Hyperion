@@ -20,12 +20,7 @@ package com.github.zly2006.zhihu.ui.subscreens
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.DataObject
-import androidx.compose.material.icons.filled.Memory
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeTopAppBar
@@ -38,6 +33,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.ui.components.SettingItem
 import com.github.zly2006.zhihu.ui.components.SettingItemGroup
@@ -58,42 +55,42 @@ val fullVariantManualLibraries = listOf(
         license = "Apache-2.0",
         summary = "用于执行句子嵌入。",
         url = "https://github.com/shubham0204/Sentence-Embeddings-Android",
-        icon = { Icon(Icons.Default.Memory, contentDescription = null) },
+        icon = { Icon(AppIcons.Memory, contentDescription = null) },
     ),
     ManualLicenseEntry(
         name = "huggingface/tokenizers 0.22.2",
         license = "Apache-2.0",
         summary = "huggingface tokenizer",
         url = "https://github.com/huggingface/tokenizers",
-        icon = { Icon(Icons.Default.DataObject, contentDescription = null) },
+        icon = { Icon(AppIcons.DataObject, contentDescription = null) },
     ),
     ManualLicenseEntry(
         name = "jni 0.21.1",
         license = "MIT/Apache-2.0",
         summary = "Rust JNI 绑定。",
         url = "https://github.com/jni-rs/jni-rs",
-        icon = { Icon(Icons.Default.DataObject, contentDescription = null) },
+        icon = { Icon(AppIcons.DataObject, contentDescription = null) },
     ),
     ManualLicenseEntry(
         name = "bytes 1.11.1",
         license = "MIT",
         summary = "Rust bytes 缓冲区库。",
         url = "https://github.com/tokio-rs/bytes",
-        icon = { Icon(Icons.Default.DataObject, contentDescription = null) },
+        icon = { Icon(AppIcons.DataObject, contentDescription = null) },
     ),
     ManualLicenseEntry(
         name = "serde 1.0.228",
         license = "MIT OR Apache-2.0",
         summary = "Rust 序列化框架。",
         url = "https://github.com/serde-rs/serde",
-        icon = { Icon(Icons.Default.DataObject, contentDescription = null) },
+        icon = { Icon(AppIcons.DataObject, contentDescription = null) },
     ),
     ManualLicenseEntry(
         name = "serde_json 1.0.149",
         license = "MIT OR Apache-2.0",
         summary = "Rust JSON 序列化实现。",
         url = "https://github.com/serde-rs/json",
-        icon = { Icon(Icons.Default.DataObject, contentDescription = null) },
+        icon = { Icon(AppIcons.DataObject, contentDescription = null) },
     ),
 )
 
@@ -163,7 +160,7 @@ fun OpenSourceLicensesScreen() {
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         ),
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(AppIcons.ArrowBack, contentDescription = "返回")
                     }
                 },
                 scrollBehavior = scrollBehavior,

@@ -36,11 +36,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -63,7 +59,6 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollDispatcher
@@ -78,6 +73,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.zly2006.zhihu.icons.AppIcon
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isPageTurnSupported
 import kotlinx.coroutines.channels.Channel
@@ -281,10 +279,10 @@ fun DraggablePageTurnButtons(
                 )
             },
     ) {
-        PageTurnButton(Icons.Default.KeyboardArrowUp, "上翻页", onPageUp, onLongPressUp, buttonSize, fabColor, iconTint)
+        PageTurnButton(AppIcons.KeyboardArrowUp, "上翻页", onPageUp, onLongPressUp, buttonSize, fabColor, iconTint)
         Spacer(modifier = Modifier.height(gap))
         PageTurnButton(
-            Icons.Default.KeyboardArrowDown,
+            AppIcons.KeyboardArrowDown,
             "下翻页",
             onPageDown,
             onLongPressDown,
@@ -298,7 +296,7 @@ fun DraggablePageTurnButtons(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun PageTurnButton(
-    icon: ImageVector,
+    icon: AppIcon,
     description: String,
     onClick: () -> Unit,
     onLongClick: () -> Unit,

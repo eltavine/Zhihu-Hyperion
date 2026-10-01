@@ -30,19 +30,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Login
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.DeleteOutline
-import androidx.compose.material.icons.filled.ErrorOutline
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.SwitchAccount
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeTopAppBar
@@ -78,6 +69,8 @@ import com.github.zly2006.zhihu.account.ZhihuSavedAccount
 import com.github.zly2006.zhihu.account.applyIdentityHeaders
 import com.github.zly2006.zhihu.account.identitySuccessBody
 import com.github.zly2006.zhihu.data.ZhihuJson
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.requestLoginNavigation
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
@@ -265,7 +258,7 @@ fun IdentityManagementScreen() {
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         ),
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(AppIcons.ArrowBack, contentDescription = "返回")
                     }
                 },
                 scrollBehavior = scrollBehavior,
@@ -300,8 +293,8 @@ fun IdentityManagementScreen() {
                     SettingItem(
                         title = { Text("加载失败") },
                         description = { Text(errorMessage) },
-                        icon = { Icon(Icons.Default.ErrorOutline, null) },
-                        endAction = { Icon(Icons.Default.Refresh, contentDescription = "重试") },
+                        icon = { Icon(AppIcons.Error, null) },
+                        endAction = { Icon(AppIcons.Refresh, contentDescription = "重试") },
                         modifier = Modifier.testTag(IDENTITY_MANAGEMENT_RETRY_TAG),
                         enabled = !state.busy,
                         onClick = {
@@ -350,7 +343,7 @@ fun IdentityManagementScreen() {
                                         style = MaterialTheme.typography.labelLarge,
                                     )
 
-                                    else -> Icon(Icons.Default.SwitchAccount, contentDescription = "切换")
+                                    else -> Icon(AppIcons.SwitchAccount, contentDescription = "切换")
                                 }
                             },
                             modifier = Modifier.testTag("identityManagement.account.$index"),
@@ -368,7 +361,7 @@ fun IdentityManagementScreen() {
                     SettingItem(
                         title = { Text("未找到可管理的账号") },
                         description = { Text("请确认当前登录状态后重试") },
-                        icon = { Icon(Icons.Default.ErrorOutline, null) },
+                        icon = { Icon(AppIcons.Error, null) },
                     )
                 }
             }
@@ -382,10 +375,10 @@ fun IdentityManagementScreen() {
                         SettingItem(
                             title = { Text(account.session.profile?.name ?: account.session.username) },
                             description = { Text("切换到这个登录账号") },
-                            icon = { Icon(Icons.Default.SwitchAccount, null) },
+                            icon = { Icon(AppIcons.SwitchAccount, null) },
                             endAction = {
                                 IconButton(onClick = { removeLoginAccount = account }) {
-                                    Icon(Icons.Default.DeleteOutline, contentDescription = "移除登录账号")
+                                    Icon(AppIcons.Delete, contentDescription = "移除登录账号")
                                 }
                             },
                             onClick = { switchLoginAccount = account },
@@ -393,7 +386,7 @@ fun IdentityManagementScreen() {
                     }
                     SettingItem(
                         title = { Text("添加其他手机号登录账号") },
-                        icon = { Icon(Icons.AutoMirrored.Filled.Login, null) },
+                        icon = { Icon(AppIcons.Login, null) },
                         onClick = ::requestLoginNavigation,
                     )
                 }
@@ -414,7 +407,7 @@ fun IdentityManagementScreen() {
                 ) {
                     SettingItem(
                         title = { Text("创建新账号") },
-                        icon = { Icon(Icons.Default.Add, null) },
+                        icon = { Icon(AppIcons.Add, null) },
                         modifier = Modifier.testTag(IDENTITY_MANAGEMENT_CREATE_TAG),
                         enabled = state.canCreateSubAccount && !state.busy,
                         endAction = {

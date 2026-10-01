@@ -174,7 +174,7 @@ dependencies {
     implementation(libs.compose.runtime)
     implementation(libs.compose.foundation)
     implementation(libs.compose.material3)
-    implementation(libs.compose.material.icons.extended)
+    implementation(projects.core.icons)
     implementation(libs.compose.ui)
     implementation(libs.compose.animation)
     // Compose Multiplatform's Android artifacts resolve to AndroidX Compose; the BOM keeps them on one release.

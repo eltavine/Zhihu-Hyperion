@@ -30,13 +30,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Image
-import androidx.compose.material.icons.filled.Save
-import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -54,6 +49,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 
 @Composable
 fun WriteContentMarkdownEditor(
@@ -177,7 +174,7 @@ fun WriteContentFabColumn(
                 },
             modifier = Modifier.testTag(previewTag),
             icon = {
-                Icon(Icons.Filled.Visibility, contentDescription = "预览")
+                Icon(AppIcons.Visibility, contentDescription = "预览")
             },
             text = {
                 Text("预览")
@@ -206,7 +203,7 @@ fun WriteContentFabColumn(
                             strokeWidth = 2.dp,
                         )
                     } else {
-                        Icon(Icons.Filled.Image, contentDescription = "插入图片")
+                        Icon(AppIcons.Image, contentDescription = "插入图片")
                     }
                 },
                 text = {
@@ -230,7 +227,7 @@ fun WriteContentFabColumn(
                 },
             modifier = Modifier.testTag(saveTag),
             icon = {
-                Icon(Icons.Filled.Save, contentDescription = "保存草稿")
+                Icon(AppIcons.Save, contentDescription = "保存草稿")
             },
             text = {
                 Text("草稿")

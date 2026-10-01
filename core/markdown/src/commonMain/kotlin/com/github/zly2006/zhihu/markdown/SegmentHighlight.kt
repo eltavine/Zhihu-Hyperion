@@ -23,15 +23,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Comment
-import androidx.compose.material.icons.filled.ThumbUp
-import androidx.compose.material.icons.outlined.ContentCopy
-import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -55,6 +49,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.zly2006.zhihu.data.SegmentInfoMeta
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.SegmentCommentHolder
 import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
 import com.github.zly2006.zhihu.ui.components.MyModalBottomSheet
@@ -340,7 +336,7 @@ private fun SegmentActionSheet(
                         modifier = Modifier.weight(1f),
                     ) {
                         Icon(
-                            imageVector = if (highlight.meta.isLike) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
+                            icon = if (highlight.meta.isLike) AppIcons.ThumbUpFilled else AppIcons.ThumbUp,
                             contentDescription = null,
                         )
                         Text(
@@ -353,7 +349,7 @@ private fun SegmentActionSheet(
                         modifier = Modifier.weight(1f),
                     ) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.Comment,
+                            icon = AppIcons.Comment,
                             contentDescription = null,
                         )
                         Text(
@@ -363,7 +359,7 @@ private fun SegmentActionSheet(
                     }
                     IconButton(onClick = onCopyClick) {
                         Icon(
-                            imageVector = Icons.Outlined.ContentCopy,
+                            icon = AppIcons.ContentCopy,
                             contentDescription = "复制内容",
                         )
                     }

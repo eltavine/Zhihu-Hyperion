@@ -35,19 +35,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Comment
-import androidx.compose.material.icons.automirrored.filled.VolumeUp
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -81,6 +73,8 @@ import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.decodePinContentDetail
 import com.github.zly2006.zhihu.data.officialBadge
 import com.github.zly2006.zhihu.filter.ContentOpenTracker
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.LocalNavigator
@@ -134,7 +128,6 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.putJsonArray
 import org.koin.compose.koinInject
 import kotlin.time.Instant
-import androidx.compose.material.icons.outlined.ThumbUp as OutlinedThumbUp
 
 const val PIN_SCREEN_BACK_BUTTON_TAG = "pin_screen_back_button"
 const val PIN_SCREEN_SHARE_BUTTON_TAG = "pin_screen_share_button"
@@ -312,7 +305,7 @@ fun PinScreen(
                         onClick = navigator.onNavigateBack,
                         modifier = Modifier.testTag(PIN_SCREEN_BACK_BUTTON_TAG),
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(AppIcons.ArrowBack, contentDescription = "返回")
                     }
                 },
                 actions = {
@@ -354,12 +347,12 @@ fun PinScreen(
                             )
 
                             isCurrentReadingItem && readingPlayerState.isActivelyPlaying -> Icon(
-                                Icons.Default.Pause,
+                                AppIcons.Pause,
                                 contentDescription = "暂停朗读",
                             )
 
                             else -> Icon(
-                                Icons.AutoMirrored.Filled.VolumeUp,
+                                AppIcons.VolumeUp,
                                 contentDescription = if (isCurrentReadingItem) "继续朗读" else "开始连续朗读",
                             )
                         }
@@ -375,7 +368,7 @@ fun PinScreen(
                         },
                         modifier = Modifier.testTag(PIN_SCREEN_SHARE_BUTTON_TAG),
                     ) {
-                        Icon(Icons.Default.Share, contentDescription = "分享")
+                        Icon(AppIcons.Share, contentDescription = "分享")
                     }
                 },
             )
@@ -753,7 +746,7 @@ private fun PinContent(
                 modifier = Modifier.testTag(PIN_SCREEN_LIKE_BUTTON_TAG),
             ) {
                 Icon(
-                    if (isLiked) Icons.Filled.ThumbUp else Icons.Outlined.OutlinedThumbUp,
+                    if (isLiked) AppIcons.ThumbUpFilled else AppIcons.ThumbUp,
                     contentDescription = "赞",
                     modifier = Modifier.size(20.dp),
                 )
@@ -769,7 +762,7 @@ private fun PinContent(
                 modifier = Modifier.testTag(PIN_SCREEN_COMMENT_BUTTON_TAG),
             ) {
                 Icon(
-                    Icons.AutoMirrored.Filled.Comment,
+                    AppIcons.Comment,
                     contentDescription = "评论",
                     modifier = Modifier.size(20.dp),
                 )

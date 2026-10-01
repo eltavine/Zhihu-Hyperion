@@ -31,13 +31,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -78,6 +74,8 @@ import com.github.zly2006.zhihu.editor.newPublishTraceId
 import com.github.zly2006.zhihu.editor.parsePublishContentId
 import com.github.zly2006.zhihu.editor.rememberImagePickerLauncher
 import com.github.zly2006.zhihu.editor.uploadZhihuImage
+import com.github.zly2006.zhihu.icons.AppIcons
+import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.markdown.zhihuHtmlToMarkdown
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
@@ -359,7 +357,7 @@ fun WriteAnswerScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = navigator.onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(AppIcons.ArrowBack, contentDescription = "返回")
                     }
                 },
                 actions = {
@@ -367,7 +365,7 @@ fun WriteAnswerScreen(
                         onClick = { showSettingsSheet = true },
                         enabled = !isSubmitting,
                     ) {
-                        Icon(Icons.Default.Settings, contentDescription = "回答设置")
+                        Icon(AppIcons.Settings, contentDescription = "回答设置")
                     }
                     Button(
                         onClick = { submitAnswer(publish = true) },
