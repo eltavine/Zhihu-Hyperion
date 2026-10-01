@@ -36,7 +36,7 @@ import org.koin.dsl.module
 fun desktopZhihuModules(): List<Module> = listOf(
     accountModule(Path(desktopZhihuDataFile("account.json").path)),
     databaseModule(desktopZhihuDataFile("content-filter.db"), desktopZhihuDataFile("local-content.db")),
-    dataModule(Path(desktopZhihuDataFile("history.json").path)),
+    dataModule,
     zhihuSharedModule,
     module {
         single { desktopSettingsStore(desktopZhihuDataFile("settings.properties")) }

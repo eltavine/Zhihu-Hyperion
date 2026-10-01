@@ -29,8 +29,18 @@ import com.github.zly2006.zhihu.data.applyPlatformDriver
 import kotlinx.coroutines.Dispatchers
 
 @Database(
-    entities = [ContentViewRecord::class, BlockedKeyword::class, BlockedUser::class, BlockedQuestionAuthor::class, BlockedContentRecord::class, BlockedTopic::class, BlockedFeedRecord::class, ContentOpenEvent::class],
-    version = 7,
+    entities = [
+        ContentViewRecord::class,
+        BlockedKeyword::class,
+        BlockedUser::class,
+        BlockedQuestionAuthor::class,
+        BlockedContentRecord::class,
+        BlockedTopic::class,
+        BlockedFeedRecord::class,
+        ContentOpenEvent::class,
+        BrowsingHistoryEntry::class,
+    ],
+    version = 8,
     exportSchema = true,
 )
 @ConstructedBy(ContentFilterDatabaseConstructor::class)
@@ -50,6 +60,8 @@ abstract class ContentFilterDatabase : RoomDatabase() {
     abstract fun blockedTopicDao(): BlockedTopicDao
 
     abstract fun blockedFeedRecordDao(): BlockedFeedRecordDao
+
+    abstract fun browsingHistoryDao(): BrowsingHistoryDao
 }
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")
@@ -167,10 +179,30 @@ private val migration6To7 = object : Migration(6, 7) {
     }
 }
 
+private val migration7To8 = object : Migration(7, 8) {
+    override fun migrate(connection: SQLiteConnection) {
+        connection.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS `${BrowsingHistoryEntry.TABLE_NAME}` (
+                `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                `destinationKey` TEXT NOT NULL,
+                `destinationJson` TEXT NOT NULL
+            )
+            """.trimIndent(),
+        )
+        connection.execSQL(
+            """
+            CREATE UNIQUE INDEX IF NOT EXISTS `index_${BrowsingHistoryEntry.TABLE_NAME}_destinationKey`
+            ON `${BrowsingHistoryEntry.TABLE_NAME}` (`destinationKey`)
+            """.trimIndent(),
+        )
+    }
+}
+
 fun buildContentFilterDatabase(
     builder: Builder<ContentFilterDatabase>,
 ): ContentFilterDatabase = builder
-    .addMigrations(migration2To3, migration3To4, migration4To5, migration5To6, migration6To7)
+    .addMigrations(migration2To3, migration3To4, migration4To5, migration5To6, migration6To7, migration7To8)
     .fallbackToDestructiveMigration(true)
     .applyPlatformDriver()
     .setQueryCoroutineContext(Dispatchers.Default)

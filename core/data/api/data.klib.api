@@ -46,13 +46,11 @@ final class com.github.zly2006.zhihu.data/FeedDisplaySettings { // com.github.zl
 }
 
 final class com.github.zly2006.zhihu.data/HistoryStorage { // com.github.zly2006.zhihu.data/HistoryStorage|null[0]
-    constructor <init>(com.github.zly2006.zhihu.util/TextDocumentStore) // com.github.zly2006.zhihu.data/HistoryStorage.<init>|<init>(com.github.zly2006.zhihu.util.TextDocumentStore){}[0]
-
-    final var history // com.github.zly2006.zhihu.data/HistoryStorage.history|{}history[0]
-        final fun <get-history>(): kotlin.collections/List<com.github.zly2006.zhihu.navigation/NavDestination> // com.github.zly2006.zhihu.data/HistoryStorage.history.<get-history>|<get-history>(){}[0]
+    constructor <init>(com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao) // com.github.zly2006.zhihu.data/HistoryStorage.<init>|<init>(com.github.zly2006.zhihu.viewmodel.filter.BrowsingHistoryDao){}[0]
 
     final suspend fun add(com.github.zly2006.zhihu.navigation/NavDestination) // com.github.zly2006.zhihu.data/HistoryStorage.add|add(com.github.zly2006.zhihu.navigation.NavDestination){}[0]
     final suspend fun clear() // com.github.zly2006.zhihu.data/HistoryStorage.clear|clear(){}[0]
+    final suspend fun entries(): kotlin.collections/List<com.github.zly2006.zhihu.navigation/NavDestination> // com.github.zly2006.zhihu.data/HistoryStorage.entries|entries(){}[0]
 }
 
 final class com.github.zly2006.zhihu.filter/ContentFilterStats { // com.github.zly2006.zhihu.filter/ContentFilterStats|null[0]
@@ -779,12 +777,14 @@ final const val com.github.zly2006.zhihu.viewmodel.local/LOCAL_CONTENT_TYPE_PIN 
 final const val com.github.zly2006.zhihu.viewmodel.local/LOCAL_CONTENT_TYPE_QUESTION // com.github.zly2006.zhihu.viewmodel.local/LOCAL_CONTENT_TYPE_QUESTION|{}LOCAL_CONTENT_TYPE_QUESTION[0]
     final fun <get-LOCAL_CONTENT_TYPE_QUESTION>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.local/LOCAL_CONTENT_TYPE_QUESTION.<get-LOCAL_CONTENT_TYPE_QUESTION>|<get-LOCAL_CONTENT_TYPE_QUESTION>(){}[0]
 
+final val com.github.zly2006.zhihu.data/dataModule // com.github.zly2006.zhihu.data/dataModule|{}dataModule[0]
+    final fun <get-dataModule>(): org.koin.core.module/Module // com.github.zly2006.zhihu.data/dataModule.<get-dataModule>|<get-dataModule>(){}[0]
+
 final fun (com.github.zly2006.zhihu.data/Feed.Target).com.github.zly2006.zhihu.viewmodel.local/toLocalContentIdentity(): com.github.zly2006.zhihu.viewmodel.local/LocalContentIdentity // com.github.zly2006.zhihu.viewmodel.local/toLocalContentIdentity|toLocalContentIdentity@com.github.zly2006.zhihu.data.Feed.Target(){}[0]
 final fun (com.github.zly2006.zhihu.data/FeedDisplayItem).com.github.zly2006.zhihu.viewmodel.filter/resolveContentIdentity(): com.github.zly2006.zhihu.viewmodel.filter/FeedContentIdentity // com.github.zly2006.zhihu.viewmodel.filter/resolveContentIdentity|resolveContentIdentity@com.github.zly2006.zhihu.data.FeedDisplayItem(){}[0]
 final fun (com.github.zly2006.zhihu.data/FeedDisplayItem).com.github.zly2006.zhihu.viewmodel.filter/toFilterableContent(com.github.zly2006.zhihu.viewmodel.filter/FeedContentIdentity, com.github.zly2006.zhihu.data/DataHolder.Content): com.github.zly2006.zhihu.viewmodel.filter/FilterableContent // com.github.zly2006.zhihu.viewmodel.filter/toFilterableContent|toFilterableContent@com.github.zly2006.zhihu.data.FeedDisplayItem(com.github.zly2006.zhihu.viewmodel.filter.FeedContentIdentity;com.github.zly2006.zhihu.data.DataHolder.Content){}[0]
 final fun (com.github.zly2006.zhihu.platform/SettingsStore).com.github.zly2006.zhihu.viewmodel.filter/toFeedFilterSettings(): com.github.zly2006.zhihu.viewmodel.filter/FeedFilterSettings // com.github.zly2006.zhihu.viewmodel.filter/toFeedFilterSettings|toFeedFilterSettings@com.github.zly2006.zhihu.platform.SettingsStore(){}[0]
 final fun <#A: kotlin/Any?, #B: kotlin/Any?> com.github.zly2006.zhihu.viewmodel.local/applyReasonDiversity(kotlin.collections/List<#A>, kotlin/Int, kotlin/Function1<#A, #B>): kotlin.collections/List<#A> // com.github.zly2006.zhihu.viewmodel.local/applyReasonDiversity|applyReasonDiversity(kotlin.collections.List<0:0>;kotlin.Int;kotlin.Function1<0:0,0:1>){0§<kotlin.Any?>;1§<kotlin.Any?>}[0]
-final fun com.github.zly2006.zhihu.data/dataModule(kotlinx.io.files/Path): org.koin.core.module/Module // com.github.zly2006.zhihu.data/dataModule|dataModule(kotlinx.io.files.Path){}[0]
 final fun com.github.zly2006.zhihu.data/decodeArticleContentDetail(com.github.zly2006.zhihu.navigation/Article, kotlinx.serialization.json/JsonObject): com.github.zly2006.zhihu.data/DataHolder.Content // com.github.zly2006.zhihu.data/decodeArticleContentDetail|decodeArticleContentDetail(com.github.zly2006.zhihu.navigation.Article;kotlinx.serialization.json.JsonObject){}[0]
 final fun com.github.zly2006.zhihu.data/decodePinContentDetail(kotlinx.serialization.json/JsonObject): com.github.zly2006.zhihu.data/DataHolder.Pin // com.github.zly2006.zhihu.data/decodePinContentDetail|decodePinContentDetail(kotlinx.serialization.json.JsonObject){}[0]
 final fun com.github.zly2006.zhihu.data/decodeQuestionContentDetail(kotlinx.serialization.json/JsonObject): com.github.zly2006.zhihu.data/DataHolder.Question // com.github.zly2006.zhihu.data/decodeQuestionContentDetail|decodeQuestionContentDetail(kotlinx.serialization.json.JsonObject){}[0]

@@ -45,6 +45,20 @@ internal val emptyContentFilterDatabase = object : ContentFilterDatabase() {
     override fun blockedTopicDao(): BlockedTopicDao = emptyBlockedTopicDao
 
     override fun blockedFeedRecordDao(): BlockedFeedRecordDao = emptyBlockedFeedRecordDao
+
+    override fun browsingHistoryDao(): BrowsingHistoryDao = emptyBrowsingHistoryDao
+}
+
+private val emptyBrowsingHistoryDao = object : BrowsingHistoryDao {
+    override suspend fun getDestinationsNewestFirst(): List<String> = emptyList()
+
+    override suspend fun insert(entry: BrowsingHistoryEntry) = Unit
+
+    override suspend fun delete(destinationKey: String) = Unit
+
+    override suspend fun keepNewest(limit: Int) = Unit
+
+    override suspend fun clear() = Unit
 }
 
 private val emptyContentFilterDao = object : ContentFilterDao {

@@ -37,7 +37,7 @@ import org.koin.dsl.module
 fun nativeZhihuModules(): List<Module> = listOf(
     accountModule(Path(nativeAccountFilePath())),
     databaseModule(nativeAppPrivateDirectoryPath()),
-    dataModule(Path("${nativeAppPrivateDirectoryPath()}/history.json")),
+    dataModule,
     zhihuSharedModule,
     module {
         single { nativeSettingsStore("settings.properties") }

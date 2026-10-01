@@ -73,7 +73,7 @@ public final class com/github/zly2006/zhihu/data/ContentDetailCacheKt {
 }
 
 public final class com/github/zly2006/zhihu/data/DataModuleKt {
-	public static final fun dataModule (Lkotlinx/io/files/Path;)Lorg/koin/core/module/Module;
+	public static final fun getDataModule ()Lorg/koin/core/module/Module;
 }
 
 public final class com/github/zly2006/zhihu/data/FeedDisplaySettings {
@@ -105,10 +105,10 @@ public final class com/github/zly2006/zhihu/data/FeedDisplaySettingsKt {
 }
 
 public final class com/github/zly2006/zhihu/data/HistoryStorage {
-	public fun <init> (Lcom/github/zly2006/zhihu/util/TextDocumentStore;)V
+	public fun <init> (Lcom/github/zly2006/zhihu/viewmodel/filter/BrowsingHistoryDao;)V
 	public final fun add (Lcom/github/zly2006/zhihu/navigation/NavDestination;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun clear (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun getHistory ()Ljava/util/List;
+	public final fun entries (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class com/github/zly2006/zhihu/data/QualityFilterMode : java/lang/Enum {

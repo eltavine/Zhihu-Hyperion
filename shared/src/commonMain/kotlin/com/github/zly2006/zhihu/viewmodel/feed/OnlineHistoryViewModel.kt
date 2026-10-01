@@ -47,7 +47,7 @@ class OnlineHistoryViewModel(
         val response = rawData.mapNotNull { item ->
             runCatching { decodeJson<OnlineHistoryItem>(item) }.getOrNull()
         }
-        val localHistory = history.history
+        val localHistory = history.entries()
 
         response.forEach { item ->
             val navDest = try {

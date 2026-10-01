@@ -58,6 +58,7 @@ import com.github.zly2006.zhihu.ui.HOME_REFRESH_BUTTON_TAG
 import com.github.zly2006.zhihu.ui.HOME_SEARCH_BUTTON_TAG
 import com.github.zly2006.zhihu.ui.subscreens.BOTTOM_BAR_ITEMS_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.subscreens.START_DESTINATION_PREFERENCE_KEY
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -139,8 +140,7 @@ class ReadingPlayerUiInstrumentedTest {
         composeRule.onNodeWithTag(READING_PLAYER_BAR_TAG).assertDoesNotExist()
         composeRule.onNodeWithText("1/2").assertIsDisplayed()
         composeRule.waitUntil(timeoutMillis = 5_000) {
-            composeRule.activity.history.history
-                .firstOrNull() == Search()
+            runBlocking { composeRule.activity.history.entries() }.firstOrNull() == Search()
         }
     }
 
@@ -181,13 +181,11 @@ class ReadingPlayerUiInstrumentedTest {
         AndroidReadingPlayerBridge.publish(PLAYER_STATE.copy(currentIndex = 1))
 
         composeRule.waitUntil(timeoutMillis = 5_000) {
-            composeRule.activity.history.history
-                .firstOrNull() == Article(type = ArticleType.Answer, id = PLAYER_STATE.queue[1].id)
+            runBlocking { composeRule.activity.history.entries() }.firstOrNull() == Article(type = ArticleType.Answer, id = PLAYER_STATE.queue[1].id)
         }
         assertEquals(
             Article(type = ArticleType.Answer, id = PLAYER_STATE.queue[1].id),
-            composeRule.activity.history.history
-                .first(),
+            runBlocking { composeRule.activity.history.entries() }.first(),
         )
     }
 
@@ -262,8 +260,7 @@ class ReadingPlayerUiInstrumentedTest {
 
         composeRule.onNodeWithTag(READING_QUEUE_SHEET_TAG).assertDoesNotExist()
         composeRule.waitUntil(timeoutMillis = 5_000) {
-            composeRule.activity.history.history
-                .firstOrNull() == Account.ReadingSettings
+            runBlocking { composeRule.activity.history.entries() }.firstOrNull() == Account.ReadingSettings
         }
         composeRule.waitForTag(READING_PLAYER_COMPACT_TAG)
     }

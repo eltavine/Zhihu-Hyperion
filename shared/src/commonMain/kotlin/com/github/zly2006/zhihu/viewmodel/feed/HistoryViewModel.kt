@@ -17,6 +17,7 @@
 
 package com.github.zly2006.zhihu.viewmodel.feed
 
+import androidx.lifecycle.viewModelScope
 import com.github.zly2006.zhihu.data.FeedDisplayItem
 import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
@@ -26,6 +27,7 @@ import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
+import kotlinx.coroutines.launch
 
 class HistoryViewModel(
     settings: SettingsStore,
@@ -42,64 +44,66 @@ class HistoryViewModel(
         isLoading = true
         errorMessage = null
 
-        displayItems.clear()
+        viewModelScope.launch {
+            val entries = history.entries()
+            displayItems.clear()
+            entries.forEach { dest ->
+                val displayItem = when (dest) {
+                    is Article -> {
+                        FeedDisplayItem(
+                            title = dest.title,
+                            summary = dest.excerpt ?: "",
+                            details = "",
+                            authorName = dest.authorName,
+                            feed = null,
+                            avatarSrc = dest.avatarSrc,
+                            navDestinationJson = dest.toFeedDisplayItemNavDestinationJson(),
+                        )
+                    }
 
-        history.history.forEach { dest ->
-            val displayItem = when (dest) {
-                is Article -> {
-                    FeedDisplayItem(
-                        title = dest.title,
-                        summary = dest.excerpt ?: "",
-                        details = "",
-                        authorName = dest.authorName,
-                        feed = null,
-                        avatarSrc = dest.avatarSrc,
-                        navDestinationJson = dest.toFeedDisplayItemNavDestinationJson(),
-                    )
+                    is Question -> {
+                        FeedDisplayItem(
+                            title = dest.title,
+                            details = "问题",
+                            feed = null,
+                            navDestinationJson = dest.toFeedDisplayItemNavDestinationJson(),
+                            summary = "",
+                        )
+                    }
+
+                    is Person -> {
+                        FeedDisplayItem(
+                            title = dest.name,
+                            details = "用户",
+                            feed = null,
+                            navDestinationJson = dest.toFeedDisplayItemNavDestinationJson(),
+                            summary = "",
+                        )
+                    }
+
+                    is Pin -> {
+                        FeedDisplayItem(
+                            title = "想法",
+                            details = "想法",
+                            authorName = dest.authorName,
+                            feed = null,
+                            navDestinationJson = dest.toFeedDisplayItemNavDestinationJson(),
+                            summary = "",
+                        )
+                    }
+
+                    else -> {
+                        null
+                    }
                 }
 
-                is Question -> {
-                    FeedDisplayItem(
-                        title = dest.title,
-                        details = "问题",
-                        feed = null,
-                        navDestinationJson = dest.toFeedDisplayItemNavDestinationJson(),
-                        summary = "",
-                    )
-                }
-
-                is Person -> {
-                    FeedDisplayItem(
-                        title = dest.name,
-                        details = "用户",
-                        feed = null,
-                        navDestinationJson = dest.toFeedDisplayItemNavDestinationJson(),
-                        summary = "",
-                    )
-                }
-
-                is Pin -> {
-                    FeedDisplayItem(
-                        title = "想法",
-                        details = "想法",
-                        authorName = dest.authorName,
-                        feed = null,
-                        navDestinationJson = dest.toFeedDisplayItemNavDestinationJson(),
-                        summary = "",
-                    )
-                }
-
-                else -> {
-                    null
+                displayItem?.let {
+                    displayItems.add(it)
                 }
             }
 
-            displayItem?.let {
-                displayItems.add(it)
-            }
+            isLoading = false
         }
-
-        isLoading = false
     }
 
     override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) = Unit

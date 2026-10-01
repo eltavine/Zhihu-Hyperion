@@ -105,6 +105,14 @@ abstract interface com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao { //
     abstract suspend fun isUserBlocked(kotlin/String): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao.isUserBlocked|isUserBlocked(kotlin.String){}[0]
 }
 
+abstract interface com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao { // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao|null[0]
+    abstract suspend fun clear() // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao.clear|clear(){}[0]
+    abstract suspend fun delete(kotlin/String) // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao.delete|delete(kotlin.String){}[0]
+    abstract suspend fun getDestinationsNewestFirst(): kotlin.collections/List<kotlin/String> // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao.getDestinationsNewestFirst|getDestinationsNewestFirst(){}[0]
+    abstract suspend fun insert(com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry) // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao.insert|insert(com.github.zly2006.zhihu.viewmodel.filter.BrowsingHistoryEntry){}[0]
+    abstract suspend fun keepNewest(kotlin/Int) // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao.keepNewest|keepNewest(kotlin.Int){}[0]
+}
+
 abstract interface com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDao { // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDao|null[0]
     abstract suspend fun clearAllRecords() // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDao.clearAllRecords|clearAllRecords(){}[0]
     abstract suspend fun getFilteredContent(kotlin/Int = ...): kotlin.collections/List<com.github.zly2006.zhihu.viewmodel.filter/ContentViewRecord> // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDao.getFilteredContent|getFilteredContent(kotlin.Int){}[0]
@@ -155,6 +163,7 @@ abstract class com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase :
     abstract fun blockedQuestionAuthorDao(): com.github.zly2006.zhihu.viewmodel.filter/BlockedQuestionAuthorDao // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase.blockedQuestionAuthorDao|blockedQuestionAuthorDao(){}[0]
     abstract fun blockedTopicDao(): com.github.zly2006.zhihu.viewmodel.filter/BlockedTopicDao // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase.blockedTopicDao|blockedTopicDao(){}[0]
     abstract fun blockedUserDao(): com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase.blockedUserDao|blockedUserDao(){}[0]
+    abstract fun browsingHistoryDao(): com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase.browsingHistoryDao|browsingHistoryDao(){}[0]
     abstract fun contentFilterDao(): com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDao // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase.contentFilterDao|contentFilterDao(){}[0]
     abstract fun contentOpenEventDao(): com.github.zly2006.zhihu.viewmodel.filter/ContentOpenEventDao // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase.contentOpenEventDao|contentOpenEventDao(){}[0]
 }
@@ -373,6 +382,30 @@ final class com.github.zly2006.zhihu.viewmodel.filter/BlockedUser { // com.githu
     final object Companion { // com.github.zly2006.zhihu.viewmodel.filter/BlockedUser.Companion|null[0]
         final const val TABLE_NAME // com.github.zly2006.zhihu.viewmodel.filter/BlockedUser.Companion.TABLE_NAME|{}TABLE_NAME[0]
             final fun <get-TABLE_NAME>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/BlockedUser.Companion.TABLE_NAME.<get-TABLE_NAME>|<get-TABLE_NAME>(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry { // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry|null[0]
+    constructor <init>(kotlin/Long = ..., kotlin/String, kotlin/String) // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry.<init>|<init>(kotlin.Long;kotlin.String;kotlin.String){}[0]
+
+    final val destinationJson // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry.destinationJson|{}destinationJson[0]
+        final fun <get-destinationJson>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry.destinationJson.<get-destinationJson>|<get-destinationJson>(){}[0]
+    final val destinationKey // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry.destinationKey|{}destinationKey[0]
+        final fun <get-destinationKey>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry.destinationKey.<get-destinationKey>|<get-destinationKey>(){}[0]
+    final val id // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry.id|{}id[0]
+        final fun <get-id>(): kotlin/Long // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry.id.<get-id>|<get-id>(){}[0]
+
+    final fun component1(): kotlin/Long // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry.component2|component2(){}[0]
+    final fun component3(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry.component3|component3(){}[0]
+    final fun copy(kotlin/Long = ..., kotlin/String = ..., kotlin/String = ...): com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry.copy|copy(kotlin.Long;kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry.toString|toString(){}[0]
+
+    final object Companion { // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry.Companion|null[0]
+        final const val TABLE_NAME // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry.Companion.TABLE_NAME|{}TABLE_NAME[0]
+            final fun <get-TABLE_NAME>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry.Companion.TABLE_NAME.<get-TABLE_NAME>|<get-TABLE_NAME>(){}[0]
     }
 }
 
@@ -740,6 +773,21 @@ final class com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao_Impl : com.
 }
 
 // Targets: [macosArm64]
+final class com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao_Impl : com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao { // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao_Impl|null[0]
+    constructor <init>(androidx.room/RoomDatabase) // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao_Impl.<init>|<init>(androidx.room.RoomDatabase){}[0]
+
+    final suspend fun clear() // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao_Impl.clear|clear(){}[0]
+    final suspend fun delete(kotlin/String) // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao_Impl.delete|delete(kotlin.String){}[0]
+    final suspend fun getDestinationsNewestFirst(): kotlin.collections/List<kotlin/String> // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao_Impl.getDestinationsNewestFirst|getDestinationsNewestFirst(){}[0]
+    final suspend fun insert(com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryEntry) // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao_Impl.insert|insert(com.github.zly2006.zhihu.viewmodel.filter.BrowsingHistoryEntry){}[0]
+    final suspend fun keepNewest(kotlin/Int) // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao_Impl.keepNewest|keepNewest(kotlin.Int){}[0]
+
+    final object Companion { // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao_Impl.Companion|null[0]
+        final fun getRequiredConverters(): kotlin.collections/List<kotlin.reflect/KClass<*>> // com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao_Impl.Companion.getRequiredConverters|getRequiredConverters(){}[0]
+    }
+}
+
+// Targets: [macosArm64]
 final class com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDao_Impl : com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDao { // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDao_Impl|null[0]
     constructor <init>(androidx.room/RoomDatabase) // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDao_Impl.<init>|<init>(androidx.room.RoomDatabase){}[0]
 
@@ -767,6 +815,7 @@ final class com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase_Impl
     final fun blockedQuestionAuthorDao(): com.github.zly2006.zhihu.viewmodel.filter/BlockedQuestionAuthorDao // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase_Impl.blockedQuestionAuthorDao|blockedQuestionAuthorDao(){}[0]
     final fun blockedTopicDao(): com.github.zly2006.zhihu.viewmodel.filter/BlockedTopicDao // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase_Impl.blockedTopicDao|blockedTopicDao(){}[0]
     final fun blockedUserDao(): com.github.zly2006.zhihu.viewmodel.filter/BlockedUserDao // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase_Impl.blockedUserDao|blockedUserDao(){}[0]
+    final fun browsingHistoryDao(): com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase_Impl.browsingHistoryDao|browsingHistoryDao(){}[0]
     final fun contentFilterDao(): com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDao // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase_Impl.contentFilterDao|contentFilterDao(){}[0]
     final fun contentOpenEventDao(): com.github.zly2006.zhihu.viewmodel.filter/ContentOpenEventDao // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase_Impl.contentOpenEventDao|contentOpenEventDao(){}[0]
     final fun createAutoMigrations(kotlin.collections/Map<kotlin.reflect/KClass<out androidx.room.migration/AutoMigrationSpec>, androidx.room.migration/AutoMigrationSpec>): kotlin.collections/List<androidx.room.migration/Migration> // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase_Impl.createAutoMigrations|createAutoMigrations(kotlin.collections.Map<kotlin.reflect.KClass<out|androidx.room.migration.AutoMigrationSpec>,androidx.room.migration.AutoMigrationSpec>){}[0]

@@ -22,8 +22,9 @@ import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.navigation.Person
 import com.github.zly2006.zhihu.platform.MapSettingsStore
-import com.github.zly2006.zhihu.util.TextDocumentStore
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
+import com.github.zly2006.zhihu.viewmodel.filter.BrowsingHistoryDao
+import com.github.zly2006.zhihu.viewmodel.filter.BrowsingHistoryEntry
 import com.github.zly2006.zhihu.viewmodel.filter.FakeBlockedQuestionAuthorDao
 import com.github.zly2006.zhihu.viewmodel.filter.FakeBlockedUserDao
 import io.ktor.client.HttpClient
@@ -120,7 +121,7 @@ class PeopleScreenProfileTest {
         )
         val viewModel = PersonViewModel(person(), MapSettingsStore())
 
-        viewModel.load(environment, HistoryStorage(MemoryDocument()), FakeBlockedUserDao(), FakeBlockedQuestionAuthorDao())
+        viewModel.load(environment, HistoryStorage(NoHistory), FakeBlockedUserDao(), FakeBlockedQuestionAuthorDao())
 
         assertTrue(viewModel.isBlocking)
         assertEquals("4.0k", viewModel.githubSocial?.starCount)
@@ -142,7 +143,7 @@ class PeopleScreenProfileTest {
         )
         val viewModel = PersonViewModel(person(), MapSettingsStore())
 
-        viewModel.load(environment, HistoryStorage(MemoryDocument()), FakeBlockedUserDao(), FakeBlockedQuestionAuthorDao())
+        viewModel.load(environment, HistoryStorage(NoHistory), FakeBlockedUserDao(), FakeBlockedQuestionAuthorDao())
 
         assertEquals("Profile User", viewModel.name)
         assertTrue(viewModel.isBlocking)
@@ -165,7 +166,6 @@ class PeopleScreenProfileTest {
         avatarUrl = "https://example.invalid/avatar.png",
         url = "https://www.zhihu.com/people/profile-user",
         headline = "",
-        gender = 0,
         isBlocking = isBlocking,
         socialMedias = socialMedias,
     )
@@ -211,17 +211,15 @@ class PeopleScreenProfileTest {
         ) = Unit
     }
 
-    private class MemoryDocument : TextDocumentStore {
-        private var text: String? = null
+    private object NoHistory : BrowsingHistoryDao {
+        override suspend fun getDestinationsNewestFirst() = emptyList<String>()
 
-        override fun readText() = text
+        override suspend fun insert(entry: BrowsingHistoryEntry) = Unit
 
-        override fun writeText(text: String) {
-            this.text = text
-        }
+        override suspend fun delete(destinationKey: String) = Unit
 
-        override fun delete() {
-            text = null
-        }
+        override suspend fun keepNewest(limit: Int) = Unit
+
+        override suspend fun clear() = Unit
     }
 }

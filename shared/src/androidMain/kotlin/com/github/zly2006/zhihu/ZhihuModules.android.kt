@@ -41,7 +41,7 @@ import java.io.File
 fun androidZhihuModules(context: Context): List<Module> = listOf(
     accountModule(Path(File(context.filesDir, "account.json").path)),
     databaseModule(context),
-    dataModule(Path(File(context.filesDir, "history.json").path)),
+    dataModule,
     zhihuSharedModule,
     module {
         single { AndroidArticleNavigationHandoff() }

@@ -248,7 +248,6 @@ class ArticleViewModel(
     val isFavorited: Boolean
         get() = collections.any { it.isFavorited }
 
-    // todo: replace this with sqlite
     @OptIn(ExperimentalStdlibApi::class)
     fun loadArticle(
         environment: ZhihuApiEnvironment,
