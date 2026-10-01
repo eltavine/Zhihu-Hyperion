@@ -344,6 +344,7 @@ data class Person(
     }
 }
 
+/** 知乎视频详情页；[id] 是 lens 视频 id，即 `www.zhihu.com/video/{id}` 中的数字。 */
 @Serializable
 data class Video(
     val id: Long,
@@ -431,7 +432,7 @@ fun resolveContent(url: Url): NavDestination? {
                 }
             } else if (segments.size == 2 && segments[0] == "video") {
                 val videoId = segments[1].toLongOrNull() ?: return null
-                return Video(id = videoId) // TODO: 视频详情页待完善。
+                return Video(id = videoId)
             } else if (segments.size == 2 && segments[0] == "pin") {
                 val pinId = segments[1].toLongOrNull() ?: return null
                 return Pin(id = pinId)
@@ -466,6 +467,11 @@ fun resolveContent(url: Url): NavDestination? {
             ) {
                 val articleId = segments[1].toLong()
                 return Article(type = ArticleType.Article, id = articleId)
+            }
+            Log.w("NavDestination", "Cannot resolve content from url: $url")
+        } else if (url.host == "video.zhihu.com") {
+            if (segments.size == 2 && segments[0] == "video") {
+                return segments[1].toLongOrNull()?.let(::Video)
             }
             Log.w("NavDestination", "Cannot resolve content from url: $url")
         } else if (url.host == "link.zhihu.com") {

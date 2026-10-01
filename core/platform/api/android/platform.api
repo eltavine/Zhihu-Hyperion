@@ -118,6 +118,7 @@ public final class com/github/zly2006/zhihu/ui/components/OpenImagePreviewConten
 }
 
 public final class com/github/zly2006/zhihu/util/AndroidImageActionsKt {
+	public static final fun saveBitmapToGallery (Landroid/content/Context;Ljava/lang/String;Landroid/graphics/Bitmap;)V
 	public static final fun saveImageToGallery (Landroid/content/Context;Lio/ktor/client/HttpClient;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun saveImageToMediaStore (Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static final fun shareImage (Landroid/content/Context;Lio/ktor/client/HttpClient;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;

@@ -63,8 +63,6 @@ import androidx.webkit.WebResourceErrorCompat
 import androidx.webkit.WebViewAssetLoader
 import androidx.webkit.WebViewClientCompat
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
-import com.github.zly2006.zhihu.data.AccountData
-import com.github.zly2006.zhihu.data.fetchHighestQualityZhihuVideoUrl
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.navigation.Video
 import com.github.zly2006.zhihu.navigation.resolveContent
@@ -77,8 +75,6 @@ import com.github.zly2006.zhihu.util.extractImageUrl
 import com.github.zly2006.zhihu.util.luoTianYiUrlLauncher
 import com.github.zly2006.zhihu.util.saveImageToGallery
 import com.github.zly2006.zhihu.util.shareImage
-import com.github.zly2006.zhihu.util.signZhihuFetchRequest
-import io.ktor.client.HttpClient
 import io.ktor.http.Url
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -111,25 +107,6 @@ private fun Context.navigateInMainActivity(destination: NavDestination, fallback
     }
     val intent = Intent(Intent.ACTION_VIEW, fallbackUri).setClassName(this, MAIN_ACTIVITY_CLASS)
     startActivity(intent)
-}
-
-/**
- * 获取最高清晰度的视频URL
- */
-@OptIn(DelicateCoroutinesApi::class)
-suspend fun getHighestQualityVideoUrl(context: Context, httpClient: HttpClient, videoId: String, contentId: String, contentType: String = "answer"): String? = try {
-    fetchHighestQualityZhihuVideoUrl(
-        httpClient = httpClient,
-        videoId = videoId,
-        contentId = contentId,
-        contentType = contentType,
-        xsrfToken = AccountData.data.cookies["_xsrf"],
-    ) {
-        signZhihuFetchRequest(AccountData.data.cookies)
-    }
-} catch (e: Exception) {
-    Log.e("VideoDownload", "Error getting video URL: ${e.message}")
-    null
 }
 
 class CustomWebView : WebView {

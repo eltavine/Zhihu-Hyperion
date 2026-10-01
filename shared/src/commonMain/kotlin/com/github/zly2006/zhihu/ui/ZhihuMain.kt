@@ -163,6 +163,7 @@ import com.github.zly2006.zhihu.ui.subscreens.ReadingSettingsScreen
 import com.github.zly2006.zhihu.ui.subscreens.SettingsSearchScreen
 import com.github.zly2006.zhihu.ui.subscreens.SystemAndUpdateSettingsScreen
 import com.github.zly2006.zhihu.ui.subscreens.WebDavSyncScreen
+import com.github.zly2006.zhihu.video.VideoScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -522,9 +523,7 @@ fun ZhihuMain(
             LocalSegmentCommentSheet provides SegmentCommentSheet,
             LocalNavigator provides Navigator(
                 onNavigate = { destination ->
-                    if (
-                        destination is Video || destination.isDetailPaneDestination() || destination.isAccountDetailDestination()
-                    ) {
+                    if (destination.isDetailPaneDestination() || destination.isAccountDetailDestination()) {
                         navigateContent(destination, detailNavController)
                     } else {
                         navigate(destination)
@@ -826,6 +825,9 @@ fun ZhihuMain(
                             composable<Pin> { navEntry ->
                                 val pin: Pin = navEntry.toRoute()
                                 if (!enableLandscapeListDetail) PinScreen(pin)
+                            }
+                            composable<Video> { navEntry ->
+                                VideoScreen(navEntry.toRoute())
                             }
                             accountSettings(reloadBottomBarPreferences, blocklistSettingsNlpContent)
                             composable<Notification> {

@@ -55,6 +55,9 @@ class NavDestinationTest {
                 Notification.Invitations,
             "https://www.zhihu.com/inbox/peer-token?title=%E7%9F%A5%E4%B9%8E%E5%B0%8F%E7%AE%A1%E5%AE%B6&source_type=message_list" to
                 Notification.Message("peer-token", "知乎小管家"),
+            "https://www.zhihu.com/video/2029631316597973958" to Video(2029631316597973958),
+            "https://video.zhihu.com/video/2029631316597973958" to Video(2029631316597973958),
+            "https://link.zhihu.com/?target=https%3A//www.zhihu.com/video/2029631316597973958" to Video(2029631316597973958),
         ).forEach { (url, expected) ->
             assertEquals(expected, resolveContent(url), url)
         }

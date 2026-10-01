@@ -1,0 +1,29 @@
+/*
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
+ * Copyright (C) 2026, eltavine <me@eltavine.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation (version 3 only).
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package com.github.zly2006.zhihu.video
+
+import androidx.compose.runtime.Composable
+import com.github.zly2006.zhihu.platform.platformName
+
+actual val isInAppVideoPlaybackSupported: Boolean = false
+
+@Composable
+actual fun InAppVideoPlayer(
+    videoId: Long,
+    playUrl: String,
+): Unit = error("$platformName 暂不支持应用内播放视频")

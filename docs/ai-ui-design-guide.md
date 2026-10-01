@@ -21,13 +21,13 @@ UI 改动不要只看目标页面。至少用 `rg "<preferenceKey>" shared app` 
 
 底栏显示只在 `MainTabs` route 上出现，判断点是 `isTopLevelDest(navEntry)`。内容页、设置页、搜索页、通知页等已注册独立目的地会离开主壳，依赖返回栈回退。
 
-Android 导航由 `MainActivity.navigate()` 承接，负责历史记录、剪贴板/外链跳转、视频特殊处理、内容打开来源埋点。Desktop 在 `DesktopZhihuMain.navigate()` 中实现同一语义。跨平台 UI 内部应优先用 `LocalNavigator.current.onNavigate(...)`，不要直接持有 Activity 或平台 NavController。
+Android 导航由 `MainActivity.navigate()` 承接，负责历史记录、剪贴板/外链跳转、内容打开来源埋点。Desktop 在 `DesktopZhihuMain.navigate()` 中实现同一语义。视频是普通 route：`Video` 只凭视频 id 由 `:feature:video` 的 `VideoScreen` 加载，宿主不再按来源页面特殊处理；它注册在主 `NavHost`，从详情栏打开时也铺满窗口。跨平台 UI 内部应优先用 `LocalNavigator.current.onNavigate(...)`，不要直接持有 Activity 或平台 NavController。
 
-URL 解析集中在 `resolveContent()`。支持知乎问题、回答、文章、用户、视频、想法、搜索、`link.zhihu.com?target=` 和 `zhihu://` scheme。新增 deep link 必须同时考虑 Android intent、剪贴板解析和桌面打开路径。
+URL 解析集中在 `resolveContent()`。支持知乎问题、回答、文章、用户、视频（含 `video.zhihu.com/video/{id}`）、想法、搜索、`link.zhihu.com?target=` 和 `zhihu://` scheme。新增 deep link 必须同时考虑 Android intent、剪贴板解析和桌面打开路径。
 
 ## 主界面结构
 
-`ZhihuMain` 是共同 UI 外壳。它读取 `ZhihuMainPreferenceState`，生成底栏项、主 pager 页、自动隐藏状态和 `NavHost` route。Android 与 Desktop 分别用平台 adapter 注入文章页、NLP 管理页、视频打开和转场。
+`ZhihuMain` 是共同 UI 外壳。它读取 `ZhihuMainPreferenceState`，生成底栏项、主 pager 页、自动隐藏状态和 `NavHost` route。Android 与 Desktop 分别用平台 adapter 注入文章页、NLP 管理页和转场。
 
 底栏项顺序固定为: 主页、关注、热榜、日报、历史、账号。实际显示由 `bottom_bar_items` 决定，并经过 `normalizeBottomBarSelection()` 兜底。`duo3_home_account` 开启后，账号入口迁到主页头像，底栏选择规则会改变；这类改动必须一起检查主页账号入口、账号页历史快捷方式和底栏启动页。
 

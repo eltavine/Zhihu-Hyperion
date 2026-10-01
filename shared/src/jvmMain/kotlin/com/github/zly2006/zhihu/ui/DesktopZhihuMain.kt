@@ -30,20 +30,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
-import com.github.zly2006.zhihu.data.fetchHighestQualityZhihuVideoUrl
-import com.github.zly2006.zhihu.desktop.openDesktopExternalUrl
 import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
 import com.github.zly2006.zhihu.filter.ContentOpenTracker
 import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.Article
-import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.CollectionContent
 import com.github.zly2006.zhihu.navigation.Daily
 import com.github.zly2006.zhihu.navigation.Follow
@@ -58,7 +54,6 @@ import com.github.zly2006.zhihu.navigation.OnlineHistory
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.TopLevelDestination
-import com.github.zly2006.zhihu.navigation.Video
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.platformBottomBarItemLimit
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
@@ -73,20 +68,16 @@ import com.github.zly2006.zhihu.ui.subscreens.defaultBottomBarSelectionKeys
 import com.github.zly2006.zhihu.ui.subscreens.navDestinationFromName
 import com.github.zly2006.zhihu.ui.subscreens.normalizeBottomBarSelection
 import com.github.zly2006.zhihu.ui.subscreens.resolveValidStartDestinationKey
-import com.github.zly2006.zhihu.util.signZhihuFetchRequest
 import com.github.zly2006.zhihu.viewmodel.ArticleAnswerSwitchState
 import com.github.zly2006.zhihu.viewmodel.ArticleAnswerTransitionDirection
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.compose.koinInject
 
 /**
  * Desktop 平台的 Zhihu-Hyperion 主界面入口。
  *
- * 这里创建桌面 NavController、账号存储、HTTP 客户端和视频/文章等平台行为，再注入共享 [ZhihuMain]。
- * 设计上尽量复用 common 页面结构，只把浏览器打开、签名请求、回答切换状态和桌面账号读取留在 JVM 侧。
+ * 这里创建桌面 NavController、账号存储、HTTP 客户端和文章等平台行为，再注入共享 [ZhihuMain]。
+ * 设计上尽量复用 common 页面结构，只把回答切换状态和桌面账号读取留在 JVM 侧。
  */
 @Composable
 fun DesktopZhihuMain() {
@@ -98,7 +89,6 @@ fun DesktopZhihuMain() {
     val accounts by accountStore.accountsState.collectAsState()
     val accountSession = accounts.session
     val httpClient = remember(accountStore, accountSession) { accountStore.client.httpClient() }
-    val coroutineScope = rememberCoroutineScope()
     val userMessages = rememberUserMessageSink()
     var mainTabNavigationTarget by remember { mutableStateOf<TopLevelDestination?>(null) }
     var currentMainTabOpenFrom by remember { mutableStateOf<String?>(null) }
@@ -143,49 +133,6 @@ fun DesktopZhihuMain() {
      */
     fun navigate(route: NavDestination, targetController: NavHostController = navController) {
         when (route) {
-            is Video -> {
-                val current = runCatching {
-                    targetController.currentBackStackEntry?.toRoute<Article>()
-                }.getOrNull() ?: runCatching {
-                    targetController.currentBackStackEntry?.toRoute<Question>()
-                }.getOrNull()
-                if (current == null) {
-                    userMessages.showMessage("无法打开视频：未知的内容类型")
-                    return
-                }
-                val (contentId, contentType) = when (current) {
-                    is Article -> current.id.toString() to when (current.type) {
-                        ArticleType.Answer -> "answer"
-                        ArticleType.Article -> "article"
-                    }
-
-                    is Question -> current.questionId.toString() to "question"
-
-                    else -> return
-                }
-                coroutineScope.launch {
-                    val cookies = accountStore.session.cookies
-                    val videoUrl = withContext(Dispatchers.IO) {
-                        runCatching {
-                            fetchHighestQualityZhihuVideoUrl(
-                                httpClient = httpClient,
-                                videoId = route.id.toString(),
-                                contentId = contentId,
-                                contentType = contentType,
-                                xsrfToken = cookies["_xsrf"],
-                            ) {
-                                signZhihuFetchRequest(cookies)
-                            }
-                        }.getOrNull()
-                    }
-                    if (videoUrl == null) {
-                        userMessages.showMessage("获取视频链接失败")
-                    } else {
-                        openDesktopExternalUrl(videoUrl)
-                    }
-                }
-            }
-
             MainTabs -> {
                 mainTabNavigationTarget = Home
                 navigateToMainTabs()

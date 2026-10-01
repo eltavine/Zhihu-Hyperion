@@ -49,6 +49,7 @@ kotlin {
             api(projects.core.ui)
             api(projects.core.markdown)
             implementation(projects.feature.editor)
+            implementation(projects.feature.video)
             api(projects.core.database)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)

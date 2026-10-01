@@ -51,7 +51,6 @@ import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
 import com.github.zly2006.zhihu.filter.ContentOpenTracker
 import com.github.zly2006.zhihu.navigation.AndroidArticleNavigationHandoff
 import com.github.zly2006.zhihu.navigation.Article
-import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.CollectionContent
 import com.github.zly2006.zhihu.navigation.CommentHolder
 import com.github.zly2006.zhihu.navigation.History
@@ -62,7 +61,6 @@ import com.github.zly2006.zhihu.navigation.Notification
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.TopLevelDestination
-import com.github.zly2006.zhihu.navigation.Video
 import com.github.zly2006.zhihu.navigation.resolveContent
 import com.github.zly2006.zhihu.nlp.SentenceEmbeddingManager
 import com.github.zly2006.zhihu.platform.androidSettingsStore
@@ -76,7 +74,6 @@ import com.github.zly2006.zhihu.ui.components.PREF_VOLUME_KEY_PAGE_TURN
 import com.github.zly2006.zhihu.ui.components.PageTurnCommand
 import com.github.zly2006.zhihu.ui.components.PageTurnDispatcher
 import com.github.zly2006.zhihu.ui.components.PageTurnFab
-import com.github.zly2006.zhihu.ui.components.getHighestQualityVideoUrl
 import com.github.zly2006.zhihu.updater.UpdateManager
 import com.github.zly2006.zhihu.util.ContinuousUsageReminderManager
 import com.github.zly2006.zhihu.util.EmojiManager
@@ -428,47 +425,6 @@ class MainActivity : ComponentActivity() {
         articleNavigationHandoff.clearCommentUnless(route)
         preparePendingContentOpen(route, targetController)
         lifecycleScope.launch { history.add(route) }
-        if (route is Video) {
-            val current = runCatching {
-                targetController.currentBackStackEntry?.toRoute<Article>()
-            }.getOrNull() ?: runCatching {
-                targetController.currentBackStackEntry?.toRoute<Question>()
-            }.getOrNull()
-            if (current == null) {
-                androidUserMessageSink(this).showShortMessage("无法打开视频：未知的内容类型")
-                return
-            }
-            val (contentId, contentType) = when (current) {
-                is Article -> {
-                    current.id.toString() to when (current.type) {
-                        ArticleType.Answer -> "answer"
-                        ArticleType.Article -> "article"
-                    }
-                }
-
-                is Question -> {
-                    current.questionId.toString() to "question"
-                }
-
-                else -> {
-                    error("Unsupported content type for video: $current")
-                }
-            }
-            CoroutineScope(Dispatchers.Main).launch {
-                val videoUrl = getHighestQualityVideoUrl(this@MainActivity, httpClient, route.id.toString(), contentId, contentType)
-                if (videoUrl == null) {
-                    androidUserMessageSink(this@MainActivity).showShortMessage("获取视频链接失败")
-                    return@launch
-                }
-                startActivity(
-                    Intent(this@MainActivity, VideoPlayerActivity::class.java).apply {
-                        putExtra("video_url", videoUrl)
-                        putExtra("video_id", route.id)
-                    },
-                )
-            }
-            return
-        }
         if (route == MainTabs) {
             mainTabNavigationTarget = Home
             navigateToMainTabs()

@@ -20,10 +20,8 @@ package com.github.zly2006.zhihu.util
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
-import android.os.Environment
 import android.provider.MediaStore
 import android.provider.MediaStore.MediaColumns
 import androidx.compose.foundation.Image
@@ -101,23 +99,6 @@ private fun loadArticleExportAssetText(
 ): String = context.assets.open(fileName).use { inputStream ->
     inputStream.bufferedReader().use { reader ->
         reader.readText()
-    }
-}
-
-fun saveBitmapToGallery(
-    context: Context,
-    displayName: String,
-    bitmap: Bitmap,
-) {
-    saveImageToMediaStore(
-        context = context,
-        displayName = displayName,
-        mimeType = "image/jpeg",
-        relativePath = Environment.DIRECTORY_PICTURES + "/Zhihu-Hyperion",
-    ) { outputStream ->
-        if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)) {
-            throw IllegalStateException("Failed to encode image")
-        }
     }
 }
 

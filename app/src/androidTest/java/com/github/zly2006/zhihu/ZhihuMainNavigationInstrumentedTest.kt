@@ -57,7 +57,7 @@ import androidx.compose.ui.test.swipeRight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
-import androidx.navigation.NavHostController
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -371,18 +371,18 @@ class ZhihuMainNavigationInstrumentedTest {
     /**
      * Related tablet request: https://github.com/zly2006/zhihu-plus-plus/issues/680
      * Regression found reviewing: https://github.com/zly2006/zhihu-plus-plus/pull/754
-     * 视频平台入口必须收到发起操作的文章控制器，不能从左侧首页推导内容身份。
+     * 详情栏文章里的视频必须打开它自己的视频页。视频页只凭视频 id 加载，所以进入主返回栈铺满窗口，不塞进右侧详情栏。
      */
     @Test
-    fun detailVideoUsesArticleController() {
-        var videoSource: Article? = null
-        composeRule.launchZhihuMainWithFakeArticle(width = { 1000.dp }, onVideo = { controller ->
-            videoSource = runCatching { controller.currentBackStackEntry?.toRoute<Article>() }.getOrNull()
-        })
-        val article = Article(type = ArticleType.Answer, id = 318L)
-        composeRule.runOnIdle { composeRule.activity.navigate(article) }
+    fun detailVideoOpensItsOwnPageInTheMainStack() {
+        composeRule.launchZhihuMainWithFakeArticle(width = { 1000.dp })
+        composeRule.runOnIdle { composeRule.activity.navigate(Article(type = ArticleType.Answer, id = 318L)) }
         composeRule.onNodeWithTag("article_video_link").performClick()
-        composeRule.runOnIdle { assertEquals(article, videoSource) }
+        composeRule.runOnIdle {
+            val entry = composeRule.activity.navController.currentBackStackEntry
+            assertTrue(entry?.destination?.hasRoute<Video>() == true)
+            assertEquals(Video(1L), entry?.toRoute<Video>())
+        }
     }
 
     /**
@@ -530,7 +530,6 @@ class ZhihuMainNavigationInstrumentedTest {
 
     private fun MainActivityComposeRule.launchZhihuMainWithFakeArticle(
         width: (() -> Dp)? = null,
-        onVideo: ((NavHostController) -> Unit)? = null,
     ) {
         activity.getSharedPreferences(PREFERENCE_NAME, android.content.Context.MODE_PRIVATE).edit(commit = true) {
             putString(START_DESTINATION_PREFERENCE_KEY, Home.name)
@@ -552,12 +551,8 @@ class ZhihuMainNavigationInstrumentedTest {
                     modifier = width?.let { Modifier.requiredSize(it(), 600.dp) } ?: Modifier,
                     navController = navController,
                     mainTabNavigationTarget = activity.mainTabNavigationTarget,
-                    navigate = { destination ->
-                        if (destination is Video && onVideo != null) onVideo(navController) else activity.navigate(destination)
-                    },
-                    navigateContent = { destination, controller ->
-                        if (destination is Video && onVideo != null) onVideo(controller) else activity.navigateIn(destination, controller)
-                    },
+                    navigate = { activity.navigate(it) },
+                    navigateContent = activity::navigateIn,
                     enableLandscapeListDetail = true,
                     setCurrentMainTabOpenFrom = activity::setCurrentMainTabOpenFrom,
                     consumeMainTabNavigationTarget = activity::consumeMainTabNavigationTarget,
