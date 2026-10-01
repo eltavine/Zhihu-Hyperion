@@ -146,6 +146,8 @@ Zhihu-Hyperion 是一个第三方知乎客户端。它把广告、推广软文�
 
 项目按 Kotlin Multiplatform 分层：`core` 模块提供数据、网络、数据库与基础界面，`feature` 模块承载独立功能（如编辑器和视频页），`shared` 组装各页面，`app`、`desktopApp` 和 `macosApp` 分别是 Android、桌面与 macOS 的应用入口。
 
+`versionCode` 等于 `gradle.properties` 中的 `app.versionCodeOffset` 加上 HEAD 的提交数，每次构建都比上一次大，应用的更新检查只比较它，因此构建需要完整的 git 历史，浅克隆会直接失败。
+
 ### 发布签名
 
 Android release 构建只在下面四个环境变量都非空时使用发布密钥签名，缺任何一项都会改用 debug 密钥，这样的安装包不能当作正式发布：

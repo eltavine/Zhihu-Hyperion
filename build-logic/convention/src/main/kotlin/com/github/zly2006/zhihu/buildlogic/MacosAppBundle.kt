@@ -25,7 +25,8 @@ fun Project.registerMacosAppBundle(
     val composeResources = sharedProject.layout.buildDirectory.dir("kotlin-multiplatform-resources/aggregated-resources/macosArm64")
     val versionTokens = mapOf(
         "APP_VERSION_NAME" to providers.gradleProperty("app.versionName").get(),
-        "APP_VERSION_CODE" to providers.gradleProperty("app.versionCode").get(),
+        "APP_VERSION_CODE" to appVersionCode().toString(),
+        "APP_GIT_COMMIT" to gitShortHash(),
     )
 
     val syncApp = tasks.register<Sync>("sync$buildType$taskSuffix") {

@@ -65,6 +65,28 @@ fun Project.gitShortHash(): String = runCatching {
         .trim()
 }.getOrNull()?.takeIf { it.isNotEmpty() } ?: "unknown"
 
+/**
+ * `app.versionCodeOffset` plus the number of commits reachable from HEAD, shared by every platform build.
+ *
+ * A shallow clone would count only its own depth and publish a versionCode below builds users already have,
+ * so it fails instead; CI checks out with `fetch-depth: 0`.
+ */
+fun Project.appVersionCode(): Int {
+    fun git(vararg arguments: String): String = providers
+        .exec {
+            commandLine("git", *arguments)
+            isIgnoreExitValue = true
+        }.standardOutput.asText
+        .get()
+        .trim()
+    check(git("rev-parse", "--is-shallow-repository") != "true") {
+        "versionCode counts git commits, so this build needs the full history (git fetch --unshallow)."
+    }
+    val commitCount = git("rev-list", "--count", "HEAD").toIntOrNull()
+        ?: error("versionCode counts git commits, so this build must run from a git checkout.")
+    return providers.gradleProperty("app.versionCodeOffset").get().toInt() + commitCount
+}
+
 /** JavaFX publishes platform-specific jars behind a Maven classifier that Gradle cannot select on its own. */
 fun javafxPlatformClassifier(): String {
     val osName = System.getProperty("os.name").lowercase()
