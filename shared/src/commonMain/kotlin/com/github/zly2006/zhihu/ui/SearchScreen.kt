@@ -93,6 +93,8 @@ import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
 import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
 import com.github.zly2006.zhihu.ui.components.AuthorBadge
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
+import com.github.zly2006.zhihu.ui.components.EmptyState
+import com.github.zly2006.zhihu.ui.components.EmptyStateAction
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockConfirmDialog
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockRequest
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockType
@@ -750,12 +752,14 @@ fun SearchScreen(
                     item {
                         when {
                             viewModel.errorMessage != null -> {
-                                TextButton(
-                                    modifier = Modifier.fillMaxWidth().testTag("search_retry_button"),
-                                    onClick = { viewModel.retry(paginationEnvironment) },
-                                ) {
-                                    Text("加载失败：${viewModel.errorMessage}，点击重试")
-                                }
+                                EmptyState(
+                                    icon = AppIcons.Error,
+                                    title = "加载失败：${viewModel.errorMessage}",
+                                    modifier = Modifier.fillMaxWidth(),
+                                    action = EmptyStateAction("重试", AppIcons.Refresh, "search_retry_button") {
+                                        viewModel.retry(paginationEnvironment)
+                                    },
+                                )
                             }
 
                             !viewModel.isEnd -> {

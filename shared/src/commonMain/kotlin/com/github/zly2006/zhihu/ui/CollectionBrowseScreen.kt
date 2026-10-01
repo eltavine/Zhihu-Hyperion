@@ -37,7 +37,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -60,7 +59,9 @@ import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
+import com.github.zly2006.zhihu.ui.components.AppPullToRefreshBox
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
+import com.github.zly2006.zhihu.ui.components.EmptyState
 import com.github.zly2006.zhihu.viewmodel.CollectionContentViewModel
 import com.github.zly2006.zhihu.viewmodel.CollectionsViewModel
 import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
@@ -304,7 +305,11 @@ fun CollectionBrowseScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text("还没有收藏夹", modifier = Modifier.testTag(COLLECTION_BROWSE_EMPTY_COLLECTIONS_TAG))
+                    EmptyState(
+                        icon = AppIcons.Folder,
+                        title = "还没有收藏夹",
+                        modifier = Modifier.testTag(COLLECTION_BROWSE_EMPTY_COLLECTIONS_TAG),
+                    )
                 }
             }
 
@@ -320,7 +325,7 @@ fun CollectionBrowseScreen(
             }
 
             else -> {
-                PullToRefreshBox(
+                AppPullToRefreshBox(
                     isRefreshing = collectionsViewModel.isLoading || contentViewModel.isLoading,
                     onRefresh = {
                         if (!useLocalCollections) {
