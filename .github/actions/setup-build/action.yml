@@ -65,6 +65,9 @@ runs:
       with:
         target: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
         cache-workspaces: rs-hf-tokenizer -> target
+        # The action denies warnings by default. The tokenizer is built with whatever Rust is stable at the time,
+        # so a lint added by a new release must not fail the signed build; this matches local cargo builds.
+        build-warnings: warn
 
     - name: Install cargo-ndk
       if: inputs.rust == 'true'
