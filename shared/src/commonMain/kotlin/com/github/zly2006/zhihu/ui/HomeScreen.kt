@@ -109,6 +109,8 @@ import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
 import com.github.zly2006.zhihu.ui.components.BlockByKeywordsDialog
 import com.github.zly2006.zhihu.ui.components.DEFAULT_FAB_OPACITY
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
+import com.github.zly2006.zhihu.ui.components.EmptyState
+import com.github.zly2006.zhihu.ui.components.EmptyStateAction
 import com.github.zly2006.zhihu.ui.components.FabMenu
 import com.github.zly2006.zhihu.ui.components.FabMenuAction
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockConfirmDialog
@@ -204,6 +206,8 @@ fun HomeScreen(
     val showUnreadBadge = notificationSettings.getUnreadBadgeEnabled()
     var showAccountBottomSheet by remember { mutableStateOf(false) }
     var showCreateMenu by remember { mutableStateOf(false) }
+    // 点底栏切到别的页面时收起创作菜单，回来不会看到残留的展开态。
+    LaunchedEffect(isActive) { if (!isActive) showCreateMenu = false }
     val createMenuBlurRadius by animateDpAsState(
         targetValue = if (showCreateMenu) 8.dp else 0.dp,
         animationSpec = tween(durationMillis = 200),
@@ -627,7 +631,20 @@ fun HomeScreen(
                         bottom = innerPadding.calculateBottomPadding() + readingPlayerOverlayPadding,
                     ),
                     onLoadMore = { viewModel.loadMore(paginationEnvironment) },
-                    footer = ProgressIndicatorFooter,
+                    footer = { listState ->
+                        val errorMessage = viewModel.errorMessage
+                        if (errorMessage != null && !viewModel.isLoading && viewModel.displayItems.isEmpty()) {
+                            EmptyState(
+                                icon = AppIcons.Error,
+                                title = "加载失败",
+                                description = errorMessage,
+                                modifier = Modifier.fillMaxWidth(),
+                                action = EmptyStateAction("重试", AppIcons.Refresh) { viewModel.refresh(paginationEnvironment) },
+                            )
+                        } else {
+                            ProgressIndicatorFooter(listState)
+                        }
+                    },
                     key = { item -> item.stableKey },
                     topContent = {
                         item {
@@ -738,7 +755,9 @@ fun HomeScreen(
                     }
                 }
 
-                if (showRefreshFab) {
+                // 创作菜单展开时隐藏可拖动按钮，免得它被遮罩模糊成色块；收起时让出创作按钮（56dp）和间距的高度。
+                if (showRefreshFab && !showCreateMenu) {
+                    val fabAvoidance = readingPlayerOverlayPadding + 72.dp
                     if (isDebuggable) {
                         DraggableRefreshButton(
                             onClick = {
@@ -747,14 +766,14 @@ fun HomeScreen(
                                 userMessages.showShortMessage("已复制调试数据")
                             },
                             preferenceName = "copyAll",
-                            bottomAvoidance = readingPlayerOverlayPadding,
+                            bottomAvoidance = fabAvoidance,
                         ) {
                             Icon(AppIcons.CopyAll, contentDescription = "复制")
                         }
                     }
                     DraggableRefreshButton(
                         modifier = Modifier.testTag(HOME_REFRESH_BUTTON_TAG),
-                        bottomAvoidance = readingPlayerOverlayPadding,
+                        bottomAvoidance = fabAvoidance,
                         onClick = { viewModel.refresh(paginationEnvironment) },
                     ) {
                         if (viewModel.isLoading) {
@@ -793,7 +812,7 @@ fun HomeScreen(
             actions = listOf(
                 FabMenuAction("提问题", AppIcons.Help, HOME_WRITE_QUESTION_BUTTON_TAG) { userMessages.showShortMessage("正在施工") },
                 FabMenuAction("写回答", AppIcons.Edit, HOME_WRITE_ANSWER_BUTTON_TAG) { userMessages.showShortMessage("正在施工") },
-                FabMenuAction("发想法", AppIcons.MarkUnreadChatAlt, HOME_WRITE_PIN_BUTTON_TAG) { navigator.onNavigate(WritePin()) },
+                FabMenuAction("发想法", AppIcons.AddComment, HOME_WRITE_PIN_BUTTON_TAG) { navigator.onNavigate(WritePin()) },
             ),
             modifier = Modifier
                 .align(Alignment.BottomEnd)

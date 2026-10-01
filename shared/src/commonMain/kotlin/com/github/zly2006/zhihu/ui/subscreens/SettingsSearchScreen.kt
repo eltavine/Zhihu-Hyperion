@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
@@ -36,6 +35,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -404,56 +404,40 @@ fun SettingsSearchScreen() {
                     )
                 }
             } else {
-                items(
-                    items = results,
-                    key = { it.id },
-                ) { entry ->
+                item(key = "results") {
                     SettingItemGroup {
-                        SettingItem(
-                            modifier = Modifier.testTag("settingsSearch.result.${entry.id}"),
-                            title = {
-                                Column {
-                                    Text(entry.title)
-                                    Text(
-                                        text = entry.section,
-                                        style = MaterialTheme.typography.labelMedium,
-                                        color = MaterialTheme.colorScheme.primary,
-                                    )
-                                }
-                            },
-                            description = {
-                                Text(entry.description)
-                            },
-                            icon = {
-                                Icon(
-                                    when (entry.destination) {
-                                        is Account.AppearanceSettings -> AppIcons.Palette
-                                        is Account.RecommendSettings -> AppIcons.FilterAlt
-                                        Account.RecommendSettings.Blocklist -> AppIcons.PlaylistRemove
-                                        Account.RecommendSettings.BlockedFeedHistory -> AppIcons.ManageHistory
-                                        is Account.SystemAndUpdateSettings -> AppIcons.Settings
-                                        Account.WebDavSync -> AppIcons.CloudSync
-                                        Account.DeveloperSettings -> AppIcons.Code
-                                        Account.OpenSourceLicenses -> AppIcons.License
-                                        is Notification.NotificationSettings -> AppIcons.Notifications
-                                        else -> AppIcons.Settings
+                        results.forEach { entry ->
+                            key(entry.id) {
+                                SettingItem(
+                                    modifier = Modifier.testTag("settingsSearch.result.${entry.id}"),
+                                    title = {
+                                        Column {
+                                            Text(entry.title)
+                                            Text(
+                                                text = entry.section,
+                                                style = MaterialTheme.typography.labelMedium,
+                                                color = MaterialTheme.colorScheme.primary,
+                                            )
+                                        }
                                     },
-                                    contentDescription = null,
+                                    description = {
+                                        Text(entry.description)
+                                    },
+                                    onClick = {
+                                        if (entry.id != "developer.page" || settings.getBoolean("developer", false)) {
+                                            navigator.onNavigate(entry.destination)
+                                        }
+                                    },
+                                    endAction = {
+                                        Icon(
+                                            AppIcons.KeyboardArrowRight,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
+                                    },
                                 )
-                            },
-                            onClick = {
-                                if (entry.id != "developer.page" || settings.getBoolean("developer", false)) {
-                                    navigator.onNavigate(entry.destination)
-                                }
-                            },
-                            endAction = {
-                                Icon(
-                                    AppIcons.ArrowForward,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                            },
-                        )
+                            }
+                        }
                     }
                 }
             }

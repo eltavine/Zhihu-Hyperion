@@ -113,7 +113,11 @@ fun BlockedFeedHistoryScreen() {
                     .padding(innerPadding),
                 contentAlignment = Alignment.Center,
             ) {
-                EmptyState(icon = AppIcons.ManageHistory, title = "暂无屏蔽记录")
+                EmptyState(
+                    icon = AppIcons.ManageHistory,
+                    title = "暂无屏蔽记录",
+                    description = "首页因广告、已读、关键词、作者、主题等规则没有展示的内容会记录在这里。",
+                )
             }
         } else {
             LazyColumn(

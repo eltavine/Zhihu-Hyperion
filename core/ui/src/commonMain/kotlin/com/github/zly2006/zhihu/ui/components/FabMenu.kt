@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.testTag
 import com.github.zly2006.zhihu.icons.AppIcon
 import com.github.zly2006.zhihu.icons.AppIcons
 import com.github.zly2006.zhihu.icons.Icon
+import com.github.zly2006.zhihu.platform.PlatformBackHandler
 
 /** [FabMenu] 中的一个动作；[testTag] 供 UI 自动化定位这一项。 */
 @Immutable
@@ -46,7 +47,7 @@ class FabMenuAction(
 /**
  * 展开式 FAB 菜单（Material 3 Expressive FAB menu）。
  *
- * 点按钮展开一列带图标的动作，按钮同时从 [icon] 形变为关闭；点任一动作会先收起菜单再执行动作。
+ * 点按钮展开一列带图标的动作，按钮同时从 [icon] 形变为关闭；点任一动作会先收起菜单再执行动作，展开时返回键也先收起菜单。
  * [buttonAlpha] 作用于收起时的整个按钮图层，阴影随之淡出，不会透过半透明的容器露出来。
  * Expressive FAB 菜单仍是实验 API，只在这里使用，调用方不依赖它。
  */
@@ -61,6 +62,7 @@ fun FabMenu(
     buttonModifier: Modifier = Modifier,
     buttonAlpha: Float = 1f,
 ) {
+    PlatformBackHandler(enabled = expanded) { onExpandedChange(false) }
     FloatingActionButtonMenu(
         expanded = expanded,
         modifier = modifier,

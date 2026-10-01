@@ -754,8 +754,9 @@ fun SearchScreen(
                             viewModel.errorMessage != null -> {
                                 EmptyState(
                                     icon = AppIcons.Error,
-                                    title = "加载失败：${viewModel.errorMessage}",
+                                    title = "加载失败",
                                     modifier = Modifier.fillMaxWidth(),
+                                    description = viewModel.errorMessage,
                                     action = EmptyStateAction("重试", AppIcons.Refresh, "search_retry_button") {
                                         viewModel.retry(paginationEnvironment)
                                     },
