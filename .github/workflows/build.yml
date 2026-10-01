@@ -21,6 +21,9 @@ jobs:
     name: Package
     if: github.ref == 'refs/heads/master'
     uses: ./.github/workflows/package.yml
+    # A reusable workflow's job only sees the secrets its caller passes, environment secrets included; without
+    # this the android-signing job gets empty values. package.yml runs only for master and reads only the signing keys.
+    secrets: inherit
 
   publish:
     name: Publish nightly
