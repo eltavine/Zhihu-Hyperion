@@ -129,23 +129,6 @@ public final class com/github/zly2006/zhihu/util/SegmentHighlightUtilsKt {
 	public static synthetic fun applySegmentInfosToHtml$default (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
 	public static final fun buildSegmentTextParts (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/util/List;
 	public static synthetic fun buildSegmentTextParts$default (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ljava/util/List;
-	public static final fun parseSegmentTextParagraph (Lcom/fleeksoft/ksoup/nodes/Element;)Lcom/github/zly2006/zhihu/util/SegmentTextParagraph;
-}
-
-public final class com/github/zly2006/zhihu/util/SegmentTextParagraph {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Ljava/util/List;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Lcom/github/zly2006/zhihu/util/SegmentTextParagraph;
-	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/util/SegmentTextParagraph;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/util/SegmentTextParagraph;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getParts ()Ljava/util/List;
-	public final fun getPid ()Ljava/lang/String;
-	public final fun getText ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/github/zly2006/zhihu/util/SegmentTextPart {

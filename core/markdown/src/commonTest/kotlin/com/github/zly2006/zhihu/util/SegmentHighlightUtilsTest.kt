@@ -84,6 +84,68 @@ class SegmentHighlightUtilsTest {
     }
 
     @Test
+    fun injectionKeepsBoldAndItalicAroundHighlightedText() {
+        val text = "前缀加粗中间斜体后缀"
+        val result = applySegmentInfosToHtml(
+            content = """<p data-pid="seg">前缀<b>加粗</b>中间<em>斜体</em>后缀</p>""",
+            segmentInfos = listOf(
+                SegmentInfoParagraph(
+                    pid = "seg",
+                    text = text,
+                    marks = listOf(SegmentInfoMark(1, 7, segInfo = SegmentInfoMeta(segIds = listOf("abc")))),
+                ),
+            ),
+        )
+
+        val paragraph = assertNotNull(Ksoup.parseBodyFragment(result).selectFirst("p"))
+        assertEquals(text, paragraph.text())
+        assertEquals("加粗", paragraph.selectFirst("b")?.text())
+        assertEquals("斜体", paragraph.selectFirst("em")?.text())
+        val fragments = paragraph.select("span.highlight-wrap")
+        assertEquals("缀加粗中间斜", fragments.joinToString("") { it.text() })
+        assertEquals("缀加粗中间斜", fragments.first()?.attr("data-highlight-display-text"))
+    }
+
+    @Test
+    fun injectionLeavesLinksAndFootnotesUntouched() {
+        val link = """<a href="https://example.com">链接</a>"""
+        val footnote = """<sup data-text="来源" data-url="" data-draft-type="reference" data-numero="3">[3]</sup>"""
+        val text = "看链接再看注[3]结束"
+        val result = applySegmentInfosToHtml(
+            content = """<p data-pid="seg">看${link}再看注${footnote}结束</p>""",
+            segmentInfos = listOf(
+                SegmentInfoParagraph(
+                    pid = "seg",
+                    text = text,
+                    marks = listOf(SegmentInfoMark(0, text.length, segInfo = SegmentInfoMeta(segIds = listOf("abc")))),
+                ),
+            ),
+        )
+
+        val paragraph = assertNotNull(Ksoup.parseBodyFragment(result).selectFirst("p"))
+        assertEquals(link, paragraph.selectFirst("a")?.outerHtml())
+        assertEquals(footnote, paragraph.selectFirst("sup")?.outerHtml())
+        assertEquals("看再看注结束", paragraph.select("span.highlight-wrap").joinToString("") { it.text() })
+    }
+
+    @Test
+    fun injectionSkipsParagraphWhoseTextNodesDoNotSpellTheSegmentText() {
+        val html = """<p data-pid="seg">第一行<br>第二行</p>"""
+        val result = applySegmentInfosToHtml(
+            content = html,
+            segmentInfos = listOf(
+                SegmentInfoParagraph(
+                    pid = "seg",
+                    text = "第一行 第二行",
+                    marks = listOf(SegmentInfoMark(0, 3, segInfo = SegmentInfoMeta(segIds = listOf("abc")))),
+                ),
+            ),
+        )
+
+        assertEquals(Ksoup.parseBodyFragment(html).body().html(), result)
+    }
+
+    @Test
     fun spanningSegmentShouldExposeAllFragmentsAsDisplayText() {
         val first = "吃柠檬，怎么吃？谁吃的？"
         val second = "柠檬，是怎样的檬？这个檬是否从事正当行业？"
@@ -117,45 +179,6 @@ class SegmentHighlightUtilsTest {
         assertEquals("", highlights[1].attr("data-highlight-display-text"))
         assertEquals("first", highlights[0].attr("data-highlight-pid"))
         assertEquals("second", highlights[1].attr("data-highlight-pid"))
-    }
-
-    @Test
-    fun parseSegmentTextParagraphHtmlShouldReadInjectedHighlightSpan() {
-        val element = Ksoup
-            .parseBodyFragment(
-                """
-                <p data-pid="seg-1"><span class="highlight-wrap other has-comments"
-                    data-highlight-id="abc,def"
-                    data-highlight-like-count="5"
-                    data-highlight-comment-count="1"
-                    data-highlight-my-comment-count="0"
-                    data-highlight-is-like="true"
-                    data-highlight-is-span="false"
-                    data-highlight-display-text="第一句需要划线&#10;&#10;跨段续句"
-                    data-highlight-content-id="42"
-                    data-highlight-content-type="answer"
-                    data-highlight-pid="seg-1"
-                    data-highlight-start-offset="0"
-                    data-highlight-end-offset="7">第一句需要划线</span>，第二句保持原样。</p>
-                """.trimIndent(),
-            ).body()
-            .firstElementChild()
-        val paragraph = element?.let(::parseSegmentTextParagraph)
-
-        assertNotNull(paragraph)
-        assertEquals("seg-1", paragraph.pid)
-        assertEquals("第一句需要划线，第二句保持原样。", paragraph.text)
-        val highlight = paragraph.parts.first().highlight
-        assertNotNull(highlight)
-        assertEquals(listOf("abc", "def"), highlight.meta.segIds)
-        assertEquals(true, highlight.meta.isLike)
-        assertEquals(5, highlight.meta.likeCount)
-        assertEquals(1, highlight.meta.commentCount)
-        assertEquals("第一句需要划线\n\n跨段续句", highlight.displayText)
-        assertEquals("42", highlight.contentId)
-        assertEquals("answer", highlight.contentType)
-        assertEquals(0, highlight.startOffset)
-        assertEquals(7, highlight.endOffset)
     }
 
     @Test

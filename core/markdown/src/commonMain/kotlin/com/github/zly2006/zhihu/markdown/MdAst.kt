@@ -23,6 +23,7 @@ import com.fleeksoft.ksoup.nodes.TextNode
 import com.github.zly2006.zhihu.navigation.Video
 import com.github.zly2006.zhihu.navigation.resolveContent
 import com.github.zly2006.zhihu.util.extractImageUrl
+import com.github.zly2006.zhihu.util.segmentHighlightFormatTags
 import com.hrm.markdown.parser.LineRange
 import com.hrm.markdown.parser.MarkdownParser
 import com.hrm.markdown.parser.ast.BlockQuote
@@ -254,8 +255,7 @@ private fun HtmlToMdAstConversion.convertElementToBlock(element: Element): List<
             val list = mutableListOf<MarkdownNode>()
 
             fun paragraph(): Paragraph = list.lastOrNull() as? Paragraph ?: Paragraph().also { list.add(it) }
-            val segmentHighlightsEnabled = element.childNodes().all(HtmlNode::supportsSegmentHighlightFormat)
-            extractInlineChildren(element, segmentHighlightsEnabled).forEach {
+            extractInlineChildren(element).forEach {
                 if (it is MathBlock) {
                     list.add(it)
                 } else {
@@ -516,10 +516,7 @@ private fun Element.toAlignment(): Table.Alignment = when (attr("align").lowerca
     else -> Table.Alignment.NONE
 }
 
-private fun HtmlToMdAstConversion.extractInlineChildren(
-    element: Element,
-    segmentHighlightsEnabled: Boolean = true,
-): List<MarkdownNode> {
+private fun HtmlToMdAstConversion.extractInlineChildren(element: Element): List<MarkdownNode> {
     val childNodes = element.childNodes()
     return childNodes.flatMapIndexed { index, child ->
         if (child is TextNode && child.text().isBlank()) {
@@ -529,7 +526,7 @@ private fun HtmlToMdAstConversion.extractInlineChildren(
                 emptyList()
             }
         } else {
-            extractInlineNode(child, segmentHighlightsEnabled)
+            extractInlineNode(child)
         }
     }
 }
@@ -552,7 +549,7 @@ private fun HtmlNode.supportsSegmentHighlightFormat(): Boolean = when (this) {
     }
 
     is Element -> {
-        val supportedTag = tagName().lowercase() in SEGMENT_HIGHLIGHT_FORMAT_TAGS ||
+        val supportedTag = tagName().lowercase() in segmentHighlightFormatTags ||
             (tagName().equals("span", ignoreCase = true) && hasClass("highlight-wrap"))
         supportedTag && childNodes().all(HtmlNode::supportsSegmentHighlightFormat)
     }
@@ -708,10 +705,7 @@ internal fun String.zhihuEquationSemantics(): ZhihuEquationSemantics {
  *
  * > 注意：由于知乎的bug，MathBlock在<p>里面。
  */
-private fun HtmlToMdAstConversion.extractInlineNode(
-    node: HtmlNode,
-    segmentHighlightsEnabled: Boolean = true,
-): List<MarkdownNode> = when (node) {
+private fun HtmlToMdAstConversion.extractInlineNode(node: HtmlNode): List<MarkdownNode> = when (node) {
     is TextNode -> {
         val text = node.text()
         if (text.isBlank()) {
@@ -727,28 +721,28 @@ private fun HtmlToMdAstConversion.extractInlineNode(
         when (node.tagName().lowercase()) {
             "strong", "b" -> {
                 listOf(
-                    StrongEmphasis().apply { appendChildren(extractInlineChildren(node, segmentHighlightsEnabled)) },
+                    StrongEmphasis().apply { appendChildren(extractInlineChildren(node)) },
                 )
             }
 
             "em", "i" -> {
                 listOf(
-                    Emphasis().apply { appendChildren(extractInlineChildren(node, segmentHighlightsEnabled)) },
+                    Emphasis().apply { appendChildren(extractInlineChildren(node)) },
                 )
             }
 
             "del", "s", "strike" -> {
                 listOf(
-                    Strikethrough().apply { appendChildren(extractInlineChildren(node, segmentHighlightsEnabled)) },
+                    Strikethrough().apply { appendChildren(extractInlineChildren(node)) },
                 )
             }
 
             "mark" -> {
-                listOf(Highlight().apply { appendChildren(extractInlineChildren(node, segmentHighlightsEnabled)) })
+                listOf(Highlight().apply { appendChildren(extractInlineChildren(node)) })
             }
 
             "span" -> {
-                if (segmentHighlightsEnabled && node.hasClass("highlight-wrap")) {
+                if (node.hasClass("highlight-wrap") && node.childNodes().all(HtmlNode::supportsSegmentHighlightFormat)) {
                     listOf(
                         SegmentHighlight(
                             text = node.text(),
@@ -756,16 +750,16 @@ private fun HtmlToMdAstConversion.extractInlineNode(
                                 .associateWith(node::attr)
                                 .filterValues(String::isNotEmpty),
                         ).apply {
-                            appendChildren(extractInlineChildren(node, segmentHighlightsEnabled))
+                            appendChildren(extractInlineChildren(node))
                         },
                     )
                 } else {
-                    extractInlineChildren(node, segmentHighlightsEnabled)
+                    extractInlineChildren(node)
                 }
             }
 
             "sub" -> {
-                listOf(Subscript().apply { appendChildren(extractInlineChildren(node, segmentHighlightsEnabled)) })
+                listOf(Subscript().apply { appendChildren(extractInlineChildren(node)) })
             }
 
             "sup" -> {
@@ -788,7 +782,7 @@ private fun HtmlToMdAstConversion.extractInlineNode(
                     }
                     listOf(FootnoteReference(index.toString(), index))
                 } else {
-                    listOf(Superscript().apply { appendChildren(extractInlineChildren(node, segmentHighlightsEnabled)) })
+                    listOf(Superscript().apply { appendChildren(extractInlineChildren(node)) })
                 }
             }
 
@@ -805,7 +799,7 @@ private fun HtmlToMdAstConversion.extractInlineNode(
                 listOf(
                     Link(destination = normalizeLinkDestination(href)).apply {
                         appendChildren(
-                            extractInlineChildren(node, segmentHighlightsEnabled).ifEmpty {
+                            extractInlineChildren(node).ifEmpty {
                                 listOf(
                                     Text(node.text()),
                                 )
@@ -845,7 +839,7 @@ private fun HtmlToMdAstConversion.extractInlineNode(
             }
 
             else -> {
-                val children = extractInlineChildren(node, segmentHighlightsEnabled)
+                val children = extractInlineChildren(node)
                 if (children.isNotEmpty()) {
                     children
                 } else {
@@ -893,8 +887,6 @@ private val SEGMENT_HIGHLIGHT_ATTRIBUTES = listOf(
     "data-highlight-start-offset",
     "data-highlight-end-offset",
 )
-
-private val SEGMENT_HIGHLIGHT_FORMAT_TAGS = setOf("b", "strong", "i", "em")
 
 /**
  * 把知乎回答的 HTML（DataHolder.Answer.content / editableContent）转换成 Markdown，

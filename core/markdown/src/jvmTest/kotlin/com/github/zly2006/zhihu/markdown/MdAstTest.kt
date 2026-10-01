@@ -17,6 +17,10 @@
 
 package com.github.zly2006.zhihu.markdown
 
+import com.github.zly2006.zhihu.data.SegmentInfoMark
+import com.github.zly2006.zhihu.data.SegmentInfoMeta
+import com.github.zly2006.zhihu.data.SegmentInfoParagraph
+import com.github.zly2006.zhihu.util.applySegmentInfosToHtml
 import com.hrm.markdown.parser.ast.ContainerNode
 import com.hrm.markdown.parser.ast.Emphasis
 import com.hrm.markdown.parser.ast.Figure
@@ -142,16 +146,72 @@ class MdAstTest {
     }
 
     @Test
-    fun segment_highlight_should_yield_to_unsupported_inline_format() {
+    fun segment_highlight_should_sit_beside_unsupported_inline_format() {
         val document = htmlToMdAst(
             """
             <p><span class="highlight-wrap" data-highlight-id="abc">划线文字</span><a href="https://example.com">原链接</a></p>
             """.trimIndent(),
         )
 
-        assertFalse(document.allNodes().any { it is SegmentHighlight })
+        assertEquals(
+            "划线文字",
+            document
+                .allNodes()
+                .filterIsInstance<SegmentHighlight>()
+                .single()
+                .text,
+        )
         assertEquals(1, document.allNodes().count { it is Link })
         assertEquals("划线文字[原链接](https://example.com)", document.toMarkdown())
+    }
+
+    @Test
+    fun segment_highlight_should_yield_when_it_wraps_unsupported_inline_format() {
+        val document = htmlToMdAst(
+            """
+            <p><span class="highlight-wrap" data-highlight-id="abc">划线<a href="https://example.com">原链接</a></span></p>
+            """.trimIndent(),
+        )
+
+        assertFalse(document.allNodes().any { it is SegmentHighlight })
+        assertEquals(1, document.allNodes().count { it is Link })
+        assertEquals("划线[原链接](https://example.com)", document.toMarkdown())
+    }
+
+    @Test
+    fun injected_segment_infos_keep_bold_and_footnote_nodes() {
+        val text = "前文加粗后文[1]"
+        val html = applySegmentInfosToHtml(
+            content = """<p data-pid="seg">前文<strong>加粗</strong>后文<sup data-text="来源" data-url="" data-draft-type="reference" data-numero="1">[1]</sup></p>""",
+            segmentInfos = listOf(
+                SegmentInfoParagraph(
+                    pid = "seg",
+                    text = text,
+                    marks = listOf(SegmentInfoMark(1, 5, segInfo = SegmentInfoMeta(segIds = listOf("abc")))),
+                ),
+            ),
+            contentId = "42",
+            contentType = "answer",
+        )
+
+        val document = htmlToMdAst(html)
+        val paragraph = document.children.filterIsInstance<Paragraph>().single()
+        val bold = paragraph.children.filterIsInstance<StrongEmphasis>().single()
+        assertEquals("加粗", (bold.children.single() as SegmentHighlight).text)
+        assertEquals(1, paragraph.children.count { it is FootnoteReference })
+        assertEquals(
+            listOf("文", "加粗", "后"),
+            document.allNodes().filterIsInstance<SegmentHighlight>().map { it.text },
+        )
+        assertEquals(
+            setOf("文加粗后"),
+            document
+                .allNodes()
+                .filterIsInstance<SegmentHighlight>()
+                .mapNotNull {
+                    it.attributes["data-highlight-display-text"]
+                }.toSet(),
+        )
     }
 
     @Test

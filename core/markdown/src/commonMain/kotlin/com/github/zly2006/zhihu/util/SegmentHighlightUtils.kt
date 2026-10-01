@@ -43,12 +43,6 @@ data class SegmentTextPart(
     val highlight: SegmentHighlightSpan? = null,
 )
 
-data class SegmentTextParagraph(
-    val pid: String?,
-    val text: String,
-    val parts: List<SegmentTextPart>,
-)
-
 private data class NormalizedSegmentMark(
     val startIndex: Int,
     val endIndex: Int,
@@ -56,14 +50,51 @@ private data class NormalizedSegmentMark(
     val isMaster: Boolean,
 )
 
-private val segmentInfoInlineFormatTags = setOf("b", "strong", "i", "em")
+/**
+ * 只有处在这些纯排版元素之内（或直接位于段落中）的文字会被包进划线；链接、脚注、公式等元素内部保持原样。
+ * Markdown 转换也只把内容仅含这些元素的划线识别成段评，二者必须一致。
+ */
+internal val segmentHighlightFormatTags = setOf("b", "strong", "i", "em")
 
-private fun Node.hasUnsupportedSegmentInfoFormat(): Boolean =
-    this is Element &&
-        (
-            tagName().lowercase() !in segmentInfoInlineFormatTags ||
-                childNodes().any(Node::hasUnsupportedSegmentInfoFormat)
-        )
+private class PositionedText(
+    val node: TextNode,
+    val start: Int,
+) {
+    val end: Int
+        get() = start + node.getWholeText().length
+}
+
+private class PreparedParagraph(
+    val pid: String,
+    val text: String,
+    val parts: List<SegmentTextPart>,
+    val injectableTexts: List<PositionedText>,
+)
+
+/**
+ * `segment_infos` 的偏移针对段落纯文本：只有全部文字节点依次拼起来恰好等于 [segmentText] 时，偏移才能对应到 DOM，
+ * 否则返回 null，整段保持原样（例如 `<br>` 在 `Element.text()` 里会变成空格，但不是文字节点）。
+ */
+private fun Element.injectableTexts(segmentText: String): List<PositionedText>? {
+    val texts = StringBuilder()
+    val injectable = mutableListOf<PositionedText>()
+
+    fun collect(node: Node, formattingOnly: Boolean) {
+        when (node) {
+            is TextNode -> {
+                if (formattingOnly) injectable += PositionedText(node, texts.length)
+                texts.append(node.getWholeText())
+            }
+
+            is Element -> {
+                val childFormattingOnly = formattingOnly && node.tagName().lowercase() in segmentHighlightFormatTags
+                node.childNodes().forEach { child -> collect(child, childFormattingOnly) }
+            }
+        }
+    }
+    childNodes().forEach { child -> collect(child, formattingOnly = true) }
+    return injectable.takeIf { texts.toString() == segmentText }
+}
 
 fun buildSegmentTextParts(
     text: String,
@@ -160,11 +191,7 @@ fun applySegmentInfosToHtml(
         .select("p[data-pid]")
         .mapNotNull { target ->
             val paragraph = segmentInfosByPid[target.attr("data-pid")] ?: return@mapNotNull null
-            if (target.text() != paragraph.text) return@mapNotNull null
-            // TODO(#418): 支持在保留内联格式的同时注入 segment_infos。
-            // https://github.com/zly2006/zhihu-plus-plus/issues/418
-            if (target.childNodes().any(Node::hasUnsupportedSegmentInfoFormat)) return@mapNotNull null
-            target to SegmentTextParagraph(
+            PreparedParagraph(
                 pid = paragraph.pid,
                 text = paragraph.text,
                 parts = buildSegmentTextParts(
@@ -175,9 +202,10 @@ fun applySegmentInfosToHtml(
                     contentType = contentType,
                     paragraphId = paragraph.pid,
                 ),
+                injectableTexts = target.injectableTexts(paragraph.text) ?: return@mapNotNull null,
             )
         }
-    val spanFragments = preparedParagraphs.flatMap { (_, paragraph) ->
+    val spanFragments = preparedParagraphs.flatMap { paragraph ->
         paragraph.parts.mapNotNull { part ->
             val highlight = part.highlight?.takeIf { it.meta.isSpan } ?: return@mapNotNull null
             val segmentId = highlight.meta.segIds
@@ -202,105 +230,59 @@ fun applySegmentInfosToHtml(
         }
     val displayTextOwners = spanDisplayTexts.keys.toMutableSet()
 
-    preparedParagraphs.forEach { (target, paragraph) ->
-        target.empty()
-        paragraph.parts.forEach { part ->
-            val highlight = part.highlight
-            if (highlight == null) {
-                target.appendChild(TextNode(part.text))
-            } else {
-                target.appendChild(
-                    Element("span").apply {
-                        addClass("highlight-wrap")
-                        addClass("other")
-                        if (highlight.meta.commentCount > 0) {
-                            addClass("has-comments")
-                        }
-                        attr("data-highlight-id", highlight.meta.segIds.joinToString(","))
-                        attr("data-highlight-like-count", highlight.meta.likeCount.toString())
-                        attr("data-highlight-comment-count", highlight.meta.commentCount.toString())
-                        attr("data-highlight-my-comment-count", highlight.meta.myCommentCount.toString())
-                        attr("data-highlight-is-like", highlight.meta.isLike.toString())
-                        attr("data-highlight-is-span", highlight.meta.isSpan.toString())
-                        val segmentId = highlight.meta.segIds.joinToString(",")
-                        if (highlight.meta.isSpan && displayTextOwners.remove(segmentId)) {
-                            spanDisplayTexts[segmentId]
-                                ?.takeIf { it != part.text }
-                                ?.let { attr("data-highlight-display-text", it) }
-                        }
-                        attr(
-                            "data-highlight-split-type",
-                            when {
-                                part.text == paragraph.text -> "both"
-                                paragraph.text.startsWith(part.text) -> "head"
-                                paragraph.text.endsWith(part.text) -> "tail"
-                                else -> "middle"
-                            },
-                        )
-                        attr("data-highlight-id-extra", "")
-                        highlight.sourceUrl?.let { attr("data-highlight-source-url", it) }
-                        contentId?.let { attr("data-highlight-content-id", it) }
-                        contentType?.let { attr("data-highlight-content-type", it) }
-                        highlight.paragraphId?.let { attr("data-highlight-pid", it) }
-                        highlight.startOffset?.let { attr("data-highlight-start-offset", it.toString()) }
-                        highlight.endOffset?.let { attr("data-highlight-end-offset", it.toString()) }
-                        text(part.text)
-                    },
-                )
+    preparedParagraphs.forEach { paragraph ->
+        val boundaries = paragraph.parts.runningFold(0) { offset, part -> offset + part.text.length }
+        val pieces = paragraph.injectableTexts.flatMap { text ->
+            val cuts = boundaries.filter { it > text.start && it < text.end }.sortedDescending()
+            listOf(text) + cuts.map { cut -> PositionedText(text.node.splitText(cut - text.start), cut) }.reversed()
+        }
+        paragraph.parts.forEachIndexed { index, part ->
+            val highlight = part.highlight ?: return@forEachIndexed
+            val fragments = pieces.filter { it.start >= boundaries[index] && it.end <= boundaries[index + 1] }
+            if (fragments.isEmpty()) return@forEachIndexed
+            val segmentId = highlight.meta.segIds.joinToString(",")
+            val displayText = when {
+                !highlight.meta.isSpan -> part.text
+                displayTextOwners.remove(segmentId) -> spanDisplayTexts[segmentId]
+                else -> null
+            }
+            fragments.forEachIndexed { fragmentIndex, fragment ->
+                val span = Element("span").apply {
+                    addClass("highlight-wrap")
+                    addClass("other")
+                    if (highlight.meta.commentCount > 0) {
+                        addClass("has-comments")
+                    }
+                    attr("data-highlight-id", segmentId)
+                    attr("data-highlight-like-count", highlight.meta.likeCount.toString())
+                    attr("data-highlight-comment-count", highlight.meta.commentCount.toString())
+                    attr("data-highlight-my-comment-count", highlight.meta.myCommentCount.toString())
+                    attr("data-highlight-is-like", highlight.meta.isLike.toString())
+                    attr("data-highlight-is-span", highlight.meta.isSpan.toString())
+                    displayText
+                        ?.takeIf { fragmentIndex == 0 && it != fragment.node.getWholeText() }
+                        ?.let { attr("data-highlight-display-text", it) }
+                    attr(
+                        "data-highlight-split-type",
+                        when {
+                            part.text == paragraph.text -> "both"
+                            paragraph.text.startsWith(part.text) -> "head"
+                            paragraph.text.endsWith(part.text) -> "tail"
+                            else -> "middle"
+                        },
+                    )
+                    attr("data-highlight-id-extra", "")
+                    highlight.sourceUrl?.let { attr("data-highlight-source-url", it) }
+                    contentId?.let { attr("data-highlight-content-id", it) }
+                    contentType?.let { attr("data-highlight-content-type", it) }
+                    highlight.paragraphId?.let { attr("data-highlight-pid", it) }
+                    highlight.startOffset?.let { attr("data-highlight-start-offset", it.toString()) }
+                    highlight.endOffset?.let { attr("data-highlight-end-offset", it.toString()) }
+                }
+                fragment.node.replaceWith(span)
+                span.appendChild(fragment.node)
             }
         }
     }
     return document.body().html()
-}
-
-fun parseSegmentTextParagraph(element: Element): SegmentTextParagraph? {
-    if (element.tagName() != "p") return null
-    val parts = element.childNodes().mapNotNull(::parseSegmentNode)
-    if (parts.isEmpty() || parts.none { it.highlight != null }) return null
-    return SegmentTextParagraph(
-        pid = element.attr("data-pid").ifBlank { null },
-        text = parts.joinToString(separator = "") { it.text },
-        parts = parts,
-    )
-}
-
-private fun parseSegmentNode(node: Node): SegmentTextPart? = when (node) {
-    is TextNode -> {
-        node.text().takeIf { it.isNotEmpty() }?.let(::SegmentTextPart)
-    }
-
-    is Element -> {
-        if (!node.hasClass("highlight-wrap")) {
-            return null
-        }
-        SegmentTextPart(
-            text = node.text(),
-            highlight = SegmentHighlightSpan(
-                text = node.text(),
-                displayText = node.attr("data-highlight-display-text").ifBlank { node.text() },
-                meta = SegmentInfoMeta(
-                    segIds = node
-                        .attr("data-highlight-id")
-                        .split(',')
-                        .map(String::trim)
-                        .filter(String::isNotEmpty),
-                    isLike = node.attr("data-highlight-is-like").toBoolean(),
-                    likeCount = node.attr("data-highlight-like-count").toIntOrNull() ?: 0,
-                    commentCount = node.attr("data-highlight-comment-count").toIntOrNull() ?: 0,
-                    myCommentCount = node.attr("data-highlight-my-comment-count").toIntOrNull() ?: 0,
-                    isSpan = node.attr("data-highlight-is-span").toBoolean(),
-                ),
-                sourceUrl = node.attr("data-highlight-source-url").ifBlank { null },
-                contentId = node.attr("data-highlight-content-id").ifBlank { null },
-                contentType = node.attr("data-highlight-content-type").ifBlank { null },
-                paragraphId = node.attr("data-highlight-pid").ifBlank { null },
-                startOffset = node.attr("data-highlight-start-offset").toIntOrNull(),
-                endOffset = node.attr("data-highlight-end-offset").toIntOrNull(),
-            ),
-        )
-    }
-
-    else -> {
-        null
-    }
 }

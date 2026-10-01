@@ -59,25 +59,6 @@ final class com.github.zly2006.zhihu.util/SegmentHighlightSpan { // com.github.z
     final fun toString(): kotlin/String // com.github.zly2006.zhihu.util/SegmentHighlightSpan.toString|toString(){}[0]
 }
 
-final class com.github.zly2006.zhihu.util/SegmentTextParagraph { // com.github.zly2006.zhihu.util/SegmentTextParagraph|null[0]
-    constructor <init>(kotlin/String?, kotlin/String, kotlin.collections/List<com.github.zly2006.zhihu.util/SegmentTextPart>) // com.github.zly2006.zhihu.util/SegmentTextParagraph.<init>|<init>(kotlin.String?;kotlin.String;kotlin.collections.List<com.github.zly2006.zhihu.util.SegmentTextPart>){}[0]
-
-    final val parts // com.github.zly2006.zhihu.util/SegmentTextParagraph.parts|{}parts[0]
-        final fun <get-parts>(): kotlin.collections/List<com.github.zly2006.zhihu.util/SegmentTextPart> // com.github.zly2006.zhihu.util/SegmentTextParagraph.parts.<get-parts>|<get-parts>(){}[0]
-    final val pid // com.github.zly2006.zhihu.util/SegmentTextParagraph.pid|{}pid[0]
-        final fun <get-pid>(): kotlin/String? // com.github.zly2006.zhihu.util/SegmentTextParagraph.pid.<get-pid>|<get-pid>(){}[0]
-    final val text // com.github.zly2006.zhihu.util/SegmentTextParagraph.text|{}text[0]
-        final fun <get-text>(): kotlin/String // com.github.zly2006.zhihu.util/SegmentTextParagraph.text.<get-text>|<get-text>(){}[0]
-
-    final fun component1(): kotlin/String? // com.github.zly2006.zhihu.util/SegmentTextParagraph.component1|component1(){}[0]
-    final fun component2(): kotlin/String // com.github.zly2006.zhihu.util/SegmentTextParagraph.component2|component2(){}[0]
-    final fun component3(): kotlin.collections/List<com.github.zly2006.zhihu.util/SegmentTextPart> // com.github.zly2006.zhihu.util/SegmentTextParagraph.component3|component3(){}[0]
-    final fun copy(kotlin/String? = ..., kotlin/String = ..., kotlin.collections/List<com.github.zly2006.zhihu.util/SegmentTextPart> = ...): com.github.zly2006.zhihu.util/SegmentTextParagraph // com.github.zly2006.zhihu.util/SegmentTextParagraph.copy|copy(kotlin.String?;kotlin.String;kotlin.collections.List<com.github.zly2006.zhihu.util.SegmentTextPart>){}[0]
-    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.util/SegmentTextParagraph.equals|equals(kotlin.Any?){}[0]
-    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.util/SegmentTextParagraph.hashCode|hashCode(){}[0]
-    final fun toString(): kotlin/String // com.github.zly2006.zhihu.util/SegmentTextParagraph.toString|toString(){}[0]
-}
-
 final class com.github.zly2006.zhihu.util/SegmentTextPart { // com.github.zly2006.zhihu.util/SegmentTextPart|null[0]
     constructor <init>(kotlin/String, com.github.zly2006.zhihu.util/SegmentHighlightSpan? = ...) // com.github.zly2006.zhihu.util/SegmentTextPart.<init>|<init>(kotlin.String;com.github.zly2006.zhihu.util.SegmentHighlightSpan?){}[0]
 
@@ -100,7 +81,6 @@ final val com.github.zly2006.zhihu.markdown/com_github_zly2006_zhihu_markdown_Ma
 final val com.github.zly2006.zhihu.markdown/isTiqianMarkdownRendererAvailable // com.github.zly2006.zhihu.markdown/isTiqianMarkdownRendererAvailable|{}isTiqianMarkdownRendererAvailable[0]
     final fun <get-isTiqianMarkdownRendererAvailable>(): kotlin/Boolean // com.github.zly2006.zhihu.markdown/isTiqianMarkdownRendererAvailable.<get-isTiqianMarkdownRendererAvailable>|<get-isTiqianMarkdownRendererAvailable>(){}[0]
 final val com.github.zly2006.zhihu.util/com_github_zly2006_zhihu_util_SegmentHighlightSpan$stableprop // com.github.zly2006.zhihu.util/com_github_zly2006_zhihu_util_SegmentHighlightSpan$stableprop|#static{}com_github_zly2006_zhihu_util_SegmentHighlightSpan$stableprop[0]
-final val com.github.zly2006.zhihu.util/com_github_zly2006_zhihu_util_SegmentTextParagraph$stableprop // com.github.zly2006.zhihu.util/com_github_zly2006_zhihu_util_SegmentTextParagraph$stableprop|#static{}com_github_zly2006_zhihu_util_SegmentTextParagraph$stableprop[0]
 final val com.github.zly2006.zhihu.util/com_github_zly2006_zhihu_util_SegmentTextPart$stableprop // com.github.zly2006.zhihu.util/com_github_zly2006_zhihu_util_SegmentTextPart$stableprop|#static{}com_github_zly2006_zhihu_util_SegmentTextPart$stableprop[0]
 
 final fun (com.hrm.markdown.parser.ast/Document).com.github.zly2006.zhihu.markdown/toMarkdown(): kotlin/String // com.github.zly2006.zhihu.markdown/toMarkdown|toMarkdown@com.hrm.markdown.parser.ast.Document(){}[0]
@@ -123,6 +103,4 @@ final fun com.github.zly2006.zhihu.markdown/zhihuHtmlToMarkdown(kotlin/String): 
 final fun com.github.zly2006.zhihu.util/applySegmentInfosToHtml(kotlin/String, kotlin.collections/List<com.github.zly2006.zhihu.data/SegmentInfoParagraph>, kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...): kotlin/String // com.github.zly2006.zhihu.util/applySegmentInfosToHtml|applySegmentInfosToHtml(kotlin.String;kotlin.collections.List<com.github.zly2006.zhihu.data.SegmentInfoParagraph>;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
 final fun com.github.zly2006.zhihu.util/buildSegmentTextParts(kotlin/String, kotlin.collections/List<com.github.zly2006.zhihu.data/SegmentInfoMark>, kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...): kotlin.collections/List<com.github.zly2006.zhihu.util/SegmentTextPart> // com.github.zly2006.zhihu.util/buildSegmentTextParts|buildSegmentTextParts(kotlin.String;kotlin.collections.List<com.github.zly2006.zhihu.data.SegmentInfoMark>;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
 final fun com.github.zly2006.zhihu.util/com_github_zly2006_zhihu_util_SegmentHighlightSpan$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.util/com_github_zly2006_zhihu_util_SegmentHighlightSpan$stableprop_getter|com_github_zly2006_zhihu_util_SegmentHighlightSpan$stableprop_getter(){}[0]
-final fun com.github.zly2006.zhihu.util/com_github_zly2006_zhihu_util_SegmentTextParagraph$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.util/com_github_zly2006_zhihu_util_SegmentTextParagraph$stableprop_getter|com_github_zly2006_zhihu_util_SegmentTextParagraph$stableprop_getter(){}[0]
 final fun com.github.zly2006.zhihu.util/com_github_zly2006_zhihu_util_SegmentTextPart$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.util/com_github_zly2006_zhihu_util_SegmentTextPart$stableprop_getter|com_github_zly2006_zhihu_util_SegmentTextPart$stableprop_getter(){}[0]
-final fun com.github.zly2006.zhihu.util/parseSegmentTextParagraph(com.fleeksoft.ksoup.nodes/Element): com.github.zly2006.zhihu.util/SegmentTextParagraph? // com.github.zly2006.zhihu.util/parseSegmentTextParagraph|parseSegmentTextParagraph(com.fleeksoft.ksoup.nodes.Element){}[0]
