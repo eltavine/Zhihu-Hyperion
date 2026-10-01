@@ -571,7 +571,9 @@ fun ZhihuMain(
     }
 
     // Material 自适应导航：窗口宽度达到中等尺寸（600dp）时，一级页面改用左侧导航轨，底栏只用于窄屏。
-    val useNavigationRail = showMainNavigationBar && containerWidth >= 600.dp
+    // 列表-详情双栏时列表栏本身就是窄屏宽度，仍在列表栏底部用底栏：导航轨再占 96dp，
+    // 约 860dp 宽的横屏平板就放不下列表栏（320dp）和详情栏（480dp）的最小宽度。
+    val useNavigationRail = showMainNavigationBar && containerWidth >= 600.dp && !isLargeLandscape
     val showNavigationRail = useNavigationRail && showMainNavigation && navEntry != null
     var navigationRailWidth by remember { mutableStateOf(0.dp) }
     val contentWidth = if (showNavigationRail) containerWidth - navigationRailWidth else containerWidth
