@@ -16,8 +16,10 @@
 """Keeps the author lines of the license headers in step with git history.
 
 A file eltavine wrote names eltavine as its copyright holder. A file somebody else wrote keeps its holder, and gets a
-"Co-author: eltavine" line once eltavine has changed it; such a file without a header gets the upstream notice first. "Wrote" means eltavine added the file and still authors most
-of its lines; code that eltavine only moved into a new file stays with its original author.
+"Co-author: eltavine" line once eltavine has changed it; such a file without a header gets the upstream notice first.
+"Wrote" means eltavine added the file and authors most of its code lines (imports and package lines do not count, since
+copy detection credits them to whichever file had them first). Code moved into a new file stays with its original
+author, and a file that came from upstream keeps the upstream notice however much of it eltavine rewrote.
 
 Authorship comes from `git blame -w -M -C -C` with .git-blame-ignore-revs, so formatting, project-wide renames and
 moves do not count. Vendored code under third_party/ keeps the notices of its own projects.
@@ -56,6 +58,7 @@ COMMENT_STYLES = {
 }
 # Front matter, shebangs and XML prologues can come before the header.
 HEADER_SEARCH_LINES = 20
+BOILERPLATE = ("import ", "package ", "from ")
 OTHER_LICENSE = re.compile(r"copyright|licensed under|spdx-license-identifier", re.IGNORECASE)
 EXCLUDED = (
     "third_party/",
@@ -83,8 +86,9 @@ def header_end(lines: list[str]) -> int:
     prefix = lines[mark][: lines[mark].index(HEADER_MARK)]
     for index in range(mark + 1, len(lines)):
         line = lines[index]
-        if prefix.strip().startswith("#"):
-            if not line.startswith("#"):
+        marker = prefix.strip()
+        if marker in ("#", "//"):
+            if not line.startswith(marker):
                 return index
         elif line.strip().endswith("*/") or line.strip().endswith("-->"):
             return index + 1
@@ -92,7 +96,7 @@ def header_end(lines: list[str]) -> int:
 
 
 def blame_share(path: str, skip: int) -> tuple[int, int]:
-    """(lines eltavine authored, all non-blank lines) after the license header."""
+    """(code lines eltavine authored, all code lines) after the license header, without imports and package lines."""
     output = git("blame", "--line-porcelain", "-w", "-M", "-C", "-C", "--ignore-revs-file", str(IGNORE_REVS), "HEAD", "--", path)
     mine = total = 0
     author_mail = ""
@@ -102,7 +106,8 @@ def blame_share(path: str, skip: int) -> tuple[int, int]:
             author_mail = line[len("author-mail "):].strip("<>")
         elif line.startswith("\t"):
             line_number += 1
-            if line_number <= skip or not line[1:].strip():
+            code = line[1:].strip()
+            if line_number <= skip or not code or code.startswith(BOILERPLATE):
                 continue
             total += 1
             mine += author_mail == AUTHOR_EMAIL
@@ -115,7 +120,8 @@ def history(path: str, ignored: set[str]) -> tuple[str, list[str]]:
     Mechanical commits and pure renames (R100) are not changes to the content.
     """
     commits = []
-    for line in git("log", "--follow", "--format=commit %H %ae %ad", "--date=format:%Y", "--name-status", "--", path).splitlines():
+    # A small new file is mostly license header, so the default 50% would pair it with any file deleted alongside it.
+    for line in git("log", "--follow", "-M90%", "--format=commit %H %ae %ad", "--date=format:%Y", "--name-status", "--", path).splitlines():
         if line.startswith("commit "):
             commits.append(line.split()[1:] + [""])
         elif line.strip() and commits:
@@ -167,14 +173,12 @@ def rewrite_header(lines: list[str], kind: str, years: list[str]) -> list[str] |
     end = mark + 1
     while end < len(lines) and (lines[end].startswith(prefix + "Copyright") or lines[end].startswith(prefix + "Co-author:")):
         end += 1
-    holders = [line for line in lines[mark + 1:end] if not line.startswith(prefix + "Co-author:")]
-    if kind == "co" and any(AUTHOR_EMAIL in line for line in holders):
-        # eltavine is already a holder of this file; a co-author line would repeat it.
-        return None
+    others = [line for line in lines[mark + 1:end] if not line.startswith(prefix + "Co-author:") and AUTHOR_EMAIL not in line]
     if kind == "written":
         replacement = [f"{prefix}Copyright (C) {year_range(years or ['2026'])}, {AUTHOR}"]
     elif kind == "co":
-        replacement = holders + [f"{prefix}Co-author: {AUTHOR}"]
+        # A file that an earlier rule wrongly gave to eltavine gets the upstream holder back.
+        replacement = (others or [f"{prefix}{UPSTREAM_HOLDER}"]) + [f"{prefix}Co-author: {AUTHOR}"]
     else:
         return None
     title = prefix + HEADER_TITLE
