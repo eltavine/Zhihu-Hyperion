@@ -33,7 +33,6 @@ class ModuleGraphConventionPlugin : Plugin<Project> {
                     ":core:designsystem -X> :(?!core:settings$).*",
                     ":core:platform -X> :(?!core:(common|model|network|account|settings)$).*",
                     ":core:notification -X> :(?!core:(common|model|network|settings|platform)$).*",
-                    ":core:updater -X> :(?!core:(common|model|network|account|settings|platform)$).*",
                     ":core:data -X> :(?!core:(common|model|navigation|network|account|database|settings|nlp)$).*",
                     ":core:ui -X> :(?!core:(common|model|navigation|network|account|database|settings|designsystem|platform|nlp|data)$).*",
                     ":core:markdown -X> :(?!(core:(common|model|navigation|network|account|database|settings|designsystem|platform|nlp|data|ui)|(markdown|latex|codehighlight)-.*)$).*",

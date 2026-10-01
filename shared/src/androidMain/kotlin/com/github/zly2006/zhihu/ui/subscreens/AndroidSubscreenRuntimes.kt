@@ -35,24 +35,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.github.zly2006.zhihu.platform.androidUserMessageSink
 import com.github.zly2006.zhihu.reading.AndroidReadingPlayerBridge
 import com.github.zly2006.zhihu.reading.rememberArticleTtsState
-import com.github.zly2006.zhihu.updater.UpdateManager
-import com.github.zly2006.zhihu.updater.UpdateManager.UpdateState
 import com.github.zly2006.zhihu.util.ContinuousUsageReminderManager
 import com.github.zly2006.zhihu.util.PowerSaveModeCompat
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.util.withContext
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import java.io.File
 
 @Composable
@@ -152,97 +145,6 @@ actual fun WebViewCustomFontSettings(
             }
         }
     }
-}
-
-@Composable
-actual fun rememberSystemUpdateState(): StateFlow<SystemUpdateState> {
-    val scope = rememberCoroutineScope()
-    return remember(scope) {
-        UpdateManager.updateState.map { it.toSystemUpdateState() }.stateIn(
-            scope,
-            SharingStarted.Eagerly,
-            UpdateManager.updateState.value.toSystemUpdateState(),
-        )
-    }
-}
-
-@Composable
-actual fun rememberSystemUpdateChecker(): SystemUpdateChecker {
-    val context = LocalContext.current
-    return remember(context) {
-        object : SystemUpdateChecker {
-            override suspend fun check() = UpdateManager.checkForUpdate(context)
-        }
-    }
-}
-
-@Composable
-actual fun rememberSystemUpdateVersionSkipper(): SystemUpdateVersionSkipper {
-    val context = LocalContext.current
-    return remember(context) {
-        object : SystemUpdateVersionSkipper {
-            override fun skip(version: String) {
-                UpdateManager.skipVersion(context, version)
-                UpdateManager.updateState.value = UpdateState.Latest
-            }
-        }
-    }
-}
-
-@Composable
-actual fun rememberSystemUpdateDownloader(): SystemUpdateDownloader {
-    val context = LocalContext.current
-    return remember(context) {
-        object : SystemUpdateDownloader {
-            override suspend fun download(url: String) = UpdateManager.downloadUpdate(context, url)
-        }
-    }
-}
-
-@Composable
-actual fun rememberDownloadedSystemUpdateInstaller(): DownloadedSystemUpdateInstaller {
-    val context = LocalContext.current
-    return remember(context) {
-        object : DownloadedSystemUpdateInstaller {
-            override suspend fun install() {
-                val state = UpdateManager.updateState.value
-                if (state is UpdateState.Downloaded) {
-                    UpdateManager.installUpdate(context, state.file)
-                }
-            }
-        }
-    }
-}
-
-actual fun resetSystemUpdateState() {
-    UpdateManager.updateState.value = UpdateState.NoUpdate
-}
-
-actual fun setSystemUpdateError(message: String) {
-    UpdateManager.updateState.value = UpdateState.Error(message)
-}
-
-actual val isApkUpdateInstallSupported: Boolean = true
-
-private fun UpdateState.toSystemUpdateState(): SystemUpdateState = when (this) {
-    UpdateState.NoUpdate -> SystemUpdateState.NoUpdate
-
-    UpdateState.Checking -> SystemUpdateState.Checking
-
-    UpdateState.Latest -> SystemUpdateState.Latest
-
-    is UpdateState.UpdateAvailable -> SystemUpdateState.UpdateAvailable(
-        version = version.toString(),
-        isNightly = isNightly,
-        releaseNotes = releaseNotes,
-        downloadUrl = downloadUrl,
-    )
-
-    UpdateState.Downloading -> SystemUpdateState.Downloading
-
-    is UpdateState.Downloaded -> SystemUpdateState.Downloaded
-
-    is UpdateState.Error -> SystemUpdateState.Error(message)
 }
 
 @Composable

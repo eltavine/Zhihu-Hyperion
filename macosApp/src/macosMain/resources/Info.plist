@@ -36,6 +36,8 @@
     <string>@APP_VERSION_NAME@</string>
     <key>CFBundleVersion</key>
     <string>@APP_VERSION_CODE@</string>
+    <key>ZhihuGitCommit</key>
+    <string>@APP_GIT_COMMIT@</string>
     <key>LSMinimumSystemVersion</key>
     <string>12.0</string>
     <key>NSHighResolutionCapable</key>

@@ -23,7 +23,11 @@ import com.github.zly2006.zhihu.data.databaseModule
 import com.github.zly2006.zhihu.notification.nativeNotificationSettingsStore
 import com.github.zly2006.zhihu.platform.nativeAccountFilePath
 import com.github.zly2006.zhihu.platform.nativeAppPrivateDirectoryPath
+import com.github.zly2006.zhihu.platform.nativeAppVersionName
+import com.github.zly2006.zhihu.platform.nativeIsDesktop
 import com.github.zly2006.zhihu.platform.nativeSettingsStore
+import com.github.zly2006.zhihu.update.InstalledBuild
+import com.github.zly2006.zhihu.update.UpdateTarget
 import com.github.zly2006.zhihu.util.AtomicTextFile
 import com.github.zly2006.zhihu.viewmodel.AccountWebClientProvider
 import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
@@ -32,6 +36,7 @@ import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
 import kotlinx.io.files.Path
 import org.koin.core.module.Module
 import org.koin.dsl.module
+import platform.Foundation.NSBundle
 
 /** 原生进程的全部 Koin 绑定；账户路径在启动时解析，调用前必须先配置好调试数据目录等进程环境。 */
 fun nativeZhihuModules(): List<Module> = listOf(
@@ -41,6 +46,16 @@ fun nativeZhihuModules(): List<Module> = listOf(
     zhihuSharedModule,
     module {
         single { nativeSettingsStore("settings.properties") }
+        single {
+            // Both macOS bundles fill these keys from MacosAppBundle's Info.plist tokens.
+            val versionCode = NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleVersion") as? String
+            InstalledBuild(
+                versionName = nativeAppVersionName,
+                versionCode = checkNotNull(versionCode?.toIntOrNull()) { "Info.plist has no numeric CFBundleVersion" },
+                commit = NSBundle.mainBundle.objectForInfoDictionaryKey("ZhihuGitCommit") as? String ?: "unknown",
+                target = if (nativeIsDesktop) UpdateTarget.MACOS_ARM64 else null,
+            )
+        }
         single { WebDavConfigFile(AtomicTextFile(Path("${nativeAppPrivateDirectoryPath()}/webdav.json"))) }
         single { nativeNotificationSettingsStore() }
         single { HomeFeedFilter(get(), get(), get()) }

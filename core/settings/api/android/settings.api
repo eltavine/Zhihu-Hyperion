@@ -23,7 +23,6 @@ public final class com/github/zly2006/zhihu/platform/MapSettingsStore : com/gith
 	public fun putString (Ljava/lang/String;Ljava/lang/String;)V
 	public fun putStringSet (Ljava/lang/String;Ljava/util/Set;)V
 	public fun remove (Ljava/lang/String;)V
-	public fun removeByPrefix (Ljava/lang/String;)V
 }
 
 public final class com/github/zly2006/zhihu/platform/NoopSettingsStoreKt {
@@ -47,11 +46,9 @@ public abstract interface class com/github/zly2006/zhihu/platform/SettingsStore 
 	public abstract fun putString (Ljava/lang/String;Ljava/lang/String;)V
 	public abstract fun putStringSet (Ljava/lang/String;Ljava/util/Set;)V
 	public abstract fun remove (Ljava/lang/String;)V
-	public fun removeByPrefix (Ljava/lang/String;)V
 }
 
 public final class com/github/zly2006/zhihu/platform/SettingsStore$DefaultImpls {
 	public static fun observeKeyChanges (Lcom/github/zly2006/zhihu/platform/SettingsStore;Lkotlin/jvm/functions/Function1;)Ljava/lang/AutoCloseable;
-	public static fun removeByPrefix (Lcom/github/zly2006/zhihu/platform/SettingsStore;Ljava/lang/String;)V
 }
 

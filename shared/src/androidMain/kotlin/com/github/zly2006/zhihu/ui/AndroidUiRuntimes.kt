@@ -18,7 +18,6 @@
 package com.github.zly2006.zhihu.ui
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
@@ -45,6 +44,7 @@ import com.github.zly2006.zhihu.platform.UserMessageSink
 import com.github.zly2006.zhihu.ui.article.prepareContentDocument
 import com.github.zly2006.zhihu.ui.components.WebviewComp
 import com.github.zly2006.zhihu.ui.components.setupUpWebviewClient
+import com.github.zly2006.zhihu.update.InstalledBuild
 import com.github.zly2006.zhihu.util.EmojiManager
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.createEmojiInlineContent
@@ -63,20 +63,16 @@ import java.io.File
 private const val WEBVIEW_ACTIVITY_CLASS = "com.github.zly2006.zhihu.WebviewActivity"
 
 @Composable
-actual fun rememberAppVersionInfo(): String = LocalContext.current.zhihuVersionInfo()
-
-private fun Context.zhihuVersionInfo(): String {
-    val versionName = runCatching {
-        packageManager.getPackageInfo(packageName, 0).versionName
-    }.getOrNull() ?: "unknown"
-    val appInfo = runCatching {
-        packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
-    }.getOrNull()
-    val metaData = appInfo?.metaData
-    val buildType = metaData?.getString("com.github.zly2006.zhihu.BUILD_TYPE")
-        ?: if ((applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0) "debug" else "release"
-    val gitHash = metaData?.getString("com.github.zly2006.zhihu.GIT_HASH") ?: "unknown"
-    return "$versionName $buildType, $gitHash"
+actual fun rememberAppVersionInfo(): String {
+    val build = koinInject<InstalledBuild>()
+    val context = LocalContext.current
+    val buildType = runCatching {
+        context.packageManager
+            .getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
+            .metaData
+            ?.getString("com.github.zly2006.zhihu.BUILD_TYPE")
+    }.getOrNull() ?: if ((context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0) "debug" else "release"
+    return "${build.versionName} $buildType, ${build.commit}"
 }
 
 @Composable

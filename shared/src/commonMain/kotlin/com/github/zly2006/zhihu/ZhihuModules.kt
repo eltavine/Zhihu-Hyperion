@@ -19,14 +19,19 @@ package com.github.zly2006.zhihu
 
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.reading.ReadingQueueSourceRegistry
+import com.github.zly2006.zhihu.update.updateModule
 import com.github.zly2006.zhihu.viewmodel.AigcVoteService
 import com.github.zly2006.zhihu.viewmodel.ArticleAnswerSwitchState
 import com.github.zly2006.zhihu.viewmodel.ZhihuGuestClient
 import org.koin.dsl.module
 import org.koin.dsl.onClose
 
-/** 与平台无关的进程级绑定；各平台组合根把它和平台模块一起启动。 */
+/**
+ * 与平台无关的进程级绑定；各平台组合根把它和平台模块一起启动。
+ * 平台模块还要绑定 [com.github.zly2006.zhihu.update.InstalledBuild]，更新检查用它判断新旧。
+ */
 val zhihuSharedModule = module {
+    includes(updateModule)
     single { ReadingQueueSourceRegistry(get()) }
     single { ArticleAnswerSwitchState() }
     single { AigcVoteService(get(), get(), get()) } onClose { it?.close() }

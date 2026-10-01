@@ -18,6 +18,8 @@
 package com.github.zly2006.zhihu
 
 import android.content.Context
+import android.content.pm.PackageManager
+import androidx.core.content.pm.PackageInfoCompat
 import com.github.zly2006.zhihu.account.accountModule
 import com.github.zly2006.zhihu.data.dataModule
 import com.github.zly2006.zhihu.data.databaseModule
@@ -26,6 +28,9 @@ import com.github.zly2006.zhihu.notification.AndroidNotificationSettingsStore
 import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.androidSettingsStore
 import com.github.zly2006.zhihu.platform.androidUserMessageSink
+import com.github.zly2006.zhihu.platform.isLiteVariant
+import com.github.zly2006.zhihu.update.InstalledBuild
+import com.github.zly2006.zhihu.update.UpdateTarget
 import com.github.zly2006.zhihu.util.AtomicTextFile
 import com.github.zly2006.zhihu.viewmodel.AndroidMobileClientProvider
 import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
@@ -45,6 +50,18 @@ fun androidZhihuModules(context: Context): List<Module> = listOf(
     zhihuSharedModule,
     module {
         single { AndroidArticleNavigationHandoff() }
+        single {
+            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            InstalledBuild(
+                versionName = packageInfo.versionName.orEmpty(),
+                versionCode = PackageInfoCompat.getLongVersionCode(packageInfo).toInt(),
+                commit = context.packageManager
+                    .getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
+                    .metaData
+                    ?.getString("com.github.zly2006.zhihu.GIT_HASH") ?: "unknown",
+                target = if (isLiteVariant) UpdateTarget.ANDROID_LITE else UpdateTarget.ANDROID_FULL,
+            )
+        }
         single { androidSettingsStore(context) }
         single { WebDavConfigFile(AtomicTextFile(Path(File(context.filesDir, "webdav.json").path))) }
         single<NotificationSettingsStore> { AndroidNotificationSettingsStore(context.applicationContext) }

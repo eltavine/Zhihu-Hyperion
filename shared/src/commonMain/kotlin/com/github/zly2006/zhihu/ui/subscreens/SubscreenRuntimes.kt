@@ -19,7 +19,6 @@ package com.github.zly2006.zhihu.ui.subscreens
 
 import androidx.compose.runtime.Composable
 import com.github.zly2006.zhihu.reading.TtsState
-import kotlinx.coroutines.flow.StateFlow
 
 expect val isWebViewCustomFontSupported: Boolean
 
@@ -28,66 +27,6 @@ expect fun WebViewCustomFontSettings(
     customFontName: String?,
     onCustomFontNameChange: (String?) -> Unit,
 )
-
-sealed interface SystemUpdateState {
-    data object NoUpdate : SystemUpdateState
-
-    data object Checking : SystemUpdateState
-
-    data object Latest : SystemUpdateState
-
-    data class UpdateAvailable(
-        val version: String,
-        val isNightly: Boolean,
-        val releaseNotes: String?,
-        val downloadUrl: String,
-    ) : SystemUpdateState
-
-    data object Downloading : SystemUpdateState
-
-    data object Downloaded : SystemUpdateState
-
-    data class Error(
-        val message: String,
-    ) : SystemUpdateState
-}
-
-@Composable
-expect fun rememberSystemUpdateState(): StateFlow<SystemUpdateState>
-
-interface SystemUpdateChecker {
-    suspend fun check()
-}
-
-interface SystemUpdateVersionSkipper {
-    fun skip(version: String)
-}
-
-interface SystemUpdateDownloader {
-    suspend fun download(url: String)
-}
-
-interface DownloadedSystemUpdateInstaller {
-    suspend fun install()
-}
-
-@Composable
-expect fun rememberSystemUpdateChecker(): SystemUpdateChecker
-
-@Composable
-expect fun rememberSystemUpdateVersionSkipper(): SystemUpdateVersionSkipper
-
-@Composable
-expect fun rememberSystemUpdateDownloader(): SystemUpdateDownloader
-
-@Composable
-expect fun rememberDownloadedSystemUpdateInstaller(): DownloadedSystemUpdateInstaller
-
-expect fun resetSystemUpdateState()
-
-expect fun setSystemUpdateError(message: String)
-
-expect val isApkUpdateInstallSupported: Boolean
 
 data class DeveloperInfoSnapshot(
     val networkStatus: String = "网络状态：未知",

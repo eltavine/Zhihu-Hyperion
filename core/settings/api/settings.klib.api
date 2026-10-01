@@ -23,7 +23,6 @@ abstract interface com.github.zly2006.zhihu.platform/SettingsStore { // com.gith
     abstract fun putStringSet(kotlin/String, kotlin.collections/Set<kotlin/String>) // com.github.zly2006.zhihu.platform/SettingsStore.putStringSet|putStringSet(kotlin.String;kotlin.collections.Set<kotlin.String>){}[0]
     abstract fun remove(kotlin/String) // com.github.zly2006.zhihu.platform/SettingsStore.remove|remove(kotlin.String){}[0]
     open fun observeKeyChanges(kotlin/Function1<kotlin/String, kotlin/Unit>): kotlin/AutoCloseable // com.github.zly2006.zhihu.platform/SettingsStore.observeKeyChanges|observeKeyChanges(kotlin.Function1<kotlin.String,kotlin.Unit>){}[0]
-    open fun removeByPrefix(kotlin/String) // com.github.zly2006.zhihu.platform/SettingsStore.removeByPrefix|removeByPrefix(kotlin.String){}[0]
 }
 
 final class com.github.zly2006.zhihu.platform/MapSettingsStore : com.github.zly2006.zhihu.platform/SettingsStore { // com.github.zly2006.zhihu.platform/MapSettingsStore|null[0]

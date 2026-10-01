@@ -163,6 +163,7 @@ import com.github.zly2006.zhihu.ui.subscreens.ReadingSettingsScreen
 import com.github.zly2006.zhihu.ui.subscreens.SettingsSearchScreen
 import com.github.zly2006.zhihu.ui.subscreens.SystemAndUpdateSettingsScreen
 import com.github.zly2006.zhihu.ui.subscreens.WebDavSyncScreen
+import com.github.zly2006.zhihu.update.UpdateOnLaunch
 import com.github.zly2006.zhihu.video.VideoScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -256,6 +257,7 @@ fun ZhihuMain(
     val readingPlayer = rememberReadingPlayerController()
     val readingPlayerState by readingPlayer.state
     val settings = koinInject<SettingsStore>()
+    UpdateOnLaunch()
 
     /** 右侧详情独立持有返回栈；栏内导航保留上级，从左侧重新选项时清空。 */
     val paneStateHolder = rememberSaveableStateHolder()

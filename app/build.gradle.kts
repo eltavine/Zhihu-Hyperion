@@ -15,6 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import com.github.zly2006.zhihu.buildlogic.appVersionCode
 import com.github.zly2006.zhihu.buildlogic.gitShortHash
 import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.toolchain.JavaLanguageVersion
@@ -38,7 +39,7 @@ android {
 
     defaultConfig {
         applicationId = "com.eltavine.zhihuhyperion"
-        versionCode = property("app.versionCode").toString().toIntOrNull() ?: 1
+        versionCode = appVersionCode()
         versionName = property("app.versionName").toString()
 
         testInstrumentationRunner = "com.github.zly2006.zhihu.ZhihuInstrumentedTestRunner"
@@ -192,4 +193,5 @@ dependencies {
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.ktor.client.mock)
     androidTestImplementation(projects.markdownRenderer)
+    androidTestImplementation(projects.feature.update)
 }

@@ -11,7 +11,7 @@ android {
 
     // Declare the ndkVersion to avoid 'NDK not installed' errors from rust-android-plugin
     // see: https://github.com/mozilla/rust-android-gradle/issues/29#issuecomment-593501017
-    ndkVersion = "29.0.14206865" // Android NDK r28b
+    ndkVersion = libs.versions.android.ndk.get()
     envAndroidNDKPath?.let {
         ndkPath = it
     }

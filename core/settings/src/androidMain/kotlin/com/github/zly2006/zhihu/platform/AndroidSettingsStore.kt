@@ -56,12 +56,6 @@ fun androidSettingsStore(context: Context): SettingsStore {
 
         override fun contains(key: String) = preferences.contains(key)
 
-        override fun removeByPrefix(prefix: String) = preferences.edit {
-            preferences.all.keys
-                .filter { it.startsWith(prefix) }
-                .forEach(::remove)
-        }
-
         override fun observeKeyChanges(onChanged: (String) -> Unit): AutoCloseable {
             val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
                 if (key != null) {

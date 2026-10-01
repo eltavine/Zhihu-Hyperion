@@ -1,7 +1,9 @@
 name: Auto Label PR
 
+# pull_request_target runs this file as it is on master, with a token that may label the pull request. It never
+# checks out the pull request's code, so nothing from the pull request can run with that token.
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, edited, synchronize]
 
 permissions:
@@ -9,14 +11,11 @@ permissions:
 
 jobs:
   label:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
     steps:
-      - uses: actions/github-script@v9
-        env:
-          PRPAT: ${{ secrets.PRPAT }}
-        if: ${{ env.PRPAT != '' }}
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
-          github-token: ${{ secrets.PRPAT }}
           script: |
             const title = context.payload.pull_request.title;
             let label = null;

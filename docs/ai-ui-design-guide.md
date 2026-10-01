@@ -122,8 +122,8 @@ URL 解析集中在 `resolveContent()`。支持知乎问题、回答、文章、
 
 | key/store | 入口 | 主要影响 | 注意 |
 | --- | --- | --- | --- |
-| `githubToken` | GitHub Token | 更新检查 API 限速 | 不要打印或提交真实 token |
-| `checkNightlyUpdates` | Nightly 更新 | 是否检查每日构建 | Android updater 和 Desktop runtime 都读 |
+| `githubAcceleration` | GitHub 加速 / 启动询问 | 更新检查和下载是否经 gh-proxy.com | 未保存即未回答，应用启动时弹窗询问，回答前不做启动检查；取决于本机网络，不进 WebDAV 同步 |
+| `checkNightlyUpdates` | Nightly 更新 | 读取 nightly 还是正式版的 update.json | 键与读取逻辑都在 `:feature:update` 的 `UpdateController` |
 | `continuousUsageReminderIntervalMinutes` | 防沉迷提醒 | 连续使用提醒间隔 | 0 表示关闭 |
 | `webdav.json`（`WebDavConfigFile`） | WebDAV 同步 | 手动上传/恢复屏蔽列表和已登记的设置 | 凭据不在 `SettingsStore`，也不进 Android 云备份；新增用户设置要登记到 `WebDavSyncViewModel.kt` 的 `syncedSettings` 才会同步 |
 | `developer` | 开发者模式 | 账号页显示开发者选项 | 账号页点击版本 5 次开启 |

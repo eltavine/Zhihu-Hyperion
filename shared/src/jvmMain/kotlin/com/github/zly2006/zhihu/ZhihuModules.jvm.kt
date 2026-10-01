@@ -23,6 +23,8 @@ import com.github.zly2006.zhihu.data.databaseModule
 import com.github.zly2006.zhihu.desktop.desktopZhihuDataFile
 import com.github.zly2006.zhihu.notification.desktopNotificationSettingsStore
 import com.github.zly2006.zhihu.platform.desktopSettingsStore
+import com.github.zly2006.zhihu.update.InstalledBuild
+import com.github.zly2006.zhihu.update.UpdateTarget
 import com.github.zly2006.zhihu.util.AtomicTextFile
 import com.github.zly2006.zhihu.viewmodel.AccountWebClientProvider
 import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
@@ -31,6 +33,7 @@ import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
 import kotlinx.io.files.Path
 import org.koin.core.module.Module
 import org.koin.dsl.module
+import java.util.Properties
 
 /** 桌面进程的全部 Koin 绑定，由 desktopApp 的组合根启动。 */
 fun desktopZhihuModules(): List<Module> = listOf(
@@ -40,6 +43,25 @@ fun desktopZhihuModules(): List<Module> = listOf(
     zhihuSharedModule,
     module {
         single { desktopSettingsStore(desktopZhihuDataFile("settings.properties")) }
+        single {
+            val buildInfo = Properties()
+            checkNotNull(Thread.currentThread().contextClassLoader?.getResourceAsStream("zhihu-build.properties")) {
+                "zhihu-build.properties is missing; desktopApp's writeBuildInfo task generates it"
+            }.use(buildInfo::load)
+            val isX64 = System.getProperty("os.arch") in setOf("amd64", "x86_64")
+            val osName = System.getProperty("os.name").lowercase()
+            InstalledBuild(
+                versionName = buildInfo.getProperty("versionName"),
+                versionCode = buildInfo.getProperty("versionCode").toInt(),
+                commit = buildInfo.getProperty("commit"),
+                // macOS ships the Kotlin/Native app, so CI publishes no JVM package for it.
+                target = when {
+                    isX64 && osName.startsWith("windows") -> UpdateTarget.WINDOWS_X64
+                    isX64 && osName.startsWith("linux") -> UpdateTarget.LINUX_X64
+                    else -> null
+                },
+            )
+        }
         single { WebDavConfigFile(AtomicTextFile(Path(desktopZhihuDataFile("webdav.json").path))) }
         single { desktopNotificationSettingsStore() }
         single { HomeFeedFilter(get(), get(), get()) }

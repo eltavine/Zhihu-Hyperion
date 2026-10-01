@@ -18,7 +18,6 @@
 package com.github.zly2006.zhihu.test
 
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
-import com.github.zly2006.zhihu.notification.ZHIHU_PLUS_PLUS_HOME_NOTIFICATIONS_URL
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope
@@ -145,29 +144,13 @@ object ZhihuMockApi {
               }
             }
             """.trimIndent()
-        mockJson(
-            method = HttpMethod.Get,
-            url = "https://api.github.com/repos/eltavine/Zhihu-Hyperion/releases/latest",
-            body =
-                """
-                {
-                  "tag_name": "0.0.0",
-                  "body": "",
-                  "assets": [
-                    {
-                      "name": "zhihu-lite.apk",
-                      "content_type": "application/vnd.android.package-archive",
-                      "browser_download_url": "https://example.invalid/zhihu-lite.apk"
-                    }
-                  ]
-                }
-                """.trimIndent(),
-        )
-        mockJsonPrefix(
-            method = HttpMethod.Get,
-            urlPrefix = "$ZHIHU_PLUS_PLUS_HOME_NOTIFICATIONS_URL?version=",
-            body = """{"notifications":[]}""",
-        )
+        listOf("latest/download", "download/nightly").forEach { path ->
+            mockJson(
+                method = HttpMethod.Get,
+                url = "https://github.com/eltavine/Zhihu-Hyperion/releases/$path/update.json",
+                body = """{"versionName":"0.0.0","versionCode":0,"commit":"0000000","releaseUrl":"https://github.com/eltavine/Zhihu-Hyperion/releases"}""",
+            )
+        }
         mockJson(
             method = HttpMethod.Get,
             url = "https://api.zhihu.com/topstory/recommend?include=data%5B%2A%5D.content%2Cexcerpt%2Cheadline",

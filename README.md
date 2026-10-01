@@ -37,7 +37,7 @@ Zhihu-Hyperion 是一个第三方知乎客户端。它把广告、推广软文�
 
 ## 下载
 
-前往 [Releases](https://github.com/eltavine/Zhihu-Hyperion/releases) 下载正式版，或下载每次合入主分支后自动构建的 [开发版](https://github.com/eltavine/Zhihu-Hyperion/releases/tag/nightly)。
+前往 [Releases](https://github.com/eltavine/Zhihu-Hyperion/releases) 下载正式版，或下载每次合入主分支后自动构建的 [开发版](https://github.com/eltavine/Zhihu-Hyperion/releases/tag/nightly)。应用会自动检查更新，在“系统与更新”中打开“检查 Nightly 版本更新”即可改为跟随开发版。
 
 **Android** 提供两个版本，包名与 Zhihu++ 不同，可以和它同时安装：
 
@@ -129,8 +129,7 @@ Zhihu-Hyperion 是一个第三方知乎客户端。它把广告、推广软文�
 - 应用不含任何遥测、使用统计或第三方统计与广告 SDK。
 - 账号凭据、浏览历史、屏蔽规则和本地推荐数据都只保存在本机；WebDAV 备份只发往你自己配置的服务器。
 - 除知乎外，应用只会在以下场景访问其他服务：
-  - 检查更新：GitHub。
-  - 首页公告：上游 Zhihu++ 的公告接口（redenmc.com）。
+  - 检查更新：GitHub。首次启动时会询问是否改经第三方加速服务 gh-proxy.com 访问，之后可在“系统与更新”中随时更改。
   - AIGC 标记与崩溃日志上报：默认关闭，开启后连接 AIGC 标记服务（aigc-vote.ai.fintechedu.cn）。
   - 按需下载：数学公式字体（npmmirror 与 CTAN 镜像），以及 Full 版的语义模型（Hugging Face）。
 
@@ -145,9 +144,11 @@ Zhihu-Hyperion 是一个第三方知乎客户端。它把广告、推广软文�
 ./gradlew :macosApp:packageReleaseMacosApp  # 打包 macOS 原生应用，需要 Apple Silicon
 ```
 
-项目按 Kotlin Multiplatform 分层：`core` 模块提供数据、网络、数据库与基础界面，`feature` 模块承载独立功能（如编辑器和视频页），`shared` 组装各页面，`app`、`desktopApp` 和 `macosApp` 分别是 Android、桌面与 macOS 的应用入口。
+项目按 Kotlin Multiplatform 分层：`core` 模块提供数据、网络、数据库与基础界面，`feature` 模块承载独立功能（如编辑器、视频页和更新检查），`shared` 组装各页面，`app`、`desktopApp` 和 `macosApp` 分别是 Android、桌面与 macOS 的应用入口。
 
-### 发布签名
+`versionCode` 等于 `gradle.properties` 中的 `app.versionCodeOffset` 加上 HEAD 的提交数，每次构建都比上一次大，应用的更新检查只比较它，因此构建需要完整的 git 历史，浅克隆会直接失败。
+
+### 发布与签名
 
 Android release 构建只在下面四个环境变量都非空时使用发布密钥签名，缺任何一项都会改用 debug 密钥，这样的安装包不能当作正式发布：
 
@@ -156,7 +157,13 @@ Android release 构建只在下面四个环境变量都非空时使用发布密�
 - `ANDROID_KEY_ALIAS`：签名密钥别名
 - `ANDROID_KEY_PASSWORD`：签名密钥密码
 
-CI 从仓库的 `android-signing` 环境读取 `ANDROID_KEYSTORE_BASE64`（keystore 文件的 Base64）和后三项，缺少任何一项都会直接失败，并在打包后用 `apksigner` 核对安装包的签名证书。
+CI 的签名密钥只存放在仓库的 `android-signing` 环境中（`ANDROID_KEYSTORE_BASE64` 即 keystore 文件的 Base64，以及后三项），该环境只允许 `master` 分支使用：
+
+- Pull Request 的检查（`ci.yml`：KtLint、ABI、模块依赖图、单元测试、构建和模拟器上的 mock 测试）不引用这个环境，PR 中的代码拿不到密钥。
+- 每次推送到 `master`，`build.yml` 签名打包并更新[开发版](https://github.com/eltavine/Zhihu-Hyperion/releases/tag/nightly)。
+- 正式版在 `master` 上手动运行 Release（`release.yml`）发布：它按 `app.versionName` 在所构建的提交上创建 `v` 开头的标签，标签已存在时拒绝发布。改版本号可以先运行 Bump Version。
+
+打包后会用 `apksigner` 核对安装包的签名证书。每个发布都附带应用检查更新时读取的 `update.json`，记录版本号、更新说明以及各平台安装包的地址和 SHA-256。
 
 ## 参与贡献
 

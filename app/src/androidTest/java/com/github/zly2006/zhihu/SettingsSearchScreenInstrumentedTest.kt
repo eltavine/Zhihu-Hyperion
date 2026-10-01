@@ -105,13 +105,13 @@ class SettingsSearchScreenInstrumentedTest {
 
         composeRule
             .onNodeWithTag(SETTINGS_SEARCH_INPUT_TAG)
-            .performTextInput("GitHub Token")
+            .performTextInput("GitHub 加速")
         composeRule
-            .onNodeWithTag("settingsSearch.result.system.githubToken")
+            .onNodeWithTag("settingsSearch.result.system.githubAcceleration")
             .assertIsDisplayed()
             .performClick()
         assertEquals(
-            listOf(Account.SystemAndUpdateSettings(setting = "githubToken")),
+            listOf(Account.SystemAndUpdateSettings(setting = "githubAcceleration")),
             navigator.destinations,
         )
 
@@ -131,7 +131,7 @@ class SettingsSearchScreenInstrumentedTest {
 
         assertEquals(
             listOf(
-                Account.SystemAndUpdateSettings(setting = "githubToken"),
+                Account.SystemAndUpdateSettings(setting = "githubAcceleration"),
                 Notification.NotificationSettings(setting = "systemNotifications"),
             ),
             navigator.destinations,

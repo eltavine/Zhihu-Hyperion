@@ -83,11 +83,6 @@ fun desktopSettingsStore(file: File): SettingsStore {
 
         override fun contains(key: String) = properties.containsKey(key)
 
-        override fun removeByPrefix(prefix: String) {
-            properties.stringPropertyNames().filter { it.startsWith(prefix) }.forEach(properties::remove)
-            propertiesFile.save()
-        }
-
         private fun write(key: String, value: String) {
             properties.setProperty(key, value)
             propertiesFile.save()

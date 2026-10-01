@@ -22,6 +22,9 @@ import android.os.Bundle
 import com.github.zly2006.zhihu.data.AccountData
 import com.github.zly2006.zhihu.data.Person
 import com.github.zly2006.zhihu.platform.PREFERENCE_NAME
+import com.github.zly2006.zhihu.update.GitHubAcceleration
+import com.github.zly2006.zhihu.update.UpdateController
+import org.koin.mp.KoinPlatform
 
 object InstrumentedTestEnvironment {
     const val DATA_MODE_ARG = "zhpp_data_mode"
@@ -50,6 +53,8 @@ object InstrumentedTestEnvironment {
             .clear()
             .putLong("last_main_launch_timestamp", System.currentTimeMillis())
             .commit()
+        // The app shell asks about GitHub acceleration until it is answered, which would cover the UI under test.
+        KoinPlatform.getKoin().get<UpdateController>().setAcceleration(GitHubAcceleration.DISABLED)
 
         when (currentDataMode) {
             DataMode.MOCK -> {

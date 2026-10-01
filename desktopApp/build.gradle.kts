@@ -1,4 +1,6 @@
 import com.github.zly2006.zhihu.buildlogic.alignComposeMaterial3
+import com.github.zly2006.zhihu.buildlogic.appVersionCode
+import com.github.zly2006.zhihu.buildlogic.gitShortHash
 import com.github.zly2006.zhihu.buildlogic.javafx
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
@@ -17,6 +19,25 @@ plugins {
 
 kotlin {
     jvmToolchain(17)
+}
+
+// The desktop build reads its own identity from this resource; jpackage launchers and the uber jar cannot pass
+// version metadata any other way that `run`, packaged apps and `java -jar` all see.
+val writeBuildInfo =
+    tasks.register<WriteProperties>("writeBuildInfo") {
+        destinationFile = layout.buildDirectory.file("generated/buildInfo/zhihu-build.properties")
+        property("versionName", appVersionName)
+        property("versionCode", appVersionCode())
+        property("commit", gitShortHash())
+    }
+sourceSets.main {
+    resources.srcDir(
+        writeBuildInfo.map {
+            it.destinationFile
+                .get()
+                .asFile.parentFile
+        },
+    )
 }
 
 alignComposeMaterial3()
