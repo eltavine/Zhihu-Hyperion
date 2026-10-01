@@ -26,6 +26,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -68,6 +69,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -91,6 +94,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.ContentScale
@@ -109,6 +113,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -144,7 +149,10 @@ import com.github.zly2006.zhihu.reading.loadReadingPreferences
 import com.github.zly2006.zhihu.reading.saveReadingPreferences
 import com.github.zly2006.zhihu.theme.PREF_FONT_SIZE
 import com.github.zly2006.zhihu.theme.PREF_LINE_HEIGHT
+import com.github.zly2006.zhihu.ui.components.ActionToggleButton
 import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
+import com.github.zly2006.zhihu.ui.components.EmptyState
+import com.github.zly2006.zhihu.ui.components.EmptyStateAction
 import com.github.zly2006.zhihu.ui.components.PageTurnFab
 import com.github.zly2006.zhihu.ui.components.pageTurnContentEndMarker
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
@@ -553,8 +561,6 @@ fun CommentScreen(
     }
     val commentBackgroundColor = MaterialTheme.colorScheme.surfaceContainerLow
     val commentInputBarColor = MaterialTheme.colorScheme.surfaceContainer
-    val actionChipColor = MaterialTheme.colorScheme.surfaceContainerHigh
-    val actionChipIconColor = MaterialTheme.colorScheme.onSurfaceVariant
 
     commentPendingDeletion?.let { target ->
         AlertDialog(
@@ -700,14 +706,18 @@ fun CommentScreen(
 
                         viewModel.errorMessage != null && viewModel.allData.isEmpty() -> {
                             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                Text(viewModel.errorMessage!!, color = MaterialTheme.colorScheme.error)
+                                EmptyState(
+                                    icon = AppIcons.Error,
+                                    title = viewModel.errorMessage!!,
+                                    action = EmptyStateAction("重试", AppIcons.Refresh) { viewModel.refresh(paginationEnvironment) },
+                                )
                             }
                         }
 
                         activeCommentItem == null && viewModel.allData.isEmpty() -> {
                             // activeCommentItem != null 的空态在下面的 LazyColumn 中处理。
                             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                Text(viewModel.commentClosedMessage ?: "暂无评论")
+                                EmptyState(icon = AppIcons.Forum, title = viewModel.commentClosedMessage ?: "暂无评论")
                             }
                         }
 
@@ -796,29 +806,18 @@ fun CommentScreen(
                                                     )
                                                 }
                                             }
-                                            Button(
+                                            FilledTonalButton(
                                                 onClick = { onChildCommentClick(commentItem) },
-                                                modifier = Modifier
-                                                    .height(28.dp)
-                                                    .testTag("comment_child_button_${commentItem.item.id}"),
-                                                shape = RoundedCornerShape(50),
-                                                colors = ButtonDefaults.buttonColors(
-                                                    containerColor = actionChipColor,
-                                                    contentColor = MaterialTheme.colorScheme.onSurface,
-                                                ),
-                                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 0.dp),
+                                                modifier = Modifier.testTag("comment_child_button_${commentItem.item.id}"),
+                                                contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                                             ) {
                                                 Icon(
-                                                    AppIcons.Comment,
-                                                    contentDescription = "查看子评论",
-                                                    modifier = Modifier.size(16.dp),
-                                                    tint = actionChipIconColor,
+                                                    AppIcons.Forum,
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(ButtonDefaults.IconSize),
                                                 )
-                                                Text(
-                                                    "查看 ${commentItem.item.childCommentCount} 条子评论",
-                                                    fontSize = 12.sp,
-                                                    modifier = Modifier.padding(vertical = 1.dp, horizontal = 4.dp),
-                                                )
+                                                Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+                                                Text("查看 ${commentItem.item.childCommentCount} 条子评论")
                                             }
                                         }
                                     }
@@ -1023,32 +1022,29 @@ fun CommentScreen(
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                                        .padding(start = 16.dp, end = 4.dp),
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Icon(
                                         AppIcons.Reply,
                                         contentDescription = null,
-                                        modifier = Modifier.size(16.dp),
+                                        modifier = Modifier.size(18.dp),
                                         tint = MaterialTheme.colorScheme.onSecondaryContainer,
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
                                         text = "回复 ${replyToComment?.item?.author?.name ?: ""}",
-                                        style = MaterialTheme.typography.bodySmall,
+                                        style = MaterialTheme.typography.labelLarge,
                                         color = MaterialTheme.colorScheme.onSecondaryContainer,
                                         modifier = Modifier.weight(1f),
                                     )
                                     IconButton(
                                         onClick = { replyToComment = null },
-                                        modifier = Modifier
-                                            .size(24.dp)
-                                            .testTag(COMMENT_CANCEL_REPLY_TAG),
+                                        modifier = Modifier.testTag(COMMENT_CANCEL_REPLY_TAG),
                                     ) {
                                         Icon(
                                             AppIcons.Close,
                                             contentDescription = "取消回复",
-                                            modifier = Modifier.size(16.dp),
                                             tint = MaterialTheme.colorScheme.onSecondaryContainer,
                                         )
                                     }
@@ -1059,9 +1055,8 @@ fun CommentScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .heightIn(min = 40.dp, max = 140.dp)
-                                .padding(8.dp),
-                            verticalAlignment = Alignment.CenterVertically,
+                                .padding(horizontal = 8.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.Bottom,
                         ) {
                             IconButton(
                                 onClick = {
@@ -1076,7 +1071,7 @@ fun CommentScreen(
                                     }
                                 },
                                 modifier = Modifier
-                                    .size(40.dp)
+                                    .size(48.dp)
                                     .testTag(COMMENT_EMOJI_BUTTON_TAG),
                             ) {
                                 Icon(
@@ -1097,8 +1092,8 @@ fun CommentScreen(
                                     },
                                 )
                             }
-                            Spacer(modifier = Modifier.width(4.dp))
 
+                            val inputTextStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface)
                             BasicTextField(
                                 value = commentFieldValue,
                                 onValueChange = {
@@ -1107,13 +1102,22 @@ fun CommentScreen(
                                 },
                                 modifier = Modifier
                                     .weight(1f)
+                                    .heightIn(min = 48.dp, max = 140.dp)
                                     .focusRequester(commentInputFocusRequester)
                                     .onFocusChanged {
                                         isCommentInputFocused = it.isFocused
                                         if (it.isFocused) showEmojiPicker = false
                                     }.testTag(COMMENT_INPUT_TAG),
+                                textStyle = inputTextStyle,
+                                cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                                 decorationBox = { inner ->
-                                    Box {
+                                    Box(
+                                        modifier = Modifier
+                                            .clip(RoundedCornerShape(24.dp))
+                                            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                                        contentAlignment = Alignment.CenterStart,
+                                    ) {
                                         if (commentFieldValue.text.isEmpty()) {
                                             Text(
                                                 if (replyToComment != null) {
@@ -1121,42 +1125,27 @@ fun CommentScreen(
                                                 } else {
                                                     "写下你的评论..."
                                                 },
-                                                fontSize = 16.sp,
+                                                style = inputTextStyle,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             )
                                         }
                                         inner()
                                     }
                                 },
-                                textStyle = TextStyle.Default.copy(
-                                    fontSize = 16.sp,
-                                    lineHeight = 18.sp,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                ),
                             )
 
-                            IconButton(
+                            Spacer(modifier = Modifier.width(8.dp))
+                            FilledIconButton(
                                 onClick = { submitComment() },
                                 modifier = Modifier
-                                    .size(24.dp)
+                                    .size(48.dp)
                                     .testTag(COMMENT_SEND_BUTTON_TAG),
                                 enabled = !isSending && commentFieldValue.text.isNotBlank(),
                             ) {
                                 if (isSending) {
-                                    CircularProgressIndicator(
-                                        modifier = Modifier.size(16.dp),
-                                        strokeWidth = 2.dp,
-                                        color = MaterialTheme.colorScheme.primary,
-                                    )
+                                    AppLoadingIndicator(modifier = Modifier.size(28.dp))
                                 } else {
-                                    Icon(
-                                        AppIcons.Send,
-                                        contentDescription = "发送评论",
-                                        tint = if (commentFieldValue.text.isNotBlank()) {
-                                            MaterialTheme.colorScheme.primary
-                                        } else {
-                                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                                        },
-                                    )
+                                    Icon(AppIcons.Send, contentDescription = "发送评论")
                                 }
                             }
                         }
@@ -1273,12 +1262,12 @@ private fun CommentItem(
                 model = commentData.author.avatarUrl,
                 contentDescription = "头像",
                 modifier = Modifier
-                    .size(36.dp)
+                    .size(40.dp)
                     .clip(CircleShape)
                     .clickable { navigator.onNavigate(authorPerson) },
                 contentScale = ContentScale.Crop,
             )
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(12.dp))
             Column(
                 verticalArrangement = Arrangement.Top,
                 modifier = Modifier,
@@ -1289,8 +1278,7 @@ private fun CommentItem(
                     // 作者名
                     Text(
                         text = commentData.author.name,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
+                        style = MaterialTheme.typography.titleSmall,
                         modifier = Modifier
                             .testTag("comment_author_${commentData.id}")
                             .clickable { navigator.onNavigate(authorPerson) },
@@ -1312,14 +1300,13 @@ private fun CommentItem(
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             "回复",
-                            fontSize = 14.sp,
+                            style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = replyToAuthor.name,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
+                            style = MaterialTheme.typography.titleSmall,
                             modifier = Modifier
                                 .testTag("comment_reply_to_author_${commentData.id}")
                                 .clickable {
@@ -1392,52 +1379,69 @@ private fun CommentItem(
             }
         }
 
-        // 底部信息栏
-        FlowRow(
+        // 底部信息栏：时间与 IP 属地在左，回复、点赞和更多操作在右。
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 44.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+                .padding(start = 52.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            // 时间
             val formattedTime = remember(commentData.createdTime) {
                 formatCommentTime(commentData.createdTime)
             }
-
-            Text(
-                text = formattedTime,
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-
             val ipInfo = comment.item.commentTag
                 .firstOrNull {
                     it.type == "ip_info"
                 }?.text
-            if (ipInfo != null) {
-                Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = listOfNotNull(formattedTime, ipInfo).joinToString(" · "),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f),
+            )
 
-                Text(
-                    text = ipInfo,
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+            TextButton(
+                onClick = { onChildCommentClick(comment) },
+                modifier = Modifier.testTag("comment_reply_button_${commentData.id}"),
+                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onSurfaceVariant),
+                contentPadding = ButtonDefaults.TextButtonWithIconContentPadding,
+            ) {
+                Icon(AppIcons.Comment, contentDescription = "回复", modifier = Modifier.size(ButtonDefaults.IconSize))
+                if (comment.item.childCommentCount > 0) {
+                    Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+                    Text(
+                        text = comment.item.childCommentCount.toString(),
+                        modifier = Modifier.testTag("comment_reply_count_${commentData.id}"),
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.weight(1f))
+            ActionToggleButton(
+                checked = isLiked,
+                onCheckedChange = { toggleLike() },
+                icon = {
+                    Icon(
+                        if (isLiked) AppIcons.ThumbUpFilled else AppIcons.ThumbUp,
+                        contentDescription = "点赞",
+                        modifier = Modifier.size(ButtonDefaults.IconSize),
+                    )
+                },
+                label = likeCount.toString(),
+                enabled = !isLikeLoading,
+                modifier = Modifier.testTag("comment_like_button_${commentData.id}"),
+            )
 
             if (onDelete != null) {
                 Box {
                     IconButton(
                         onClick = { showMoreMenu = true },
-                        modifier = Modifier
-                            .size(24.dp)
-                            .testTag("comment_more_button_${commentData.id}"),
+                        modifier = Modifier.testTag("comment_more_button_${commentData.id}"),
                     ) {
                         Icon(
                             AppIcons.MoreVert,
                             contentDescription = "更多操作",
-                            modifier = Modifier.size(16.dp),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
@@ -1462,76 +1466,6 @@ private fun CommentItem(
                         )
                     }
                 }
-                Spacer(modifier = Modifier.width(8.dp))
-            }
-
-            // 回复按钮
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .testTag("comment_reply_button_${commentData.id}")
-                    .clickable { onChildCommentClick(comment) },
-            ) {
-                Spacer(modifier = Modifier.width(4.dp))
-                Column(
-                    modifier = Modifier.height(24.dp),
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Icon(
-                        AppIcons.Comment,
-                        contentDescription = "回复",
-                        modifier = Modifier.size(16.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-                Spacer(modifier = Modifier.width(4.dp))
-                if (comment.item.childCommentCount > 0) {
-                    Text(
-                        text = comment.item.childCommentCount.toString(),
-                        modifier = Modifier.testTag("comment_reply_count_${commentData.id}"),
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                }
-            }
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            // 点赞
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .testTag("comment_like_button_${commentData.id}")
-                    .clickable(enabled = !isLikeLoading) { toggleLike() },
-            ) {
-                Spacer(modifier = Modifier.width(4.dp))
-                Icon(
-                    if (isLiked) {
-                        AppIcons.ThumbUpFilled
-                    } else {
-                        AppIcons.ThumbUp
-                    },
-                    contentDescription = "点赞",
-                    modifier = Modifier.size(16.dp),
-                    tint = if (isLiked) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    },
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = likeCount.toString(),
-                    modifier = Modifier.testTag("comment_like_count_${commentData.id}"),
-                    fontSize = 12.sp,
-                    color = if (isLiked) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    },
-                )
-                Spacer(modifier = Modifier.width(4.dp))
             }
         }
     }
@@ -1649,20 +1583,15 @@ fun AnnotatedString.Builder.dfsSimple(
 }
 
 @Composable
-fun AuthorTag(authorTag: String) {
-    Box(
-        modifier = Modifier
-            .border(
-                width = 0.5.dp,
-                color = Color.Gray,
-                shape = RoundedCornerShape(3.dp),
-            ).padding(horizontal = 3.dp),
+private fun AuthorTag(authorTag: String) {
+    Surface(
+        shape = MaterialTheme.shapes.extraSmall,
+        color = MaterialTheme.colorScheme.secondaryContainer,
     ) {
         Text(
             text = authorTag,
-            fontSize = 12.sp,
-            lineHeight = 12.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.labelSmall,
+            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
         )
     }
 }

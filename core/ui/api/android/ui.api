@@ -116,6 +116,11 @@ public final class com/github/zly2006/zhihu/ui/components/BlockedFeedAuthor {
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/github/zly2006/zhihu/ui/components/BottomFloatingToolbarKt {
+	public static final fun ActionToggleButton-SxpAMN0 (ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/Modifier;Ljava/lang/String;ZJJLandroidx/compose/runtime/Composer;II)V
+	public static final fun BottomFloatingToolbar (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class com/github/zly2006/zhihu/ui/components/ChoiceButtonGroupKt {
 	public static final fun ChoiceButtonGroup (Ljava/util/List;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;II)V
 }
