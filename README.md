@@ -37,7 +37,7 @@ Zhihu-Hyperion 是一个第三方知乎客户端。它把广告、推广软文�
 
 ## 下载
 
-前往 [Releases](https://github.com/eltavine/Zhihu-Hyperion/releases) 下载正式版，或下载每次合入主分支后自动构建的 [开发版](https://github.com/eltavine/Zhihu-Hyperion/releases/tag/nightly)。
+前往 [Releases](https://github.com/eltavine/Zhihu-Hyperion/releases) 下载正式版，或下载每次合入主分支后自动构建的 [开发版](https://github.com/eltavine/Zhihu-Hyperion/releases/tag/nightly)。应用会自动检查更新，在“系统与更新”中打开“检查 Nightly 版本更新”即可改为跟随开发版。
 
 **Android** 提供两个版本，包名与 Zhihu++ 不同，可以和它同时安装：
 
@@ -129,7 +129,7 @@ Zhihu-Hyperion 是一个第三方知乎客户端。它把广告、推广软文�
 - 应用不含任何遥测、使用统计或第三方统计与广告 SDK。
 - 账号凭据、浏览历史、屏蔽规则和本地推荐数据都只保存在本机；WebDAV 备份只发往你自己配置的服务器。
 - 除知乎外，应用只会在以下场景访问其他服务：
-  - 检查更新：GitHub。
+  - 检查更新：GitHub。首次启动时会询问是否改经第三方加速服务 gh-proxy.com 访问，之后可在“系统与更新”中随时更改。
   - AIGC 标记与崩溃日志上报：默认关闭，开启后连接 AIGC 标记服务（aigc-vote.ai.fintechedu.cn）。
   - 按需下载：数学公式字体（npmmirror 与 CTAN 镜像），以及 Full 版的语义模型（Hugging Face）。
 
@@ -144,7 +144,7 @@ Zhihu-Hyperion 是一个第三方知乎客户端。它把广告、推广软文�
 ./gradlew :macosApp:packageReleaseMacosApp  # 打包 macOS 原生应用，需要 Apple Silicon
 ```
 
-项目按 Kotlin Multiplatform 分层：`core` 模块提供数据、网络、数据库与基础界面，`feature` 模块承载独立功能（如编辑器和视频页），`shared` 组装各页面，`app`、`desktopApp` 和 `macosApp` 分别是 Android、桌面与 macOS 的应用入口。
+项目按 Kotlin Multiplatform 分层：`core` 模块提供数据、网络、数据库与基础界面，`feature` 模块承载独立功能（如编辑器、视频页和更新检查），`shared` 组装各页面，`app`、`desktopApp` 和 `macosApp` 分别是 Android、桌面与 macOS 的应用入口。
 
 `versionCode` 等于 `gradle.properties` 中的 `app.versionCodeOffset` 加上 HEAD 的提交数，每次构建都比上一次大，应用的更新检查只比较它，因此构建需要完整的 git 历史，浅克隆会直接失败。
 

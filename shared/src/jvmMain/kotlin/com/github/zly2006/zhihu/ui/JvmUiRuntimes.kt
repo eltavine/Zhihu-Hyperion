@@ -35,7 +35,7 @@ import com.github.zly2006.zhihu.desktop.desktopZhihuDataFile
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.platform.UserMessageSink
 import com.github.zly2006.zhihu.platform.platformName
-import com.github.zly2006.zhihu.ui.subscreens.desktopVersionName
+import com.github.zly2006.zhihu.update.InstalledBuild
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.encodeBlocklistBackup
@@ -185,7 +185,7 @@ private fun chooseBlocklistImportFile(): File? {
 }
 
 @Composable
-actual fun rememberAppVersionInfo(): String = desktopVersionName()
+actual fun rememberAppVersionInfo(): String = koinInject<InstalledBuild>().let { "${it.versionName}, ${it.commit}" }
 
 @Composable
 actual fun consumePendingCommentId(content: com.github.zly2006.zhihu.navigation.NavDestination): String? = null

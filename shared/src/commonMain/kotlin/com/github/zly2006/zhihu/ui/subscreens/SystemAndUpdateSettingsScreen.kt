@@ -34,8 +34,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowOutward
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,6 +45,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -68,8 +67,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -84,6 +81,13 @@ import com.github.zly2006.zhihu.ui.components.SettingItemGroup
 import com.github.zly2006.zhihu.ui.components.SettingItemWithSwitch
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
+import com.github.zly2006.zhihu.update.AvailableUpdate
+import com.github.zly2006.zhihu.update.CHECK_NIGHTLY_UPDATES_PREFERENCE_KEY
+import com.github.zly2006.zhihu.update.GITHUB_ACCELERATION_PREFERENCE_KEY
+import com.github.zly2006.zhihu.update.GitHubAcceleration
+import com.github.zly2006.zhihu.update.UpdateController
+import com.github.zly2006.zhihu.update.UpdateState
+import com.github.zly2006.zhihu.update.isInAppUpdateInstallSupported
 import com.github.zly2006.zhihu.util.ContinuousUsageReminderPolicy
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -99,9 +103,9 @@ const val SYSTEM_SETTINGS_AIGC_MARKING_TAG = "system_settings_aigc_marking"
 /**
  * 系统、更新和外部服务设置页。
  *
- * 页面展示更新横幅、下载/安装/跳过版本操作、GitHub Token、Nightly、防沉迷提醒和社区链接。
- * 更新相关状态与动作由细粒度平台能力提供，防沉迷间隔写入 [CONTINUOUS_USAGE_REMINDER_INTERVAL_MINUTES_KEY]，
- * 改动时要同时考虑 Android 更新管理器和 Desktop 运行时。
+ * 页面展示更新横幅、下载/安装/跳过版本操作、Nightly 与 GitHub 加速开关、防沉迷提醒和社区链接。
+ * 更新状态与动作来自 [UpdateController]；只有 Android 能在应用内下载安装，其他平台在浏览器中打开下载地址。
+ * 防沉迷间隔写入 [CONTINUOUS_USAGE_REMINDER_INTERVAL_MINUTES_KEY]。
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,11 +113,7 @@ fun SystemAndUpdateSettingsScreen(
     setting: String? = null,
 ) {
     val settings = koinInject<SettingsStore>()
-    val updateStateFlow = rememberSystemUpdateState()
-    val checkForUpdate = rememberSystemUpdateChecker()
-    val skipUpdateVersion = rememberSystemUpdateVersionSkipper()
-    val downloadUpdate = rememberSystemUpdateDownloader()
-    val installDownloadedUpdate = rememberDownloadedSystemUpdateInstaller()
+    val updateController = koinInject<UpdateController>()
     val openExternalUrl = rememberExternalUrlOpener()
     val navigator = LocalNavigator.current
     val highlightedSetting = setting.orEmpty()
@@ -155,42 +155,34 @@ fun SystemAndUpdateSettingsScreen(
                 .padding(innerPadding)
                 .padding(vertical = 16.dp),
         ) {
-            val updateState by updateStateFlow.collectAsState()
+            val updateState by updateController.state.collectAsState()
             val coroutineScope = rememberCoroutineScope()
-            val showUpdateBanner = updateState is SystemUpdateState.UpdateAvailable ||
-                updateState is SystemUpdateState.Downloading ||
-                updateState is SystemUpdateState.Downloaded
-
-            var updateVersion: String by remember { mutableStateOf("") }
-            var releaseNotes: String? by remember { mutableStateOf(null) }
-            LaunchedEffect(updateState) {
-                val state = updateState
-                if (state is SystemUpdateState.UpdateAvailable) {
-                    updateVersion = state.version
-                    releaseNotes = state.releaseNotes
-                }
+            val shownUpdate = when (val state = updateState) {
+                is UpdateState.Available -> state.update
+                is UpdateState.Downloading -> state.update
+                is UpdateState.Downloaded -> state.update
+                else -> null
+            }
+            // The banner's exit animation still needs the update it was showing.
+            var lastShownUpdate by remember { mutableStateOf<AvailableUpdate?>(null) }
+            LaunchedEffect(shownUpdate) {
+                if (shownUpdate != null) lastShownUpdate = shownUpdate
             }
 
-            AnimatedVisibility(visible = showUpdateBanner) {
+            AnimatedVisibility(visible = shownUpdate != null) {
+                val update = shownUpdate ?: lastShownUpdate ?: return@AnimatedVisibility
                 Surface(
                     color = MaterialTheme.colorScheme.surfaceBright,
                     shape = MaterialTheme.shapes.large,
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 16.dp),
                 ) {
                     Column(modifier = Modifier.padding(16.dp, 12.dp)) {
-                        if (updateVersion.isNotEmpty()) {
-                            Text(
-                                text = "新版本：\n$updateVersion",
-                                style = MaterialTheme.typography.titleLarge,
-                            )
-                        } else {
-                            Text(
-                                text = "检测到新版本",
-                                style = MaterialTheme.typography.titleLarge,
-                            )
-                        }
+                        Text(
+                            text = "新版本：\n${update.displayVersion}",
+                            style = MaterialTheme.typography.titleLarge,
+                        )
 
-                        if (releaseNotes != null) {
+                        if (update.notes.isNotBlank()) {
                             Spacer(modifier = Modifier.height(16.dp))
                             Surface(
                                 color = MaterialTheme.colorScheme.surfaceContainer,
@@ -209,8 +201,8 @@ fun SystemAndUpdateSettingsScreen(
                                             buildAnnotatedString {
                                                 val prRegex = Regex("https://github.com/eltavine/Zhihu-Hyperion/pull/(\\d+)")
                                                 var lastIndex = 0
-                                                prRegex.findAll(releaseNotes!!).forEach { matchResult ->
-                                                    append(releaseNotes!!.substring(lastIndex, matchResult.range.first))
+                                                prRegex.findAll(update.notes).forEach { matchResult ->
+                                                    append(update.notes.substring(lastIndex, matchResult.range.first))
                                                     val prNumber = matchResult.groupValues[1]
                                                     withLink(LinkAnnotation.Url("https://github.com/eltavine/Zhihu-Hyperion/pull/$prNumber")) {
                                                         withStyle(
@@ -223,7 +215,7 @@ fun SystemAndUpdateSettingsScreen(
                                                     }
                                                     lastIndex = matchResult.range.last + 1
                                                 }
-                                                append(releaseNotes!!.substring(lastIndex))
+                                                append(update.notes.substring(lastIndex))
                                             },
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -231,7 +223,7 @@ fun SystemAndUpdateSettingsScreen(
                                     }
                                     Spacer(modifier = Modifier.height(12.dp))
                                     TextButton(
-                                        onClick = { openExternalUrl("https://github.com/eltavine/Zhihu-Hyperion/releases") },
+                                        onClick = { openExternalUrl(update.releaseUrl) },
                                         modifier = Modifier.align(Alignment.End),
                                     ) {
                                         Text("查看完整更新日志")
@@ -251,49 +243,34 @@ fun SystemAndUpdateSettingsScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(16.dp),
                         ) {
-                            androidx.compose.material3.OutlinedButton(
-                                onClick = {
-                                    val state = updateState
-                                    if (state is SystemUpdateState.UpdateAvailable) {
-                                        skipUpdateVersion.skip(state.version)
-                                    }
-                                },
+                            val downloading = updateState is UpdateState.Downloading
+                            OutlinedButton(
+                                onClick = { updateController.skip(update) },
                                 modifier = Modifier.weight(1f),
-                                enabled = updateState !is SystemUpdateState.Downloaded || isApkUpdateInstallSupported,
+                                enabled = !downloading,
                             ) {
                                 Text("跳过此版本", Modifier.padding(0.dp, 4.dp))
                             }
 
+                            val asset = update.asset
                             Button(
                                 onClick = {
-                                    coroutineScope.launch {
-                                        when (val state = updateState) {
-                                            is SystemUpdateState.UpdateAvailable -> {
-                                                downloadUpdate.download(state.downloadUrl)
-                                            }
-
-                                            is SystemUpdateState.Downloaded -> {
-                                                installDownloadedUpdate.install()
-                                            }
-
-                                            else -> {}
-                                        }
+                                    when {
+                                        asset == null -> openExternalUrl(update.releaseUrl)
+                                        !isInAppUpdateInstallSupported -> openExternalUrl(asset.url)
+                                        updateState is UpdateState.Downloaded -> updateController.install()
+                                        else -> coroutineScope.launch { updateController.download(update) }
                                     }
                                 },
                                 modifier = Modifier.weight(1f),
+                                enabled = !downloading,
                             ) {
                                 Text(
-                                    when (updateState) {
-                                        is SystemUpdateState.UpdateAvailable -> "下载更新"
-
-                                        is SystemUpdateState.Downloading -> "下载中..."
-
-                                        is SystemUpdateState.Downloaded -> if (isApkUpdateInstallSupported) {
-                                            "安装更新"
-                                        } else {
-                                            "暂不支持安装 APK 更新"
-                                        }
-
+                                    when {
+                                        asset == null -> "前往发布页"
+                                        !isInAppUpdateInstallSupported -> "前往下载"
+                                        downloading -> "下载中..."
+                                        updateState is UpdateState.Downloaded -> "安装更新"
                                         else -> "下载更新"
                                     },
                                     Modifier.padding(0.dp, 4.dp),
@@ -304,40 +281,17 @@ fun SystemAndUpdateSettingsScreen(
                 }
             }
 
-            // GitHub Token。
-            var githubToken by remember { mutableStateOf(settings.getString("githubToken", "")) }
-            var showGithubToken by remember { mutableStateOf(false) }
-
             SettingItemGroup {
-                SettingItem(
-                    title = { Text("GitHub Token") },
-                    description = {
-                        Text(
-                            "用于访问 GitHub API 时解除限速，提高更新检查的稳定性。留空则使用匿名访问，检查更新可能会失败。",
-                        )
+                val acceleration by updateController.acceleration.collectAsState()
+                SettingItemWithSwitch(
+                    title = { Text("GitHub 加速") },
+                    description = { Text("通过第三方加速服务 gh-proxy.com 检查和下载更新，适合直连 GitHub 很慢或失败的网络") },
+                    checked = acceleration == GitHubAcceleration.ENABLED,
+                    onCheckedChange = {
+                        updateController.setAcceleration(if (it) GitHubAcceleration.ENABLED else GitHubAcceleration.DISABLED)
                     },
-                    settingKey = "githubToken",
+                    settingKey = GITHUB_ACCELERATION_PREFERENCE_KEY,
                     highlightedKey = highlightedSetting,
-                    bottomAction = {
-                        OutlinedTextField(
-                            value = githubToken,
-                            onValueChange = {
-                                githubToken = it
-                                settings.putString("githubToken", it)
-                            },
-                            visualTransformation = if (showGithubToken) VisualTransformation.None else PasswordVisualTransformation(),
-                            trailingIcon = {
-                                IconButton(onClick = { showGithubToken = !showGithubToken }) {
-                                    Icon(
-                                        imageVector = if (showGithubToken) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                                        contentDescription = null,
-                                    )
-                                }
-                            },
-                            modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-                            singleLine = true,
-                        )
-                    },
                 )
 
                 if (platformName == "macOS") {
@@ -357,16 +311,16 @@ fun SystemAndUpdateSettingsScreen(
                     )
                 }
 
-                var checkNightlyUpdates by remember { mutableStateOf(settings.getBoolean("checkNightlyUpdates", false)) }
+                var checkNightlyUpdates by remember { mutableStateOf(settings.getBoolean(CHECK_NIGHTLY_UPDATES_PREFERENCE_KEY, false)) }
                 SettingItemWithSwitch(
                     title = { Text("检查 Nightly 版本更新") },
                     description = { Text("检查每日构建版本 (可能不稳定)") },
                     checked = checkNightlyUpdates,
                     onCheckedChange = {
                         checkNightlyUpdates = it
-                        settings.putBoolean("checkNightlyUpdates", it)
+                        settings.putBoolean(CHECK_NIGHTLY_UPDATES_PREFERENCE_KEY, it)
                     },
-                    settingKey = "checkNightlyUpdates",
+                    settingKey = CHECK_NIGHTLY_UPDATES_PREFERENCE_KEY,
                     highlightedKey = highlightedSetting,
                 )
 
@@ -391,35 +345,25 @@ fun SystemAndUpdateSettingsScreen(
                 )
             }
 
-            AnimatedVisibility(visible = !showUpdateBanner) {
+            AnimatedVisibility(visible = shownUpdate == null) {
                 Button(
                     onClick = {
                         coroutineScope.launch {
-                            when (updateState) {
-                                is SystemUpdateState.NoUpdate, is SystemUpdateState.Error -> {
-                                    checkForUpdate.check()
-                                    if (updateStateFlow.value is SystemUpdateState.UpdateAvailable) {
-                                        scrollState.animateScrollTo(0)
-                                    }
-                                }
-
-                                SystemUpdateState.Latest -> {
-                                    resetSystemUpdateState()
-                                }
-
-                                else -> { /* NOOP */ }
+                            updateController.checkNow()
+                            if (updateController.state.value is UpdateState.Available) {
+                                scrollState.animateScrollTo(0)
                             }
                         }
                     },
+                    enabled = updateState != UpdateState.Checking,
                     modifier = Modifier.fillMaxWidth().padding(16.dp, 0.dp, 16.dp, 16.dp),
                 ) {
                     Text(
                         when (updateState) {
-                            is SystemUpdateState.NoUpdate -> "检查更新"
-                            is SystemUpdateState.Checking -> "检查中..."
-                            is SystemUpdateState.Latest -> "已经是最新版本"
-                            is SystemUpdateState.Error -> "检查更新失败，点击重试"
-                            else -> ""
+                            UpdateState.Checking -> "检查中..."
+                            UpdateState.UpToDate -> "已经是最新版本，点击重新检查"
+                            is UpdateState.Failed -> "检查更新失败，点击重试"
+                            else -> "检查更新"
                         },
                         Modifier.padding(0.dp, 4.dp),
                     )

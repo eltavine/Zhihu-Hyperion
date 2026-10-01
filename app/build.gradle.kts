@@ -193,4 +193,5 @@ dependencies {
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.ktor.client.mock)
     androidTestImplementation(projects.markdownRenderer)
+    androidTestImplementation(projects.feature.update)
 }

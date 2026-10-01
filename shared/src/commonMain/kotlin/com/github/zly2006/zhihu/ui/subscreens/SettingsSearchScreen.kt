@@ -74,6 +74,8 @@ import com.github.zly2006.zhihu.ui.components.SettingItem
 import com.github.zly2006.zhihu.ui.components.SettingItemGroup
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
+import com.github.zly2006.zhihu.update.CHECK_NIGHTLY_UPDATES_PREFERENCE_KEY
+import com.github.zly2006.zhihu.update.GITHUB_ACCELERATION_PREFERENCE_KEY
 import org.koin.compose.koinInject
 
 const val SETTINGS_SEARCH_INPUT_TAG = "settingsSearch.input"
@@ -262,8 +264,8 @@ private val settingsSearchEntries = buildList {
         ),
     )
 
-    add(systemEntry("system.githubToken", "GitHub Token", "配置更新检查时使用的 GitHub API 令牌。", "githubToken", listOf("限速", "更新检查", "令牌")))
-    add(systemEntry("system.checkNightlyUpdates", "检查 Nightly 版本更新", "检查每日构建版本。", "checkNightlyUpdates", listOf("每日构建")))
+    add(systemEntry("system.githubAcceleration", "GitHub 加速", "通过 gh-proxy.com 检查和下载更新。", GITHUB_ACCELERATION_PREFERENCE_KEY, listOf("gh-proxy", "代理", "更新检查")))
+    add(systemEntry("system.checkNightlyUpdates", "检查 Nightly 版本更新", "检查每日构建版本。", CHECK_NIGHTLY_UPDATES_PREFERENCE_KEY, listOf("每日构建")))
     add(systemEntry("system.aigcMarking", "启用 AIGC 标记", "开启后可查看其他用户对内容是否疑似 AIGC 的标记。", AIGC_MARKING_ENABLED_PREFERENCE_KEY, listOf("AI", "AIGC")))
     add(systemEntry("system.reminder", "防沉迷提醒", "设置连续使用提醒的间隔。", CONTINUOUS_USAGE_REMINDER_INTERVAL_MINUTES_KEY, listOf("连续使用", "休息提醒")))
     add(

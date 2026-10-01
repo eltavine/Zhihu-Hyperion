@@ -100,11 +100,11 @@ import com.github.zly2006.zhihu.ui.components.SettingItemGroup
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.ui.subscreens.BOTTOM_BAR_ITEMS_PREFERENCE_KEY
-import com.github.zly2006.zhihu.ui.subscreens.SystemUpdateState
 import com.github.zly2006.zhihu.ui.subscreens.defaultBottomBarSelectionKeys
 import com.github.zly2006.zhihu.ui.subscreens.normalizeBottomBarSelection
-import com.github.zly2006.zhihu.ui.subscreens.rememberSystemUpdateState
 import com.github.zly2006.zhihu.ui.subscreens.shouldShowAccountHistoryShortcut
+import com.github.zly2006.zhihu.update.UpdateController
+import com.github.zly2006.zhihu.update.UpdateState
 import com.github.zly2006.zhihu.util.Log
 import kotlinx.coroutines.CancellationException
 import org.jetbrains.compose.resources.painterResource
@@ -160,7 +160,7 @@ fun AccountSettingScreen(
     val copyPlainText = rememberPlainTextClipboard()
     val openSystemUrl = rememberSystemUrlOpener()
     val userMessages = rememberUserMessageSink()
-    val systemUpdateState = rememberSystemUpdateState()
+    val updateController = koinInject<UpdateController>()
     val versionInfo = rememberAppVersionInfo()
     val readingPlayerSupported = isReadingPlayerSupported
     val launchQrScanner = rememberAccountQrScanAction()
@@ -541,15 +541,18 @@ fun AccountSettingScreen(
                 }
             }
 
-            val updateState by systemUpdateState.collectAsState()
+            val updateState by updateController.state.collectAsState()
             LaunchedEffect(updateState) {
-                if (updateState is SystemUpdateState.UpdateAvailable) {
-                    val state = updateState as SystemUpdateState.UpdateAvailable
-                    val versionType = if (state.isNightly) "Nightly版本" else "正式版本"
-                    userMessages.showShortMessage("发现新$versionType ${state.version}")
-                }
-                if (updateState is SystemUpdateState.Error) {
-                    userMessages.showLongMessage("检查更新失败: ${(updateState as SystemUpdateState.Error).message}")
+                when (val state = updateState) {
+                    is UpdateState.Available -> {
+                        userMessages.showShortMessage("发现新版本 ${state.update.displayVersion}")
+                    }
+
+                    is UpdateState.Failed -> {
+                        userMessages.showLongMessage("检查更新失败: ${state.message}")
+                    }
+
+                    else -> {}
                 }
             }
 

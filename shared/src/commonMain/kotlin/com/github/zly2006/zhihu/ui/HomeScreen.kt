@@ -138,8 +138,8 @@ import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.ui.components.feedKeywordExtractionAvailable
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
-import com.github.zly2006.zhihu.ui.subscreens.SystemUpdateState
-import com.github.zly2006.zhihu.ui.subscreens.rememberSystemUpdateState
+import com.github.zly2006.zhihu.update.UpdateController
+import com.github.zly2006.zhihu.update.UpdateState
 import com.github.zly2006.zhihu.util.json
 import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
 import com.github.zly2006.zhihu.viewmodel.feed.AUTO_REFRESH_HOME_ON_STARTUP_PREFERENCE_KEY
@@ -182,7 +182,7 @@ const val HOME_REFRESH_BUTTON_TAG = "home_refresh_button"
 // Pager can dispose this page while its feed ViewModels survive. Keep the header rows alive too,
 // so restoring a saved list index does not shift the visible card.
 private class HomeScreenState : ViewModel() {
-    val dismissedUpdateVersion = mutableStateOf<String?>(null)
+    val dismissedUpdateVersionCode = mutableStateOf<Int?>(null)
 }
 
 /**
@@ -248,8 +248,8 @@ fun HomeScreen(
             },
         )
     }
-    val updateState by rememberSystemUpdateState().collectAsState()
-    val updateAnnouncement = updateState as? SystemUpdateState.UpdateAvailable
+    val updateState by koinInject<UpdateController>().state.collectAsState()
+    val updateAnnouncement = (updateState as? UpdateState.Available)?.update
     val isDebuggable = rememberHomeIsDebuggable()
     val viewModel: BaseFeedViewModel = when (currentRecommendationMode) {
         RecommendationMode.WEB -> viewModel { HomeFeedViewModel(settings, homeFeedFilter) }
@@ -276,7 +276,7 @@ fun HomeScreen(
         items = viewModel.displayItems,
     )
 
-    var dismissedUpdateVersion by homeState.dismissedUpdateVersion
+    var dismissedUpdateVersionCode by homeState.dismissedUpdateVersionCode
 
     val listState = rememberLazyListState()
     var cachedScrollToTopTrigger by remember { mutableIntStateOf(scrollToTopTrigger) }
@@ -648,8 +648,8 @@ fun HomeScreen(
                             val availableUpdate = updateAnnouncement
 
                             AnnouncementCard(
-                                visible = availableUpdate != null && dismissedUpdateVersion != availableUpdate.version,
-                                title = "发现新版本：${availableUpdate?.version}${if (availableUpdate?.isNightly == true) " (Nightly)" else ""}",
+                                visible = availableUpdate != null && dismissedUpdateVersionCode != availableUpdate.versionCode,
+                                title = "发现新版本：${availableUpdate?.displayVersion}",
                                 leadingIcon = { Icon(Icons.Default.ArrowCircleUp, contentDescription = null) },
                                 accept = { Text("查看更新") },
                                 onAccept = {
@@ -657,9 +657,7 @@ fun HomeScreen(
                                 },
                                 dismiss = { Text("以后") },
                                 onDismiss = {
-                                    availableUpdate?.version?.let { versionStr ->
-                                        dismissedUpdateVersion = versionStr
-                                    }
+                                    dismissedUpdateVersionCode = availableUpdate?.versionCode
                                 },
                                 colors = AnnouncementCardDefaults.colorsImportant(),
                             )
