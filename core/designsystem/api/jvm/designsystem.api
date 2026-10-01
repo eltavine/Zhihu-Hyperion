@@ -1,12 +1,3 @@
-public final class com/github/zly2006/zhihu/theme/ColorKt {
-	public static final fun getPink40 ()J
-	public static final fun getPink80 ()J
-	public static final fun getPurple40 ()J
-	public static final fun getPurple80 ()J
-	public static final fun getPurpleGrey40 ()J
-	public static final fun getPurpleGrey80 ()J
-}
-
 public final class com/github/zly2006/zhihu/theme/ContentTypographyPreferencesKt {
 	public static final field DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY Ljava/lang/String;
 	public static final field DUO3_TIQIAN_MATH_FONT_PREFERENCE_KEY Ljava/lang/String;
