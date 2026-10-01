@@ -22,6 +22,8 @@
     <string>zh_CN</string>
     <key>CFBundleExecutable</key>
     <string>ZhihuHyperion</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
     <key>CFBundleIdentifier</key>
     <string>com.eltavine.zhihuhyperion.macos</string>
     <key>CFBundleInfoDictionaryVersion</key>

@@ -50,7 +50,7 @@ import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.navigation.Pin
 import org.jetbrains.compose.resources.painterResource
 import zhihu.shared.generated.resources.Res
-import zhihu.shared.generated.resources.ic_launcher_foreground
+import zhihu.shared.generated.resources.app_icon
 
 internal const val LANDSCAPE_LIST_PANE_RATIO_KEY = "landscape_list_pane_ratio"
 internal const val DEFAULT_LIST_PANE_RATIO = 1f / 3f
@@ -144,7 +144,7 @@ internal fun EmptyDetailPane(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth().padding(32.dp),
         ) {
             Image(
-                painter = painterResource(Res.drawable.ic_launcher_foreground),
+                painter = painterResource(Res.drawable.app_icon),
                 contentDescription = null,
                 modifier = Modifier.size(96.dp).alpha(0.72f),
             )

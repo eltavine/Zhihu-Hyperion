@@ -110,8 +110,8 @@ import kotlinx.coroutines.CancellationException
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import zhihu.shared.generated.resources.Res
+import zhihu.shared.generated.resources.app_icon
 import zhihu.shared.generated.resources.ic_github_24dp
-import zhihu.shared.generated.resources.ic_launcher_foreground
 import zhihu.shared.generated.resources.ic_license_24dp
 
 const val ACCOUNT_SETTINGS_SCROLL_TAG = "accountSettings.scroll"
@@ -562,7 +562,7 @@ fun AccountSettingScreen(
                     description = { Text("版本号：$versionInfo") },
                     icon = {
                         Image(
-                            painterResource(Res.drawable.ic_launcher_foreground),
+                            painterResource(Res.drawable.app_icon),
                             contentDescription = null,
                             modifier = Modifier
                                 .clip(CircleShape)

@@ -30,10 +30,8 @@ import org.koin.core.context.startKoin
 import platform.AppKit.NSApplication
 import platform.AppKit.NSApplicationActivationPolicy
 import platform.AppKit.NSApplicationDelegateProtocol
-import platform.AppKit.NSImage
 import platform.AppKit.NSWindow
 import platform.AppKit.NSWindowDelegateProtocol
-import platform.Foundation.NSBundle
 import platform.darwin.NSObject
 import kotlin.experimental.ExperimentalNativeApi
 import kotlin.native.setUnhandledExceptionHook
@@ -53,10 +51,6 @@ fun main() {
         application.setActivationPolicy(NSApplicationActivationPolicy.NSApplicationActivationPolicyRegular)
         val applicationDelegate = MacosApplicationDelegate(application)
         application.delegate = applicationDelegate
-        NSBundle.mainBundle
-            .pathForResource("desktop-icon", ofType = "png")
-            ?.let { iconPath -> NSImage(contentsOfFile = iconPath) }
-            ?.let(application::setApplicationIconImage)
         Window(
             title = "Zhihu-Hyperion",
         ) {

@@ -49,7 +49,7 @@ fun Project.registerMacosAppBundle(
         from(rootProject.file("misc/emojis")) {
             into("Contents/Resources/misc/emojis")
         }
-        from(rootProject.file("desktopApp/src/main/resources/desktop-icon.png")) {
+        from("src/macosMain/resources/AppIcon.icns") {
             into("Contents/Resources")
         }
         from(layout.buildDirectory.file(ABOUT_LIBRARIES_EXPORT)) {

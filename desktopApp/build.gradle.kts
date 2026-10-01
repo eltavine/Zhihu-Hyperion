@@ -93,7 +93,7 @@ compose.desktop {
             targetFormats(TargetFormat.AppImage, TargetFormat.Msi)
             packageName = "Zhihu-Hyperion"
             packageVersion = desktopPackageVersion
-            description = "Free and ad-free third-party Zhihu client"
+            description = "Ad-free, lightweight, AI-assisted third-party Zhihu client"
             vendor = "eltavine"
 
             // jlink 裁剪内嵌运行时：默认只含 java.base/java.desktop/java.logging/jdk.crypto.ec，
