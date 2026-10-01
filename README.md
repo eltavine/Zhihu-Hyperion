@@ -147,6 +147,17 @@ Zhihu-Hyperion 是一个第三方知乎客户端。它把广告、推广软文�
 
 项目按 Kotlin Multiplatform 分层：`core` 模块提供数据、网络、数据库与基础界面，`feature` 模块承载独立功能（如编辑器和视频页），`shared` 组装各页面，`app`、`desktopApp` 和 `macosApp` 分别是 Android、桌面与 macOS 的应用入口。
 
+### 发布签名
+
+Android release 构建只在下面四个环境变量都非空时使用发布密钥签名，缺任何一项都会改用 debug 密钥，这样的安装包不能当作正式发布：
+
+- `ANDROID_KEYSTORE_PATH`：keystore 文件路径
+- `ANDROID_KEYSTORE_PASSWORD`：keystore 密码
+- `ANDROID_KEY_ALIAS`：签名密钥别名
+- `ANDROID_KEY_PASSWORD`：签名密钥密码
+
+CI 从仓库的 `android-signing` 环境读取 `ANDROID_KEYSTORE_BASE64`（keystore 文件的 Base64）和后三项，缺少任何一项都会直接失败，并在打包后用 `apksigner` 核对安装包的签名证书。
+
 ## 参与贡献
 
 欢迎提交 Issue 和 Pull Request。反馈问题时请注明 Zhihu-Hyperion 的版本号，并附上复现步骤。

@@ -15,13 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:OptIn(ExperimentalEncodingApi::class)
-
 import com.github.zly2006.zhihu.buildlogic.gitShortHash
 import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.toolchain.JavaLanguageVersion
-import kotlin.io.encoding.Base64
-import kotlin.io.encoding.ExperimentalEncodingApi
 
 plugins {
     id("zhihu.android.application")
@@ -73,16 +69,22 @@ android {
         }
     }
 
+    val releaseKeystorePath = providers.environmentVariable("ANDROID_KEYSTORE_PATH")
+    val releaseStorePassword = providers.environmentVariable("ANDROID_KEYSTORE_PASSWORD")
+    val releaseKeyAlias = providers.environmentVariable("ANDROID_KEY_ALIAS")
+    val releaseKeyPassword = providers.environmentVariable("ANDROID_KEY_PASSWORD")
+    // 四项齐全才用发布密钥；缺任何一项时 release 用 debug 密钥签名，这样的产物不能当作正式发布。
+    val hasReleaseSigning =
+        listOf(releaseKeystorePath, releaseStorePassword, releaseKeyAlias, releaseKeyPassword)
+            .all { !it.orNull.isNullOrBlank() }
+
     signingConfigs {
-        if (System.getenv("signingKey") != null) {
-            register("env") {
-                storeFile =
-                    file("zhihu.jks").apply {
-                        writeBytes(Base64.decode(System.getenv("signingKey")))
-                    }
-                storePassword = System.getenv("keyStorePassword")
-                keyAlias = System.getenv("keyAlias")
-                keyPassword = System.getenv("keyPassword")
+        if (hasReleaseSigning) {
+            create("ciRelease") {
+                storeFile = file(releaseKeystorePath.get())
+                storePassword = releaseStorePassword.get()
+                keyAlias = releaseKeyAlias.get()
+                keyPassword = releaseKeyPassword.get()
             }
         }
     }
@@ -101,9 +103,7 @@ android {
             buildConfigField("String", "GIT_HASH", "\"$gitHash\"")
             manifestPlaceholders["zhihuBuildType"] = "release"
             manifestPlaceholders["zhihuGitHash"] = gitHash
-            if (System.getenv("signingKey") != null) {
-                signingConfig = signingConfigs["env"]
-            }
+            signingConfig = signingConfigs.getByName(if (hasReleaseSigning) "ciRelease" else "debug")
         }
     }
     kotlin {
