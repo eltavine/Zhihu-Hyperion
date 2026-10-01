@@ -244,7 +244,6 @@ class ArticleExportEnvironmentInstrumentedTest {
         id = 1001L,
         author = DataHolder.Author(
             avatarUrl = "",
-            gender = 0,
             headline = "导出测试作者简介",
             id = "export-author",
             isAdvertiser = false,
@@ -271,7 +270,6 @@ class ArticleExportEnvironmentInstrumentedTest {
         answerType = "normal",
         author = DataHolder.Author(
             avatarUrl = "",
-            gender = 0,
             headline = "导出测试答主简介",
             id = "answer-export-author",
             isAdvertiser = false,

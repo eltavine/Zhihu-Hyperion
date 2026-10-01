@@ -1259,8 +1259,8 @@ public final class com/github/zly2006/zhihu/data/DataHolder$Article$Companion {
 
 public final class com/github/zly2006/zhihu/data/DataHolder$Author {
 	public static final field Companion Lcom/github/zly2006/zhihu/data/DataHolder$Author$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;ZZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;Lcom/github/zly2006/zhihu/data/DataHolder$ExposedMedal;Lcom/github/zly2006/zhihu/data/DataHolder$VipInfo;IZZZZZ)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;ZZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;Lcom/github/zly2006/zhihu/data/DataHolder$ExposedMedal;Lcom/github/zly2006/zhihu/data/DataHolder$VipInfo;IZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/data/Gender;Ljava/lang/String;Ljava/lang/String;ZZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;Lcom/github/zly2006/zhihu/data/DataHolder$ExposedMedal;Lcom/github/zly2006/zhihu/data/DataHolder$VipInfo;IZZZZZ)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/data/Gender;Ljava/lang/String;Ljava/lang/String;ZZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;Lcom/github/zly2006/zhihu/data/DataHolder$ExposedMedal;Lcom/github/zly2006/zhihu/data/DataHolder$VipInfo;IZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component10 ()Ljava/lang/String;
 	public final fun component11 ()Ljava/lang/String;
@@ -1277,15 +1277,15 @@ public final class com/github/zly2006/zhihu/data/DataHolder$Author {
 	public final fun component21 ()Z
 	public final fun component22 ()Z
 	public final fun component23 ()Z
-	public final fun component3 ()I
+	public final fun component3 ()Lcom/github/zly2006/zhihu/data/Gender;
 	public final fun component4 ()Ljava/lang/String;
 	public final fun component5 ()Ljava/lang/String;
 	public final fun component6 ()Z
 	public final fun component7 ()Z
 	public final fun component8 ()Z
 	public final fun component9 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;ZZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;Lcom/github/zly2006/zhihu/data/DataHolder$ExposedMedal;Lcom/github/zly2006/zhihu/data/DataHolder$VipInfo;IZZZZZ)Lcom/github/zly2006/zhihu/data/DataHolder$Author;
-	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/data/DataHolder$Author;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;ZZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;Lcom/github/zly2006/zhihu/data/DataHolder$ExposedMedal;Lcom/github/zly2006/zhihu/data/DataHolder$VipInfo;IZZZZZILjava/lang/Object;)Lcom/github/zly2006/zhihu/data/DataHolder$Author;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/data/Gender;Ljava/lang/String;Ljava/lang/String;ZZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;Lcom/github/zly2006/zhihu/data/DataHolder$ExposedMedal;Lcom/github/zly2006/zhihu/data/DataHolder$VipInfo;IZZZZZ)Lcom/github/zly2006/zhihu/data/DataHolder$Author;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/data/DataHolder$Author;Ljava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/data/Gender;Ljava/lang/String;Ljava/lang/String;ZZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;Lcom/github/zly2006/zhihu/data/DataHolder$ExposedMedal;Lcom/github/zly2006/zhihu/data/DataHolder$VipInfo;IZZZZZILjava/lang/Object;)Lcom/github/zly2006/zhihu/data/DataHolder$Author;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAvatarUrl ()Ljava/lang/String;
 	public final fun getAvatarUrlTemplate ()Ljava/lang/String;
@@ -1293,7 +1293,7 @@ public final class com/github/zly2006/zhihu/data/DataHolder$Author {
 	public final fun getBadgeV2 ()Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;
 	public final fun getExposedMedal ()Lcom/github/zly2006/zhihu/data/DataHolder$ExposedMedal;
 	public final fun getFollowerCount ()I
-	public final fun getGender ()I
+	public final fun getGender ()Lcom/github/zly2006/zhihu/data/Gender;
 	public final fun getHeadline ()Ljava/lang/String;
 	public final fun getId ()Ljava/lang/String;
 	public final fun getName ()Ljava/lang/String;
@@ -1729,11 +1729,11 @@ public final synthetic class com/github/zly2006/zhihu/data/DataHolder$Comment$$s
 
 public final class com/github/zly2006/zhihu/data/DataHolder$Comment$Author {
 	public static final field Companion Lcom/github/zly2006/zhihu/data/DataHolder$Comment$Author$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/data/Gender;ZLcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/data/Gender;ZLcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component10 ()Ljava/lang/String;
-	public final fun component11 ()I
+	public final fun component11 ()Lcom/github/zly2006/zhihu/data/Gender;
 	public final fun component12 ()Z
 	public final fun component14 ()Lkotlinx/serialization/json/JsonElement;
 	public final fun component15 ()Lkotlinx/serialization/json/JsonElement;
@@ -1747,14 +1747,14 @@ public final class com/github/zly2006/zhihu/data/DataHolder$Comment$Author {
 	public final fun component7 ()Ljava/lang/String;
 	public final fun component8 ()Ljava/lang/String;
 	public final fun component9 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;)Lcom/github/zly2006/zhihu/data/DataHolder$Comment$Author;
-	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/data/DataHolder$Comment$Author;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/data/DataHolder$Comment$Author;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/data/Gender;ZLcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;)Lcom/github/zly2006/zhihu/data/DataHolder$Comment$Author;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/data/DataHolder$Comment$Author;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/data/Gender;ZLcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/JsonElement;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/data/DataHolder$Comment$Author;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAvatarUrl ()Ljava/lang/String;
 	public final fun getAvatarUrlTemplate ()Ljava/lang/String;
 	public final fun getBadgeV2 ()Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;
 	public final fun getExposedMedal ()Lkotlinx/serialization/json/JsonElement;
-	public final fun getGender ()I
+	public final fun getGender ()Lcom/github/zly2006/zhihu/data/Gender;
 	public final fun getHeadline ()Ljava/lang/String;
 	public final fun getId ()Ljava/lang/String;
 	public final fun getKvipInfo ()Lkotlinx/serialization/json/JsonElement;
@@ -1998,13 +1998,13 @@ public final class com/github/zly2006/zhihu/data/DataHolder$MyAnswer$Companion {
 
 public final class com/github/zly2006/zhihu/data/DataHolder$People {
 	public static final field Companion Lcom/github/zly2006/zhihu/data/DataHolder$People$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/lang/String;Lcom/github/zly2006/zhihu/data/DataHolder$VipInfo;Lkotlinx/serialization/json/JsonElement;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;ZZZZIIIILjava/util/List;ILkotlinx/serialization/json/JsonElement;ZZ)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/lang/String;Lcom/github/zly2006/zhihu/data/DataHolder$VipInfo;Lkotlinx/serialization/json/JsonElement;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;ZZZZIIIILjava/util/List;ILkotlinx/serialization/json/JsonElement;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/data/Gender;ZLjava/lang/String;Lcom/github/zly2006/zhihu/data/DataHolder$VipInfo;Lkotlinx/serialization/json/JsonElement;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;ZZZZIIIILjava/util/List;ILkotlinx/serialization/json/JsonElement;ZZ)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/data/Gender;ZLjava/lang/String;Lcom/github/zly2006/zhihu/data/DataHolder$VipInfo;Lkotlinx/serialization/json/JsonElement;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;ZZZZIIIILjava/util/List;ILkotlinx/serialization/json/JsonElement;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component10 ()Ljava/lang/String;
 	public final fun component11 ()Ljava/lang/String;
 	public final fun component12 ()Ljava/lang/String;
-	public final fun component13 ()I
+	public final fun component13 ()Lcom/github/zly2006/zhihu/data/Gender;
 	public final fun component14 ()Z
 	public final fun component15 ()Ljava/lang/String;
 	public final fun component16 ()Lcom/github/zly2006/zhihu/data/DataHolder$VipInfo;
@@ -2030,8 +2030,8 @@ public final class com/github/zly2006/zhihu/data/DataHolder$People {
 	public final fun component7 ()Z
 	public final fun component8 ()Ljava/lang/String;
 	public final fun component9 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/lang/String;Lcom/github/zly2006/zhihu/data/DataHolder$VipInfo;Lkotlinx/serialization/json/JsonElement;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;ZZZZIIIILjava/util/List;ILkotlinx/serialization/json/JsonElement;ZZ)Lcom/github/zly2006/zhihu/data/DataHolder$People;
-	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/data/DataHolder$People;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/lang/String;Lcom/github/zly2006/zhihu/data/DataHolder$VipInfo;Lkotlinx/serialization/json/JsonElement;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;ZZZZIIIILjava/util/List;ILkotlinx/serialization/json/JsonElement;ZZILjava/lang/Object;)Lcom/github/zly2006/zhihu/data/DataHolder$People;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/data/Gender;ZLjava/lang/String;Lcom/github/zly2006/zhihu/data/DataHolder$VipInfo;Lkotlinx/serialization/json/JsonElement;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;ZZZZIIIILjava/util/List;ILkotlinx/serialization/json/JsonElement;ZZ)Lcom/github/zly2006/zhihu/data/DataHolder$People;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/data/DataHolder$People;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/data/Gender;ZLjava/lang/String;Lcom/github/zly2006/zhihu/data/DataHolder$VipInfo;Lkotlinx/serialization/json/JsonElement;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;ZZZZIIIILjava/util/List;ILkotlinx/serialization/json/JsonElement;ZZILjava/lang/Object;)Lcom/github/zly2006/zhihu/data/DataHolder$People;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAllowMessage ()Z
 	public final fun getAnswerCount ()I
@@ -2042,7 +2042,7 @@ public final class com/github/zly2006/zhihu/data/DataHolder$People {
 	public final fun getBadgeV2 ()Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;
 	public final fun getFollowerCount ()I
 	public final fun getFollowingCount ()I
-	public final fun getGender ()I
+	public final fun getGender ()Lcom/github/zly2006/zhihu/data/Gender;
 	public final fun getHasApplyingColumn ()Z
 	public final fun getHeadline ()Ljava/lang/String;
 	public final fun getHeadlineRendered ()Ljava/lang/String;
@@ -4010,6 +4010,21 @@ public final class com/github/zly2006/zhihu/data/FollowedTopic$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public final class com/github/zly2006/zhihu/data/Gender : java/lang/Enum {
+	public static final field Companion Lcom/github/zly2006/zhihu/data/Gender$Companion;
+	public static final field Female Lcom/github/zly2006/zhihu/data/Gender;
+	public static final field Male Lcom/github/zly2006/zhihu/data/Gender;
+	public static final field Unknown Lcom/github/zly2006/zhihu/data/Gender;
+	public final fun getCode ()I
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/zly2006/zhihu/data/Gender;
+	public static fun values ()[Lcom/github/zly2006/zhihu/data/Gender;
+}
+
+public final class com/github/zly2006/zhihu/data/Gender$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class com/github/zly2006/zhihu/data/GroupFeed : com/github/zly2006/zhihu/data/Feed {
 	public static final field Companion Lcom/github/zly2006/zhihu/data/GroupFeed$Companion;
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;I)V
@@ -5478,8 +5493,8 @@ public final class com/github/zly2006/zhihu/data/OnlineHistoryMatrixItem$Compani
 
 public final class com/github/zly2006/zhihu/data/Person {
 	public static final field Companion Lcom/github/zly2006/zhihu/data/Person$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZIIZZLjava/util/List;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZIIZZLjava/util/List;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLcom/github/zly2006/zhihu/data/Gender;IZZLjava/util/List;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLcom/github/zly2006/zhihu/data/Gender;IZZLjava/util/List;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component10 ()I
 	public final fun component11 ()Z
@@ -5492,15 +5507,15 @@ public final class com/github/zly2006/zhihu/data/Person {
 	public final fun component6 ()Ljava/lang/String;
 	public final fun component7 ()Ljava/lang/String;
 	public final fun component8 ()Z
-	public final fun component9 ()I
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZIIZZLjava/util/List;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;)Lcom/github/zly2006/zhihu/data/Person;
-	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/data/Person;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZIIZZLjava/util/List;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/data/Person;
+	public final fun component9 ()Lcom/github/zly2006/zhihu/data/Gender;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLcom/github/zly2006/zhihu/data/Gender;IZZLjava/util/List;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;)Lcom/github/zly2006/zhihu/data/Person;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/data/Person;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLcom/github/zly2006/zhihu/data/Gender;IZZLjava/util/List;Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/data/Person;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAvatarUrl ()Ljava/lang/String;
 	public final fun getBadge ()Ljava/util/List;
 	public final fun getBadgeV2 ()Lcom/github/zly2006/zhihu/data/DataHolder$BadgeV2;
 	public final fun getFollowersCount ()I
-	public final fun getGender ()I
+	public final fun getGender ()Lcom/github/zly2006/zhihu/data/Gender;
 	public final fun getHeadline ()Ljava/lang/String;
 	public final fun getId ()Ljava/lang/String;
 	public final fun getName ()Ljava/lang/String;

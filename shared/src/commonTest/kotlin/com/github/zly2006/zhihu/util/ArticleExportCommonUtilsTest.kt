@@ -158,7 +158,6 @@ class ArticleExportCommonUtilsTest {
         id = 1001L,
         author = DataHolder.Author(
             avatarUrl = "",
-            gender = 0,
             headline = "作者简介",
             id = "export-author",
             isAdvertiser = false,

@@ -596,7 +596,6 @@ class FeedDisplayFilterPipelineTest {
         name: String = "author",
     ): DataHolder.Author = DataHolder.Author(
         avatarUrl = "",
-        gender = 0,
         headline = "",
         id = id,
         isAdvertiser = false,

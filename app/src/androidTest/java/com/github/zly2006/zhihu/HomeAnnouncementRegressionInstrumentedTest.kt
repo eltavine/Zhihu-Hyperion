@@ -177,7 +177,6 @@ class HomeAnnouncementRegressionInstrumentedTest {
         url = "https://www.zhihu.com/pin/$pinId",
         author = DataHolder.Author(
             avatarUrl = "",
-            gender = 0,
             headline = "",
             id = "zhihu-plus-author",
             isAdvertiser = false,

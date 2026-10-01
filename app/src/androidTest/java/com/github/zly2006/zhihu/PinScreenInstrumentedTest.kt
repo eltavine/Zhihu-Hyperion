@@ -162,7 +162,6 @@ class PinScreenInstrumentedTest {
         url = "https://www.zhihu.com/pin/101",
         author = DataHolder.Author(
             avatarUrl = "",
-            gender = 0,
             headline = "离线作者简介",
             id = "pin-author-id",
             isAdvertiser = false,
@@ -205,7 +204,6 @@ class PinScreenInstrumentedTest {
         likers = listOf(
             DataHolder.Author(
                 avatarUrl = "",
-                gender = 0,
                 headline = "",
                 id = "pin-liker-id",
                 isAdvertiser = false,

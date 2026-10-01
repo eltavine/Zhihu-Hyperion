@@ -91,7 +91,6 @@ private fun offlineComment(
         url = "https://www.zhihu.com/people/offline-comment-author-token",
         userType = "people",
         headline = "离线评论作者签名",
-        gender = 0,
         isAdvertiser = false,
     ),
     childCommentCount = 0,

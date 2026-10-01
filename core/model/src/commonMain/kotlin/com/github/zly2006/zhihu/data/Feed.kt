@@ -488,7 +488,7 @@ data class Person(
     val headline: String,
     val avatarUrl: String,
     val isOrg: Boolean = false,
-    val gender: Int = 0, // todo: 0做默认合适吗？
+    val gender: Gender = Gender.Unknown,
     @OptIn(ExperimentalSerializationApi::class)
     @JsonNames("followerCount")
     val followersCount: Int = 0,

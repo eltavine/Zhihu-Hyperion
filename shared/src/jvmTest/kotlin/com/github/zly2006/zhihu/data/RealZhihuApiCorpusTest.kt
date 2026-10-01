@@ -37,11 +37,13 @@ class RealZhihuApiCorpusTest {
         val answer = assertIs<Feed.AnswerTarget>(decodeTarget("answer-detail.json"))
         assertTrue(answer.content.startsWith("<p"))
         assertTrue(answer.author?.id?.startsWith("redacted-person-") == true)
+        assertEquals(Gender.Unknown, answer.author?.gender)
 
         val comment = ZhihuJson.decodeJson<DataHolder.Comment>(fixtureJson("comment.json"))
         assertEquals("comment", comment.type)
         assertTrue(comment.content.startsWith("<p"))
         assertTrue(comment.author.id.startsWith("redacted-person-"))
+        assertEquals(Gender.Female, comment.author.gender)
 
         val daily = ZhihuJson.decodeJson<DailyStoriesResponse>(fixtureJson("daily-stories.json"))
         assertEquals("20260816", daily.date)
@@ -77,6 +79,7 @@ class RealZhihuApiCorpusTest {
         val pin = assertIs<Feed.PinTarget>(decodeTarget("pin-target.json"))
         assertTrue(pin.content.isNotEmpty())
         assertTrue(pin.author.id.startsWith("redacted-person-"))
+        assertEquals(Gender.Male, pin.author.gender)
     }
 
     private fun decodeTarget(name: String) = ZhihuJson.decodeJson<Feed.Target>(fixtureJson(name))

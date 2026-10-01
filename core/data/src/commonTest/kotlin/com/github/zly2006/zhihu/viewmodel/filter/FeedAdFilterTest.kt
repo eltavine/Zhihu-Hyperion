@@ -86,7 +86,6 @@ class FeedAdFilterTest {
 
     private fun author(): DataHolder.Author = DataHolder.Author(
         avatarUrl = "",
-        gender = 0,
         headline = "",
         id = "author-id",
         isAdvertiser = false,

@@ -463,7 +463,6 @@ class PeopleScreenInstrumentedTest {
         avatarUrl = "https://example.invalid/avatar/root.png",
         url = "https://www.zhihu.com/people/${ROOT_PERSON.urlToken}",
         headline = "离线个人简介",
-        gender = 0,
         followerCount = 120,
         followingCount = 45,
         answerCount = itemCount,
@@ -604,7 +603,6 @@ class PeopleScreenInstrumentedTest {
         avatarUrl = "https://example.invalid/$prefix-$index.png",
         url = "https://www.zhihu.com/people/$prefix-token-$index",
         headline = "$namePrefix $index 的简介",
-        gender = 0,
         followerCount = 100 + index,
         followingCount = 50 + index,
         answerCount = index,
@@ -613,7 +611,6 @@ class PeopleScreenInstrumentedTest {
 
     private fun seededAuthor(id: String, name: String) = DataHolder.Author(
         avatarUrl = "https://example.invalid/avatar/$id.png",
-        gender = 0,
         headline = "$name 的签名",
         id = id,
         isAdvertiser = false,

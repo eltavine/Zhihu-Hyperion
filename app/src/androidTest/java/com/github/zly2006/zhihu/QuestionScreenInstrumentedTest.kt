@@ -320,7 +320,6 @@ class QuestionScreenInstrumentedTest {
         topics = emptyList(),
         author = DataHolder.Author(
             avatarUrl = "",
-            gender = 0,
             headline = "离线提问者简介",
             id = "question-author-id",
             isAdvertiser = false,

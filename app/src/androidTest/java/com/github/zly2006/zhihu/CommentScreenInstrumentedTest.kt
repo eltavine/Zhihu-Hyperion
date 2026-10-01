@@ -577,7 +577,6 @@ class CommentScreenInstrumentedTest {
                         url = "https://www.zhihu.com/people/submitted-author-${submissions.size}-token",
                         userType = "people",
                         headline = "当前用户的离线签名",
-                        gender = 0,
                         isAdvertiser = false,
                     ),
                     replyToAuthor = null,
@@ -680,7 +679,6 @@ class CommentScreenInstrumentedTest {
         url = "https://www.zhihu.com/people/$urlToken",
         userType = "people",
         headline = "$name 的离线签名",
-        gender = 0,
         isAdvertiser = false,
     )
 

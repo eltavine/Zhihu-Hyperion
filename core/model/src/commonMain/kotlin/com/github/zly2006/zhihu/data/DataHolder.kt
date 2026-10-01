@@ -121,7 +121,7 @@ object DataHolder {
     data class Author(
         val avatarUrl: String,
         val avatarUrlTemplate: String? = null,
-        val gender: Int,
+        val gender: Gender = Gender.Unknown,
         @Serializable(HTMLDecoder::class)
         val headline: String,
         val id: String,
@@ -701,7 +701,7 @@ object DataHolder {
             val url: String,
             val userType: String,
             val headline: String,
-            val gender: Int,
+            val gender: Gender = Gender.Unknown,
             val isAdvertiser: Boolean,
             @SerialName("badgeV2")
             private val apiBadgeV2: BadgeV2? = null,
@@ -745,7 +745,7 @@ object DataHolder {
         val userType: String = "people",
         val headline: String,
         val headlineRendered: String? = null,
-        val gender: Int,
+        val gender: Gender = Gender.Unknown,
         val isAdvertiser: Boolean = false,
         val ipInfo: String? = null,
         val vipInfo: VipInfo? = null,
