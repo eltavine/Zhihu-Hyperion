@@ -1,6 +1,6 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
- * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
+ * Copyright (C) 2026, eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -85,7 +85,7 @@ import kotlinx.serialization.json.floatOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlin.time.Clock
 
-private const val BACKUP_DIRECTORY = "zhihu-plus-plus/"
+private const val BACKUP_DIRECTORY = "zhihu-hyperion/"
 private const val BLOCKLIST_FILE = "blocklist.json"
 private const val SETTINGS_FILE = "settings.json"
 

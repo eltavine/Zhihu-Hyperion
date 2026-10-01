@@ -6,6 +6,6 @@ This directory contains the production sources needed from
 Kotlin/Native publication, but the generated Maven repository and compiled
 artifacts are deliberately not checked in.
 
-The imported modules remain licensed under the MIT License. Zhihu++ adds only
+The imported modules remain licensed under the MIT License. Zhihu-Hyperion adds only
 the build wiring and macOS target needed to compile the existing implementation
 from reviewable source.

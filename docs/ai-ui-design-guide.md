@@ -1,4 +1,4 @@
-# Zhihu++ AI UI Design Guide
+# Zhihu-Hyperion AI UI Design Guide
 
 这份文档给 AI agent 快速建立 UI、导航、按钮和设置项的共同语义。改代码前仍然要读对应源码；这里负责告诉你先读哪里、状态从哪里来、一个开关会影响哪些界面。
 

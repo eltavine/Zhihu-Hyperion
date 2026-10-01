@@ -1,9 +1,9 @@
 ---
 name: zhihu-instrument-test-governance
-description: Audit, add, migrate, or remove Zhihu++ Android instrument tests under app/src/androidTest. Use for instrument-test cleanup, flaky device-test reduction, regression-test provenance, deciding whether a UI test belongs on an emulator, or reviewing a PR that changes permanent Android instrument coverage.
+description: Audit, add, migrate, or remove Zhihu-Hyperion Android instrument tests under app/src/androidTest. Use for instrument-test cleanup, flaky device-test reduction, regression-test provenance, deciding whether a UI test belongs on an emulator, or reviewing a PR that changes permanent Android instrument coverage.
 ---
 
-# Zhihu++ Instrument Test Governance
+# Zhihu-Hyperion Instrument Test Governance
 
 ## 回归与数据边界
 

@@ -5,7 +5,7 @@
 // - Show manifest properties: true
 // - Show declarations: true
 
-// Library unique name: <Zhihu.core:notification>
+// Library unique name: <Zhihu-Hyperion.core:notification>
 final enum class com.github.zly2006.zhihu.notification/NotificationType : kotlin/Enum<com.github.zly2006.zhihu.notification/NotificationType> { // com.github.zly2006.zhihu.notification/NotificationType|null[0]
     enum entry INVITE_ANSWER // com.github.zly2006.zhihu.notification/NotificationType.INVITE_ANSWER|null[0]
     enum entry LIKE_ANSWER // com.github.zly2006.zhihu.notification/NotificationType.LIKE_ANSWER|null[0]

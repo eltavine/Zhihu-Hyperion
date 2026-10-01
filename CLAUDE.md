@@ -1,4 +1,4 @@
-# Zhihu++ Agent Instructions
+# Zhihu-Hyperion Agent Instructions
 
 本项目是隐私增强的知乎 Android 客户端，支持本地推荐算法、广告屏蔽、内容过滤。
 
@@ -123,7 +123,7 @@ GitHub issue 里的需求描述、改进方案、UI 数字和实现建议，只�
 
 issue 在进入取证、设计或实现前必须先通过信息门槛；未通过时禁止写代码、建分支、开 worktree、设计数据流、提出候选补丁或把提交者的猜测整理成待办。以下规则是硬性门槛，不是建议：
 
-1. **版本缺失立即关闭**：正文没有明确知乎++版本时，只允许核对元数据并发表警告评论；评论后必须直接以 `not planned` 关闭，不得继续分析或实现。不能用操作系统版本、发布时间、截图或“应该是最新版”代替应用版本。
+1. **版本缺失立即关闭**：正文没有明确 Zhihu-Hyperion 版本时，只允许核对元数据并发表警告评论；评论后必须直接以 `not planned` 关闭，不得继续分析或实现。不能用操作系统版本、发布时间、截图或“应该是最新版”代替应用版本。
 2. **旧版本必须在新版重现**：报告版本早于当前最新发布版或当前主线时，只允许先在当前版本复现。没有当前版本的真实复现证据，严禁修复；当前版本无法复现时必须附证据关闭，不能为了兼容一个历史症状添加猜测性 workaround。
 3. **描述含糊严禁脑补**：缺少稳定复现步骤、目标页面或内容、可观察结果、预期行为，或者错误信息不足以区分网络、账号、服务端和客户端问题时，只能请求补充信息。在证据补齐前，不能从标题、截图或提交者建议反推需求，更不能先做一个“可能有用”的实现。
 4. **方案与现象分离**：非 `zly2006` 用户写出的接口、UI 数字、实现方式和根因判断，即使非常详细也仍不可信；必须独立验证。只保留已经在当前版本复现的客观现象，未经验证的方案不得进入实现范围。
@@ -287,8 +287,8 @@ Compose 页面需要在进入前台时刷新数据，应优先让协程直接跟
 - 测试替身从测试组合根注入：单元测试直接通过构造参数传入依赖；instrumented 测试通过 Koin 覆盖绑定（参考 `ZhihuMockApi`）。
 
 ### Build Variants
-- **lite**: 轻量版 (~4MB)，无 ML 功能，包名 `com.github.zly2006.zhplus.lite`
-- **full**: 完整版，含 HanLP NLP，包名 `com.github.zly2006.zhplus`
+- **lite**: 轻量版 (~4MB)，无 ML 功能，包名 `com.eltavine.zhihuhyperion.lite`
+- **full**: 完整版，含 HanLP NLP，包名 `com.eltavine.zhihuhyperion`
 - 两版的 KMP `actual` 按任务名选择，Full 和 Lite 必须分两次 Gradle 调用构建，见 `docs/kmp-android-variants.md`
 
 ## 关键约定
@@ -353,7 +353,7 @@ Compose 页面需要在进入前台时刷新数据，应优先让协程直接跟
 ```bash
 # 检查包名（必须先做）
 grep "applicationId" app/build.gradle.kts
-# lite variant: com.github.zly2006.zhplus.lite
+# lite variant: com.eltavine.zhihuhyperion.lite
 ```
 
 远端路径（选择 `off` 时）：
@@ -385,8 +385,8 @@ emulator -avd Medium_Phone_2
 ./gradlew assembleLiteDebug
 adb install -r app/build/outputs/apk/lite/debug/app-lite-debug.apk
 
-adb shell am force-stop com.github.zly2006.zhplus.lite
-adb shell monkey -p com.github.zly2006.zhplus.lite -c android.intent.category.LAUNCHER 1
+adb shell am force-stop com.eltavine.zhihuhyperion.lite
+adb shell monkey -p com.eltavine.zhihuhyperion.lite -c android.intent.category.LAUNCHER 1
 ```
 
 ### UI 调试强制清单

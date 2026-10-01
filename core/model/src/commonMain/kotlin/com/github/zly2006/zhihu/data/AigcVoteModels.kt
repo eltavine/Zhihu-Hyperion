@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -155,7 +155,7 @@ data class AigcVoteFlagResponse(
     val credit: Int,
     @SerialName("credit_bypass_available")
     val creditBypassAvailable: Boolean = false,
-    /** 自家后端支持人数：每个有效的 Zhihu++ AIGC 标记用户计 1 人。 */
+    /** 自家后端支持人数：每个有效的 Zhihu-Hyperion AIGC 标记用户计 1 人。 */
     @SerialName("effective_flag_count")
     val effectiveFlagCount: Int,
     /** 自家后端原始支持人数；当前与 effectiveFlagCount 相同。 */
@@ -184,7 +184,7 @@ data class AigcVoteFlagStatusResponse(
     val cap: Int,
     @SerialName("credit_bypass_available")
     val creditBypassAvailable: Boolean = false,
-    /** 自家后端支持人数：每个有效的 Zhihu++ AIGC 标记用户计 1 人。 */
+    /** 自家后端支持人数：每个有效的 Zhihu-Hyperion AIGC 标记用户计 1 人。 */
     @SerialName("effective_flag_count")
     val effectiveFlagCount: Int,
     /** 自家后端原始支持人数；当前与 effectiveFlagCount 相同。 */

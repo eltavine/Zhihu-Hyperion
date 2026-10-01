@@ -4,8 +4,8 @@
 Example:
     python3 misc/repack_release_apk.py \
         --tag 0.23.4 \
-        --asset 'zhihu++-lite.apk' \
-        --new-package com.github.zly2006.zhplus.lite.release
+        --asset 'zhihu-hyperion-lite.apk' \
+        --new-package com.eltavine.zhihuhyperion.lite.release
 """
 
 from __future__ import annotations
@@ -22,9 +22,9 @@ from pathlib import Path
 from typing import Any
 
 
-DEFAULT_REPO = "zly2006/zhihu-plus-plus"
-DEFAULT_ASSET = "zhihu++-lite.apk"
-DEFAULT_NEW_PACKAGE = "com.github.zly2006.zhplus.lite.release"
+DEFAULT_REPO = "eltavine/Zhihu-Hyperion"
+DEFAULT_ASSET = "zhihu-hyperion-lite.apk"
+DEFAULT_NEW_PACKAGE = "com.eltavine.zhihuhyperion.lite.release"
 DEFAULT_APKTOOL_VERSION = "v3.0.2"
 DEFAULT_APKTOOL_ASSET = "apktool_3.0.2.jar"
 
@@ -56,7 +56,7 @@ def run(command: list[str], *, capture: bool = False) -> str:
 def github_headers() -> dict[str, str]:
     headers = {
         "Accept": "application/vnd.github+json",
-        "User-Agent": "zhihu-plus-plus-apk-repack",
+        "User-Agent": "zhihu-hyperion-apk-repack",
     }
     token = os.environ.get("GITHUB_TOKEN")
     if token:

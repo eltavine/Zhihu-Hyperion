@@ -95,15 +95,15 @@ public abstract interface class com/github/zly2006/zhihu/platform/ZhihuWebUrlOpe
 public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$OpenImageDialogKt {
 	public static final field INSTANCE Lcom/github/zly2006/zhihu/ui/components/ComposableSingletons$OpenImageDialogKt;
 	public fun <init> ()V
-	public final fun getLambda$1140190723$Zhihu_core_platform ()Lkotlin/jvm/functions/Function6;
+	public final fun getLambda$1140190723$Zhihu_Hyperion_core_platform ()Lkotlin/jvm/functions/Function6;
 }
 
 public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$OpenImagePreviewContentKt {
 	public static final field INSTANCE Lcom/github/zly2006/zhihu/ui/components/ComposableSingletons$OpenImagePreviewContentKt;
 	public fun <init> ()V
-	public final fun getLambda$-1741611983$Zhihu_core_platform ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-959804743$Zhihu_core_platform ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$414515440$Zhihu_core_platform ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1741611983$Zhihu_Hyperion_core_platform ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-959804743$Zhihu_Hyperion_core_platform ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$414515440$Zhihu_Hyperion_core_platform ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/github/zly2006/zhihu/ui/components/OpenImageDialog : androidx/activity/ComponentDialog {

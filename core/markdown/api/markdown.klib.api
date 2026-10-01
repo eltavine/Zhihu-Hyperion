@@ -5,7 +5,7 @@
 // - Show manifest properties: true
 // - Show declarations: true
 
-// Library unique name: <Zhihu.core:markdown>
+// Library unique name: <Zhihu-Hyperion.core:markdown>
 final class com.github.zly2006.zhihu.markdown/MarkdownImageRequestHeaders { // com.github.zly2006.zhihu.markdown/MarkdownImageRequestHeaders|null[0]
     constructor <init>(kotlin/String, kotlin/String) // com.github.zly2006.zhihu.markdown/MarkdownImageRequestHeaders.<init>|<init>(kotlin.String;kotlin.String){}[0]
 

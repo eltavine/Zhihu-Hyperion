@@ -132,7 +132,7 @@ pub struct AigcFlagResponse {
     pub my_flagged: bool,
     pub credit: i64,
     pub credit_bypass_available: bool,
-    /// 自家后端支持人数：每个有效的 Zhihu++ AIGC 标记用户计 1 人。
+    /// 自家后端支持人数：每个有效的 Zhihu-Hyperion AIGC 标记用户计 1 人。
     pub effective_flag_count: i64,
     /// 自家后端原始支持人数；当前与 effective_flag_count 相同。
     pub raw_flag_count: i64,
@@ -154,7 +154,7 @@ pub struct AigcFlagStatusResponse {
     pub progress: i64,
     pub cap: i64,
     pub credit_bypass_available: bool,
-    /// 自家后端支持人数：每个有效的 Zhihu++ AIGC 标记用户计 1 人。
+    /// 自家后端支持人数：每个有效的 Zhihu-Hyperion AIGC 标记用户计 1 人。
     pub effective_flag_count: i64,
     /// 自家后端原始支持人数；当前与 effective_flag_count 相同。
     pub raw_flag_count: i64,

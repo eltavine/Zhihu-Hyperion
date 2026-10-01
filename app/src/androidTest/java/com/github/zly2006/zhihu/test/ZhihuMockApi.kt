@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -147,7 +147,7 @@ object ZhihuMockApi {
             """.trimIndent()
         mockJson(
             method = HttpMethod.Get,
-            url = "https://api.github.com/repos/zly2006/zhihu-plus-plus/releases/latest",
+            url = "https://api.github.com/repos/eltavine/Zhihu-Hyperion/releases/latest",
             body =
                 """
                 {
@@ -167,25 +167,6 @@ object ZhihuMockApi {
             method = HttpMethod.Get,
             urlPrefix = "$ZHIHU_PLUS_PLUS_HOME_NOTIFICATIONS_URL?version=",
             body = """{"notifications":[]}""",
-        )
-        mockJson(
-            method = HttpMethod.Get,
-            url = "https://redenmc.com/api/zhihu/releases/latest",
-            body =
-                """
-                {
-                  "tag_name": "0.0.0",
-                  "body": "",
-                  "assets": [
-                    {
-                      "name": "zhihu-lite.apk",
-                      "content_type": "application/vnd.android.package-archive",
-                      "browser_download_url": "https://example.invalid/zhihu-lite.apk",
-                      "cn_download_url": "https://example.invalid/zhihu-lite-cn.apk"
-                    }
-                  ]
-                }
-                """.trimIndent(),
         )
         mockJson(
             method = HttpMethod.Get,

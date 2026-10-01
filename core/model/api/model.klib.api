@@ -5,7 +5,7 @@
 // - Show manifest properties: true
 // - Show declarations: true
 
-// Library unique name: <Zhihu.core:model>
+// Library unique name: <Zhihu-Hyperion.core:model>
 final enum class com.github.zly2006.zhihu.data/CommentSortOrder : kotlin/Enum<com.github.zly2006.zhihu.data/CommentSortOrder> { // com.github.zly2006.zhihu.data/CommentSortOrder|null[0]
     enum entry SCORE // com.github.zly2006.zhihu.data/CommentSortOrder.SCORE|null[0]
     enum entry TIME // com.github.zly2006.zhihu.data/CommentSortOrder.TIME|null[0]

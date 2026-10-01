@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Find structurally similar Kotlin function bodies in Zhihu++.
+"""Find structurally similar Kotlin function bodies in Zhihu-Hyperion.
 
 The output is a review queue. Similarity is based on normalized token shingles,
 so every reported pair still needs source inspection.

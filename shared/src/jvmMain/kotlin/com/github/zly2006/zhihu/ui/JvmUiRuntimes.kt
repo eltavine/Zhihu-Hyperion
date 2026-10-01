@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,13 +31,13 @@ import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.unit.em
+import com.github.zly2006.zhihu.desktop.desktopZhihuDataFile
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.platform.UserMessageSink
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.ui.subscreens.desktopVersionName
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
-import com.github.zly2006.zhihu.viewmodel.filter.desktopContentFilterDatabaseFile
 import com.github.zly2006.zhihu.viewmodel.filter.encodeBlocklistBackup
 import com.github.zly2006.zhihu.viewmodel.filter.importBlocklistBackupFromJsonText
 import kotlinx.coroutines.launch
@@ -156,7 +156,7 @@ actual fun rememberBlocklistRuleExporter(): BlocklistRuleExporter {
     return remember(database) {
         object : BlocklistRuleExporter {
             override suspend fun invoke(): String {
-                val file = File(desktopContentFilterDatabaseFile().parentFile, "zhihupp_blocklist.json")
+                val file = desktopZhihuDataFile("zhihu_hyperion_blocklist.json")
                 file.writeText(
                     encodeBlocklistBackup(
                         keywordDao = database.blockedKeywordDao(),

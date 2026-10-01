@@ -5,7 +5,7 @@
 // - Show manifest properties: true
 // - Show declarations: true
 
-// Library unique name: <Zhihu.core:account>
+// Library unique name: <Zhihu-Hyperion.core:account>
 sealed interface com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult { // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult|null[0]
     final class CaptchaRequired : com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult { // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.CaptchaRequired|null[0]
         constructor <init>(kotlin/String?) // com.github.zly2006.zhihu.account/ZhihuPhoneDigitsResult.CaptchaRequired.<init>|<init>(kotlin.String?){}[0]

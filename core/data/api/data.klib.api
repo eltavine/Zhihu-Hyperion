@@ -5,7 +5,7 @@
 // - Show manifest properties: true
 // - Show declarations: true
 
-// Library unique name: <Zhihu.core:data>
+// Library unique name: <Zhihu-Hyperion.core:data>
 final enum class com.github.zly2006.zhihu.data/QualityFilterMode : kotlin/Enum<com.github.zly2006.zhihu.data/QualityFilterMode> { // com.github.zly2006.zhihu.data/QualityFilterMode|null[0]
     enum entry HIDE // com.github.zly2006.zhihu.data/QualityFilterMode.HIDE|null[0]
     enum entry OFF // com.github.zly2006.zhihu.data/QualityFilterMode.OFF|null[0]

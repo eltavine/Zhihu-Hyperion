@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -73,7 +73,7 @@ actual fun copyNativePlainText(text: String) {
 
 actual fun nativeAccountFilePath(): String =
     macosBackgroundUiDebugDataDirectoryPath()?.let { "$it/account.json" }
-        ?: "${NSHomeDirectory()}/.zhihu-plus-plus/account.json"
+        ?: "${NSHomeDirectory()}/.zhihu-hyperion/account.json"
 
 actual fun nativeSettingsStore(relativePath: String): SettingsStore =
     macosSettingsStore("${nativeAppPrivateDirectoryPath()}/$relativePath")

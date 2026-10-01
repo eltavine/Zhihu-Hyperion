@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -197,7 +197,7 @@ actual fun rememberBlocklistRuleExporter(): BlocklistRuleExporter {
                     topicDao = database.blockedTopicDao(),
                 )
                 val outputDirectory = nativeAppPrivateDirectoryPath()
-                val outputFile = "$outputDirectory/zhihupp_blocklist.json"
+                val outputFile = "$outputDirectory/zhihu_hyperion_blocklist.json"
                 val fileManager = NSFileManager.defaultManager
                 if (!fileManager.fileExistsAtPath(outputDirectory)) {
                     fileManager.createDirectoryAtPath(

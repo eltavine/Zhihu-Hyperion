@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -1677,7 +1677,7 @@ fun AppearanceSettingsScreen(
                     Text(
                         text = buildAnnotatedString {
                             append("以上设置项可能随时更改，或并入主线。\n欢迎")
-                            withLink(LinkAnnotation.Url("https://github.com/zly2006/zhihu-plus-plus/issues")) {
+                            withLink(LinkAnnotation.Url("https://github.com/eltavine/Zhihu-Hyperion/issues")) {
                                 withStyle(
                                     MaterialTheme.typography.bodyMedium
                                         .copy(

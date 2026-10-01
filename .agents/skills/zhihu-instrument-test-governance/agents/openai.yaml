@@ -1,4 +1,4 @@
 interface:
-  display_name: "Zhihu++ Instrument Test Governance"
+  display_name: "Zhihu-Hyperion Instrument Test Governance"
   short_description: "Govern instrument tests by provenance and contract value"
-  default_prompt: "Audit Zhihu++ instrument tests, preserve every proven regression test, add verified issue and pull request provenance, and remove only low-value device coverage in a separate PR."
+  default_prompt: "Audit Zhihu-Hyperion instrument tests, preserve every proven regression test, add verified issue and pull request provenance, and remove only low-value device coverage in a separate PR."

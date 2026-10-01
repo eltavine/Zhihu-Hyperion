@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -153,7 +153,6 @@ private suspend fun checkDesktopUpdate(
                         .firstOrNull()
                         ?.browserDownloadUrl
                         .orEmpty(),
-                    cnDownloadUrl = latestResponse.assets.firstOrNull()?.cnDownloadUrl,
                 )
             } else {
                 state.value = SystemUpdateState.Latest

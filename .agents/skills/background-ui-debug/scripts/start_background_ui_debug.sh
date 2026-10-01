@@ -1,6 +1,6 @@
 #!/bin/zsh
 #
-# Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+# Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
 # Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -19,8 +19,8 @@ set -euo pipefail
 
 skill_directory=${0:A:h}
 project_directory=${skill_directory:h:h:h:h}
-debug_bundle="$project_directory/macosUiDebug/build/bin/macosArm64/debugApp/ZhihuPlusPlusUiDebug.app"
-debug_binary="$debug_bundle/Contents/MacOS/ZhihuPlusPlusUiDebug"
+debug_bundle="$project_directory/macosUiDebug/build/bin/macosArm64/debugApp/ZhihuHyperionUiDebug.app"
+debug_binary="$debug_bundle/Contents/MacOS/ZhihuHyperionUiDebug"
 
 cd "$project_directory"
 ./gradlew :macosUiDebug:packageDebugMacosUiDebug
@@ -30,12 +30,12 @@ if [[ ! -x "$debug_binary" ]]; then
     exit 1
 fi
 
-if pgrep -x 'ZhihuPlusPlus|ZhihuPlusPlus.kexe' >/dev/null 2>&1; then
+if pgrep -x 'ZhihuHyperion|ZhihuHyperion.kexe' >/dev/null 2>&1; then
     print -u2 "正式应用仍在运行；拒绝启动后台 UI 调试器"
     exit 1
 fi
 
-if pgrep -x ZhihuPlusPlusUiDebug >/dev/null 2>&1; then
+if pgrep -x ZhihuHyperionUiDebug >/dev/null 2>&1; then
     print -u2 "已有后台 UI 调试器正在运行；拒绝启动重复实例"
     exit 1
 fi

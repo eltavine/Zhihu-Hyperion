@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -169,7 +169,7 @@ class AndroidContentExporter(
             val contentValues = ContentValues().apply {
                 put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
                 put(MediaStore.MediaColumns.MIME_TYPE, "text/html")
-                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/Zhihu++")
+                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/Zhihu-Hyperion")
                 put(MediaStore.MediaColumns.IS_PENDING, 1)
             }
             val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
@@ -183,7 +183,7 @@ class AndroidContentExporter(
                 contentValues.clear()
                 contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
                 resolver.update(uri, contentValues, null, null)
-                "Zhihu++/$displayName"
+                "Zhihu-Hyperion/$displayName"
             } catch (e: Exception) {
                 resolver.delete(uri, null, null)
                 throw e
@@ -193,7 +193,7 @@ class AndroidContentExporter(
         @Suppress("DEPRECATION")
         val downloadsDir = File(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-            "Zhihu++",
+            "Zhihu-Hyperion",
         )
         if (!downloadsDir.exists() && !downloadsDir.mkdirs()) {
             throw IllegalStateException("无法创建下载目录")

@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ import co.touchlab.kermit.loggerConfigInit
 
 /** Application log facade over Kermit, keeping the `(tag, message, throwable)` order used throughout the code base. */
 object Log {
-    private val logger = Logger(loggerConfigInit(defaultLogWriter()), tag = "Zhihu++")
+    private val logger = Logger(loggerConfigInit(defaultLogWriter()), tag = "Zhihu-Hyperion")
 
     fun d(
         tag: String,

@@ -1,15 +1,15 @@
 ---
 name: zhihu-parallel-pr-workflow
-description: Coordinate Zhihu++ issue implementation and pull requests when the user explicitly asks for subagents or when multiple independent issues or scopes have real parallel value. Covers issue trust gates, isolated worktrees, ownership-aware process handling, build and AVD validation, review, Chinese PR publication, and final evidence. Do not use merely because one narrow issue needs one PR.
+description: Coordinate Zhihu-Hyperion issue implementation and pull requests when the user explicitly asks for subagents or when multiple independent issues or scopes have real parallel value. Covers issue trust gates, isolated worktrees, ownership-aware process handling, build and AVD validation, review, Chinese PR publication, and final evidence. Do not use merely because one narrow issue needs one PR.
 ---
 
-# Zhihu++ Parallel PR Workflow
+# Zhihu-Hyperion Parallel PR Workflow
 
 ## 变更边界与验收
 
 先确认真实数据面和既有协议，不得擅自新增未授权 action、字段或 seed。回归修复需保留基线红测和修复绿测证据，单调用 helper 应在调用点内联；证据齐全后才能创建 PR。
 
-Use this workflow to shorten independent Zhihu++ issue work without weakening evidence or ownership boundaries.
+Use this workflow to shorten independent Zhihu-Hyperion issue work without weakening evidence or ownership boundaries.
 
 ## Decide whether to delegate
 

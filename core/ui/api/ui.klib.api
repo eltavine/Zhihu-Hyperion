@@ -5,7 +5,7 @@
 // - Show manifest properties: true
 // - Show declarations: true
 
-// Library unique name: <Zhihu.core:ui>
+// Library unique name: <Zhihu-Hyperion.core:ui>
 final enum class com.github.zly2006.zhihu.ui.components/FeedAuthorBlockType : kotlin/Enum<com.github.zly2006.zhihu.ui.components/FeedAuthorBlockType> { // com.github.zly2006.zhihu.ui.components/FeedAuthorBlockType|null[0]
     enum entry CONTENT_AUTHOR // com.github.zly2006.zhihu.ui.components/FeedAuthorBlockType.CONTENT_AUTHOR|null[0]
     enum entry QUESTION_AUTHOR // com.github.zly2006.zhihu.ui.components/FeedAuthorBlockType.QUESTION_AUTHOR|null[0]

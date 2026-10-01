@@ -1,6 +1,6 @@
 ---
 name: ui-test
-description: Zhihu++ LLM 自动化 UI 测试。使用 testTag 系统精准定位 Compose 元素并交互，替代硬编码坐标的 adb tap。提供已知 tag 列表、文字内容点击、截图验证等能力。适用于：功能验证、UI 回归测试、自动化交互流程。
+description: Zhihu-Hyperion LLM 自动化 UI 测试。使用 testTag 系统精准定位 Compose 元素并交互，替代硬编码坐标的 adb tap。提供已知 tag 列表、文字内容点击、截图验证等能力。适用于：功能验证、UI 回归测试、自动化交互流程。
 license: CC BY-NC-SA 4.0
 ---
 
@@ -241,8 +241,8 @@ adb devices
 emulator -avd Medium_Phone_2
 
 # 2. 启动应用
-adb shell am force-stop com.github.zly2006.zhplus.lite
-adb shell monkey -p com.github.zly2006.zhplus.lite -c android.intent.category.LAUNCHER 1
+adb shell am force-stop com.eltavine.zhihuhyperion.lite
+adb shell monkey -p com.eltavine.zhihuhyperion.lite -c android.intent.category.LAUNCHER 1
 sleep 10
 
 # 3. 确认界面元素

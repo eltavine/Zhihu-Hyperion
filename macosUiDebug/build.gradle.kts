@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@ plugins {
 kotlin {
     macosArm64 {
         binaries.executable(listOf(DEBUG)) {
-            baseName = "ZhihuPlusPlusUiDebug"
+            baseName = "ZhihuHyperionUiDebug"
             entryPoint = "com.github.zly2006.zhihu.macos.debug.main"
         }
     }
@@ -44,8 +44,8 @@ kotlin {
 
 registerMacosAppBundle(
     "Debug",
-    executableBaseName = "ZhihuPlusPlusUiDebug",
-    bundleName = "ZhihuPlusPlusUiDebug",
+    executableBaseName = "ZhihuHyperionUiDebug",
+    bundleName = "ZhihuHyperionUiDebug",
     taskSuffix = "MacosUiDebug",
 )
 
@@ -54,7 +54,7 @@ tasks.register<Exec>("verifyMacosReleaseIsolation") {
     val releaseBinary =
         project(":macosApp")
             .layout.buildDirectory
-            .file("bin/macosArm64/releaseExecutable/ZhihuPlusPlus.kexe")
+            .file("bin/macosArm64/releaseExecutable/ZhihuHyperion.kexe")
             .get()
             .asFile
             .absolutePath

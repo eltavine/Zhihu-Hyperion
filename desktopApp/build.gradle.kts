@@ -91,10 +91,10 @@ compose.desktop {
             // 对外发布的安装形式：Windows 用 MSI，Linux 用 AppImage（由 CI 用 appimagetool
             // 把 jpackage 的 app-image 目录封装成单文件）。macOS 走 macosApp 的 Kotlin/Native 构建。
             targetFormats(TargetFormat.AppImage, TargetFormat.Msi)
-            packageName = "Zhihu++"
+            packageName = "Zhihu-Hyperion"
             packageVersion = desktopPackageVersion
             description = "Free and ad-free third-party Zhihu client"
-            vendor = "zly2006"
+            vendor = "eltavine"
 
             // jlink 裁剪内嵌运行时：默认只含 java.base/java.desktop/java.logging/jdk.crypto.ec，
             // 其余模块按依赖补齐（JavaFX WebView 的 JS 互操作、JDBC、HTTP、中文扩展字符集等）。
@@ -120,9 +120,9 @@ compose.desktop {
             windows {
                 iconFile.set(project.file("desktop-icon.ico"))
                 menu = true
-                menuGroup = "Zhihu++"
+                menuGroup = "Zhihu-Hyperion"
                 shortcut = true
-                upgradeUuid = "84FED2C6-8F40-4FDA-B84A-616602D7A888"
+                upgradeUuid = "488DBBD3-16F8-4CC0-AC04-2ECA1616E609"
             }
         }
     }

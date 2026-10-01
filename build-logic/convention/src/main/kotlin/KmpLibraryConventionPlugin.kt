@@ -13,7 +13,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 
 /**
- * Kotlin Multiplatform library targeting every platform Zhihu++ ships on: Android, desktop JVM and macOS,
+ * Kotlin Multiplatform library targeting every platform Zhihu-Hyperion ships on: Android, desktop JVM and macOS,
  * plus iOS so shared code keeps compiling for the next Apple host.
  *
  * Modules only declare what differs from this baseline; override the Android namespace with

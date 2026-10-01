@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -121,7 +121,7 @@ fun main(args: Array<String>) {
         "Cannot create isolated background UI debug data directory"
     }
     if (useRealAccount) {
-        val sourceAccountFile = "${NSHomeDirectory()}/.zhihu-plus-plus/account.json"
+        val sourceAccountFile = "${NSHomeDirectory()}/.zhihu-hyperion/account.json"
         check(NSFileManager.defaultManager.fileExistsAtPath(sourceAccountFile)) {
             "Cannot use real account: account file does not exist"
         }

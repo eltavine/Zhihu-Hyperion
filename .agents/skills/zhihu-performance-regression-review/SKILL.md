@@ -1,9 +1,9 @@
 ---
 name: zhihu-performance-regression-review
-description: Review and fix Zhihu++ functional regressions caused by performance optimizations. Use when a change trades correctness, selection, rendering, scrolling, navigation, or state completeness for laziness, caching, recycling, batching, deferred work, or reduced data structures; also use when deciding whether restoring older behavior would really regress performance. Requires cache-lifetime analysis, real-path staged benchmarks, functional regression coverage, and before/after evidence before implementation or PR delivery.
+description: Review and fix Zhihu-Hyperion functional regressions caused by performance optimizations. Use when a change trades correctness, selection, rendering, scrolling, navigation, or state completeness for laziness, caching, recycling, batching, deferred work, or reduced data structures; also use when deciding whether restoring older behavior would really regress performance. Requires cache-lifetime analysis, real-path staged benchmarks, functional regression coverage, and before/after evidence before implementation or PR delivery.
 ---
 
-# Zhihu++ 性能回归复核
+# Zhihu-Hyperion 性能回归复核
 
 ## 交付门禁
 

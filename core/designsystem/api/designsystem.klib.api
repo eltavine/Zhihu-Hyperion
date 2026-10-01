@@ -5,7 +5,7 @@
 // - Show manifest properties: true
 // - Show declarations: true
 
-// Library unique name: <Zhihu.core:designsystem>
+// Library unique name: <Zhihu-Hyperion.core:designsystem>
 final enum class com.github.zly2006.zhihu.theme/ThemeMode : kotlin/Enum<com.github.zly2006.zhihu.theme/ThemeMode> { // com.github.zly2006.zhihu.theme/ThemeMode|null[0]
     enum entry DARK // com.github.zly2006.zhihu.theme/ThemeMode.DARK|null[0]
     enum entry LIGHT // com.github.zly2006.zhihu.theme/ThemeMode.LIGHT|null[0]

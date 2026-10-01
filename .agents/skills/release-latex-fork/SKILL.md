@@ -1,6 +1,6 @@
 ---
 name: release-latex-fork
-description: Release the LaTeX fork used by Zhihu++. Use when merging the latest huarangmeng/latex release into zly2006/latex, preserving approved fork deltas, publishing Maven Central artifacts, updating Zhihu's vendored third_party/markdown and direct LaTeX dependencies, and verifying the app.
+description: Release the LaTeX fork used by Zhihu-Hyperion. Use when merging the latest huarangmeng/latex release into zly2006/latex, preserving approved fork deltas, publishing Maven Central artifacts, updating Zhihu's vendored third_party/markdown and direct LaTeX dependencies, and verifying the app.
 ---
 
 # Release LaTeX Fork

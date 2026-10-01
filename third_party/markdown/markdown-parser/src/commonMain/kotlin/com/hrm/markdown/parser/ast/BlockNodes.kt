@@ -293,7 +293,7 @@ class FrontMatter(
  * 原生 Compose 块。
  *
  * 该节点不由 Markdown 文本直接解析产生，而是用于外部手工构造 AST 时插入
- * 无法表达为正文 AST 的自定义 Compose 内容。Zhihu++ 当前仅用它承载视频卡片；
+ * 无法表达为正文 AST 的自定义 Compose 内容。Zhihu-Hyperion 当前仅用它承载视频卡片；
  * 文字及其交互必须建模为普通或专用 inline AST，以保留选择和无障碍语义。
  */
 class NativeBlock(

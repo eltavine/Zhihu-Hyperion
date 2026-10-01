@@ -1,9 +1,9 @@
 ---
 name: zhihu-pp-ai-slop-cleaner
-description: Use for Zhihu++ maintenance work that scans Kotlin main sources for low-call functions, structurally similar function bodies, dead code, pure forwarding wrappers, pointless abstractions, repeated helpers, and cross-platform duplicate glue before refactoring or PR cleanup. Trigger when the user asks to clean AI slop, remove low-call wrappers, find similar or duplicated code, review duplicated helper functions, or audit functions with call count at most 2 in /Users/zhaoliyan/IdeaProjects/Zhihu.
+description: Use for Zhihu-Hyperion maintenance work that scans Kotlin main sources for low-call functions, structurally similar function bodies, dead code, pure forwarding wrappers, pointless abstractions, repeated helpers, and cross-platform duplicate glue before refactoring or PR cleanup. Trigger when the user asks to clean AI slop, remove low-call wrappers, find similar or duplicated code, review duplicated helper functions, or audit functions with call count at most 2 in /Users/zhaoliyan/IdeaProjects/Zhihu.
 ---
 
-# Zhihu++ AI Slop Cleaner
+# Zhihu-Hyperion AI Slop Cleaner
 
 ## 强制验证门禁
 

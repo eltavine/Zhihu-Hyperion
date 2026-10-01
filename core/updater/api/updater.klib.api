@@ -5,14 +5,12 @@
 // - Show manifest properties: true
 // - Show declarations: true
 
-// Library unique name: <Zhihu.core:updater>
+// Library unique name: <Zhihu-Hyperion.core:updater>
 final class com.github.zly2006.zhihu.updater/GithubAsset { // com.github.zly2006.zhihu.updater/GithubAsset|null[0]
-    constructor <init>(kotlin/String, kotlin/String, kotlin/String, kotlin/String? = ...) // com.github.zly2006.zhihu.updater/GithubAsset.<init>|<init>(kotlin.String;kotlin.String;kotlin.String;kotlin.String?){}[0]
+    constructor <init>(kotlin/String, kotlin/String, kotlin/String) // com.github.zly2006.zhihu.updater/GithubAsset.<init>|<init>(kotlin.String;kotlin.String;kotlin.String){}[0]
 
     final val browserDownloadUrl // com.github.zly2006.zhihu.updater/GithubAsset.browserDownloadUrl|{}browserDownloadUrl[0]
         final fun <get-browserDownloadUrl>(): kotlin/String // com.github.zly2006.zhihu.updater/GithubAsset.browserDownloadUrl.<get-browserDownloadUrl>|<get-browserDownloadUrl>(){}[0]
-    final val cnDownloadUrl // com.github.zly2006.zhihu.updater/GithubAsset.cnDownloadUrl|{}cnDownloadUrl[0]
-        final fun <get-cnDownloadUrl>(): kotlin/String? // com.github.zly2006.zhihu.updater/GithubAsset.cnDownloadUrl.<get-cnDownloadUrl>|<get-cnDownloadUrl>(){}[0]
     final val contentType // com.github.zly2006.zhihu.updater/GithubAsset.contentType|{}contentType[0]
         final fun <get-contentType>(): kotlin/String // com.github.zly2006.zhihu.updater/GithubAsset.contentType.<get-contentType>|<get-contentType>(){}[0]
     final val name // com.github.zly2006.zhihu.updater/GithubAsset.name|{}name[0]
@@ -21,8 +19,7 @@ final class com.github.zly2006.zhihu.updater/GithubAsset { // com.github.zly2006
     final fun component1(): kotlin/String // com.github.zly2006.zhihu.updater/GithubAsset.component1|component1(){}[0]
     final fun component2(): kotlin/String // com.github.zly2006.zhihu.updater/GithubAsset.component2|component2(){}[0]
     final fun component3(): kotlin/String // com.github.zly2006.zhihu.updater/GithubAsset.component3|component3(){}[0]
-    final fun component4(): kotlin/String? // com.github.zly2006.zhihu.updater/GithubAsset.component4|component4(){}[0]
-    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String? = ...): com.github.zly2006.zhihu.updater/GithubAsset // com.github.zly2006.zhihu.updater/GithubAsset.copy|copy(kotlin.String;kotlin.String;kotlin.String;kotlin.String?){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String = ...): com.github.zly2006.zhihu.updater/GithubAsset // com.github.zly2006.zhihu.updater/GithubAsset.copy|copy(kotlin.String;kotlin.String;kotlin.String){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.updater/GithubAsset.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.updater/GithubAsset.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // com.github.zly2006.zhihu.updater/GithubAsset.toString|toString(){}[0]
@@ -108,13 +105,6 @@ final class com.github.zly2006.zhihu.updater/SemanticVersion : kotlin/Comparable
         final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.updater/SemanticVersion> // com.github.zly2006.zhihu.updater/SemanticVersion.Companion.serializer|serializer(){}[0]
     }
 }
-
-final const val com.github.zly2006.zhihu.updater/ZHIHU_PLUS_PLUS_GITHUB_LATEST_RELEASE_URL // com.github.zly2006.zhihu.updater/ZHIHU_PLUS_PLUS_GITHUB_LATEST_RELEASE_URL|{}ZHIHU_PLUS_PLUS_GITHUB_LATEST_RELEASE_URL[0]
-    final fun <get-ZHIHU_PLUS_PLUS_GITHUB_LATEST_RELEASE_URL>(): kotlin/String // com.github.zly2006.zhihu.updater/ZHIHU_PLUS_PLUS_GITHUB_LATEST_RELEASE_URL.<get-ZHIHU_PLUS_PLUS_GITHUB_LATEST_RELEASE_URL>|<get-ZHIHU_PLUS_PLUS_GITHUB_LATEST_RELEASE_URL>(){}[0]
-final const val com.github.zly2006.zhihu.updater/ZHIHU_PLUS_PLUS_GITHUB_NIGHTLY_RELEASE_URL // com.github.zly2006.zhihu.updater/ZHIHU_PLUS_PLUS_GITHUB_NIGHTLY_RELEASE_URL|{}ZHIHU_PLUS_PLUS_GITHUB_NIGHTLY_RELEASE_URL[0]
-    final fun <get-ZHIHU_PLUS_PLUS_GITHUB_NIGHTLY_RELEASE_URL>(): kotlin/String // com.github.zly2006.zhihu.updater/ZHIHU_PLUS_PLUS_GITHUB_NIGHTLY_RELEASE_URL.<get-ZHIHU_PLUS_PLUS_GITHUB_NIGHTLY_RELEASE_URL>|<get-ZHIHU_PLUS_PLUS_GITHUB_NIGHTLY_RELEASE_URL>(){}[0]
-final const val com.github.zly2006.zhihu.updater/ZHIHU_PLUS_PLUS_REDEN_LATEST_RELEASE_URL // com.github.zly2006.zhihu.updater/ZHIHU_PLUS_PLUS_REDEN_LATEST_RELEASE_URL|{}ZHIHU_PLUS_PLUS_REDEN_LATEST_RELEASE_URL[0]
-    final fun <get-ZHIHU_PLUS_PLUS_REDEN_LATEST_RELEASE_URL>(): kotlin/String // com.github.zly2006.zhihu.updater/ZHIHU_PLUS_PLUS_REDEN_LATEST_RELEASE_URL.<get-ZHIHU_PLUS_PLUS_REDEN_LATEST_RELEASE_URL>|<get-ZHIHU_PLUS_PLUS_REDEN_LATEST_RELEASE_URL>(){}[0]
 
 final fun com.github.zly2006.zhihu.updater/extractGithubReleaseNotes(kotlin/String): kotlin/String // com.github.zly2006.zhihu.updater/extractGithubReleaseNotes|extractGithubReleaseNotes(kotlin.String){}[0]
 final suspend fun com.github.zly2006.zhihu.updater/fetchLatestZhihuRelease(io.ktor.client/HttpClient, kotlin/String?): com.github.zly2006.zhihu.updater/GithubRelease // com.github.zly2006.zhihu.updater/fetchLatestZhihuRelease|fetchLatestZhihuRelease(io.ktor.client.HttpClient;kotlin.String?){}[0]

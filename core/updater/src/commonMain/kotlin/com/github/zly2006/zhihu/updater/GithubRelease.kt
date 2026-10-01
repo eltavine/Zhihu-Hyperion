@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,9 +26,8 @@ import io.ktor.http.HttpHeaders
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-const val ZHIHU_PLUS_PLUS_GITHUB_LATEST_RELEASE_URL = "https://api.github.com/repos/zly2006/zhihu-plus-plus/releases/latest"
-const val ZHIHU_PLUS_PLUS_REDEN_LATEST_RELEASE_URL = "https://redenmc.com/api/zhihu/releases/latest"
-const val ZHIHU_PLUS_PLUS_GITHUB_NIGHTLY_RELEASE_URL = "https://api.github.com/repos/zly2006/zhihu-plus-plus/releases/tags/nightly"
+private const val ZHIHU_HYPERION_GITHUB_LATEST_RELEASE_URL = "https://api.github.com/repos/eltavine/Zhihu-Hyperion/releases/latest"
+private const val ZHIHU_HYPERION_GITHUB_NIGHTLY_RELEASE_URL = "https://api.github.com/repos/eltavine/Zhihu-Hyperion/releases/tags/nightly"
 
 @Serializable
 data class GithubRelease(
@@ -43,7 +42,6 @@ data class GithubAsset(
     val name: String,
     @SerialName("content_type") val contentType: String,
     @SerialName("browser_download_url") val browserDownloadUrl: String,
-    @SerialName("cn_download_url") val cnDownloadUrl: String? = null,
 )
 
 fun extractGithubReleaseNotes(body: String): String = body
@@ -55,10 +53,8 @@ fun extractGithubReleaseNotes(body: String): String = body
 suspend fun fetchLatestZhihuRelease(
     client: HttpClient,
     githubToken: String?,
-): GithubRelease = runCatching {
-    client.get(ZHIHU_PLUS_PLUS_REDEN_LATEST_RELEASE_URL).raiseForStatus().body<GithubRelease>()
-}.getOrNull() ?: client
-    .get(ZHIHU_PLUS_PLUS_GITHUB_LATEST_RELEASE_URL) {
+): GithubRelease = client
+    .get(ZHIHU_HYPERION_GITHUB_LATEST_RELEASE_URL) {
         githubToken?.let { token ->
             headers {
                 append(HttpHeaders.Authorization, "Bearer $token")
@@ -71,7 +67,7 @@ suspend fun fetchNightlyZhihuRelease(
     client: HttpClient,
     githubToken: String?,
 ): GithubRelease = client
-    .get(ZHIHU_PLUS_PLUS_GITHUB_NIGHTLY_RELEASE_URL) {
+    .get(ZHIHU_HYPERION_GITHUB_NIGHTLY_RELEASE_URL) {
         githubToken?.let { token ->
             headers {
                 append(HttpHeaders.Authorization, "Bearer $token")
@@ -82,7 +78,6 @@ suspend fun fetchNightlyZhihuRelease(
 
 internal data class AndroidReleaseDownloadInfo(
     val browserDownloadUrl: String,
-    val cnDownloadUrl: String? = null,
     val opensExternally: Boolean = false,
 )
 
@@ -91,7 +86,7 @@ internal fun GithubRelease.extractAndroidDownloadInfo(isLiteVariant: Boolean): A
     val variant = if (isLiteVariant) "lite" else "full"
     val selectedAsset = apkAssets.firstOrNull { it.name.contains(variant, ignoreCase = true) } ?: apkAssets.firstOrNull()
     if (selectedAsset != null) {
-        return AndroidReleaseDownloadInfo(selectedAsset.browserDownloadUrl, selectedAsset.cnDownloadUrl)
+        return AndroidReleaseDownloadInfo(selectedAsset.browserDownloadUrl)
     }
     val quarkUrl = Regex("""https://pan\.quark\.cn/s/[A-Za-z0-9_-]+(?:\?[A-Za-z0-9._~%!$&*+,;=:@/?-]+)?""")
         .find(body.orEmpty())

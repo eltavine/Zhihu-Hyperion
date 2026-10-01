@@ -1,6 +1,6 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
- * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
+ * Copyright (C) 2026, eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -128,7 +128,7 @@ fun WebDavSyncScreen() {
                 title = "服务器",
                 footer = {
                     Text(
-                        "填写 WebDAV 目录地址，例如坚果云的 https://dav.jianguoyun.com/dav/。备份保存在其中的 zhihu-plus-plus 文件夹；账号信息只保存在本机。",
+                        "填写 WebDAV 目录地址，例如坚果云的 https://dav.jianguoyun.com/dav/。备份保存在其中的 zhihu-hyperion 文件夹；账号信息只保存在本机。",
                     )
                 },
             ) {

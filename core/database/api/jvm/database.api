@@ -493,7 +493,6 @@ public final class com/github/zly2006/zhihu/viewmodel/filter/ContentViewRecord$C
 }
 
 public final class com/github/zly2006/zhihu/viewmodel/filter/JvmContentFilterDatabaseKt {
-	public static final fun desktopContentFilterDatabaseFile ()Ljava/io/File;
 	public static final fun getContentFilterDatabase (Ljava/io/File;)Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterDatabase;
 }
 

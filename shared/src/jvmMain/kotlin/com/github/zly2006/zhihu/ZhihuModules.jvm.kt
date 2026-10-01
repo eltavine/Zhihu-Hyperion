@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,6 @@ import com.github.zly2006.zhihu.account.accountModule
 import com.github.zly2006.zhihu.data.dataModule
 import com.github.zly2006.zhihu.data.databaseModule
 import com.github.zly2006.zhihu.desktop.desktopZhihuDataFile
-import com.github.zly2006.zhihu.desktop.desktopZhihuLegacyAccountFile
 import com.github.zly2006.zhihu.notification.desktopNotificationSettingsStore
 import com.github.zly2006.zhihu.platform.desktopSettingsStore
 import com.github.zly2006.zhihu.util.AtomicTextFile
@@ -29,15 +28,14 @@ import com.github.zly2006.zhihu.viewmodel.AccountWebClientProvider
 import com.github.zly2006.zhihu.viewmodel.MobileClientProvider
 import com.github.zly2006.zhihu.viewmodel.WebDavConfigFile
 import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
-import com.github.zly2006.zhihu.viewmodel.filter.desktopContentFilterDatabaseFile
 import kotlinx.io.files.Path
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
 /** 桌面进程的全部 Koin 绑定，由 desktopApp 的组合根启动。 */
 fun desktopZhihuModules(): List<Module> = listOf(
-    accountModule(Path(desktopZhihuLegacyAccountFile().toString())),
-    databaseModule(desktopContentFilterDatabaseFile(), desktopZhihuDataFile("local-content.db")),
+    accountModule(Path(desktopZhihuDataFile("account.json").path)),
+    databaseModule(desktopZhihuDataFile("content-filter.db"), desktopZhihuDataFile("local-content.db")),
     dataModule(Path(desktopZhihuDataFile("history.json").path)),
     zhihuSharedModule,
     module {

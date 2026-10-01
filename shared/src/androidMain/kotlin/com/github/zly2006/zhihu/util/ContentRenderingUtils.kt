@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -113,7 +113,7 @@ fun saveBitmapToGallery(
         context = context,
         displayName = displayName,
         mimeType = "image/jpeg",
-        relativePath = Environment.DIRECTORY_PICTURES + "/Zhihu++",
+        relativePath = Environment.DIRECTORY_PICTURES + "/Zhihu-Hyperion",
     ) { outputStream ->
         if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)) {
             throw IllegalStateException("Failed to encode image")

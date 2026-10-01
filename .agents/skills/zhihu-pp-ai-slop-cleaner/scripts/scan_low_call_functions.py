@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Scan Zhihu++ Kotlin main sources for low-call function candidates.
+"""Scan Zhihu-Hyperion Kotlin main sources for low-call function candidates.
 
 This script is a review queue generator, not a refactoring oracle.
 """

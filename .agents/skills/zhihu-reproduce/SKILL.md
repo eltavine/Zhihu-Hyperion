@@ -1,6 +1,6 @@
 ---
 name: zhihu-reproduce
-description: 复刻或验证知乎的产品功能、交互、接口、字段、分页、创作流程和视觉行为，并落地到 Zhihu++。当需求包含“知乎有什么我全要”、官方行为对齐、API 字段/include 判断、Web 与 Android 差异、真实请求取证或协议稳定性时使用。
+description: 复刻或验证知乎的产品功能、交互、接口、字段、分页、创作流程和视觉行为，并落地到 Zhihu-Hyperion。当需求包含“知乎有什么我全要”、官方行为对齐、API 字段/include 判断、Web 与 Android 差异、真实请求取证或协议稳定性时使用。
 ---
 
 # Zhihu Reproduce
@@ -34,7 +34,7 @@ Gate 1 未通过条件：仍用“应该有”“大概类似”“顺便支持�
 1. 官方 Web 能完整操作：使用独立已登录 Edge/Chrome + JavaScript/CDP。它适合 DOM、批量交互、N+1 边界和网络捕获，是默认主执行面。
 2. 已知接口契约：使用 `zhurl` 重放原始 JSON；Web 和 Android headers 分开验证。
 3. 官方 Android：只补 Web 缺失的移动端专属入口、UI、灰度或协议。记录包名、版本、API、登录态和导航路径。
-4. Zhihu++：只用于验证项目生产链路，不能反过来证明官方产品行为。
+4. Zhihu-Hyperion：只用于验证项目生产链路，不能反过来证明官方产品行为。
 
 浏览器必须使用独立 profile。此 Mac 使用：
 

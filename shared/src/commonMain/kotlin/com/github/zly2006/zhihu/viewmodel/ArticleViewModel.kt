@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -172,7 +172,7 @@ class ArticleViewModel(
     var aigcNamedVoters by mutableStateOf<List<AigcVoteNamedVoter>>(emptyList())
         private set
 
-    /** 自家后端支持人数：在 Zhihu++ 服务中把该内容标记为 AIGC 的有效用户数。 */
+    /** 自家后端支持人数：在 Zhihu-Hyperion 服务中把该内容标记为 AIGC 的有效用户数。 */
     var aigcEffectiveFlagCount by mutableIntStateOf(0)
         private set
     var aigcCurrentVersionFlagCount by mutableIntStateOf(0)

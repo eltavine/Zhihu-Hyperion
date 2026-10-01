@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,7 +40,7 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 const val ARTICLE_EXPORT_TEMPLATE_ASSET = "article_export_template.html"
-const val ARTICLE_EXPORT_GITHUB_URL = "https://github.com/zly2006/zhihu-plus-plus"
+const val ARTICLE_EXPORT_GITHUB_URL = "https://github.com/eltavine/Zhihu-Hyperion"
 private const val ARTICLE_EXPORT_IMAGE_FETCH_CONCURRENCY = 6
 
 data class ArticleExportFooterData(

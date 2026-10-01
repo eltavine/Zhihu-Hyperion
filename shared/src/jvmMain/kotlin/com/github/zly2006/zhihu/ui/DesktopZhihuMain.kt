@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -83,7 +83,7 @@ import kotlinx.coroutines.withContext
 import org.koin.compose.koinInject
 
 /**
- * Desktop 平台的 Zhihu++ 主界面入口。
+ * Desktop 平台的 Zhihu-Hyperion 主界面入口。
  *
  * 这里创建桌面 NavController、账号存储、HTTP 客户端和视频/文章等平台行为，再注入共享 [ZhihuMain]。
  * 设计上尽量复用 common 页面结构，只把浏览器打开、签名请求、回答切换状态和桌面账号读取留在 JVM 侧。

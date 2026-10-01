@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -207,12 +207,12 @@ fun SystemAndUpdateSettingsScreen(
                                     SelectionContainer {
                                         Text(
                                             buildAnnotatedString {
-                                                val prRegex = Regex("https://github.com/zly2006/zhihu-plus-plus/pull/(\\d+)")
+                                                val prRegex = Regex("https://github.com/eltavine/Zhihu-Hyperion/pull/(\\d+)")
                                                 var lastIndex = 0
                                                 prRegex.findAll(releaseNotes!!).forEach { matchResult ->
                                                     append(releaseNotes!!.substring(lastIndex, matchResult.range.first))
                                                     val prNumber = matchResult.groupValues[1]
-                                                    withLink(LinkAnnotation.Url("https://github.com/zly2006/zhihu-plus-plus/pull/$prNumber")) {
+                                                    withLink(LinkAnnotation.Url("https://github.com/eltavine/Zhihu-Hyperion/pull/$prNumber")) {
                                                         withStyle(
                                                             MaterialTheme.typography.bodyMedium
                                                                 .copy(color = MaterialTheme.colorScheme.primary)
@@ -231,7 +231,7 @@ fun SystemAndUpdateSettingsScreen(
                                     }
                                     Spacer(modifier = Modifier.height(12.dp))
                                     TextButton(
-                                        onClick = { openExternalUrl("https://github.com/zly2006/zhihu-plus-plus/releases") },
+                                        onClick = { openExternalUrl("https://github.com/eltavine/Zhihu-Hyperion/releases") },
                                         modifier = Modifier.align(Alignment.End),
                                     ) {
                                         Text("查看完整更新日志")
@@ -246,26 +246,6 @@ fun SystemAndUpdateSettingsScreen(
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
-                        val cnDownloadUrl = (updateState as? SystemUpdateState.UpdateAvailable)?.cnDownloadUrl
-                        if (!cnDownloadUrl.isNullOrBlank()) {
-                            Button(
-                                onClick = {
-                                    runCatching {
-                                        openExternalUrl(cnDownloadUrl)
-                                    }.onFailure {
-                                        setSystemUpdateError(it.message ?: "无法打开浏览器")
-                                    }
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                            ) {
-                                Text("使用国内网盘加速下载", Modifier.padding(0.dp, 4.dp))
-                            }
-                            Text(
-                                "使用国内网盘下载，不需要梯，网络稳定。您也可以选择使用GitHub下载。",
-                                style = MaterialTheme.typography.bodyMedium,
-                            )
-                            Spacer(modifier = Modifier.height(12.dp))
-                        }
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -567,7 +547,7 @@ fun SystemAndUpdateSettingsScreen(
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     },
-                    onClick = { openExternalUrl("https://github.com/zly2006/zhihu-plus-plus/issues") },
+                    onClick = { openExternalUrl("https://github.com/eltavine/Zhihu-Hyperion/issues") },
                 )
             }
         }

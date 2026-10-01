@@ -5,7 +5,7 @@
 // - Show manifest properties: true
 // - Show declarations: true
 
-// Library unique name: <Zhihu.core:nlp>
+// Library unique name: <Zhihu-Hyperion.core:nlp>
 abstract fun interface com.github.zly2006.zhihu.nlp/KeywordWeightExtractor { // com.github.zly2006.zhihu.nlp/KeywordWeightExtractor|null[0]
     abstract suspend fun extractKeywordsWithWeight(kotlin/String, kotlin/Int): kotlin.collections/List<com.github.zly2006.zhihu.nlp/KeywordWithWeight> // com.github.zly2006.zhihu.nlp/KeywordWeightExtractor.extractKeywordsWithWeight|extractKeywordsWithWeight(kotlin.String;kotlin.Int){}[0]
 }

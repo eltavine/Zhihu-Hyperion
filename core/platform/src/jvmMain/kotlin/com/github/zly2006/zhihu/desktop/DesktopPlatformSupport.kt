@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -51,13 +51,13 @@ private fun desktopImageFileName(
 }
 
 fun desktopZhihuDataDir(): File =
-    File(System.getProperty("user.home"), ".zhihu-plus")
+    File(System.getProperty("user.home"), ".zhihu-hyperion")
 
 fun desktopZhihuDataFile(relativePath: String): File =
     File(desktopZhihuDataDir(), relativePath)
 
 fun desktopZhihuDownloadsDir(errorMessage: String = "无法创建下载目录"): File =
-    File(System.getProperty("user.home"), "Downloads/Zhihu++").also { directory ->
+    File(System.getProperty("user.home"), "Downloads/Zhihu-Hyperion").also { directory ->
         if (!directory.exists() && !directory.mkdirs()) {
             throw IllegalStateException(errorMessage)
         }

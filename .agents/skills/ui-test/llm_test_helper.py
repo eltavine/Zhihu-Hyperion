@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Zhihu++ LLM 自动化测试辅助脚本
+Zhihu-Hyperion LLM 自动化测试辅助脚本
 
 通过 UIAutomator dump + adb 精准交互 UI 元素，替代硬编码坐标。
 
@@ -29,8 +29,8 @@ import time
 import xml.etree.ElementTree as ET
 from typing import Optional
 
-PACKAGE_LITE = "com.github.zly2006.zhplus.lite"
-PACKAGE_FULL = "com.github.zly2006.zhplus"
+PACKAGE_LITE = "com.eltavine.zhihuhyperion.lite"
+PACKAGE_FULL = "com.eltavine.zhihuhyperion"
 UI_DUMP_DEVICE = "/sdcard/ui_dump.xml"
 UI_DUMP_LOCAL = "/tmp/zhihu_ui_dump.xml"
 
@@ -458,7 +458,7 @@ def add_selector_args(p: argparse.ArgumentParser):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Zhihu++ LLM 自动化测试辅助工具",
+        description="Zhihu-Hyperion LLM 自动化测试辅助工具",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     sub = parser.add_subparsers(dest="command", required=True)

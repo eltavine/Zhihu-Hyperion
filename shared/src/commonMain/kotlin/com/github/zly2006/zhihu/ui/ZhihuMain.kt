@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -192,7 +192,7 @@ internal val LocalReadingPlayerOverlayPadding = staticCompositionLocalOf { 0.dp 
 internal val LocalArticleNavController = staticCompositionLocalOf<NavHostController?> { null }
 
 /**
- * Zhihu++ 的共享应用主壳。
+ * Zhihu-Hyperion 的共享应用主壳。
  *
  * 这个 composable 是顶层体验的唯一所有者：渲染可配置底部导航栏，承载横向主 tab pager，向子页面提供 [LocalNavigator]，
  * 并注册跨平台共享的 typed [NavDestination] route。设计上把顶层 tab 收在 [MainTabs] 内部，而不是把每个 tab

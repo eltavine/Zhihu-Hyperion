@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ import com.github.zly2006.zhihu.viewmodel.ArticleViewModel
 import org.koin.compose.koinInject
 
 /**
- * Android 平台的 Zhihu++ 主界面入口。
+ * Android 平台的 Zhihu-Hyperion 主界面入口。
  *
  * 这里把 [MainActivity] 持有的导航、偏好设置、文章页 ViewModel、回答切换转场和 NLP 页面适配到共享 [ZhihuMain]。
  * UI 结构仍由 common 主壳负责，Android 只提供生命周期、Activity、ViewModel 和平台专属页面实现。

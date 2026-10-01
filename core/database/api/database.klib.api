@@ -5,7 +5,7 @@
 // - Show manifest properties: true
 // - Show declarations: true
 
-// Library unique name: <Zhihu.core:database>
+// Library unique name: <Zhihu-Hyperion.core:database>
 final enum class com.github.zly2006.zhihu.viewmodel.filter/KeywordType : kotlin/Enum<com.github.zly2006.zhihu.viewmodel.filter/KeywordType> { // com.github.zly2006.zhihu.viewmodel.filter/KeywordType|null[0]
     enum entry EXACT_MATCH // com.github.zly2006.zhihu.viewmodel.filter/KeywordType.EXACT_MATCH|null[0]
     enum entry NLP_SEMANTIC // com.github.zly2006.zhihu.viewmodel.filter/KeywordType.NLP_SEMANTIC|null[0]

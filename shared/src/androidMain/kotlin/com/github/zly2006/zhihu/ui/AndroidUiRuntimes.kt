@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -185,7 +185,7 @@ actual fun rememberBlocklistRuleExporter(): BlocklistRuleExporter {
             override suspend fun invoke(): String {
                 val file = withContext(Dispatchers.IO) {
                     val dir = context.getExternalFilesDir(null) ?: context.filesDir
-                    val file = File(dir, "zhihupp_blocklist.json")
+                    val file = File(dir, "zhihu_hyperion_blocklist.json")
                     file.writeText(
                         encodeBlocklistBackup(
                             keywordDao = database.blockedKeywordDao(),

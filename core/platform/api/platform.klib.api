@@ -5,7 +5,7 @@
 // - Show manifest properties: true
 // - Show declarations: true
 
-// Library unique name: <Zhihu.core:platform>
+// Library unique name: <Zhihu-Hyperion.core:platform>
 final enum class com.github.zly2006.zhihu.platform/UserMessageDuration : kotlin/Enum<com.github.zly2006.zhihu.platform/UserMessageDuration> { // com.github.zly2006.zhihu.platform/UserMessageDuration|null[0]
     enum entry Long // com.github.zly2006.zhihu.platform/UserMessageDuration.Long|null[0]
     enum entry Short // com.github.zly2006.zhihu.platform/UserMessageDuration.Short|null[0]

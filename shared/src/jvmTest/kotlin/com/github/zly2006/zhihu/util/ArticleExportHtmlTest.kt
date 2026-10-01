@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -123,8 +123,8 @@ class ArticleExportHtmlTest {
         assertTrue(html.contains("导出日期："))
         assertTrue(html.contains("发布日期："))
         assertFalse(html.contains("编辑日期："), "编辑和发布同一时间时不应显示编辑日期")
-        assertTrue(html.contains("知乎++"))
-        assertTrue(html.contains("GitHub地址：https://github.com/zly2006/zhihu-plus-plus"))
+        assertTrue(html.contains("Zhihu-Hyperion"))
+        assertTrue(html.contains("GitHub地址：https://github.com/eltavine/Zhihu-Hyperion"))
     }
 
     @Test

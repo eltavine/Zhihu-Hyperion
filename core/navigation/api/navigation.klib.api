@@ -5,7 +5,7 @@
 // - Show manifest properties: true
 // - Show declarations: true
 
-// Library unique name: <Zhihu.core:navigation>
+// Library unique name: <Zhihu-Hyperion.core:navigation>
 final enum class com.github.zly2006.zhihu.navigation/ArticleType : kotlin/Enum<com.github.zly2006.zhihu.navigation/ArticleType> { // com.github.zly2006.zhihu.navigation/ArticleType|null[0]
     enum entry Answer // com.github.zly2006.zhihu.navigation/ArticleType.Answer|null[0]
     enum entry Article // com.github.zly2006.zhihu.navigation/ArticleType.Article|null[0]

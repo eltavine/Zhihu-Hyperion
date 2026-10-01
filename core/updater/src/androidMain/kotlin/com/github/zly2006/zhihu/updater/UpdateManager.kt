@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -62,7 +62,6 @@ object UpdateManager {
             val isNightly: Boolean = false,
             val releaseNotes: String?,
             val downloadUrl: String,
-            val cnDownloadUrl: String?,
             val opensExternally: Boolean = false,
         ) : UpdateState()
 
@@ -140,7 +139,6 @@ object UpdateManager {
                         false,
                         latestResponse.body?.let(::extractGithubReleaseNotes),
                         latestDownloadInfo.browserDownloadUrl,
-                        latestDownloadInfo.cnDownloadUrl,
                         latestDownloadInfo.opensExternally,
                     )
                     return true // 有可用更新且未被跳过
@@ -209,7 +207,6 @@ object UpdateManager {
                     isNightly,
                     releaseNotes,
                     downloadInfo.browserDownloadUrl,
-                    downloadInfo.cnDownloadUrl,
                     downloadInfo.opensExternally,
                 )
             } else {

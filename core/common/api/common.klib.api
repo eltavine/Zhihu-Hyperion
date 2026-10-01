@@ -5,7 +5,7 @@
 // - Show manifest properties: true
 // - Show declarations: true
 
-// Library unique name: <Zhihu.core:common>
+// Library unique name: <Zhihu-Hyperion.core:common>
 abstract interface com.github.zly2006.zhihu.util/TextDocumentStore { // com.github.zly2006.zhihu.util/TextDocumentStore|null[0]
     abstract fun delete() // com.github.zly2006.zhihu.util/TextDocumentStore.delete|delete(){}[0]
     abstract fun readText(): kotlin/String? // com.github.zly2006.zhihu.util/TextDocumentStore.readText|readText(){}[0]

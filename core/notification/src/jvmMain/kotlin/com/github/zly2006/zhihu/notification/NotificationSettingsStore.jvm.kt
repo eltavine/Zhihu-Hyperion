@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ import com.github.zly2006.zhihu.platform.DesktopPropertiesFile
 fun desktopNotificationSettingsStore(): NotificationSettingsStore = DesktopNotificationSettingsStore()
 
 private class DesktopNotificationSettingsStore : NotificationSettingsStore {
-    private val propertiesFile = DesktopPropertiesFile(desktopZhihuDataFile("notification_settings.properties"), "Zhihu++ desktop notification settings")
+    private val propertiesFile = DesktopPropertiesFile(desktopZhihuDataFile("notification_settings.properties"), "Zhihu-Hyperion desktop notification settings")
     private val properties = propertiesFile.properties
 
     override fun getSystemNotificationEnabled(type: NotificationType): Boolean =

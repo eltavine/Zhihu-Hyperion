@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,15 +45,15 @@ object OpenInBrowser {
         val jojo = environment.fetchJson("https://www.zhihu.com/api/v4/people/$urlToken/collections?limit=50", "")!!
         val collection = ZhihuJson
             .decodeJson<List<Collection>>(jojo["data"]!!)
-            .firstOrNull { it.description == "com.github.zly2006.zhplus.openinbrowser" }
+            .firstOrNull { it.description == "com.eltavine.zhihuhyperion.openinbrowser" }
             ?: ZhihuJson.decodeJson<Collection>(
                 environment
                     .postSigned("https://www.zhihu.com/api/v4/collections") {
                         contentType(ContentType.Application.Json)
                         setBody(
                             buildJsonObject {
-                                put("title", "Zhihu++: 要在浏览器中打开的内容")
-                                put("description", "com.github.zly2006.zhplus.openinbrowser")
+                                put("title", "Zhihu-Hyperion: 要在浏览器中打开的内容")
+                                put("description", "com.eltavine.zhihuhyperion.openinbrowser")
                                 put("is_public", false)
                             },
                         )

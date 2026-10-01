@@ -1,5 +1,5 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@ plugins {
 kotlin {
     macosArm64 {
         binaries.executable {
-            baseName = "ZhihuPlusPlus"
+            baseName = "ZhihuHyperion"
             entryPoint = "com.github.zly2006.zhihu.macos.main"
         }
     }
@@ -43,14 +43,14 @@ kotlin {
     }
 }
 
-registerMacosAppBundle("Release", executableBaseName = "ZhihuPlusPlus", bundleName = "Zhihu++", taskSuffix = "MacosApp")
-val debugApp = registerMacosAppBundle("Debug", executableBaseName = "ZhihuPlusPlus", bundleName = "Zhihu++", taskSuffix = "MacosApp")
+registerMacosAppBundle("Release", executableBaseName = "ZhihuHyperion", bundleName = "Zhihu-Hyperion", taskSuffix = "MacosApp")
+val debugApp = registerMacosAppBundle("Debug", executableBaseName = "ZhihuHyperion", bundleName = "Zhihu-Hyperion", taskSuffix = "MacosApp")
 
 tasks.named<Exec>("runDebugExecutableMacosArm64") {
     dependsOn("syncDebugMacosApp")
     executable =
         debugApp
             .get()
-            .file("Contents/MacOS/ZhihuPlusPlus")
+            .file("Contents/MacOS/ZhihuHyperion")
             .asFile.absolutePath
 }

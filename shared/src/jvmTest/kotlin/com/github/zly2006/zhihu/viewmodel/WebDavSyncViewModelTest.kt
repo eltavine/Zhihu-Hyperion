@@ -1,6 +1,6 @@
 /*
- * Zhihu++ - Free & Ad-Free Zhihu client for all platforms.
- * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
+ * Copyright (C) 2026, eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -88,9 +88,9 @@ class WebDavSyncViewModelTest {
         assertEquals("已上传屏蔽列表和 3 项设置", viewModel.status)
         assertEquals(
             listOf(
-                "MKCOL https://dav.example.com/dav/zhihu-plus-plus/",
-                "PUT https://dav.example.com/dav/zhihu-plus-plus/blocklist.json",
-                "PUT https://dav.example.com/dav/zhihu-plus-plus/settings.json",
+                "MKCOL https://dav.example.com/dav/zhihu-hyperion/",
+                "PUT https://dav.example.com/dav/zhihu-hyperion/blocklist.json",
+                "PUT https://dav.example.com/dav/zhihu-hyperion/settings.json",
             ),
             requests.map { "${it.method.value} ${it.url}" },
         )
