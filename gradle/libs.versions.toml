@@ -19,6 +19,8 @@ module-graph-assertion = "2.9.1"
 android-compileSdk = "37"
 android-minSdk = "27"
 android-targetSdk = "35"
+# The Full flavor's Rust tokenizer links against this NDK; CI installs the same version.
+android-ndk = "29.0.14206865"
 
 # ---- AndroidX ----
 androidx-activity = "1.13.0"

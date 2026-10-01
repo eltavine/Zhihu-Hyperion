@@ -1,0 +1,34 @@
+{
+  "versionName": "1.2.3",
+  "versionCode": 1300,
+  "commit": "0123456789abcdef0123456789abcdef01234567",
+  "releaseUrl": "https://github.com/eltavine/Zhihu-Hyperion/releases/tag/nightly",
+  "notes": "- 修复更新检查 (abc1234)",
+  "assets": {
+    "android-lite": {
+      "url": "https://github.com/eltavine/Zhihu-Hyperion/releases/download/nightly/zhihu-hyperion-lite.apk",
+      "size": 23,
+      "sha256": "c0b571e4083c62eeb871aac112ef3cc87251227400f9a7f5b06e9df2abb9d3a0"
+    },
+    "android-full": {
+      "url": "https://github.com/eltavine/Zhihu-Hyperion/releases/download/nightly/zhihu-hyperion-full.apk",
+      "size": 23,
+      "sha256": "5476c1e13c054eb8940a588263e063b3e88ee0c9a5b967eaaf98efbb7ebdd5c2"
+    },
+    "windows-x64": {
+      "url": "https://github.com/eltavine/Zhihu-Hyperion/releases/download/nightly/zhihu-hyperion-desktop-windows-x64.msi",
+      "size": 38,
+      "sha256": "1301274a95c41c7b11b9188073834b185bf2aed487283bedb3d19c1e843e603f"
+    },
+    "linux-x64": {
+      "url": "https://github.com/eltavine/Zhihu-Hyperion/releases/download/nightly/zhihu-hyperion-desktop-linux-x64.AppImage",
+      "size": 41,
+      "sha256": "273c325d34b2b3391586e9da084de1e98163a2abfa9f84c870a567c62f6d93fb"
+    },
+    "macos-arm64": {
+      "url": "https://github.com/eltavine/Zhihu-Hyperion/releases/download/nightly/zhihu-hyperion-desktop-macos-arm64.app.zip",
+      "size": 42,
+      "sha256": "a3e8a42250be22cd90ea95ed688215dca339069109d9968d30b08da493bbdf7f"
+    }
+  }
+}

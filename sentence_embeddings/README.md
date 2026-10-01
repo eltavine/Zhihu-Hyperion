@@ -6,7 +6,7 @@ This module builds an Android AAR library that includes Rust-based HuggingFace t
 
 ### Local Development
 - Android Studio Arctic Fox or later
-- Android NDK 29.0.14206865 (installed via SDK Manager)
+- Android NDK at the `android-ndk` version pinned in `gradle/libs.versions.toml` (installed via SDK Manager)
 - Rust toolchain (https://rustup.rs/)
 - cargo-ndk: `cargo install cargo-ndk`
 
@@ -76,7 +76,7 @@ dependencies {
 ### NDK not found
 Make sure `ANDROID_NDK_HOME` is set:
 ```bash
-export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/29.0.14206865
+export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/<android-ndk version>
 ```
 
 ### Rust targets not installed

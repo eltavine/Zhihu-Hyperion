@@ -148,7 +148,7 @@ Zhihu-Hyperion 是一个第三方知乎客户端。它把广告、推广软文�
 
 `versionCode` 等于 `gradle.properties` 中的 `app.versionCodeOffset` 加上 HEAD 的提交数，每次构建都比上一次大，应用的更新检查只比较它，因此构建需要完整的 git 历史，浅克隆会直接失败。
 
-### 发布签名
+### 发布与签名
 
 Android release 构建只在下面四个环境变量都非空时使用发布密钥签名，缺任何一项都会改用 debug 密钥，这样的安装包不能当作正式发布：
 
@@ -157,7 +157,13 @@ Android release 构建只在下面四个环境变量都非空时使用发布密�
 - `ANDROID_KEY_ALIAS`：签名密钥别名
 - `ANDROID_KEY_PASSWORD`：签名密钥密码
 
-CI 从仓库的 `android-signing` 环境读取 `ANDROID_KEYSTORE_BASE64`（keystore 文件的 Base64）和后三项，缺少任何一项都会直接失败，并在打包后用 `apksigner` 核对安装包的签名证书。
+CI 的签名密钥只存放在仓库的 `android-signing` 环境中（`ANDROID_KEYSTORE_BASE64` 即 keystore 文件的 Base64，以及后三项），该环境只允许 `master` 分支使用：
+
+- Pull Request 的检查（`ci.yml`：KtLint、ABI、模块依赖图、单元测试、构建和模拟器上的 mock 测试）不引用这个环境，PR 中的代码拿不到密钥。
+- 每次推送到 `master`，`build.yml` 签名打包并更新[开发版](https://github.com/eltavine/Zhihu-Hyperion/releases/tag/nightly)。
+- 正式版在 `master` 上手动运行 Release（`release.yml`）发布：它按 `app.versionName` 在所构建的提交上创建 `v` 开头的标签，标签已存在时拒绝发布。改版本号可以先运行 Bump Version。
+
+打包后会用 `apksigner` 核对安装包的签名证书。每个发布都附带应用检查更新时读取的 `update.json`，记录版本号、更新说明以及各平台安装包的地址和 SHA-256。
 
 ## 参与贡献
 

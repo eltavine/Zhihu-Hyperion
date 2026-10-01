@@ -1,0 +1,302 @@
+name: Package
+
+# Builds every distributable of the calling run's commit for the nightly and release workflows.
+#
+# Only master may sign: the android job is skipped on any other ref, and the android-signing environment that
+# holds the key admits master alone, so a workflow edited on another branch or in a pull request cannot read it.
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    name: Android release APKs
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    environment: android-signing
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # versionCode counts commits, so the build needs the full history.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Validate signing secrets and prepare release keystore
+        id: keystore
+        shell: bash
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          missing_secrets=()
+          for secret_name in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS ANDROID_KEY_PASSWORD; do
+            if [ -z "${!secret_name:-}" ]; then
+              missing_secrets+=("${secret_name}")
+            fi
+          done
+          if [ "${#missing_secrets[@]}" -ne 0 ]; then
+            printf 'Missing required secrets in the android-signing environment: %s\n' \
+              "$(IFS=', '; echo "${missing_secrets[*]}")" >&2
+            exit 1
+          fi
+
+          keystore_path="$RUNNER_TEMP/release.keystore"
+          if ! printf '%s' "${ANDROID_KEYSTORE_BASE64}" | base64 --decode > "${keystore_path}"; then
+            echo "ANDROID_KEYSTORE_BASE64 is not valid base64." >&2
+            exit 1
+          fi
+          if [ ! -s "${keystore_path}" ]; then
+            echo "Decoded release keystore is empty." >&2
+            exit 1
+          fi
+          chmod 600 "${keystore_path}"
+          echo "keystore_path=${keystore_path}" >> "$GITHUB_OUTPUT"
+
+      - name: Extract expected signing fingerprint
+        id: signing_fingerprint
+        shell: bash
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ steps.keystore.outputs.keystore_path }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          set -euo pipefail
+
+          expected_sha256=$(keytool -J-Duser.language=en -J-Duser.country=US -list -v \
+              -keystore "${ANDROID_KEYSTORE_PATH}" \
+              -storepass "${ANDROID_KEYSTORE_PASSWORD}" \
+              -alias "${ANDROID_KEY_ALIAS}" \
+            | sed -n 's/^[[:space:]]*SHA256:[[:space:]]*//p' \
+            | head -n 1 \
+            | tr -d '[:space:]:' \
+            | tr '[:upper:]' '[:lower:]')
+          if [ -z "${expected_sha256}" ]; then
+            echo "Failed to extract the SHA-256 fingerprint from the configured keystore." >&2
+            exit 1
+          fi
+          echo "sha256=${expected_sha256}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up build toolchain
+        uses: ./.github/actions/setup-build
+        with:
+          cache-read-only: "false"
+          rust: "true"
+
+      # Full and Lite select their Android actuals by task name, so they need separate Gradle invocations.
+      - name: Build release APKs
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ steps.keystore.outputs.keystore_path }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          ./gradlew assembleFullRelease
+          ./gradlew assembleLiteRelease
+
+      - name: Collect APKs
+        run: |
+          mkdir -p dist
+          mv app/build/outputs/apk/full/release/app-full-release.apk dist/zhihu-hyperion-full.apk
+          mv app/build/outputs/apk/lite/release/app-lite-release.apk dist/zhihu-hyperion-lite.apk
+          (cd app/build/outputs/mapping/liteRelease && zip -q "${GITHUB_WORKSPACE}/dist/mapping-lite.zip" mapping.txt)
+
+      # update.json takes its version from the APKs that were actually built, not from a second copy of the
+      # versionCode rule.
+      - name: Verify APK signatures and versions
+        shell: bash
+        env:
+          EXPECTED_SIGNER_SHA256: ${{ steps.signing_fingerprint.outputs.sha256 }}
+        run: |
+          set -euo pipefail
+
+          build_tools_dir=$(find "${ANDROID_SDK_ROOT}/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -n 1)
+          for apk in dist/zhihu-hyperion-full.apk dist/zhihu-hyperion-lite.apk; do
+            actual_sha256=$("${build_tools_dir}/apksigner" verify --print-certs "${apk}" \
+              | sed -n '/Source Stamp/!s/^.*certificate SHA-256 digest:[[:space:]]*//p' \
+              | head -n 1 \
+              | tr -d '[:space:]:' \
+              | tr '[:upper:]' '[:lower:]')
+            if [ "${actual_sha256}" != "${EXPECTED_SIGNER_SHA256}" ]; then
+              echo "${apk} was not signed with the release key." >&2
+              echo "Expected: ${EXPECTED_SIGNER_SHA256}" >&2
+              echo "Actual:   ${actual_sha256:-<none>}" >&2
+              exit 1
+            fi
+          done
+
+          version_of() {
+            "${build_tools_dir}/aapt2" dump badging "$1" \
+              | sed -n "s/^package: .* versionCode='\([0-9]*\)' versionName='\([^']*\)'.*/\1 \2/p"
+          }
+          lite_version="$(version_of dist/zhihu-hyperion-lite.apk)"
+          full_version="$(version_of dist/zhihu-hyperion-full.apk)"
+          if [ -z "${lite_version}" ] || [ "${lite_version}" != "${full_version}" ]; then
+            echo "Lite (${lite_version:-<none>}) and Full (${full_version:-<none>}) APK versions differ." >&2
+            exit 1
+          fi
+          read -r version_code version_name <<< "${lite_version}"
+          python3 -c 'import json, sys; print(json.dumps({"versionName": sys.argv[2], "versionCode": int(sys.argv[1])}))' \
+            "${version_code}" "${version_name}" > dist/build-info.json
+
+      - name: Upload APKs
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: android
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Clean up signing material
+        if: always()
+        shell: bash
+        run: rm -f -- "$RUNNER_TEMP/release.keystore"
+
+  desktop:
+    name: Desktop (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2025, macos-15]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up build toolchain
+        uses: ./.github/actions/setup-build
+        with:
+          cache-read-only: "false"
+
+      - name: Set desktop artifact suffix
+        id: desktop_suffix
+        shell: bash
+        run: |
+          if [[ "$RUNNER_OS" == "macOS" ]]; then
+            echo "suffix=macos-arm64" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          arch="$(uname -m)"
+          case "$arch" in
+            x86_64|amd64) arch="x64" ;;
+            aarch64|arm64) arch="arm64" ;;
+          esac
+          case "$RUNNER_OS" in
+            Linux) os="linux" ;;
+            Windows) os="windows" ;;
+            *) os="$(echo "$RUNNER_OS" | tr '[:upper:]' '[:lower:]')" ;;
+          esac
+          echo "suffix=$os-$arch" >> "$GITHUB_OUTPUT"
+
+      - name: Build desktop distribution
+        if: runner.os != 'macOS'
+        shell: bash
+        run: ./gradlew :desktopApp:packageReleaseDistributionForCurrentOS
+
+      - name: Package Windows MSI
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          mkdir -p dist
+          msi="$(find desktopApp/build/compose/binaries -name '*.msi' | head -n 1)"
+          test -n "$msi"
+          cp "$msi" "dist/zhihu-hyperion-desktop-${{ steps.desktop_suffix.outputs.suffix }}.msi"
+
+      - name: Package Linux AppImage
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          mkdir -p dist
+          # Compose 的 TargetFormat.AppImage 只产出 jpackage 的 app-image 目录，
+          # 需要再用 appimagetool 封装成单文件 .AppImage
+          images_dir="$(find desktopApp/build/compose/binaries -type d -name app -mindepth 2 -maxdepth 2 | head -n 1)"
+          test -n "$images_dir"
+          app_dir="$(find "$images_dir" -mindepth 1 -maxdepth 1 -type d | head -n 1)"
+          test -d "$app_dir/bin"
+
+          appdir="$RUNNER_TEMP/zhihu-appdir"
+          rm -rf "$appdir"
+          mkdir -p "$appdir/usr/share/icons/hicolor/512x512/apps"
+          cp -a "$app_dir/." "$appdir/"
+
+          icon_name="com.eltavine.zhihuhyperion"
+          # 根目录那份是给 appimagetool 校验用的（它不认 hicolor 子目录），hicolor 那份用于安装后的桌面集成
+          cp desktopApp/src/main/resources/desktop-icon.png "$appdir/$icon_name.png"
+          cp desktopApp/src/main/resources/desktop-icon.png "$appdir/usr/share/icons/hicolor/512x512/apps/$icon_name.png"
+          ln -s "$icon_name.png" "$appdir/.DirIcon"
+
+          launcher_name="$(basename "$(find "$appdir/bin" -maxdepth 1 -type f -perm -u+x | head -n 1)")"
+          test -n "$launcher_name"
+
+          cat > "$appdir/zhihu-hyperion.desktop" <<EOF
+          [Desktop Entry]
+          Type=Application
+          Name=Zhihu-Hyperion
+          Comment=自由、无广告的知乎第三方客户端
+          Exec=AppRun
+          Icon=$icon_name
+          Terminal=false
+          Categories=Network;
+          EOF
+
+          cat > "$appdir/AppRun" <<EOF
+          #!/bin/sh
+          HERE="\$(dirname "\$(readlink -f "\$0")")"
+          exec "\$HERE/bin/$launcher_name" "\$@"
+          EOF
+          chmod +x "$appdir/AppRun"
+
+          out="dist/zhihu-hyperion-desktop-${{ steps.desktop_suffix.outputs.suffix }}.AppImage"
+          abs_out="$PWD/$out"
+          appimagetool="$RUNNER_TEMP/appimagetool-x86_64.AppImage"
+          appimagetool_version="1.9.1"
+          appimagetool_sha256="ed4ce84f0d9caff66f50bcca6ff6f35aae54ce8135408b3fa33abfc3cb384eb0"
+          curl -fsSL -o "$appimagetool" \
+            "https://github.com/AppImage/appimagetool/releases/download/$appimagetool_version/appimagetool-x86_64.AppImage"
+          printf '%s  %s\n' "$appimagetool_sha256" "$appimagetool" | sha256sum --check --status -
+          chmod +x "$appimagetool"
+          "$appimagetool" --appimage-extract-and-run "$appdir" "$abs_out"
+
+          # 产物自检：能 --appimage-extract 说明 squashfs 完整
+          (cd "$RUNNER_TEMP" && "$abs_out" --appimage-extract >/dev/null 2>&1)
+          rm -rf "$RUNNER_TEMP/squashfs-root"
+
+      - name: Build and package macOS Kotlin/Native app
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          ./gradlew -Dorg.gradle.jvmargs="-Xmx5120m -Dfile.encoding=UTF-8" :macosApp:packageReleaseMacosApp :macosUiDebug:verifyMacosReleaseIsolation
+
+          app_bundle="macosApp/build/bin/macosArm64/releaseApp/Zhihu-Hyperion.app"
+          app_executable="$app_bundle/Contents/MacOS/ZhihuHyperion"
+          app_archive="dist/zhihu-hyperion-desktop-${{ steps.desktop_suffix.outputs.suffix }}.app.zip"
+          extracted_dir="$RUNNER_TEMP/zhihu-native-release"
+
+          test -d "$app_bundle"
+          /usr/bin/file "$app_executable" | grep -q 'Mach-O 64-bit executable arm64'
+          /usr/bin/codesign --verify --deep --strict "$app_bundle"
+
+          mkdir -p dist
+          /usr/bin/ditto -c -k --sequesterRsrc --keepParent "$app_bundle" "$app_archive"
+          /usr/bin/ditto -x -k "$app_archive" "$extracted_dir"
+          /usr/bin/codesign --verify --deep --strict "$extracted_dir/Zhihu-Hyperion.app"
+
+      - name: Upload desktop package
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: desktop-${{ steps.desktop_suffix.outputs.suffix }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7

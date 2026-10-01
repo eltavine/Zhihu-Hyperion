@@ -1,36 +1,114 @@
-name: Nightly Builds
+name: Nightly
 
+# Every push to master publishes a signed nightly under the moving nightly tag: the APKs, the desktop packages
+# and the update.json the app reads. A newer push waits for a running publish instead of cancelling it, because
+# cancelling between deleting and recreating the release would leave no nightly at all.
 on:
   push:
     branches:
       - master
-    tags:
-      - '*'
   workflow_dispatch:
 
+concurrency:
+  group: nightly
+  cancel-in-progress: false
+
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  build:
-    uses: ./.github/workflows/my-build-action.yml
-    if: startsWith(github.ref, 'refs/heads')
-    with:
-      name: 'Nightly Builds'
-    secrets: inherit
-  build_minified_release:
-    uses: ./.github/workflows/my-build-action.yml
-    if: startsWith(github.ref, 'refs/heads/')
-    with:
-      name: 'Minified Builds'
-      minify: true
-      nightly_release: true
-    secrets: inherit
-  release:
-    uses: ./.github/workflows/my-build-action.yml
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    with:
-      name: 'Release'
-      release: true
-      minify: true
-    secrets: inherit
+  package:
+    name: Package
+    if: github.ref == 'refs/heads/master'
+    uses: ./.github/workflows/package.yml
+
+  publish:
+    name: Publish nightly
+    needs: package
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Download packages
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Write release notes and update manifest
+        id: manifest
+        run: |
+          set -euo pipefail
+
+          notes="$RUNNER_TEMP/notes.md"
+          last_release="$(git describe --tags --match 'v*' --abbrev=0 2>/dev/null || true)"
+          if [ -n "${last_release}" ]; then
+            printf '自 %s 以来的提交：\n\n' "${last_release}" > "${notes}"
+            range="${last_release}..HEAD"
+          else
+            printf '最近的提交：\n\n' > "${notes}"
+            range="HEAD"
+          fi
+          git log --no-merges --max-count=50 --format='- %s (%h)' "${range}" >> "${notes}"
+
+          python3 .github/scripts/write_update_manifest.py \
+            --dist dist \
+            --repository "${GITHUB_REPOSITORY}" \
+            --tag nightly \
+            --commit "${GITHUB_SHA}" \
+            --notes "${notes}"
+          echo "notes=${notes}" >> "$GITHUB_OUTPUT"
+          echo "title=Nightly $(jq -r .versionName dist/update.json) ($(jq -r .versionCode dist/update.json))" >> "$GITHUB_OUTPUT"
+
+      - name: Delete the previous nightly
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const tagName = 'nightly';
+
+            const releases = await github.paginate(github.rest.repos.listReleases, { owner, repo, per_page: 100 });
+            for (const release of releases.filter(r => r.tag_name === tagName)) {
+              core.info(`Deleting nightly release ${release.id}`);
+              await github.rest.repos.deleteRelease({ owner, repo, release_id: release.id });
+            }
+
+            try {
+              await github.rest.git.deleteRef({ owner, repo, ref: `tags/${tagName}` });
+              core.info(`Deleted tag ${tagName}`);
+            } catch (error) {
+              if (error.status !== 422) throw error;
+              core.info(`Tag ${tagName} does not exist`);
+            }
+
+      - name: Publish nightly release
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        with:
+          tag_name: nightly
+          target_commitish: ${{ github.sha }}
+          name: ${{ steps.manifest.outputs.title }}
+          body_path: ${{ steps.manifest.outputs.notes }}
+          prerelease: true
+          files: |
+            dist/update.json
+            dist/zhihu-hyperion-lite.apk
+            dist/zhihu-hyperion-full.apk
+            dist/mapping-lite.zip
+            dist/zhihu-hyperion-desktop-*.AppImage
+            dist/zhihu-hyperion-desktop-*.msi
+            dist/zhihu-hyperion-desktop-*.app.zip
+          fail_on_unmatched_files: true
+
+      - name: Verify the published update manifest
+        run: |
+          curl -fsSL --retry 5 --retry-all-errors \
+            "https://github.com/${GITHUB_REPOSITORY}/releases/download/nightly/update.json" \
+            | cmp - dist/update.json
