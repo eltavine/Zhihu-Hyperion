@@ -27,6 +27,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toComposeImageBitmap
+import androidx.compose.ui.text.input.PlatformImeOptions
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.ui.components.DesktopRiskControlWebView
 import com.github.zly2006.zhihu.ui.components.DesktopWebviewComp
@@ -44,6 +45,8 @@ actual val supportedLoginMethods: List<LoginMethod> = listOf(
 )
 
 actual val isLoginRiskControlSupported: Boolean = true
+
+internal actual val smsCodeImeOptions: PlatformImeOptions? = null
 
 @Composable
 actual fun rememberLoginHttpClient(cookies: MutableMap<String, String>): HttpClient {
