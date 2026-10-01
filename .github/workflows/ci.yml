@@ -36,7 +36,7 @@ jobs:
         uses: ./.github/actions/setup-build
 
       - name: Run KtLint, ABI and module graph checks
-        run: ./gradlew ktlintCheck checkKotlinAbi :app:assertModuleGraph :desktopApp:assertModuleGraph :macosApp:assertModuleGraph :macosUiDebug:assertModuleGraph
+        run: ./gradlew ktlintCheck checkKotlinAbi :app:assertModuleGraph :desktopApp:assertModuleGraph :macosApp:assertModuleGraph :macosUiDebug:assertModuleGraph :iosApp:assertModuleGraph
 
       - name: Verify the update manifest contract
         run: python3 .github/scripts/test_write_update_manifest.py
@@ -169,6 +169,49 @@ jobs:
       - name: Build desktop release package
         run: ./gradlew :desktopApp:packageReleaseDistributionForCurrentOS --max-workers=2
 
+  ios:
+    name: iOS simulator app and unsigned IPA
+    runs-on: macos-15
+    timeout-minutes: 90
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up build toolchain
+        uses: ./.github/actions/setup-build
+
+      - name: Verify the Xcode project matches project.yml
+        run: |
+          xcodegen_version="2.46.0"
+          xcodegen_sha256="4d9e34b62172d645eed6457cac13fc222569974098ef4ee9c3368bedf0196806"
+          curl -fsSL -o "$RUNNER_TEMP/xcodegen.zip" \
+            "https://github.com/yonaskolb/XcodeGen/releases/download/$xcodegen_version/xcodegen.zip"
+          printf '%s  %s\n' "$xcodegen_sha256" "$RUNNER_TEMP/xcodegen.zip" | shasum -a 256 --check --status -
+          unzip -q "$RUNNER_TEMP/xcodegen.zip" -d "$RUNNER_TEMP"
+          "$RUNNER_TEMP/xcodegen/bin/xcodegen" generate --spec iosApp/project.yml --quiet
+          if [ -n "$(git status --porcelain -- iosApp)" ]; then
+            echo "::error::iosApp/ZhihuHyperion.xcodeproj is out of date; run xcodegen generate --spec iosApp/project.yml and commit the result."
+            git status --short -- iosApp
+            git diff -- iosApp
+            exit 1
+          fi
+
+      - name: Build the simulator app and the unsigned IPA
+        run: |
+          iosApp/scripts/package-ios.sh simulator dist/zhihu-hyperion-ios-simulator.app.zip
+          iosApp/scripts/package-ios.sh device dist/zhihu-hyperion-ios-arm64-unsigned.ipa
+
+      - name: Upload iOS packages
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ios
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
+
   instrumented-tests:
     name: Mock instrumented shard (${{ matrix.shard_label }}/5)
     if: needs.android.outputs.run_instrumented_tests == 'true'
@@ -245,6 +288,7 @@ jobs:
       - unit-tests
       - android
       - desktop
+      - ios
       - instrumented-tests
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -255,6 +299,7 @@ jobs:
           UNIT_TESTS: ${{ needs.unit-tests.result }}
           ANDROID: ${{ needs.android.result }}
           DESKTOP: ${{ needs.desktop.result }}
+          IOS: ${{ needs.ios.result }}
           RUN_INSTRUMENTED_TESTS: ${{ needs.android.outputs.run_instrumented_tests }}
           INSTRUMENTED_TESTS: ${{ needs.instrumented-tests.result }}
         run: |
@@ -262,6 +307,7 @@ jobs:
           test "$UNIT_TESTS" = success
           test "$ANDROID" = success
           test "$DESKTOP" = success
+          test "$IOS" = success
           if [[ "$RUN_INSTRUMENTED_TESTS" == "true" ]]; then
             test "$INSTRUMENTED_TESTS" = success
           else

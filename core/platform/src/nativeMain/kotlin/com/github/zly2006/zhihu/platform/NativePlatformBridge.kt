@@ -37,4 +37,11 @@ expect fun nativeChooseBlocklistImportFilePath(): String?
 fun nativeBundledResourcePath(relativePath: String): String? =
     NSBundle.mainBundle.resourcePath?.let { resourceDirectory -> "$resourceDirectory/$relativePath" }
 
-expect fun nativeSettingsStore(relativePath: String): SettingsStore
+fun nativeSettingsStore(relativePath: String): SettingsStore =
+    propertiesFileSettingsStore("${nativeAppPrivateDirectoryPath()}/$relativePath")
+
+actual val isAigcVoteSupported: Boolean = true
+
+actual val isFeedQualityFilterSupported: Boolean = true
+
+actual val isLegacyWebViewSupported: Boolean = false

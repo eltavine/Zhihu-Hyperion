@@ -30,3 +30,7 @@ actual fun currentSystemInDarkTheme(): Boolean =
     NSApplication.sharedApplication
         .effectiveAppearance()
         .bestMatchFromAppearancesWithNames(listOf(NSAppearanceNameAqua, NSAppearanceNameDarkAqua)) == NSAppearanceNameDarkAqua
+
+/** macOS 窗口的标题栏和侧栏外观由系统按“外观”设置绘制，应用不改动。 */
+@Composable
+actual fun PlatformSystemBarEffect(darkTheme: Boolean) = Unit

@@ -106,6 +106,7 @@ jobs:
           {
             echo 'Android 请下载 APK 安装：Full 版带端侧语义模型，支持智能内容过滤；Lite 版体积更小。mapping-lite.zip 只用于分析混淆后的崩溃。'
             echo '桌面端提供内置 Java 运行时的 Windows MSI 与 Linux AppImage，macOS 为 Apple Silicon 原生应用。'
+            echo 'iOS 的 IPA 没有签名，需要先用 AltStore、SideStore、Sideloadly 或自己的开发者证书签名再安装。'
             echo
             cat "${RUNNER_TEMP}/notes.md"
           } > "${RUNNER_TEMP}/body.md"
@@ -126,6 +127,7 @@ jobs:
             dist/zhihu-hyperion-desktop-*.AppImage
             dist/zhihu-hyperion-desktop-*.msi
             dist/zhihu-hyperion-desktop-*.app.zip
+            dist/zhihu-hyperion-ios-*.ipa
           fail_on_unmatched_files: true
 
       - name: Verify the published update manifest

@@ -108,6 +108,7 @@ jobs:
             dist/zhihu-hyperion-desktop-*.AppImage
             dist/zhihu-hyperion-desktop-*.msi
             dist/zhihu-hyperion-desktop-*.app.zip
+            dist/zhihu-hyperion-ios-*.ipa
           fail_on_unmatched_files: true
 
       - name: Verify the published update manifest

@@ -22,6 +22,3 @@ import androidx.compose.runtime.Composable
 
 @Composable
 actual fun platformDynamicColorScheme(darkTheme: Boolean): ColorScheme? = null
-
-@Composable
-actual fun PlatformSystemBarEffect(darkTheme: Boolean) = Unit

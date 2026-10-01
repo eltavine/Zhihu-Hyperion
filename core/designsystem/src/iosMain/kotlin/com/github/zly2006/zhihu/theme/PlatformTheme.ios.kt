@@ -17,13 +17,32 @@
 
 package com.github.zly2006.zhihu.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
-import kotlinx.cinterop.ExperimentalForeignApi
-import platform.UIKit.UITraitCollection
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.uikit.LocalUIViewController
 import platform.UIKit.UIUserInterfaceStyle
-import platform.UIKit.currentTraitCollection
 
+/** Compose 跟踪界面的特征集合变化，系统切换深浅色时会重组。 */
 @Composable
-@OptIn(ExperimentalForeignApi::class)
-actual fun currentSystemInDarkTheme(): Boolean =
-    UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyle.UIUserInterfaceStyleDark
+actual fun currentSystemInDarkTheme(): Boolean = isSystemInDarkTheme()
+
+/**
+ * 让状态栏、键盘和系统菜单跟随应用主题：样式设在承载界面的窗口上，SwiftUI 宿主控制器也一并生效。
+ *
+ * 跟随系统时清除覆盖，否则系统深浅色的变化传不进来，[currentSystemInDarkTheme] 会停在覆盖值上。
+ */
+@Composable
+actual fun PlatformSystemBarEffect(darkTheme: Boolean) {
+    val viewController = LocalUIViewController.current
+    val followsSystem = ThemeManager.getThemeMode() == ThemeMode.SYSTEM
+    LaunchedEffect(viewController, darkTheme, followsSystem) {
+        val style = when {
+            followsSystem -> UIUserInterfaceStyle.UIUserInterfaceStyleUnspecified
+            darkTheme -> UIUserInterfaceStyle.UIUserInterfaceStyleDark
+            else -> UIUserInterfaceStyle.UIUserInterfaceStyleLight
+        }
+        viewController.view.window?.overrideUserInterfaceStyle = style
+        viewController.overrideUserInterfaceStyle = style
+    }
+}
