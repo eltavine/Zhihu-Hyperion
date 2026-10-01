@@ -60,7 +60,7 @@ URL 解析集中在 `resolveContent()`。支持知乎问题、回答、文章、
 - 单选：两到三个短标签的互斥选项用 `ChoiceButtonGroup`（连接式按钮组）；标签加图标在 360dp 宽度下放不下时只放标签。选项多、标签长或随数据变化时用下拉菜单。
 - 菜单和对话框：`DropdownMenuItem` 配 `leadingIcon`，倍速、时长这类纯数值列表除外；`AlertDialog` 配 `icon` 说明用途（删除用 `Delete`，清空用 `DeleteSweep`，屏蔽用户用 `PersonOff` 等），同一动作在各处用同一个图标。
 - 加载：页面、列表加载更多、弹窗内容等区块的不定时等待用 `AppLoadingIndicator`；按钮或行内的小号转圈、视频缓冲，以及有明确进度的场景继续用 `CircularProgressIndicator` / `LinearProgressIndicator`。下拉刷新一律用 `AppPullToRefreshBox`，不直接用 `PullToRefreshBox`。
-- 导航与 FAB：主壳底栏是 `ShortNavigationBar`，各项的标题和图标只在 `allBottomBarItems` 定义。一个按钮下有多个创作类动作时用 `FabMenu`（Expressive FAB 菜单），不要手写弹出卡片。
+- 导航与 FAB：主壳按 Material 自适应导航规则切换：窗口宽度小于 600dp 用底栏 `ShortNavigationBar`，达到 600dp（横屏手机、平板、桌面窗口）改用左侧导航轨 `WideNavigationRail`，两者的标题和图标都只在 `allBottomBarItems` 定义。悬浮在内容上的控件要按所在容器而不是整个窗口计算位置，导航轨会占去左侧宽度。一个按钮下有多个创作类动作时用 `FabMenu`（Expressive FAB 菜单），不要手写弹出卡片。
 - 空状态：整页空列表和列表底部的加载失败用 `EmptyState`（Expressive 异形容器里的图标、一句说明、可选的“重试”等按钮）；只有一行的轻提示（如“已经到底啦”）保持文字。
 
 主题状态集中在 `ThemeManager` 和平台 `ThemeSettingsRuntime`。`themeMode` 控制明暗，`useDynamicColor` 控制 Material You 动态取色，`customThemeColor` 在动态取色关闭后生效，`backgroundColorLight` / `backgroundColorDark` 控制背景色，`luotianyi_color` 控制应用内浏览器工具栏色。

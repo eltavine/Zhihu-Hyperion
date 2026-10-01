@@ -55,6 +55,8 @@ import androidx.compose.material3.ShortNavigationBar
 import androidx.compose.material3.ShortNavigationBarItem
 import androidx.compose.material3.ShortNavigationBarItemDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.WideNavigationRail
+import androidx.compose.material3.WideNavigationRailItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -568,362 +570,390 @@ fun ZhihuMain(
         }
     }
 
+    // Material 自适应导航：窗口宽度达到中等尺寸（600dp）时，一级页面改用左侧导航轨，底栏只用于窄屏。
+    val useNavigationRail = showMainNavigationBar && containerWidth >= 600.dp
+    val showNavigationRail = useNavigationRail && showMainNavigation && navEntry != null
+    var navigationRailWidth by remember { mutableStateOf(0.dp) }
+    val contentWidth = if (showNavigationRail) containerWidth - navigationRailWidth else containerWidth
+    val currentBottomDestination = mainTabPages.getOrNull(mainPagerState.targetPage)?.bottomDestination
+
+    fun onTopLevelItemClick(destination: TopLevelDestination, selected: Boolean) {
+        isReadingPlayerExpandedByUser = false
+        if (!selected) {
+            navigateTopLevel(destination)
+        } else if (tapToScrollToTopEnabled) {
+            scrollToTopTrigger++
+        }
+    }
+
     Box(Modifier.fillMaxSize()) {
-        val listPaneWidth = if (showListDetail) {
-            normalizedListPaneWidth(containerWidth, listPaneRatio)
-        } else {
-            containerWidth
-        }
-        val listPaneModifier = if (showListDetail) {
-            Modifier.width(listPaneWidth).fillMaxHeight().align(Alignment.CenterStart)
-        } else {
-            Modifier.fillMaxSize()
-        }
-        LaunchedEffect(navEntry, isLargeLandscape, hasOpenSecondaryDetail, isListPaneContext) {
-            val directReadingDestination = navEntry.readingDestinationOrNull()?.takeIf { it.isDetailPaneDestination() }
-            if (enableLandscapeListDetail && directReadingDestination != null) {
-                navController.popBackStack()
-                if (navController.currentBackStackEntry == null) navController.navigate(MainTabs)
-                detailOwnerEntryId = navController.currentBackStackEntry?.id
-                detailNavController.popBackStack(detailNavController.graph.startDestinationId, inclusive = false)
-                // 平台入口已经处理历史、评论交接等副作用，这里只转移页面归属。
-                detailNavController.navigate(directReadingDestination)
+        if (showNavigationRail) {
+            WideNavigationRail(
+                modifier = Modifier.onSizeChanged { navigationRailWidth = with(density) { it.width.toDp() } },
+            ) {
+                bottomBarItems.forEach { item ->
+                    val destination = item.destination
+                    val selected = currentBottomDestination?.let { it::class == destination::class } == true
+                    WideNavigationRailItem(
+                        selected = selected,
+                        onClick = { onTopLevelItemClick(destination, selected) },
+                        icon = {
+                            Icon(if (selected) item.selectedIcon else item.icon, contentDescription = item.label)
+                        },
+                        label = { Text(item.label) },
+                        railExpanded = false,
+                        modifier = Modifier.testTag("nav_tab_${destination.name.lowercase()}"),
+                    )
+                }
             }
         }
-        if (showListDetail || !showDetailPane) {
-            paneStateHolder.SaveableStateProvider("list") {
-                Scaffold(
-                    modifier = listPaneModifier
-                        .testTag("list_pane")
-                        .nestedScroll(bottomBarScrollConnection),
-                    bottomBar = {
-                        if (showMainNavigationBar && navEntry != null) {
-                            // 页面切换时重置底部导航栏可见状态
-                            LaunchedEffect(navEntry) { isBottomBarVisible = true }
-                            val currentBottomDestination = mainTabPages
-                                .getOrNull(mainPagerState.targetPage)
-                                ?.bottomDestination
-                            AnimatedVisibility(
-                                visible = showMainNavigation && (!autoHideBottomBar || isBottomBarVisible),
-                                enter = slideInVertically(tween(200)) { it },
-                                exit = slideOutVertically(tween(200)) { it },
-                            ) {
-                                ShortNavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh) {
-                                    val itemColors = if (!isDarkTheme) {
-                                        ShortNavigationBarItemDefaults.colors(
-                                            selectedIndicatorColor =
-                                                MaterialTheme.colorScheme.secondaryContainer
-                                                    .copy(alpha = 0.92f)
-                                                    .compositeOver(MaterialTheme.colorScheme.secondary),
-                                        )
-                                    } else {
-                                        ShortNavigationBarItemDefaults.colors()
-                                    }
-                                    bottomBarItems.forEach { item ->
-                                        val destination = item.destination
-                                        val selected = currentBottomDestination?.let { it::class == destination::class } == true
-                                        ShortNavigationBarItem(
-                                            selected = selected,
-                                            onClick = {
-                                                isReadingPlayerExpandedByUser = false
-                                                if (!selected) {
-                                                    navigateTopLevel(destination)
-                                                } else if (tapToScrollToTopEnabled) {
-                                                    scrollToTopTrigger++
-                                                }
-                                            },
-                                            icon = {
-                                                Icon(if (selected) item.selectedIcon else item.icon, contentDescription = item.label)
-                                            },
-                                            label = { Text(item.label) },
-                                            colors = itemColors,
-                                            modifier = Modifier.testTag("nav_tab_${destination.name.lowercase()}"),
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    },
-                ) { innerPadding ->
-                    CompositionLocalProvider(
-                        LocalLifecycleOwner provides listLifecycleOwner,
-                        LocalArticleNavController provides navController,
-                        LocalSegmentCommentSheet provides SegmentCommentSheet,
-                        LocalNavigator provides Navigator(
-                            onNavigate = { destination ->
-                                if (
-                                    useSecondaryContentNavigation &&
-                                    (
-                                        destination.isDetailPaneDestination() ||
-                                            (showListDetail && currentMainTabDestination == Account && destination.isAccountDetailDestination())
-                                    )
+        Box(Modifier.fillMaxSize().padding(start = if (showNavigationRail) navigationRailWidth else 0.dp)) {
+            val listPaneWidth = if (showListDetail) {
+                normalizedListPaneWidth(contentWidth, listPaneRatio)
+            } else {
+                contentWidth
+            }
+            val listPaneModifier = if (showListDetail) {
+                Modifier.width(listPaneWidth).fillMaxHeight().align(Alignment.CenterStart)
+            } else {
+                Modifier.fillMaxSize()
+            }
+            LaunchedEffect(navEntry, isLargeLandscape, hasOpenSecondaryDetail, isListPaneContext) {
+                val directReadingDestination = navEntry.readingDestinationOrNull()?.takeIf { it.isDetailPaneDestination() }
+                if (enableLandscapeListDetail && directReadingDestination != null) {
+                    navController.popBackStack()
+                    if (navController.currentBackStackEntry == null) navController.navigate(MainTabs)
+                    detailOwnerEntryId = navController.currentBackStackEntry?.id
+                    detailNavController.popBackStack(detailNavController.graph.startDestinationId, inclusive = false)
+                    // 平台入口已经处理历史、评论交接等副作用，这里只转移页面归属。
+                    detailNavController.navigate(directReadingDestination)
+                }
+            }
+            if (showListDetail || !showDetailPane) {
+                paneStateHolder.SaveableStateProvider("list") {
+                    Scaffold(
+                        modifier = listPaneModifier
+                            .testTag("list_pane")
+                            .nestedScroll(bottomBarScrollConnection),
+                        bottomBar = {
+                            if (showMainNavigationBar && !useNavigationRail && navEntry != null) {
+                                // 页面切换时重置底部导航栏可见状态
+                                LaunchedEffect(navEntry) { isBottomBarVisible = true }
+                                AnimatedVisibility(
+                                    visible = showMainNavigation && (!autoHideBottomBar || isBottomBarVisible),
+                                    enter = slideInVertically(tween(200)) { it },
+                                    exit = slideOutVertically(tween(200)) { it },
                                 ) {
-                                    openListDetail(destination)
-                                } else {
-                                    navigate(destination)
-                                }
-                            },
-                            onNavigateBack = navController::popBackStack,
-                            onNavigateTopLevel = ::navigateTopLevel,
-                        ),
-                        LocalReadingPlayerOverlayPadding provides readingPlayerOverlayPadding,
-                        LocalReadingPlayerOverlayOffsetState provides readingPlayerOverlayOffsetState,
-                        LocalSelectedContentDestination provides selectedContentDestination,
-                    ) {
-                        NavHost(
-                            navController,
-                            modifier = Modifier.pointerInput(Unit) {
-                                while (true) {
-                                    awaitPointerEventScope {
-                                        awaitFirstDown(
-                                            requireUnconsumed = false,
-                                            pass = PointerEventPass.Initial,
-                                        )
-                                        while (
-                                            awaitPointerEvent(PointerEventPass.Final)
-                                                .changes
-                                                .any { it.pressed }
-                                        ) {
-                                            // 等手势完成后再重组，避免取消同一次背景点击或滚动。
+                                    ShortNavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh) {
+                                        val itemColors = if (!isDarkTheme) {
+                                            ShortNavigationBarItemDefaults.colors(
+                                                selectedIndicatorColor =
+                                                    MaterialTheme.colorScheme.secondaryContainer
+                                                        .copy(alpha = 0.92f)
+                                                        .compositeOver(MaterialTheme.colorScheme.secondary),
+                                            )
+                                        } else {
+                                            ShortNavigationBarItemDefaults.colors()
+                                        }
+                                        bottomBarItems.forEach { item ->
+                                            val destination = item.destination
+                                            val selected = currentBottomDestination?.let { it::class == destination::class } == true
+                                            ShortNavigationBarItem(
+                                                selected = selected,
+                                                onClick = { onTopLevelItemClick(destination, selected) },
+                                                icon = {
+                                                    Icon(if (selected) item.selectedIcon else item.icon, contentDescription = item.label)
+                                                },
+                                                label = { Text(item.label) },
+                                                colors = itemColors,
+                                                modifier = Modifier.testTag("nav_tab_${destination.name.lowercase()}"),
+                                            )
                                         }
                                     }
-                                    if (shouldCompactPlayerOnBackgroundInteraction) {
-                                        delay(100)
-                                        isReadingPlayerExpandedByUser = false
-                                    }
                                 }
-                            },
-                            startDestination = MainTabs,
-                            enterTransition = {
-                                slideInHorizontally(tween(300)) { it }
-                            },
-                            exitTransition = {
-                                ExitTransition.None
-                            },
-                            popEnterTransition = {
-                                EnterTransition.None
-                            },
-                            popExitTransition = {
-                                slideOutHorizontally(tween(300)) { it } + fadeOut(tween(300))
-                            },
-                        ) {
-                            composable<MainTabs> {
-                                MainTabsPager(
-                                    pagerState = mainPagerState,
-                                    pages = mainTabPages,
-                                    scrollToTopTrigger = scrollToTopTrigger,
-                                    innerPadding = innerPadding,
-                                    collectionDirectBrowseEnabled = collectionDirectBrowseEnabled,
-                                    showHomeTopActions = showHomeTopActions,
-                                )
                             }
-                            composable<Login> {
-                                LoginScreen(onLoginComplete = { navController.popBackStack() })
-                            }
-                            composable<Question> { navEntry ->
-                                val question: Question = navEntry.toRoute()
-                                QuestionScreen(question)
-                            }
-                            composable<Topic> { navEntry ->
-                                TopicScreen(navEntry.toRoute())
-                            }
-                            composable<WriteAnswer> { navEntry ->
-                                val args: WriteAnswer = navEntry.toRoute()
-                                WriteAnswerScreen(args)
-                            }
-                            composable<WritePin> { navEntry ->
-                                WritePinScreen(navEntry.toRoute())
-                            }
-                            composable<Article>(
-                                typeMap = mapOf(typeOf<ArticleType>() to ArticleTypeNavType),
-                                enterTransition = articleEnterTransition,
-                                exitTransition = articleExitTransition,
-                            ) { navEntry ->
-                                val article: Article = navEntry.toRoute()
-                                // 启用自适应导航时由 effect 转交详情栈，不创建会抢先消费一次性交接数据的临时页面。
-                                if (!enableLandscapeListDetail) articleContent(article, navEntry)
-                            }
-                            composable<HotList> {
-                                HotListScreen(innerPadding)
-                            }
-                            composable<Follow> {
-                                FollowScreen(
-                                    scrollToTopTrigger = scrollToTopTrigger,
-                                    innerPadding = innerPadding,
-                                    parentPagerState = mainPagerState,
-                                )
-                            }
-                            composable<Daily> {
-                                DailyScreen()
-                            }
-                            composable<History> {
-                                LegacyLocalHistoryScreen(innerPadding)
-                            }
-                            composable<OnlineHistory> {
-                                OnlineHistoryScreen()
-                            }
-                            composable<Account> {
-                                AccountSettingScreen(innerPadding)
-                            }
-                            composable<Search>(
-                                enterTransition = {
-                                    if (initialState.destination.hasRoute<Search>()) {
-                                        EnterTransition.None
+                        },
+                    ) { innerPadding ->
+                        CompositionLocalProvider(
+                            LocalLifecycleOwner provides listLifecycleOwner,
+                            LocalArticleNavController provides navController,
+                            LocalSegmentCommentSheet provides SegmentCommentSheet,
+                            LocalNavigator provides Navigator(
+                                onNavigate = { destination ->
+                                    if (
+                                        useSecondaryContentNavigation &&
+                                        (
+                                            destination.isDetailPaneDestination() ||
+                                                (showListDetail && currentMainTabDestination == Account && destination.isAccountDetailDestination())
+                                        )
+                                    ) {
+                                        openListDetail(destination)
                                     } else {
-                                        fadeIn(animationSpec = tween(durationMillis = 240)) +
-                                            slideInVertically(animationSpec = tween(durationMillis = 280)) { it / 16 } +
-                                            scaleIn(
-                                                animationSpec = tween(durationMillis = 280),
-                                                initialScale = 0.985f,
-                                            )
+                                        navigate(destination)
                                     }
+                                },
+                                onNavigateBack = navController::popBackStack,
+                                onNavigateTopLevel = ::navigateTopLevel,
+                            ),
+                            LocalReadingPlayerOverlayPadding provides readingPlayerOverlayPadding,
+                            LocalReadingPlayerOverlayOffsetState provides readingPlayerOverlayOffsetState,
+                            LocalSelectedContentDestination provides selectedContentDestination,
+                        ) {
+                            NavHost(
+                                navController,
+                                modifier = Modifier.pointerInput(Unit) {
+                                    while (true) {
+                                        awaitPointerEventScope {
+                                            awaitFirstDown(
+                                                requireUnconsumed = false,
+                                                pass = PointerEventPass.Initial,
+                                            )
+                                            while (
+                                                awaitPointerEvent(PointerEventPass.Final)
+                                                    .changes
+                                                    .any { it.pressed }
+                                            ) {
+                                                // 等手势完成后再重组，避免取消同一次背景点击或滚动。
+                                            }
+                                        }
+                                        if (shouldCompactPlayerOnBackgroundInteraction) {
+                                            delay(100)
+                                            isReadingPlayerExpandedByUser = false
+                                        }
+                                    }
+                                },
+                                startDestination = MainTabs,
+                                enterTransition = {
+                                    slideInHorizontally(tween(300)) { it }
+                                },
+                                exitTransition = {
+                                    ExitTransition.None
+                                },
+                                popEnterTransition = {
+                                    EnterTransition.None
                                 },
                                 popExitTransition = {
-                                    if (targetState.destination.hasRoute<Search>()) {
-                                        ExitTransition.None
-                                    } else {
-                                        fadeOut(animationSpec = tween(durationMillis = 180)) +
-                                            slideOutVertically(animationSpec = tween(durationMillis = 220)) { it / 20 } +
-                                            scaleOut(
-                                                animationSpec = tween(durationMillis = 220),
-                                                targetScale = 0.985f,
-                                            )
-                                    }
+                                    slideOutHorizontally(tween(300)) { it } + fadeOut(tween(300))
                                 },
-                            ) { navEntry ->
-                                val search: Search = navEntry.toRoute()
-                                SearchScreen(search)
-                            }
-                            composable<Collections> { navEntry ->
-                                val data: Collections = navEntry.toRoute()
-                                CollectionScreen(
-                                    urlToken = data.userToken,
-                                    contentPadding = innerPadding,
-                                )
-                            }
-                            composable<CollectionContent> { navEntry ->
-                                val content: CollectionContent = navEntry.toRoute()
-                                CollectionContentScreen(content.collectionId)
-                            }
-                            composable<Person> { navEntry ->
-                                val person: Person = navEntry.toRoute()
-                                PeopleScreen(person)
-                            }
-                            composable<Pin> { navEntry ->
-                                val pin: Pin = navEntry.toRoute()
-                                if (!enableLandscapeListDetail) PinScreen(pin)
-                            }
-                            composable<Video> { navEntry ->
-                                VideoScreen(navEntry.toRoute())
-                            }
-                            accountSettings(reloadBottomBarPreferences, blocklistSettingsNlpContent)
-                            composable<Notification> {
-                                NotificationScreen()
-                            }
-                            composable<Notification.Entry> { navEntry ->
-                                val entry: Notification.Entry = navEntry.toRoute()
-                                NotificationTimelineScreen(entry.entryName, entry.title)
-                            }
-                            composable<Notification.Invitations> {
-                                NotificationTimelineScreen("invite", "邀请回答")
-                            }
-                            composable<Notification.Message> { navEntry ->
-                                PrivateMessageScreen(navEntry.toRoute())
-                            }
-                            composable<Notification.NotificationSettings> { navEntry ->
-                                NotificationSettingsScreen(
-                                    setting = navEntry.toRoute<Notification.NotificationSettings>().setting,
-                                )
-                            }
-                            composable<SentenceSimilarityTest> {
-                                sentenceSimilarityContent()
+                            ) {
+                                composable<MainTabs> {
+                                    MainTabsPager(
+                                        pagerState = mainPagerState,
+                                        pages = mainTabPages,
+                                        scrollToTopTrigger = scrollToTopTrigger,
+                                        innerPadding = innerPadding,
+                                        collectionDirectBrowseEnabled = collectionDirectBrowseEnabled,
+                                        showHomeTopActions = showHomeTopActions,
+                                    )
+                                }
+                                composable<Login> {
+                                    LoginScreen(onLoginComplete = { navController.popBackStack() })
+                                }
+                                composable<Question> { navEntry ->
+                                    val question: Question = navEntry.toRoute()
+                                    QuestionScreen(question)
+                                }
+                                composable<Topic> { navEntry ->
+                                    TopicScreen(navEntry.toRoute())
+                                }
+                                composable<WriteAnswer> { navEntry ->
+                                    val args: WriteAnswer = navEntry.toRoute()
+                                    WriteAnswerScreen(args)
+                                }
+                                composable<WritePin> { navEntry ->
+                                    WritePinScreen(navEntry.toRoute())
+                                }
+                                composable<Article>(
+                                    typeMap = mapOf(typeOf<ArticleType>() to ArticleTypeNavType),
+                                    enterTransition = articleEnterTransition,
+                                    exitTransition = articleExitTransition,
+                                ) { navEntry ->
+                                    val article: Article = navEntry.toRoute()
+                                    // 启用自适应导航时由 effect 转交详情栈，不创建会抢先消费一次性交接数据的临时页面。
+                                    if (!enableLandscapeListDetail) articleContent(article, navEntry)
+                                }
+                                composable<HotList> {
+                                    HotListScreen(innerPadding)
+                                }
+                                composable<Follow> {
+                                    FollowScreen(
+                                        scrollToTopTrigger = scrollToTopTrigger,
+                                        innerPadding = innerPadding,
+                                        parentPagerState = mainPagerState,
+                                    )
+                                }
+                                composable<Daily> {
+                                    DailyScreen()
+                                }
+                                composable<History> {
+                                    LegacyLocalHistoryScreen(innerPadding)
+                                }
+                                composable<OnlineHistory> {
+                                    OnlineHistoryScreen()
+                                }
+                                composable<Account> {
+                                    AccountSettingScreen(innerPadding)
+                                }
+                                composable<Search>(
+                                    enterTransition = {
+                                        if (initialState.destination.hasRoute<Search>()) {
+                                            EnterTransition.None
+                                        } else {
+                                            fadeIn(animationSpec = tween(durationMillis = 240)) +
+                                                slideInVertically(animationSpec = tween(durationMillis = 280)) { it / 16 } +
+                                                scaleIn(
+                                                    animationSpec = tween(durationMillis = 280),
+                                                    initialScale = 0.985f,
+                                                )
+                                        }
+                                    },
+                                    popExitTransition = {
+                                        if (targetState.destination.hasRoute<Search>()) {
+                                            ExitTransition.None
+                                        } else {
+                                            fadeOut(animationSpec = tween(durationMillis = 180)) +
+                                                slideOutVertically(animationSpec = tween(durationMillis = 220)) { it / 20 } +
+                                                scaleOut(
+                                                    animationSpec = tween(durationMillis = 220),
+                                                    targetScale = 0.985f,
+                                                )
+                                        }
+                                    },
+                                ) { navEntry ->
+                                    val search: Search = navEntry.toRoute()
+                                    SearchScreen(search)
+                                }
+                                composable<Collections> { navEntry ->
+                                    val data: Collections = navEntry.toRoute()
+                                    CollectionScreen(
+                                        urlToken = data.userToken,
+                                        contentPadding = innerPadding,
+                                    )
+                                }
+                                composable<CollectionContent> { navEntry ->
+                                    val content: CollectionContent = navEntry.toRoute()
+                                    CollectionContentScreen(content.collectionId)
+                                }
+                                composable<Person> { navEntry ->
+                                    val person: Person = navEntry.toRoute()
+                                    PeopleScreen(person)
+                                }
+                                composable<Pin> { navEntry ->
+                                    val pin: Pin = navEntry.toRoute()
+                                    if (!enableLandscapeListDetail) PinScreen(pin)
+                                }
+                                composable<Video> { navEntry ->
+                                    VideoScreen(navEntry.toRoute())
+                                }
+                                accountSettings(reloadBottomBarPreferences, blocklistSettingsNlpContent)
+                                composable<Notification> {
+                                    NotificationScreen()
+                                }
+                                composable<Notification.Entry> { navEntry ->
+                                    val entry: Notification.Entry = navEntry.toRoute()
+                                    NotificationTimelineScreen(entry.entryName, entry.title)
+                                }
+                                composable<Notification.Invitations> {
+                                    NotificationTimelineScreen("invite", "邀请回答")
+                                }
+                                composable<Notification.Message> { navEntry ->
+                                    PrivateMessageScreen(navEntry.toRoute())
+                                }
+                                composable<Notification.NotificationSettings> { navEntry ->
+                                    NotificationSettingsScreen(
+                                        setting = navEntry.toRoute<Notification.NotificationSettings>().setting,
+                                    )
+                                }
+                                composable<SentenceSimilarityTest> {
+                                    sentenceSimilarityContent()
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        if (showListDetail || showDetailPane || detailEntry == null) {
-            paneStateHolder.SaveableStateProvider("detail") {
-                // 尺寸变化只调整同一宿主的布局；隐藏时保存整个导航子树，独立弹窗也随页面离开组合。
-                Row(if (showListDetail || showDetailPane) Modifier.fillMaxSize() else Modifier.size(0.dp)) {
-                    if (showListDetail) {
-                        Spacer(Modifier.width(listPaneWidth))
-                        ListDetailDivider(
-                            onDrag = { deltaPx ->
-                                val usableWidthPx = with(density) {
-                                    (containerWidth - LIST_DETAIL_DIVIDER_WIDTH).toPx()
-                                }
-                                if (usableWidthPx > 0f) {
-                                    listPaneRatio = (listPaneRatio + deltaPx / usableWidthPx).coerceIn(0f, 1f)
-                                }
-                            },
-                            onAdjustBy = { ratioDelta ->
-                                listPaneRatio = (listPaneRatio + ratioDelta).coerceIn(0f, 1f)
-                            },
-                            onDragStopped = {
-                                val normalizedWidth = normalizedListPaneWidth(containerWidth, listPaneRatio)
-                                listPaneRatio = normalizedWidth.value /
-                                    (containerWidth - LIST_DETAIL_DIVIDER_WIDTH).value
-                                settings.putFloat(LANDSCAPE_LIST_PANE_RATIO_KEY, listPaneRatio)
-                            },
-                        )
+            if (showListDetail || showDetailPane || detailEntry == null) {
+                paneStateHolder.SaveableStateProvider("detail") {
+                    // 尺寸变化只调整同一宿主的布局；隐藏时保存整个导航子树，独立弹窗也随页面离开组合。
+                    Row(if (showListDetail || showDetailPane) Modifier.fillMaxSize() else Modifier.size(0.dp)) {
+                        if (showListDetail) {
+                            Spacer(Modifier.width(listPaneWidth))
+                            ListDetailDivider(
+                                onDrag = { deltaPx ->
+                                    val usableWidthPx = with(density) {
+                                        (contentWidth - LIST_DETAIL_DIVIDER_WIDTH).toPx()
+                                    }
+                                    if (usableWidthPx > 0f) {
+                                        listPaneRatio = (listPaneRatio + deltaPx / usableWidthPx).coerceIn(0f, 1f)
+                                    }
+                                },
+                                onAdjustBy = { ratioDelta ->
+                                    listPaneRatio = (listPaneRatio + ratioDelta).coerceIn(0f, 1f)
+                                },
+                                onDragStopped = {
+                                    val normalizedWidth = normalizedListPaneWidth(contentWidth, listPaneRatio)
+                                    listPaneRatio = normalizedWidth.value /
+                                        (contentWidth - LIST_DETAIL_DIVIDER_WIDTH).value
+                                    settings.putFloat(LANDSCAPE_LIST_PANE_RATIO_KEY, listPaneRatio)
+                                },
+                            )
+                        }
+                        DetailPane(Modifier.weight(1f).fillMaxSize())
                     }
-                    DetailPane(Modifier.weight(1f).fillMaxSize())
                 }
             }
-        }
 
-        AnimatedVisibility(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(
-                    start = if (showListDetail && showDetailPane) listPaneWidth + LIST_DETAIL_DIVIDER_WIDTH else 0.dp,
-                    bottom = bottomPadding + 16.dp + if (
-                        !showDetailPane && showMainNavigation && showMainNavigationBar && (!autoHideBottomBar || isBottomBarVisible)
-                    ) {
-                        64.dp
-                    } else {
-                        0.dp
-                    },
-                ).fillMaxWidth(),
-            visible = isReadingPlayerExpanded,
-            enter = fadeIn(tween(220)) + scaleIn(tween(220), initialScale = 0.92f),
-            exit = fadeOut(tween(160)) + scaleOut(tween(160), targetScale = 0.92f),
-        ) {
-            ReadingPlayerBar(
-                state = readingPlayerState,
-                onPrevious = readingPlayer::playPrevious,
-                onTogglePlayPause = readingPlayer::togglePlayPause,
-                onNext = readingPlayer::playNext,
-                onStop = readingPlayer::stop,
-                onOpenQueue = { showReadingQueue = true },
-                onPlaybackSpeedChange = { speed ->
-                    saveReadingPlaybackSpeed(settings, speed)
-                    readingPlayer.setPlaybackSpeed(speed)
-                },
-                onBackgroundInteraction = {
-                    if (!isOnReadingDetail) isReadingPlayerExpandedByUser = false
-                },
+            AnimatedVisibility(
                 modifier = Modifier
-                    .onSizeChanged { readingPlayerHeightPx = it.height }
-                    .graphicsLayer {
-                        translationY = readingPlayerOverlayOffsetState.verticalOffsetPx
-                    },
-            )
-        }
-
-        AnimatedVisibility(
-            visible = readingPlayerState.hasSession && !isReadingPlayerExpanded,
-            enter = fadeIn(tween(220)),
-            exit = fadeOut(tween(160)),
-        ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                CompactReadingPlayerButton(
+                    .align(Alignment.BottomCenter)
+                    .padding(
+                        start = if (showListDetail && showDetailPane) listPaneWidth + LIST_DETAIL_DIVIDER_WIDTH else 0.dp,
+                        bottom = bottomPadding + 16.dp + if (
+                            !showDetailPane && showMainNavigation && showMainNavigationBar && !useNavigationRail && (!autoHideBottomBar || isBottomBarVisible)
+                        ) {
+                            64.dp
+                        } else {
+                            0.dp
+                        },
+                    ).fillMaxWidth(),
+                visible = isReadingPlayerExpanded,
+                enter = fadeIn(tween(220)) + scaleIn(tween(220), initialScale = 0.92f),
+                exit = fadeOut(tween(160)) + scaleOut(tween(160), targetScale = 0.92f),
+            ) {
+                ReadingPlayerBar(
                     state = readingPlayerState,
-                    onExpand = { isReadingPlayerExpandedByUser = true },
+                    onPrevious = readingPlayer::playPrevious,
+                    onTogglePlayPause = readingPlayer::togglePlayPause,
+                    onNext = readingPlayer::playNext,
+                    onStop = readingPlayer::stop,
+                    onOpenQueue = { showReadingQueue = true },
+                    onPlaybackSpeedChange = { speed ->
+                        saveReadingPlaybackSpeed(settings, speed)
+                        readingPlayer.setPlaybackSpeed(speed)
+                    },
+                    onBackgroundInteraction = {
+                        if (!isOnReadingDetail) isReadingPlayerExpandedByUser = false
+                    },
+                    modifier = Modifier
+                        .onSizeChanged { readingPlayerHeightPx = it.height }
+                        .graphicsLayer {
+                            translationY = readingPlayerOverlayOffsetState.verticalOffsetPx
+                        },
                 )
+            }
+
+            AnimatedVisibility(
+                visible = readingPlayerState.hasSession && !isReadingPlayerExpanded,
+                enter = fadeIn(tween(220)),
+                exit = fadeOut(tween(160)),
+            ) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    CompactReadingPlayerButton(
+                        state = readingPlayerState,
+                        onExpand = { isReadingPlayerExpandedByUser = true },
+                    )
+                }
             }
         }
     }
