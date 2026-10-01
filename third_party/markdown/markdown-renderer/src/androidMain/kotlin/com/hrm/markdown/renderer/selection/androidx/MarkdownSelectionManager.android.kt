@@ -22,13 +22,11 @@ import androidx.compose.foundation.PlatformMagnifierFactory
 import androidx.compose.foundation.text.selection.*
 import androidx.compose.foundation.isPlatformMagnifierSupported
 import androidx.compose.foundation.magnifier
-import androidx.compose.foundation.text.KeyCommand
 import androidx.compose.foundation.text.TextContextMenuItems
 import androidx.compose.foundation.text.TextContextMenuItems.Copy
 import androidx.compose.foundation.text.TextContextMenuItems.SelectAll
 import androidx.compose.foundation.text.contextmenu.builder.TextContextMenuBuilderScope
 import androidx.compose.foundation.text.contextmenu.modifier.addTextContextMenuComponentsWithContext
-import androidx.compose.foundation.text.platformDefaultKeyMapping
 import androidx.compose.foundation.text.textItem
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,12 +34,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
-import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntSize
-
-internal actual fun isMarkdownSelectionCopyKeyEvent(keyEvent: KeyEvent) =
-    platformDefaultKeyMapping.map(keyEvent) == KeyCommand.COPY
 
 // We use composed{} to read a local, but don't provide inspector info because the underlying
 // magnifier modifier provides more meaningful inspector info.

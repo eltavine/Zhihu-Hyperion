@@ -6,7 +6,7 @@
 - 上游基线提交：`0ae14148bbe427e27629117b3581ea071d86c4c7`
 - 保持原应用行为的源码提交：`4f2ab8c13f44bf24cc070821ea6b510efe188759`
 - 内置日期：2026-07-21
-- 生产源码清单 SHA-256：`2e69525d51f8de48efb393800898018b24c54ffdf4eb89d5e9e415b5c80ba6a6`
+- 生产源码清单 SHA-256：`b24cd6d17ecfa563d513e6a46a5cce3ba6e4cfb89586cab7616586e5bc8e2873`
 
 替换前，应用依赖的是 `io.github.zly2006:markdown-*:0.0.1-alpha.11`。这个坐标只说明被替换的分叉构件，不是本目录的上游 base version；本目录的 base version 始终按上游实际版本记为 `1.2.9`。源码提交 `4f2ab8c...` 在 1.2.9 基础上保留了原应用所需的 `NativeBlock` 与 LaTeX 1.4.6-zly 兼容改动。
 
@@ -16,7 +16,7 @@
 
 issue #495 的性能修复不会拆分 HTML 或构造不完整 AST。Zhihu-Hyperion 仍一次性生成完整文档结构，renderer 默认只对视口及半屏预取范围内的顶层块执行真实 Compose 布局；其余块按文字宽度、换行、公式行数、代码行数、图片比例和容器子块预估高度。块离开预取范围后会恢复为占位，并优先复用已经测得的实际高度，因此滚动条从首帧起就能得到接近完整文档的范围，同时把公式等重布局成本移动到滚动阶段。
 
-vendored renderer 继续使用 1.2.9 分支的原生 Compose `SelectionContainer`，没有带入实验工作树中仍有 issue 的自定义选择实现。脚注实现恢复自[上游 PR #15](https://github.com/huarangmeng/Markdown/pull/15)，并仅按其评论中的方案增加 1px 宽度补偿，修复 Android AVD 上的舍入裁切；视口懒布局还会在脚注跳转时临时物化目标定义或引用，完成 `bringIntoView` 后再恢复常规回收策略。
+vendored renderer 继续使用 1.2.9 分支的原生 Compose `SelectionContainer`，没有带入实验工作树中仍有 issue 的自定义选择实现。选择管理器相对 AndroidX 原实现有两处有意分叉：快捷键交给 foundation 的 `platformDefaultKeyMapping` 解析成 `KeyCommand`，因此复制和全选沿用各平台文本框的按键约定；选中文本移动时由各 selectable 自身的快照状态通知派生的工具栏范围，管理器不再读取一个只为触发重算的空状态。脚注实现恢复自[上游 PR #15](https://github.com/huarangmeng/Markdown/pull/15)，并仅按其评论中的方案增加 1px 宽度补偿，修复 Android AVD 上的舍入裁切；视口懒布局还会在脚注跳转时临时物化目标定义或引用，完成 `bringIntoView` 后再恢复常规回收策略。
 
 完整的阶段计时、错误复盘、被拒绝方案和最终验证结果见 [`docs/markdown-issue-495-performance-report.md`](../../docs/markdown-issue-495-performance-report.md)。
 

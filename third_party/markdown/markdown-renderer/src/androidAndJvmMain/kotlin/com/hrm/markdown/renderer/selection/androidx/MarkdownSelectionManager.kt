@@ -35,6 +35,7 @@ import androidx.compose.foundation.internal.checkPreconditionNotNull
 import androidx.compose.foundation.internal.requirePrecondition
 import androidx.compose.foundation.internal.requirePreconditionNotNull
 import androidx.compose.foundation.text.Handle
+import androidx.compose.foundation.text.KeyCommand
 import androidx.compose.foundation.text.TextContextMenuItems
 import androidx.compose.foundation.text.TextContextMenuItems.*
 import androidx.compose.foundation.text.TextDragObserver
@@ -46,6 +47,7 @@ import androidx.compose.foundation.text.contextmenu.modifier.textContextMenuTool
 import androidx.compose.foundation.text.contextmenu.modifier.translateRootToDestination
 import androidx.compose.foundation.text.input.internal.coerceIn
 import androidx.compose.foundation.text.isPositionInsideSelection
+import androidx.compose.foundation.text.platformDefaultKeyMapping
 import androidx.compose.foundation.text.selection.Selectable
 import androidx.compose.foundation.text.selection.Selection
 import androidx.compose.foundation.text.selection.Selection.AnchorInfo
@@ -63,7 +65,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -75,8 +76,9 @@ import androidx.compose.ui.geometry.isSpecified
 import androidx.compose.ui.geometry.isUnspecified
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.LayoutCoordinates
@@ -188,13 +190,14 @@ internal class MarkdownSelectionManager(private val selectionRegistrar: Markdown
                 }
                 .focusable()
                 .updateSelectionTouchMode { isInTouchMode = it }
-                .onKeyEvent {
-                    if (!shouldIgnoreCopyKeyEvent && isMarkdownSelectionCopyKeyEvent(it)) {
-                        copy()
-                        true
-                    } else {
-                        false
+                .onKeyEvent { event ->
+                    if (event.type != KeyEventType.KeyDown) return@onKeyEvent false
+                    when (platformDefaultKeyMapping.map(event)) {
+                        KeyCommand.COPY if !shouldIgnoreCopyKeyEvent -> copy()
+                        KeyCommand.SELECT_ALL -> selectAll()
+                        else -> return@onKeyEvent false
                     }
+                    true
                 }
                 .then(if (shouldShowMagnifier) Modifier.markdownSelectionMagnifier(this) else Modifier)
                 .addContextMenuComponents()
@@ -246,9 +249,6 @@ internal class MarkdownSelectionManager(private val selectionRegistrar: Markdown
                 }
             }
         }
-
-    /** Updated whenever a position change is received on a selected text. */
-    private var positionChangeState by mutableStateOf(Unit, neverEqualPolicy())
 
     /**
      * The beginning position of the drag gesture. Every time a new drag gesture starts, it wil be
@@ -331,7 +331,6 @@ internal class MarkdownSelectionManager(private val selectionRegistrar: Markdown
     init {
         selectionRegistrar.onPositionChangeCallback = { selectableId ->
             if (selectableId in selectionRegistrar.subselections) {
-                positionChangeState = Unit
                 updateHandleOffsets()
                 updateSelectionToolbar()
             }
@@ -859,10 +858,6 @@ internal class MarkdownSelectionManager(private val selectionRegistrar: Markdown
      * entire selection, coerced into visible bounds.
      */
     private fun getContentRect(): Rect? {
-        // TODO(grantapher) Instead of a useless state read, the state should be incorporated into
-        //   the selectables themselves.
-        positionChangeState // State read. Updated when a selected text position changes.
-
         selection ?: return null
         val containerCoordinates = containerLayoutCoordinates ?: return null
         if (!containerCoordinates.isAttached) return null
@@ -1215,8 +1210,6 @@ internal fun mergeMarkdownSelection(lhs: Selection?, rhs: Selection?): Selection
     return lhs?.merge(rhs) ?: rhs
 }
 
-internal expect fun isMarkdownSelectionCopyKeyEvent(keyEvent: KeyEvent): Boolean
-
 internal expect fun Modifier.markdownSelectionMagnifier(manager: MarkdownSelectionManager): Modifier
 
 internal expect fun Modifier.addMarkdownSelectionContainerTextContextMenuComponents(
@@ -1269,7 +1262,7 @@ internal fun getMarkdownSelectedRegionRect(
         val startOffset = subSelection.start.offset
         val endOffset = subSelection.end.offset
         if (startOffset == endOffset) return@fastForEach
-        val localCoordinates = selectable.getLayoutCoordinates() ?: return@fastForEach
+        val localCoordinates = selectable.observeLayoutCoordinates() ?: return@fastForEach
 
         val minOffset = minOf(startOffset, endOffset)
         val maxOffset = maxOf(startOffset, endOffset)
@@ -1391,6 +1384,3 @@ internal fun LayoutCoordinates.markdownVisibleBounds(): Rect {
 
 internal fun Rect.markdownContainsInclusive(offset: Offset): Boolean =
     offset.x in left..right && offset.y in top..bottom
-
-// We skip `isMarkdownSelectionCopyKeyEvent(it)` on web, because should handle browser 'copy' event
-internal expect val MarkdownSelectionManager.skipMarkdownCopyKeyEvent: Boolean

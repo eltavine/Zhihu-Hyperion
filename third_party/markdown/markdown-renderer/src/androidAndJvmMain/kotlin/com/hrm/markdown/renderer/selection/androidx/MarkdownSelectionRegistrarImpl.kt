@@ -30,6 +30,7 @@ import androidx.compose.foundation.text.selection.SelectionLayoutBuilder
 import androidx.compose.foundation.text.selection.SelectionRegistrar
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
@@ -54,6 +55,16 @@ internal interface MarkdownSelectable : DocumentOrderedSelectable {
     fun getSelectAllSelection(): Selection?
     fun getHandlePosition(selection: Selection, isStartHandle: Boolean): Offset
     fun getLayoutCoordinates(): LayoutCoordinates?
+
+    /**
+     * [getLayoutCoordinates] for snapshot readers such as a `derivedStateOf`, which run again after
+     * [notifyPositionChange]. It is not the default accessor because the manager also reads coordinates while
+     * its container composes; subscribing that composition recomposed it on every position change and the
+     * container never became idle.
+     */
+    fun observeLayoutCoordinates(): LayoutCoordinates?
+
+    fun notifyPositionChange()
     fun textLayoutResult(): TextLayoutResult?
     fun getText(): AnnotatedString
     fun getBoundingBox(offset: Int): Rect
@@ -69,6 +80,8 @@ private class MarkdownSelectableAdapter(
     private val selectable: Selectable,
     private val orderedSelectable: DocumentOrderedSelectable,
 ) : MarkdownSelectable {
+    private var position by mutableStateOf(Unit, neverEqualPolicy())
+
     override val documentOrder: List<Int>
         get() = orderedSelectable.documentOrder
     override val selectableId: Long
@@ -79,6 +92,13 @@ private class MarkdownSelectableAdapter(
     override fun getHandlePosition(selection: Selection, isStartHandle: Boolean): Offset =
         selectable.getHandlePosition(selection, isStartHandle)
     override fun getLayoutCoordinates(): LayoutCoordinates? = selectable.getLayoutCoordinates()
+    override fun observeLayoutCoordinates(): LayoutCoordinates? {
+        position
+        return selectable.getLayoutCoordinates()
+    }
+    override fun notifyPositionChange() {
+        position = Unit
+    }
     override fun textLayoutResult(): TextLayoutResult? = selectable.textLayoutResult()
     override fun getText(): AnnotatedString = selectable.getText()
     override fun getBoundingBox(offset: Int): Rect = selectable.getBoundingBox(offset)
@@ -217,6 +237,9 @@ internal class MarkdownSelectionRegistrarImpl private constructor(initialIncreme
 
     override fun notifyPositionChange(selectableId: Long) {
         sorted = false
+        // Coordinates are only read under snapshot observation for selected text, while scrolling moves every
+        // visible selectable; writing state for unselected ones would invalidate nothing.
+        if (selectableId in subselections) _selectableMap[selectableId]?.notifyPositionChange()
         onPositionChangeCallback?.invoke(selectableId)
     }
 

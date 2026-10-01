@@ -20,13 +20,6 @@
 package com.hrm.markdown.renderer.selection.androidx
 
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEvent
-import androidx.compose.ui.input.key.isMetaPressed
-import androidx.compose.ui.input.key.key
-
-internal actual fun isMarkdownSelectionCopyKeyEvent(keyEvent: KeyEvent): Boolean =
-    keyEvent.key == Key.C && keyEvent.isMetaPressed || keyEvent.key == Key.Copy
 
 internal actual fun Modifier.markdownSelectionMagnifier(manager: MarkdownSelectionManager): Modifier = this
 

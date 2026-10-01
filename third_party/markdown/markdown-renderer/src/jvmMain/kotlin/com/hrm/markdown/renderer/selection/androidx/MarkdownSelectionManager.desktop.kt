@@ -19,27 +19,12 @@
 
 package com.hrm.markdown.renderer.selection.androidx
 
-import androidx.compose.foundation.DesktopPlatform
 import androidx.compose.foundation.text.selection.*
 import androidx.compose.foundation.text.contextmenu.builder.TextContextMenuBuilderScope
 import androidx.compose.foundation.text.contextmenu.builder.item
 import androidx.compose.foundation.text.contextmenu.data.TextContextMenuKeys
 import androidx.compose.foundation.text.contextmenu.modifier.addTextContextMenuComponentsWithLocalization
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEvent
-import androidx.compose.ui.input.key.isCtrlPressed
-import androidx.compose.ui.input.key.isMetaPressed
-import androidx.compose.ui.input.key.key
-
-// this doesn't sounds very sustainable
-// it would end up being a function for any conceptual keyevent (selectall, cut, copy, paste)
-// TODO(b/1564937)
-internal actual fun isMarkdownSelectionCopyKeyEvent(keyEvent: KeyEvent) =
-    keyEvent.key == Key.C && when (DesktopPlatform.Current) {
-        DesktopPlatform.MacOS -> keyEvent.isMetaPressed
-        else -> keyEvent.isCtrlPressed
-    } || keyEvent.key == Key.Copy
 
 /**
  * Magnification is not supported on desktop.
