@@ -22,8 +22,9 @@ of its lines; code that eltavine only moved into a new file stays with its origi
 Authorship comes from `git blame -w -M -C -C` with .git-blame-ignore-revs, so formatting, project-wide renames and
 moves do not count. Vendored code under third_party/ keeps the notices of its own projects.
 
-    python3 tools/update_attribution.py           # rewrite the headers
-    python3 tools/update_attribution.py --report  # print the classification without writing
+    python3 tools/update_attribution.py                 # rewrite the headers
+    python3 tools/update_attribution.py --report        # print the classification without writing
+    python3 tools/update_attribution.py PATH [PATH...]  # only these files, e.g. the ones a branch changes
 """
 
 import argparse
@@ -220,9 +221,9 @@ def apply(result: dict) -> bool:
     return True
 
 
-def candidates() -> list[str]:
+def candidates(only: list[str]) -> list[str]:
     files = []
-    for path in git("ls-files").splitlines():
+    for path in only or git("ls-files").splitlines():
         if path.startswith(EXCLUDED) or not (ROOT / path).is_file():
             continue
         try:
@@ -237,10 +238,11 @@ def candidates() -> list[str]:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--report", action="store_true", help="print the classification without writing files")
+    parser.add_argument("paths", nargs="*", help="files to process instead of every tracked file")
     args = parser.parse_args()
 
     ignored = ignored_revs()
-    paths = candidates()
+    paths = candidates(args.paths)
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
         results = list(pool.map(lambda path: classify(path, ignored), paths))
 
