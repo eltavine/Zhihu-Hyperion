@@ -1,0 +1,10 @@
+# Mechanical commits that `git blame` looks through (GitHub's blame view reads this file too): formatting,
+# project-wide renames and pure file moves. The lines they touched stay attributed to the commits that wrote them.
+# Use it locally with `git config blame.ignoreRevsFile .git-blame-ignore-revs`.
+
+# style: upgrade the ktlint engine to 1.8.0 and reformat with the new rules
+97bf2107378beefdbbd117f7e0ea05b7f7c356db
+# refactor: 项目改名为 Zhihu-Hyperion
+67f2675ab7c3e7279dacca2315b54356c0b991de
+# refactor: move shared-local-db into the core:database module
+d942d34a47a362712750e3a0fb5f0314b01d036c
