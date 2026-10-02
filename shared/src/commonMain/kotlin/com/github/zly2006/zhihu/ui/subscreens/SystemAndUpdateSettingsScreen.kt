@@ -92,7 +92,6 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import zhihu.shared.generated.resources.Res
-import zhihu.shared.generated.resources.ic_discord_24dp
 import zhihu.shared.generated.resources.ic_github_24dp
 import zhihu.shared.generated.resources.ic_telegram_24dp
 
@@ -448,25 +447,11 @@ fun SystemAndUpdateSettingsScreen(
 
             SettingItemGroup(
                 title = "交流 & 闲聊",
-                footer = { Text("代码和功能反馈请前往GitHub。上边的频道用于用户交流和闲聊，开发者不一定会在线回答问题。") },
+                footer = { Text("代码和功能反馈请前往 GitHub。Telegram 群组用于用户交流和闲聊，开发者不一定会在线回答问题。") },
             ) {
                 SettingItem(
-                    title = { Text("Discord 频道") },
-                    description = { Text("请在 my-other-apps/zhihu-plus-plus 频道讨论") },
-                    icon = { Icon(painterResource(Res.drawable.ic_discord_24dp), null) },
-                    endAction = {
-                        Icon(
-                            AppIcons.ArrowOutward,
-                            null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    },
-                    onClick = { openExternalUrl("https://discord.gg/YCPFZV5XSA") },
-                )
-
-                SettingItem(
-                    title = { Text("Telegram 群组 (Hydrogen)") },
-                    description = { Text("另一个知乎客户端 Hydrogen 的群组，也可以在里面讨论知乎++哦") },
+                    title = { Text("Telegram 群组") },
+                    description = { Text("Zhihu-Hyperion 用户交流群") },
                     icon = { Icon(painterResource(Res.drawable.ic_telegram_24dp), null) },
                     endAction = {
                         Icon(
@@ -475,7 +460,7 @@ fun SystemAndUpdateSettingsScreen(
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     },
-                    onClick = { openExternalUrl("https://t.me/+_A1Yto6EpyIyODA1") },
+                    onClick = { openExternalUrl("https://t.me/Zhihu_Hyperion") },
                 )
 
                 SettingItem(
