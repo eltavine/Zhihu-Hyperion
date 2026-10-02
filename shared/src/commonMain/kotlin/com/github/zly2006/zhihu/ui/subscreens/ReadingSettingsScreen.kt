@@ -169,7 +169,7 @@ fun ReadingSettingsScreen() {
         ) {
             Text(
                 text = "设置会在下次开始朗读时生效；当前会话和已经生成的播放队列不会随之改变。",
-                modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp),
+                modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 16.dp),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

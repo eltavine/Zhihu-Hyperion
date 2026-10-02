@@ -59,6 +59,7 @@ class NavDestinationTest {
             "https://www.zhihu.com/video/2029631316597973958" to Video(2029631316597973958),
             "https://video.zhihu.com/video/2029631316597973958" to Video(2029631316597973958),
             "https://link.zhihu.com/?target=https%3A//www.zhihu.com/video/2029631316597973958" to Video(2029631316597973958),
+            "https://www.zhihu.com/collection/19928423" to CollectionContent("19928423"),
         ).forEach { (url, expected) ->
             assertEquals(expected, resolveContent(url), url)
         }

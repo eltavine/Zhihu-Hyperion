@@ -437,6 +437,8 @@ fun resolveContent(url: Url): NavDestination? {
             } else if (segments.size == 2 && segments[0] == "pin") {
                 val pinId = segments[1].toLongOrNull() ?: return null
                 return Pin(id = pinId)
+            } else if (segments.size == 2 && segments[0] == "collection") {
+                return segments[1].takeIf { it.toLongOrNull() != null }?.let(::CollectionContent)
             } else if (segments.size >= 2 && segments[0] == "topic") {
                 return Topic(id = segments[1], section = segments.getOrNull(2).orEmpty())
             } else if (segments.size == 3 && segments[0] == "appview") {

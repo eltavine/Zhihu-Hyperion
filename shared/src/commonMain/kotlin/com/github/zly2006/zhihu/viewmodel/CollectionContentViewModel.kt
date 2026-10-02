@@ -32,6 +32,7 @@ import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.ZhihuPaging
 import com.github.zly2006.zhihu.data.navDestination
 import com.github.zly2006.zhihu.data.toFeedDisplayItemNavDestinationJson
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -167,7 +168,8 @@ class CollectionContentViewModel(
     private fun refreshCurrentPagingMode(environment: ZhihuApiEnvironment) {
         displayItems.clear()
         viewModelScope.launch {
-            collection = environment.fetchCollection(collectionId)
+            // 收藏夹已删除或需要登录时，列表请求会显示知乎给出的原因，这里不再单独报错。
+            suspendRunCatching { environment.fetchCollection(collectionId) }.onSuccess { collection = it }
         }
         super.refresh(environment)
     }

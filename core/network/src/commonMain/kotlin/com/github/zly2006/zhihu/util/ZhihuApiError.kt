@@ -25,7 +25,8 @@ import kotlinx.serialization.json.contentOrNull
 /**
  * 知乎没有返回数据，而是返回了 `{"error": {...}}` 错误体，例如未登录查看回答时的 HTTP 403。
  *
- * [message] 是知乎给用户看的原话，可以直接展示；[needLogin] 为 true 时登录后才能查看。
+ * [message] 是知乎给用户看的原话，可以直接展示；[needLogin] 为 true 时登录后才能查看：错误体标了 `need_login`，
+ * 或者是未登录请求被 HTTP 401 拒绝时的 `AuthenticationError`（例如未登录查看收藏夹条目，这种错误体不带 `need_login`）。
  */
 class ZhihuApiErrorException(
     override val message: String,
@@ -37,6 +38,7 @@ fun JsonObject.zhihuApiErrorOrNull(): ZhihuApiErrorException? {
     val error = this["error"] as? JsonObject ?: return null
     return ZhihuApiErrorException(
         message = (error["message"] as? JsonPrimitive)?.contentOrNull ?: "知乎暂时无法提供这项内容",
-        needLogin = (error["need_login"] as? JsonPrimitive)?.booleanOrNull == true,
+        needLogin = (error["need_login"] as? JsonPrimitive)?.booleanOrNull == true ||
+            (error["name"] as? JsonPrimitive)?.contentOrNull == "AuthenticationError",
     )
 }
