@@ -1,3 +1,18 @@
+# Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
+# Copyright (C) 2026, eltavine <me@eltavine.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation (version 3 only).
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 name: Set up Gradle build
 description: >
   JDK 17, Gradle with its cache and, on request, the Android SDK and the Rust toolchain that the Full
@@ -6,15 +21,20 @@ description: >
 
 inputs:
   cache-read-only:
+    # Builds on master write the cache, so pull requests start from master's warm cache instead of a cold one.
     description: Restore the Gradle cache without writing it back.
     required: false
-    default: "true"
+    default: ${{ github.ref != 'refs/heads/master' }}
   android-sdk:
     description: Install the Android SDK platform tools.
     required: false
     default: "false"
   rust:
     description: Also install Rust, cargo-ndk, the Android Rust targets and the pinned NDK.
+    required: false
+    default: "false"
+  kotlin-native:
+    description: Cache the Kotlin/Native toolchain in ~/.konan, which Gradle's cache does not cover.
     required: false
     default: "false"
 
@@ -37,6 +57,15 @@ runs:
       uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
       with:
         cache-read-only: ${{ inputs.cache-read-only }}
+
+    # About 1 GB of compiler, LLVM and sysroots that every macOS and iOS build otherwise downloads again.
+    - name: Cache Kotlin/Native toolchain
+      if: inputs.kotlin-native == 'true'
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ~/.konan
+        key: konan-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('gradle/libs.versions.toml') }}
+        restore-keys: konan-${{ runner.os }}-${{ runner.arch }}-
 
     - name: Set up Android SDK
       if: inputs.android-sdk == 'true' || inputs.rust == 'true'

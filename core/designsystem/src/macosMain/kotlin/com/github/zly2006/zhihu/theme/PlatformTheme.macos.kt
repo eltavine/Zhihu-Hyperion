@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,3 +31,7 @@ actual fun currentSystemInDarkTheme(): Boolean =
     NSApplication.sharedApplication
         .effectiveAppearance()
         .bestMatchFromAppearancesWithNames(listOf(NSAppearanceNameAqua, NSAppearanceNameDarkAqua)) == NSAppearanceNameDarkAqua
+
+/** macOS 窗口的标题栏和侧栏外观由系统按“外观”设置绘制，应用不改动。 */
+@Composable
+actual fun PlatformSystemBarEffect(darkTheme: Boolean) = Unit

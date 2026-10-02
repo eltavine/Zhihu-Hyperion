@@ -1,0 +1,106 @@
+# Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
+# Copyright (C) 2026, eltavine <me@eltavine.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation (version 3 only).
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# XcodeGen spec for the iOS host app; ZhihuHyperion.xcodeproj is generated from this file.
+# After editing it, regenerate with `xcodegen generate --spec iosApp/project.yml` and commit both.
+# CI regenerates the project and fails when the committed copy is out of date.
+name: ZhihuHyperion
+options:
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+configFiles:
+  Debug: Configuration/App.xcconfig
+  Release: Configuration/App.xcconfig
+settings:
+  base:
+    # syncIosAppBundle writes the real version and commit into the built Info.plist; these never ship.
+    MARKETING_VERSION: "0.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    # The Kotlin build phases read and write files outside the Xcode-declared inputs.
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+    SWIFT_VERSION: "6.0"
+targets:
+  ZhihuHyperion:
+    type: application
+    platform: iOS
+    sources:
+      - path: ZhihuHyperion
+    info:
+      path: ZhihuHyperion/Info.plist
+      properties:
+        CFBundleDisplayName: Zhihu-Hyperion
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        ZhihuGitCommit: unknown
+        LSRequiresIPhoneOS: true
+        # Compose Multiplatform renders at 120 Hz on ProMotion displays only with this key.
+        CADisableMinimumFrameDurationOnPhone: true
+        ITSAppUsesNonExemptEncryption: false
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        # Reading aloud keeps playing when the app is in the background or the screen is locked.
+        UIBackgroundModes:
+          - audio
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.eltavine.zhihuhyperion
+        # The Kotlin framework is built for Apple silicon simulators only (iosSimulatorArm64), not x86_64.
+        "EXCLUDED_ARCHS[sdk=iphonesimulator*]": x86_64
+        PRODUCT_NAME: Zhihu-Hyperion
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        FRAMEWORK_SEARCH_PATHS: $(SRCROOT)/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)
+        OTHER_LDFLAGS:
+          - $(inherited)
+          - -framework
+          - ZhihuHyperionKit
+    preBuildScripts:
+      - name: Compile Kotlin framework
+        basedOnDependencyAnalysis: false
+        script: |
+          cd "$SRCROOT/.."
+          ./gradlew :iosApp:embedAndSignAppleFrameworkForXcode
+    postBuildScripts:
+      - name: Sync app bundle
+        basedOnDependencyAnalysis: false
+        # Declaring the processed Info.plist as an input makes Xcode run this phase after it writes that file;
+        # otherwise an incremental build may process Info.plist afterwards and drop the version patch.
+        inputFiles:
+          - $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
+        script: |
+          cd "$SRCROOT/.."
+          ./gradlew :iosApp:syncIosAppBundle
+schemes:
+  ZhihuHyperion:
+    build:
+      targets:
+        ZhihuHyperion: all
+    run:
+      config: Debug
+    archive:
+      config: Release

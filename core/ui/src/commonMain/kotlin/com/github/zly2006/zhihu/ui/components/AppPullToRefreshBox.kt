@@ -1,6 +1,6 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
- * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Copyright (C) 2026, eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,6 +28,11 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -35,6 +40,7 @@ import androidx.compose.ui.unit.dp
 /**
  * 下拉刷新容器，刷新指示用 Material 3 Expressive 的形状变形加载指示器。
  *
+ * 从开始下拉到刷新结束，内容里的 [LocalPullToRefreshInProgress] 为 true，列表底部不会再叠一个加载指示器。
  * [indicatorPadding] 把指示器让到顶栏等覆盖层下方。下拉刷新和 Expressive 指示器都还是实验 API，只在这里使用。
  */
 @Composable
@@ -46,6 +52,8 @@ fun AppPullToRefreshBox(
     content: @Composable BoxScope.() -> Unit,
 ) {
     val state = rememberPullToRefreshState()
+    val currentIsRefreshing by rememberUpdatedState(isRefreshing)
+    val inProgress by remember { derivedStateOf { currentIsRefreshing || state.distanceFraction > 0f } }
     PullToRefreshBox(
         isRefreshing = isRefreshing,
         onRefresh = onRefresh,
@@ -60,6 +68,9 @@ fun AppPullToRefreshBox(
                     .padding(indicatorPadding),
             )
         },
-        content = content,
-    )
+    ) {
+        CompositionLocalProvider(LocalPullToRefreshInProgress provides inProgress) {
+            content()
+        }
+    }
 }

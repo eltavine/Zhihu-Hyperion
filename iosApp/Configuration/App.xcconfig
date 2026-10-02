@@ -1,0 +1,8 @@
+// No Apple account is needed for simulator builds, which are signed ad hoc ("Sign to Run Locally"),
+// or for the unsigned IPA, which iosApp/scripts/package-ios.sh builds with code signing turned off.
+CODE_SIGN_STYLE = Automatic
+CODE_SIGN_IDENTITY[sdk=iphonesimulator*] = -
+
+// To run on your own device, create Configuration/Local.xcconfig (ignored by git) containing
+//     DEVELOPMENT_TEAM = <your team id>
+#include? "Local.xcconfig"

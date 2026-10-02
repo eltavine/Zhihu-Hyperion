@@ -54,15 +54,15 @@ URL 解析集中在 `resolveContent()`。支持知乎问题、回答、文章、
 - 主题：`ZhihuTheme` 用 `MaterialExpressiveTheme`，动效是 `MotionScheme.expressive()` 的弹簧物理，形状和字体用 Expressive 默认尺度（含 `largeIncreased`、`extraLargeIncreased`、`extraExtraLarge` 形状和 `*Emphasized` 字体样式）。自定义动画优先取 `MaterialTheme.motionScheme` 的 spring token，不再手写 tween 时长。
 - 配色：平台壁纸取色可用时用平台配色；否则（关闭动态取色、桌面、macOS、Android 12 以下）用 `customThemeColor` 经 material-kolor 按 2025 版规范生成。
 - 组件：优先用 material3 已提供的 Expressive 组件（分段列表、按钮组、切换按钮、FAB 菜单、浮动工具栏、加载指示器等），不要手写外观相似的替代品；只有承载应用语义时才封装（如设置项）。
-- 图标：界面只用 `:core:icons` 的 `AppIcons.<名称>`，用 `Icon(icon = ...)` 渲染，不依赖任何图标库或直接引用图标资源。图标是 Material Symbols Rounded 的未填充版本；`*Filled` 只用于选中、已赞、已收藏等状态，底栏选中项也用填充版本。新增图标先在 `core/icons/symbols.txt` 登记一行，再运行 `python3 core/icons/symbols.py`，CI 用 `--check` 校验清单、资源和 `AppIcons.kt` 一致。品牌标志（GitHub、Telegram、Discord）和知乎投票箭头这类 Material Symbols 没有的图形才保留独立资源。
+- 图标：界面只用 `:core:icons` 的 `AppIcons.<名称>`，用 `Icon(icon = ...)` 渲染，不依赖任何图标库或直接引用图标资源。图标是 Material Symbols Rounded 的未填充版本；`*Filled` 只用于选中、已赞、已收藏等状态，底栏选中项也用填充版本。新增图标先在 `core/icons/symbols.txt` 登记一行，再运行 `python3 core/icons/symbols.py`，CI 用 `--check` 校验清单、资源和 `AppIcons.kt` 一致。品牌标志（GitHub、Telegram、Discord）和知乎投票箭头这类 Material Symbols 没有的图形才保留独立资源。同一个概念全局只用一个图标（如“收藏夹”一律用 `Bookmarks`，赞数用 `ThumbUp`，粉丝数和关注数用 `Group`），一个图标也只表示一种含义；选图标前先搜一遍 `AppIcons.<名称>` 的现有用法。
 - 实验 API 的边界：Expressive 组件大多仍标注 `@ExperimentalMaterial3ExpressiveApi`，只在 `:core:ui` 的封装里使用（`SettingItem` 系列、`ChoiceButtonGroup`、`AppLoadingIndicator`、`AppPullToRefreshBox`、`FabMenu`、`EmptyState`），公开参数只用稳定类型；页面直接调用这些封装，不在页面里 opt-in 实验 API。`ShortNavigationBar` 等已稳定的组件可以直接用。
 - 自适应导航：窗口宽度达到 600dp（横屏手机、平板、桌面窗口）且没有进入列表-详情双栏时，主壳用左侧导航轨 `WideNavigationRail` 代替底栏，标题和图标同样只取 `allBottomBarItems`；双栏时列表栏本身是窄屏宽度，仍在列表栏底部用底栏。悬浮在内容上的控件要按所在容器而不是整个窗口计算位置，因为导航轨会占去左侧宽度。
 - 设置项：每一行都配一个表意的图标，`SettingItem` 把它放进色调圆形容器。有整行动作的行由 Expressive 分段列表项绘制，按下时圆角形变；开关行带 `Role.Switch` 语义。行尾只放开关、数值和跳转箭头；选择控件（按钮组、下拉框）、滑杆和输入框放进 `bottomAction`，横跨整行宽度，不和标题抢宽度。
 - 单选：两到三个短标签的互斥选项用 `ChoiceButtonGroup`（连接式按钮组）；标签加图标在 360dp 宽度下放不下时只放标签。选项多、标签长或随数据变化时用下拉菜单。
-- 菜单和对话框：`DropdownMenuItem` 配 `leadingIcon`，倍速、时长这类纯数值列表除外；`AlertDialog` 配 `icon` 说明用途（删除用 `Delete`，清空用 `DeleteSweep`，屏蔽用户用 `PersonOff` 等），同一动作在各处用同一个图标。
+- 菜单和对话框：`DropdownMenuItem` 配 `leadingIcon`，倍速、时长这类纯数值列表除外；下拉选择的菜单里，当前值在尾部打勾；`AlertDialog` 配 `icon` 说明用途（删除用 `Delete`，清空用 `DeleteSweep`，屏蔽用户用 `PersonOff` 等），同一动作在各处用同一个图标。
 - 加载：页面、列表加载更多、弹窗内容等区块的不定时等待用 `AppLoadingIndicator`；按钮或行内的小号转圈、视频缓冲，以及有明确进度的场景继续用 `CircularProgressIndicator` / `LinearProgressIndicator`。下拉刷新一律用 `AppPullToRefreshBox`，不直接用 `PullToRefreshBox`。
 - 导航与 FAB：主壳底栏是 `ShortNavigationBar`，各项的标题和图标只在 `allBottomBarItems` 定义。一个按钮下有多个创作类动作时用 `FabMenu`（Expressive FAB 菜单），不要手写弹出卡片。
-- 空状态：整页空列表和列表底部的加载失败用 `EmptyState`（Expressive 异形容器里的图标、一句说明、可选的“重试”等按钮）；只有一行的轻提示（如“已经到底啦”）保持文字。
+- 空状态：整页空列表和列表底部的加载失败用 `EmptyState`（Expressive 异形容器里的图标、标题、可选说明和“重试”等按钮）。标题只写状态（如“加载失败”），原因、错误详情和这里会出现什么放进说明；只有一行的轻提示（如“已经到底啦”）保持文字。被其他设置禁用的设置项，要在说明或分组脚注里写明前置条件。
 
 主题状态集中在 `ThemeManager` 和平台 `ThemeSettingsRuntime`。`themeMode` 控制明暗，`useDynamicColor` 控制 Material You 动态取色，`customThemeColor` 在动态取色关闭后生效，`backgroundColorLight` / `backgroundColorDark` 控制背景色，`luotianyi_color` 控制应用内浏览器工具栏色。
 

@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -160,7 +161,7 @@ fun ContentFilterSettingsScreen(
             SettingItemGroup {
                 SettingItem(
                     title = { Text("推荐算法") },
-                    icon = { Icon(AppIcons.Recommend, contentDescription = null) },
+                    icon = { Icon(AppIcons.Explore, contentDescription = null) },
                     settingKey = "recommendationMode",
                     highlightedKey = highlightedSetting,
                     bottomAction = {
@@ -200,6 +201,11 @@ fun ContentFilterSettingsScreen(
                                                 Text(mode.displayName)
                                                 Text(mode.description, style = MaterialTheme.typography.bodySmall)
                                             }
+                                        },
+                                        trailingIcon = if (mode == currentRecommendationMode.value) {
+                                            { Icon(AppIcons.Check, contentDescription = "当前设置") }
+                                        } else {
+                                            null
                                         },
                                         leadingIcon = {
                                             Icon(
@@ -314,7 +320,7 @@ fun ContentFilterSettingsScreen(
                 )
                 SettingItem(
                     title = { Text("文章最低赞数") },
-                    icon = { Icon(AppIcons.Article, contentDescription = null) },
+                    icon = { Icon(AppIcons.ThumbUp, contentDescription = null) },
                     description = { Text("低于此赞数或作者粉丝低于对应阈值的文章会被过滤") },
                     settingKey = ARTICLE_VOTEUP_THRESHOLD_PREFERENCE_KEY,
                     highlightedKey = highlightedSetting,
@@ -343,10 +349,10 @@ fun ContentFilterSettingsScreen(
                     Column {
                         listOf(
                             Triple(ARTICLE_FOLLOWERS_THRESHOLD_PREFERENCE_KEY, "文章最低粉丝数", AppIcons.Group),
-                            Triple(VIDEO_VOTE_THRESHOLD_PREFERENCE_KEY, "视频最低赞数", AppIcons.SmartDisplay),
-                            Triple(VIDEO_FOLLOWERS_THRESHOLD_PREFERENCE_KEY, "视频最低粉丝数", AppIcons.Groups),
+                            Triple(VIDEO_VOTE_THRESHOLD_PREFERENCE_KEY, "视频最低赞数", AppIcons.ThumbUp),
+                            Triple(VIDEO_FOLLOWERS_THRESHOLD_PREFERENCE_KEY, "视频最低粉丝数", AppIcons.Group),
                             Triple(QUESTION_ANSWER_THRESHOLD_PREFERENCE_KEY, "问题最低回答数", AppIcons.Forum),
-                            Triple(QUESTION_FOLLOWERS_THRESHOLD_PREFERENCE_KEY, "问题最低关注数", AppIcons.PersonAdd),
+                            Triple(QUESTION_FOLLOWERS_THRESHOLD_PREFERENCE_KEY, "问题最低关注数", AppIcons.Group),
                         ).forEach { (key, title, icon) ->
                             SettingItem(
                                 title = { Text(title) },

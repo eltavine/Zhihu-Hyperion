@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -754,8 +755,9 @@ fun SearchScreen(
                             viewModel.errorMessage != null -> {
                                 EmptyState(
                                     icon = AppIcons.Error,
-                                    title = "加载失败：${viewModel.errorMessage}",
+                                    title = "加载失败",
                                     modifier = Modifier.fillMaxWidth(),
+                                    description = viewModel.errorMessage,
                                     action = EmptyStateAction("重试", AppIcons.Refresh, "search_retry_button") {
                                         viewModel.retry(paginationEnvironment)
                                     },

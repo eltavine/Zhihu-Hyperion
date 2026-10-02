@@ -1,4 +1,19 @@
 #!/usr/bin/env python3
+# Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
+# Copyright (C) 2026, eltavine <me@eltavine.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation (version 3 only).
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 """Writes the update.json that the app's UpdateController reads (feature/update).
 
 Clients that are already installed keep reading this file, so fields may be added but never renamed, removed
@@ -10,6 +25,7 @@ import argparse
 import hashlib
 import json
 import pathlib
+import re
 
 # update.json asset key -> release file name. The keys are the app's UpdateTarget keys.
 ASSETS = {
@@ -18,7 +34,13 @@ ASSETS = {
     "windows-x64": "zhihu-hyperion-desktop-windows-x64.msi",
     "linux-x64": "zhihu-hyperion-desktop-linux-x64.AppImage",
     "macos-arm64": "zhihu-hyperion-desktop-macos-arm64.app.zip",
+    "ios-arm64": "zhihu-hyperion-ios-arm64-unsigned.ipa",
 }
+
+
+def plain_text(markdown: str) -> str:
+    """The app shows the notes as plain text, so the "### " of git-cliff's section headings would show literally."""
+    return re.sub(r"^#{1,6}[ \t]+", "", markdown, flags=re.MULTILINE).strip()
 
 
 def sha256(path: pathlib.Path) -> str:
@@ -36,7 +58,7 @@ def main() -> None:
     parser.add_argument("--repository", required=True, help="owner/name of the GitHub repository.")
     parser.add_argument("--tag", required=True, help="Release tag the files are published under.")
     parser.add_argument("--commit", required=True, help="Commit the files were built from.")
-    parser.add_argument("--notes", type=pathlib.Path, required=True, help="Markdown release notes.")
+    parser.add_argument("--notes", type=pathlib.Path, required=True, help="Markdown release notes written by git-cliff.")
     args = parser.parse_args()
 
     build = json.loads((args.dist / "build-info.json").read_text(encoding="utf-8"))
@@ -46,7 +68,7 @@ def main() -> None:
         "versionCode": build["versionCode"],
         "commit": args.commit,
         "releaseUrl": f"https://github.com/{args.repository}/releases/tag/{args.tag}",
-        "notes": args.notes.read_text(encoding="utf-8").strip(),
+        "notes": plain_text(args.notes.read_text(encoding="utf-8")),
         "assets": {
             key: {
                 "url": f"{download_url}/{name}",
