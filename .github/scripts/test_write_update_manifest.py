@@ -1,4 +1,19 @@
 #!/usr/bin/env python3
+# Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
+# Copyright (C) 2026, eltavine <me@eltavine.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation (version 3 only).
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 """Checks write_update_manifest.py against the sample that the app's UpdateManifestContractTest decodes.
 
 The sample is this test's expected output and that Kotlin test's input, so a format change made on either
@@ -25,7 +40,7 @@ def generate() -> str:
         for name in ASSETS.values():
             (dist / name).write_bytes(name.encode())
         notes = dist / "notes.md"
-        notes.write_text("- 修复更新检查 (abc1234)\n", encoding="utf-8")
+        notes.write_text("### 修复\n\n- 修复更新检查 (#12) (abc1234)\n", encoding="utf-8")
         subprocess.run(
             [
                 sys.executable, str(SCRIPTS / "write_update_manifest.py"),

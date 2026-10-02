@@ -46,15 +46,17 @@ class EmptyStateAction(
 )
 
 /**
- * 空列表或加载失败时的占位：Expressive 异形容器里的图标、一句说明和可选的操作按钮。
+ * 空列表或加载失败时的占位：Expressive 异形容器里的图标、一句标题、可选的说明和操作按钮。
  *
  * 用于整页空状态和列表底部的失败提示，让这些状态有统一的样子；只有一行的轻提示（如“已经到底啦”）不必用它。
+ * 标题只写状态本身（如“加载失败”），原因和下一步放进 [description]。
  */
 @Composable
 fun EmptyState(
     icon: AppIcon,
     title: String,
     modifier: Modifier = Modifier,
+    description: String? = null,
     action: EmptyStateAction? = null,
 ) {
     Column(
@@ -69,6 +71,14 @@ fun EmptyState(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
         )
+        description?.let {
+            Text(
+                it,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+            )
+        }
         action?.let {
             FilledTonalButton(
                 onClick = it.onClick,

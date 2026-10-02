@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -113,7 +114,11 @@ fun BlockedFeedHistoryScreen() {
                     .padding(innerPadding),
                 contentAlignment = Alignment.Center,
             ) {
-                EmptyState(icon = AppIcons.ManageHistory, title = "暂无屏蔽记录")
+                EmptyState(
+                    icon = AppIcons.ManageHistory,
+                    title = "暂无屏蔽记录",
+                    description = "首页因广告、已读、关键词、作者、主题等规则没有展示的内容会记录在这里。",
+                )
             }
         } else {
             LazyColumn(

@@ -1,6 +1,6 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
- * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Copyright (C) 2026, eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -47,13 +47,13 @@ fun nativeZhihuModules(): List<Module> = listOf(
     module {
         single { nativeSettingsStore("settings.properties") }
         single {
-            // Both macOS bundles fill these keys from MacosAppBundle's Info.plist tokens.
+            // MacosAppBundle (both macOS bundles) and syncIosAppBundle write these keys into Info.plist.
             val versionCode = NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleVersion") as? String
             InstalledBuild(
                 versionName = nativeAppVersionName,
                 versionCode = checkNotNull(versionCode?.toIntOrNull()) { "Info.plist has no numeric CFBundleVersion" },
                 commit = NSBundle.mainBundle.objectForInfoDictionaryKey("ZhihuGitCommit") as? String ?: "unknown",
-                target = if (nativeIsDesktop) UpdateTarget.MACOS_ARM64 else null,
+                target = if (nativeIsDesktop) UpdateTarget.MACOS_ARM64 else UpdateTarget.IOS_ARM64,
             )
         }
         single { WebDavConfigFile(AtomicTextFile(Path("${nativeAppPrivateDirectoryPath()}/webdav.json"))) }

@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,7 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.github.zly2006.zhihu.platform.MacosUserMessageHost
+import com.github.zly2006.zhihu.platform.NativeUserMessageHost
 import com.github.zly2006.zhihu.platform.macosContentAreaInsetState
 import com.github.zly2006.zhihu.ui.MacosWindowChrome
 import com.github.zly2006.zhihu.ui.MacosWindowNavigationItem
@@ -104,7 +105,7 @@ internal fun MacosNativeWindowChrome(
 
     Box(Modifier.fillMaxSize()) {
         val contentAreaModifier = Modifier.padding(start = sidebarInset)
-        MacosUserMessageHost(modifier = contentAreaModifier) {
+        NativeUserMessageHost(modifier = contentAreaModifier) {
             content(Modifier.fillMaxSize())
         }
     }

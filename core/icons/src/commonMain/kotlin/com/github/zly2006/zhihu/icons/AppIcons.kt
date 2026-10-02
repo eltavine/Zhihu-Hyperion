@@ -23,16 +23,15 @@ import zhihu.core.icons.generated.resources.Res
 import zhihu.core.icons.generated.resources.account_circle
 import zhihu.core.icons.generated.resources.ad_off
 import zhihu.core.icons.generated.resources.add
+import zhihu.core.icons.generated.resources.add_comment
 import zhihu.core.icons.generated.resources.add_reaction
 import zhihu.core.icons.generated.resources.android
 import zhihu.core.icons.generated.resources.archive
 import zhihu.core.icons.generated.resources.arrow_back
 import zhihu.core.icons.generated.resources.arrow_circle_up
 import zhihu.core.icons.generated.resources.arrow_downward
-import zhihu.core.icons.generated.resources.arrow_forward
 import zhihu.core.icons.generated.resources.arrow_outward
 import zhihu.core.icons.generated.resources.arrow_upward
-import zhihu.core.icons.generated.resources.article
 import zhihu.core.icons.generated.resources.auto_awesome
 import zhihu.core.icons.generated.resources.auto_stories
 import zhihu.core.icons.generated.resources.autorenew
@@ -57,7 +56,6 @@ import zhihu.core.icons.generated.resources.cloud_download
 import zhihu.core.icons.generated.resources.cloud_sync
 import zhihu.core.icons.generated.resources.cloud_upload
 import zhihu.core.icons.generated.resources.code
-import zhihu.core.icons.generated.resources.collections_bookmark
 import zhihu.core.icons.generated.resources.comment
 import zhihu.core.icons.generated.resources.contact_page
 import zhihu.core.icons.generated.resources.contact_support
@@ -81,13 +79,13 @@ import zhihu.core.icons.generated.resources.error
 import zhihu.core.icons.generated.resources.event
 import zhihu.core.icons.generated.resources.expand_less
 import zhihu.core.icons.generated.resources.expand_more
+import zhihu.core.icons.generated.resources.explore
 import zhihu.core.icons.generated.resources.favorite
 import zhihu.core.icons.generated.resources.favorite_filled
 import zhihu.core.icons.generated.resources.filter_alt
 import zhihu.core.icons.generated.resources.filter_center_focus
 import zhihu.core.icons.generated.resources.filter_list
 import zhihu.core.icons.generated.resources.flag
-import zhihu.core.icons.generated.resources.folder
 import zhihu.core.icons.generated.resources.folder_open
 import zhihu.core.icons.generated.resources.font_download
 import zhihu.core.icons.generated.resources.format_align_justify
@@ -140,7 +138,6 @@ import zhihu.core.icons.generated.resources.manage_accounts
 import zhihu.core.icons.generated.resources.manage_accounts_filled
 import zhihu.core.icons.generated.resources.manage_history
 import zhihu.core.icons.generated.resources.mark_chat_read
-import zhihu.core.icons.generated.resources.mark_unread_chat_alt
 import zhihu.core.icons.generated.resources.match_word
 import zhihu.core.icons.generated.resources.memory
 import zhihu.core.icons.generated.resources.merge
@@ -150,7 +147,6 @@ import zhihu.core.icons.generated.resources.navigation
 import zhihu.core.icons.generated.resources.network_check
 import zhihu.core.icons.generated.resources.newspaper
 import zhihu.core.icons.generated.resources.newspaper_filled
-import zhihu.core.icons.generated.resources.nightlight
 import zhihu.core.icons.generated.resources.notifications
 import zhihu.core.icons.generated.resources.notifications_unread
 import zhihu.core.icons.generated.resources.opacity
@@ -172,7 +168,6 @@ import zhihu.core.icons.generated.resources.power_settings_new
 import zhihu.core.icons.generated.resources.psychology
 import zhihu.core.icons.generated.resources.qr_code_scanner
 import zhihu.core.icons.generated.resources.queue_music
-import zhihu.core.icons.generated.resources.recommend
 import zhihu.core.icons.generated.resources.record_voice_over
 import zhihu.core.icons.generated.resources.refresh
 import zhihu.core.icons.generated.resources.reply
@@ -181,6 +176,7 @@ import zhihu.core.icons.generated.resources.rounded_corner
 import zhihu.core.icons.generated.resources.save
 import zhihu.core.icons.generated.resources.schedule
 import zhihu.core.icons.generated.resources.school
+import zhihu.core.icons.generated.resources.science
 import zhihu.core.icons.generated.resources.search
 import zhihu.core.icons.generated.resources.send
 import zhihu.core.icons.generated.resources.sentiment_satisfied
@@ -191,7 +187,6 @@ import zhihu.core.icons.generated.resources.shuffle
 import zhihu.core.icons.generated.resources.skip_next_filled
 import zhihu.core.icons.generated.resources.skip_previous_filled
 import zhihu.core.icons.generated.resources.smart_button
-import zhihu.core.icons.generated.resources.smart_display
 import zhihu.core.icons.generated.resources.smart_toy
 import zhihu.core.icons.generated.resources.smartphone
 import zhihu.core.icons.generated.resources.sms
@@ -240,16 +235,15 @@ object AppIcons {
     val AccountCircle = AppIcon(Res.drawable.account_circle)
     val AdOff = AppIcon(Res.drawable.ad_off)
     val Add = AppIcon(Res.drawable.add)
+    val AddComment = AppIcon(Res.drawable.add_comment)
     val AddReaction = AppIcon(Res.drawable.add_reaction)
     val Android = AppIcon(Res.drawable.android)
     val Archive = AppIcon(Res.drawable.archive)
     val ArrowBack = AppIcon(Res.drawable.arrow_back)
     val ArrowCircleUp = AppIcon(Res.drawable.arrow_circle_up)
     val ArrowDownward = AppIcon(Res.drawable.arrow_downward)
-    val ArrowForward = AppIcon(Res.drawable.arrow_forward)
     val ArrowOutward = AppIcon(Res.drawable.arrow_outward)
     val ArrowUpward = AppIcon(Res.drawable.arrow_upward)
-    val Article = AppIcon(Res.drawable.article)
     val AutoAwesome = AppIcon(Res.drawable.auto_awesome)
     val AutoStories = AppIcon(Res.drawable.auto_stories)
     val Autorenew = AppIcon(Res.drawable.autorenew)
@@ -274,7 +268,6 @@ object AppIcons {
     val CloudSync = AppIcon(Res.drawable.cloud_sync)
     val CloudUpload = AppIcon(Res.drawable.cloud_upload)
     val Code = AppIcon(Res.drawable.code)
-    val CollectionsBookmark = AppIcon(Res.drawable.collections_bookmark)
     val Comment = AppIcon(Res.drawable.comment)
     val ContactPage = AppIcon(Res.drawable.contact_page)
     val ContactSupport = AppIcon(Res.drawable.contact_support)
@@ -298,13 +291,13 @@ object AppIcons {
     val Event = AppIcon(Res.drawable.event)
     val ExpandLess = AppIcon(Res.drawable.expand_less)
     val ExpandMore = AppIcon(Res.drawable.expand_more)
+    val Explore = AppIcon(Res.drawable.explore)
     val Favorite = AppIcon(Res.drawable.favorite)
     val FavoriteFilled = AppIcon(Res.drawable.favorite_filled)
     val FilterAlt = AppIcon(Res.drawable.filter_alt)
     val FilterCenterFocus = AppIcon(Res.drawable.filter_center_focus)
     val FilterList = AppIcon(Res.drawable.filter_list)
     val Flag = AppIcon(Res.drawable.flag)
-    val Folder = AppIcon(Res.drawable.folder)
     val FolderOpen = AppIcon(Res.drawable.folder_open)
     val FontDownload = AppIcon(Res.drawable.font_download)
     val FormatAlignJustify = AppIcon(Res.drawable.format_align_justify)
@@ -357,7 +350,6 @@ object AppIcons {
     val ManageAccountsFilled = AppIcon(Res.drawable.manage_accounts_filled)
     val ManageHistory = AppIcon(Res.drawable.manage_history)
     val MarkChatRead = AppIcon(Res.drawable.mark_chat_read)
-    val MarkUnreadChatAlt = AppIcon(Res.drawable.mark_unread_chat_alt)
     val MatchWord = AppIcon(Res.drawable.match_word)
     val Memory = AppIcon(Res.drawable.memory)
     val Merge = AppIcon(Res.drawable.merge)
@@ -367,7 +359,6 @@ object AppIcons {
     val NetworkCheck = AppIcon(Res.drawable.network_check)
     val Newspaper = AppIcon(Res.drawable.newspaper)
     val NewspaperFilled = AppIcon(Res.drawable.newspaper_filled)
-    val Nightlight = AppIcon(Res.drawable.nightlight)
     val Notifications = AppIcon(Res.drawable.notifications)
     val NotificationsUnread = AppIcon(Res.drawable.notifications_unread)
     val Opacity = AppIcon(Res.drawable.opacity)
@@ -389,7 +380,6 @@ object AppIcons {
     val Psychology = AppIcon(Res.drawable.psychology)
     val QrCodeScanner = AppIcon(Res.drawable.qr_code_scanner)
     val QueueMusic = AppIcon(Res.drawable.queue_music)
-    val Recommend = AppIcon(Res.drawable.recommend)
     val RecordVoiceOver = AppIcon(Res.drawable.record_voice_over)
     val Refresh = AppIcon(Res.drawable.refresh)
     val Reply = AppIcon(Res.drawable.reply)
@@ -398,6 +388,7 @@ object AppIcons {
     val Save = AppIcon(Res.drawable.save)
     val Schedule = AppIcon(Res.drawable.schedule)
     val School = AppIcon(Res.drawable.school)
+    val Science = AppIcon(Res.drawable.science)
     val Search = AppIcon(Res.drawable.search)
     val Send = AppIcon(Res.drawable.send)
     val SentimentSatisfied = AppIcon(Res.drawable.sentiment_satisfied)
@@ -408,7 +399,6 @@ object AppIcons {
     val SkipNext = AppIcon(Res.drawable.skip_next_filled)
     val SkipPrevious = AppIcon(Res.drawable.skip_previous_filled)
     val SmartButton = AppIcon(Res.drawable.smart_button)
-    val SmartDisplay = AppIcon(Res.drawable.smart_display)
     val SmartToy = AppIcon(Res.drawable.smart_toy)
     val Smartphone = AppIcon(Res.drawable.smartphone)
     val Sms = AppIcon(Res.drawable.sms)

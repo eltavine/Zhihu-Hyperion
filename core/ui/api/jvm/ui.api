@@ -280,7 +280,7 @@ public final class com/github/zly2006/zhihu/ui/components/EmptyStateAction {
 }
 
 public final class com/github/zly2006/zhihu/ui/components/EmptyStateKt {
-	public static final fun EmptyState (Lcom/github/zly2006/zhihu/icons/AppIcon;Ljava/lang/String;Landroidx/compose/ui/Modifier;Lcom/github/zly2006/zhihu/ui/components/EmptyStateAction;Landroidx/compose/runtime/Composer;II)V
+	public static final fun EmptyState (Lcom/github/zly2006/zhihu/icons/AppIcon;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Lcom/github/zly2006/zhihu/ui/components/EmptyStateAction;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/github/zly2006/zhihu/ui/components/ExportDialogComponentKt {

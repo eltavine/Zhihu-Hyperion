@@ -7,16 +7,15 @@
 account_circle
 ad_off
 add
+add_comment
 add_reaction
 android
 archive
 arrow_back
 arrow_circle_up
 arrow_downward
-arrow_forward
 arrow_outward
 arrow_upward
-article
 auto_awesome
 auto_stories
 autorenew
@@ -41,7 +40,6 @@ cloud_download
 cloud_sync
 cloud_upload
 code
-collections_bookmark
 comment
 contact_page
 contact_support
@@ -65,13 +63,13 @@ error
 event
 expand_less
 expand_more
+explore
 favorite
 favorite filled
 filter_alt
 filter_center_focus
 filter_list
 flag
-folder
 folder_open
 font_download
 format_align_justify
@@ -124,7 +122,6 @@ manage_accounts
 manage_accounts filled
 manage_history
 mark_chat_read
-mark_unread_chat_alt
 match_word
 memory
 merge
@@ -134,7 +131,6 @@ navigation
 network_check
 newspaper
 newspaper filled
-nightlight
 notifications
 notifications_unread
 opacity
@@ -156,7 +152,6 @@ power_settings_new
 psychology
 qr_code_scanner
 queue_music
-recommend
 record_voice_over
 refresh
 reply
@@ -165,6 +160,7 @@ rounded_corner
 save
 schedule
 school
+science
 search
 send
 sentiment_satisfied
@@ -175,7 +171,6 @@ shuffle
 skip_next solid
 skip_previous solid
 smart_button
-smart_display
 smart_toy
 smartphone
 sms
