@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,12 +38,6 @@ actual val nativeIsDesktop: Boolean = true
 fun isMacosQuitOnWindowCloseEnabled(): Boolean =
     KoinPlatform.getKoin().get<SettingsStore>().getBoolean(MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_KEY, false)
 
-actual val isAigcVoteSupported: Boolean = true
-
-actual val isFeedQualityFilterSupported: Boolean = true
-
-actual val isLegacyWebViewSupported: Boolean = false
-
 @Composable
 @OptIn(ExperimentalForeignApi::class)
 actual fun rememberExternalUrlOpener(): ExternalUrlOpener = remember {
@@ -75,9 +70,6 @@ actual fun nativeAccountFilePath(): String =
     macosBackgroundUiDebugDataDirectoryPath()?.let { "$it/account.json" }
         ?: "${NSHomeDirectory()}/.zhihu-hyperion/account.json"
 
-actual fun nativeSettingsStore(relativePath: String): SettingsStore =
-    macosSettingsStore("${nativeAppPrivateDirectoryPath()}/$relativePath")
-
 actual fun nativeAppPrivateDirectoryPath(): String =
     macosAppDataDirectoryPath()
 
@@ -93,23 +85,6 @@ actual fun nativeChooseBlocklistImportFilePath(): String? {
     panel.canChooseDirectories = false
     panel.allowsMultipleSelection = false
     return if (panel.runModal() == NSModalResponseOK) panel.URL?.path else null
-}
-
-data class MacosUserMessage(
-    val text: String,
-    val duration: UserMessageDuration,
-)
-
-internal val macosUserMessages = Channel<MacosUserMessage>(capacity = Channel.UNLIMITED)
-
-fun showMacosUserMessage(
-    message: String,
-    duration: UserMessageDuration = UserMessageDuration.Short,
-) {
-    println(message)
-    check(macosUserMessages.trySend(MacosUserMessage(message, duration)).isSuccess) {
-        "macOS user message queue is unavailable"
-    }
 }
 
 actual val platformBottomBarItemLimit: Int? = null

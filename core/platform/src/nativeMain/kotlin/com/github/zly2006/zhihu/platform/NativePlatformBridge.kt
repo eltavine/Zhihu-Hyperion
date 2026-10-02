@@ -1,6 +1,6 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
- * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Copyright (C) 2026, eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,4 +37,11 @@ expect fun nativeChooseBlocklistImportFilePath(): String?
 fun nativeBundledResourcePath(relativePath: String): String? =
     NSBundle.mainBundle.resourcePath?.let { resourceDirectory -> "$resourceDirectory/$relativePath" }
 
-expect fun nativeSettingsStore(relativePath: String): SettingsStore
+fun nativeSettingsStore(relativePath: String): SettingsStore =
+    propertiesFileSettingsStore("${nativeAppPrivateDirectoryPath()}/$relativePath")
+
+actual val isAigcVoteSupported: Boolean = true
+
+actual val isFeedQualityFilterSupported: Boolean = true
+
+actual val isLegacyWebViewSupported: Boolean = false

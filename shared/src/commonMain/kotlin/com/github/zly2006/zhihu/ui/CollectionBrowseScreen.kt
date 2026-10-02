@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -222,7 +223,7 @@ fun CollectionBrowseScreen(
                             enabled = collections.isNotEmpty(),
                             modifier = Modifier.testTag(COLLECTION_BROWSE_FOLDER_SWITCH_BUTTON_TAG),
                         ) {
-                            Icon(AppIcons.Folder, contentDescription = "切换收藏夹")
+                            Icon(AppIcons.Bookmarks, contentDescription = "切换收藏夹")
                         }
                         DropdownMenu(
                             expanded = folderMenuExpanded,
@@ -232,7 +233,7 @@ fun CollectionBrowseScreen(
                             collections.forEach { collection ->
                                 DropdownMenuItem(
                                     text = { Text(collection.title) },
-                                    leadingIcon = { Icon(AppIcons.Folder, contentDescription = null) },
+                                    leadingIcon = { Icon(AppIcons.Bookmarks, contentDescription = null) },
                                     trailingIcon = {
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             if (collection.id == selectedCollectionId) {
@@ -306,7 +307,7 @@ fun CollectionBrowseScreen(
                     contentAlignment = Alignment.Center,
                 ) {
                     EmptyState(
-                        icon = AppIcons.Folder,
+                        icon = AppIcons.Bookmarks,
                         title = "还没有收藏夹",
                         modifier = Modifier.testTag(COLLECTION_BROWSE_EMPTY_COLLECTIONS_TAG),
                     )

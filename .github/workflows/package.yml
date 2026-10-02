@@ -1,3 +1,18 @@
+# Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
+# Copyright (C) 2026, eltavine <me@eltavine.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation (version 3 only).
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 name: Package
 
 # Builds every distributable of the calling run's commit for the nightly and release workflows.
@@ -6,6 +21,12 @@ name: Package
 # holds the key admits master alone, so a workflow edited on another branch or in a pull request cannot read it.
 on:
   workflow_call:
+    inputs:
+      ref:
+        description: Commit to build; the calling run's commit when empty.
+        type: string
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -21,6 +42,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ inputs.ref }}
           # versionCode counts commits, so the build needs the full history.
           fetch-depth: 0
           persist-credentials: false
@@ -171,6 +193,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ inputs.ref }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -178,6 +201,7 @@ jobs:
         uses: ./.github/actions/setup-build
         with:
           cache-read-only: "false"
+          kotlin-native: ${{ runner.os == 'macOS' }}
 
       - name: Set desktop artifact suffix
         id: desktop_suffix
@@ -277,7 +301,7 @@ jobs:
         if: runner.os == 'macOS'
         shell: bash
         run: |
-          ./gradlew -Dorg.gradle.jvmargs="-Xmx5120m -Dfile.encoding=UTF-8" :macosApp:packageReleaseMacosApp :macosUiDebug:verifyMacosReleaseIsolation
+          ./gradlew :macosApp:packageReleaseMacosApp :macosUiDebug:verifyMacosReleaseIsolation
 
           app_bundle="macosApp/build/bin/macosArm64/releaseApp/Zhihu-Hyperion.app"
           app_executable="$app_bundle/Contents/MacOS/ZhihuHyperion"
@@ -297,6 +321,35 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: desktop-${{ steps.desktop_suffix.outputs.suffix }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
+
+  ios:
+    name: iOS unsigned IPA
+    runs-on: macos-15
+    timeout-minutes: 90
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up build toolchain
+        uses: ./.github/actions/setup-build
+        with:
+          cache-read-only: "false"
+          kotlin-native: "true"
+
+      - name: Build the unsigned IPA
+        run: iosApp/scripts/package-ios.sh device dist/zhihu-hyperion-ios-arm64-unsigned.ipa
+
+      - name: Upload iOS package
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ios
           path: dist/
           if-no-files-found: error
           retention-days: 7

@@ -61,6 +61,7 @@ enum class UpdateTarget(
     WINDOWS_X64("windows-x64"),
     LINUX_X64("linux-x64"),
     MACOS_ARM64("macos-arm64"),
+    IOS_ARM64("ios-arm64"),
 }
 
 /**
