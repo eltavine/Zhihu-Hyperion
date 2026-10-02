@@ -775,6 +775,7 @@ fun HomeScreen(
                             },
                             preferenceName = "copyAll",
                             bottomAvoidance = fabAvoidance,
+                            initiallyOnLeft = true,
                         ) {
                             Icon(AppIcons.CopyAll, contentDescription = "复制")
                         }

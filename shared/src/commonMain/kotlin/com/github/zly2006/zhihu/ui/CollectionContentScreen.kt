@@ -59,6 +59,7 @@ import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.LocalNavigator
+import com.github.zly2006.zhihu.navigation.requestLoginNavigation
 import com.github.zly2006.zhihu.platform.PlatformBackHandler
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
 import com.github.zly2006.zhihu.ui.components.FeedCard
@@ -220,6 +221,10 @@ internal fun CollectionContentBody(
         listState = listState,
         modifier = modifier.testTag("${tagPrefix}_list"),
         footer = ProgressIndicatorFooter,
+        loadFailed = viewModel.errorMessage != null,
+        onRetry = { viewModel.retry(environment) },
+        loadFailureMessage = viewModel.apiError?.message,
+        onLogin = (::requestLoginNavigation).takeIf { viewModel.apiError?.needLogin == true },
         topContent = {
             item(0) {
                 Text(
