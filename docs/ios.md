@@ -31,7 +31,7 @@ iOS 版与 Android、桌面、macOS 共用同一套 Compose 界面和全部业�
 
 - 模拟器包按 “Sign to Run Locally” 临时签名；IPA 关闭代码签名构建，要用 AltStore、SideStore、Sideloadly 或自己的证书签名后才能安装。
 - 装到自己的设备上：在 `iosApp/Configuration/Local.xcconfig`（不进 git）写 `DEVELOPMENT_TEAM = <团队 ID>`。
-- PR 的 CI 任务 `iOS simulator app and unsigned IPA` 产出两种包；发布流程把 `zhihu-hyperion-ios-arm64-unsigned.ipa` 附在 nightly 与正式版上，`update.json` 的 `ios-arm64` 指向它。iOS 不能在应用内安装更新，检查到新版本时打开下载页。
+- PR 的 CI 任务 `iOS simulator debug build` 只构建 Debug 模拟器应用，不产出包：在 GitHub 的 macOS 机器上，每个 Release 目标要构建 27–39 分钟。发布流程用 Release 构建 `zhihu-hyperion-ios-arm64-unsigned.ipa`，附在 nightly 与正式版上，`update.json` 的 `ios-arm64` 指向它。iOS 不能在应用内安装更新，检查到新版本时打开下载页。
 - Kotlin/Native 在 Gradle 守护进程里链接 Release 二进制，整程序优化需要超过 4 GiB 堆，`gradle.properties` 因此设为 5 GiB。
 
 ## 交互与系统适配

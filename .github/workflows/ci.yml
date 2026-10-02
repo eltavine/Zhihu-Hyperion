@@ -185,9 +185,9 @@ jobs:
         run: ./gradlew :desktopApp:packageReleaseDistributionForCurrentOS --max-workers=2
 
   ios:
-    name: iOS simulator app and unsigned IPA
+    name: iOS simulator debug build
     runs-on: macos-15
-    timeout-minutes: 90
+    timeout-minutes: 60
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -214,18 +214,13 @@ jobs:
             exit 1
           fi
 
-      - name: Build the simulator app and the unsigned IPA
-        run: |
-          iosApp/scripts/package-ios.sh simulator dist/zhihu-hyperion-ios-simulator.app.zip
-          iosApp/scripts/package-ios.sh device dist/zhihu-hyperion-ios-arm64-unsigned.ipa
-
-      - name: Upload iOS packages
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: ios
-          path: dist/
-          if-no-files-found: error
-          retention-days: 7
+      # Each Release iOS build took 27–39 minutes on this runner, so pull requests build Debug;
+      # package.yml builds the Release IPA.
+      - name: Build the simulator app
+        run: >-
+          xcodebuild -project iosApp/ZhihuHyperion.xcodeproj -scheme ZhihuHyperion -configuration Debug
+          -sdk iphonesimulator -destination 'generic/platform=iOS Simulator'
+          -derivedDataPath iosApp/build/derived-data build
 
   instrumented-tests:
     name: Mock instrumented shard (${{ matrix.shard_label }}/5)
