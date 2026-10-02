@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,11 +18,14 @@
 
 package com.github.zly2006.zhihu.util
 
-import android.app.AlertDialog
 import android.os.SystemClock
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
+import com.github.zly2006.zhihu.icons.AppIcons
 import com.github.zly2006.zhihu.platform.androidSettingsStore
+import com.github.zly2006.zhihu.ui.components.AppDialogAction
+import com.github.zly2006.zhihu.ui.components.AppDialogQueue
+import com.github.zly2006.zhihu.ui.components.AppDialogRequest
 import com.github.zly2006.zhihu.util.ContinuousUsageReminderPolicy
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -30,6 +34,7 @@ import kotlinx.coroutines.launch
 
 class ContinuousUsageReminderManager(
     private val activity: ComponentActivity,
+    private val dialogs: AppDialogQueue,
 ) {
     init {
         current = this
@@ -42,7 +47,6 @@ class ContinuousUsageReminderManager(
         settingsStore.getLong(KEY_SESSION_ACCUMULATED_FOREGROUND_MS, 0L).coerceAtLeast(0L)
     private var foregroundStartElapsedMs: Long? = null
     private var checkJob: Job? = null
-    private var reminderDialog: AlertDialog? = null
 
     fun onAppForeground() {
         if (foregroundStartElapsedMs == null) {
@@ -68,15 +72,13 @@ class ContinuousUsageReminderManager(
         }
         foregroundStartElapsedMs = null
 
-        reminderDialog?.dismiss()
-        reminderDialog = null
+        dialogs.dismiss(REMINDER_DIALOG_KEY)
     }
 
     fun onDestroy() {
         checkJob?.cancel()
         checkJob = null
-        reminderDialog?.dismiss()
-        reminderDialog = null
+        dialogs.dismiss(REMINDER_DIALOG_KEY)
         if (current === this) current = null
     }
 
@@ -99,13 +101,15 @@ class ContinuousUsageReminderManager(
         val reminder = policy.consumeReminder(elapsedForegroundMs) ?: return
         if (activity.isFinishing || activity.isDestroyed) return
 
-        if (reminderDialog?.isShowing == true) return
-        reminderDialog = AlertDialog
-            .Builder(activity)
-            .setTitle("连续浏览提醒")
-            .setMessage("你已经连续浏览知乎 ${reminder.durationText}\n\n休息一下吧")
-            .setPositiveButton("知道了", null)
-            .show()
+        dialogs.show(
+            AppDialogRequest(
+                key = REMINDER_DIALOG_KEY,
+                title = "连续浏览提醒",
+                text = "你已经连续浏览知乎 ${reminder.durationText}，休息一下吧。",
+                icon = AppIcons.HourglassTop,
+                confirm = AppDialogAction("知道了"),
+            ),
+        )
     }
 
     private fun restoreSessionForForegroundStart() {
@@ -145,6 +149,7 @@ class ContinuousUsageReminderManager(
     }
 
     companion object {
+        private const val REMINDER_DIALOG_KEY = "continuous-usage-reminder"
         private var current: ContinuousUsageReminderManager? = null
 
         fun currentElapsedForegroundMs(): Long = current?.currentElapsedForegroundMs() ?: 0L

@@ -19,7 +19,6 @@
 package com.github.zly2006.zhihu
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.ClipData
 import android.content.Intent
 import android.net.Uri
@@ -50,6 +49,7 @@ import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
 import com.github.zly2006.zhihu.filter.ContentOpenTracker
+import com.github.zly2006.zhihu.icons.AppIcons
 import com.github.zly2006.zhihu.navigation.AndroidArticleNavigationHandoff
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.CollectionContent
@@ -70,6 +70,9 @@ import com.github.zly2006.zhihu.reading.ContentReadingService
 import com.github.zly2006.zhihu.theme.AndroidThemeSettings
 import com.github.zly2006.zhihu.theme.ZhihuTheme
 import com.github.zly2006.zhihu.ui.AndroidZhihuMain
+import com.github.zly2006.zhihu.ui.components.AppDialogAction
+import com.github.zly2006.zhihu.ui.components.AppDialogQueue
+import com.github.zly2006.zhihu.ui.components.AppDialogRequest
 import com.github.zly2006.zhihu.ui.components.LocalPageTurnDispatcher
 import com.github.zly2006.zhihu.ui.components.PREF_VOLUME_KEY_PAGE_TURN
 import com.github.zly2006.zhihu.ui.components.PageTurnCommand
@@ -93,6 +96,7 @@ class MainActivity : ComponentActivity() {
     private val accountStore: ZhihuAccountStore by inject()
     private val articleNavigationHandoff: AndroidArticleNavigationHandoff by inject()
     private val contentOpens: ContentOpenTracker by inject()
+    private val dialogs: AppDialogQueue by inject()
     val httpClient
         get() = accountStore.client.httpClient()
 
@@ -133,7 +137,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdgeCompat()
         super.onCreate(savedInstanceState)
         clearShareImageCache(this)
-        continuousUsageReminderManager = ContinuousUsageReminderManager(this)
+        continuousUsageReminderManager = ContinuousUsageReminderManager(this, dialogs)
         AndroidThemeSettings.initialize(this)
 
         val settings = androidSettingsStore(this)
@@ -190,20 +194,19 @@ class MainActivity : ComponentActivity() {
                     if (intent.data!!.path == "/error") {
                         val title = intent.data!!.getQueryParameter("title")
 //                        val message = intent.data!!.getQueryParameter("message")
-                        val stack = intent.data!!.getQueryParameter("stack")
-                        AlertDialog
-                            .Builder(this)
-                            .apply {
-                                setTitle(title)
-                                setMessage(stack)
-                                setPositiveButton("OK") { _, _ ->
-                                }
-                                setNeutralButton("Copy") { _, _ ->
-                                    val clip = ClipData.newPlainText("error", "$stack")
-                                    clipboardManager.setPrimaryClip(clip)
-                                }
-                            }.create()
-                            .show()
+                        val stack = intent.data!!.getQueryParameter("stack").orEmpty()
+                        dialogs.show(
+                            AppDialogRequest(
+                                key = "crash-report",
+                                title = title ?: "应用上次崩溃了",
+                                text = stack,
+                                icon = AppIcons.Error,
+                                confirm = AppDialogAction("复制") {
+                                    clipboardManager.setPrimaryClip(ClipData.newPlainText("error", stack))
+                                },
+                                dismiss = AppDialogAction("关闭"),
+                            ),
+                        )
                     }
                 }
             }
@@ -360,14 +363,15 @@ class MainActivity : ComponentActivity() {
                 navigate(destination, popup = true)
             }
         } else {
-            AlertDialog
-                .Builder(this)
-                .apply {
-                    setTitle("Unsupported URL")
-                    setMessage("Unknown URL: $data")
-                    setPositiveButton("OK") { _, _ -> }
-                }.create()
-                .show()
+            dialogs.show(
+                AppDialogRequest(
+                    key = "unsupported-url",
+                    title = "暂不支持这个链接",
+                    text = data.toString(),
+                    icon = AppIcons.LinkOff,
+                    confirm = AppDialogAction("知道了"),
+                ),
+            )
         }
         return true
     }
