@@ -242,8 +242,9 @@ class CollectionContentViewModel(
                     resultMessage = resultMessage,
                     zipFilePath = result.zipFilePath,
                 )
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
-                if (e is CancellationException) throw e
                 exportDialogState = CollectionHtmlExportDialogState(
                     phaseText = "导出失败",
                     totalCount = exportDialogState?.totalCount ?: 0,

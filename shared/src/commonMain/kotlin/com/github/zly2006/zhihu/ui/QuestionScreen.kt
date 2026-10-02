@@ -96,6 +96,7 @@ import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.Topic
 import com.github.zly2006.zhihu.navigation.WriteAnswer
+import com.github.zly2006.zhihu.navigation.requestLoginNavigation
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.platform.rememberZhihuWebUrlOpener
@@ -115,6 +116,7 @@ import com.github.zly2006.zhihu.viewmodel.addReadHistory
 import com.github.zly2006.zhihu.viewmodel.feed.QuestionFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import kotlin.math.roundToInt
@@ -233,6 +235,8 @@ fun QuestionScreen(
             } else {
                 userMessages.showShortMessage("获取问题详情失败")
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             userMessages.showShortMessage("加载失败: ${e.message}")
         }
@@ -277,6 +281,10 @@ fun QuestionScreen(
                     .testTag(QUESTION_SCREEN_LIST_TAG),
                 contentPadding = PaddingValues(bottom = readingPlayerOverlayPadding),
                 footer = ProgressIndicatorFooter,
+                loadFailed = viewModel.errorMessage != null,
+                onRetry = { viewModel.retry(paginationEnvironment) },
+                loadFailureMessage = viewModel.apiError?.message,
+                onLogin = (::requestLoginNavigation).takeIf { viewModel.apiError?.needLogin == true },
                 topContent = {
                     item {
                         Column(
@@ -285,6 +293,7 @@ fun QuestionScreen(
                         ) {
                             QuestionHeaderSection(
                                 title = title,
+                                isLoaded = isQuestionLoaded,
                                 visitCount = visitCount,
                                 commentCount = commentCount,
                                 followerCount = followerCount,
@@ -408,20 +417,25 @@ private fun QuestionTopBar(
 @Composable
 private fun QuestionHeaderSection(
     title: String,
+    isLoaded: Boolean,
     visitCount: Int,
     commentCount: Int,
     followerCount: Int,
     onShowComments: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        SelectionContainer(modifier = Modifier.questionSelectionWorkaround()) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.testTag(QUESTION_TITLE_TAG),
-            )
+        if (title.isNotBlank()) {
+            SelectionContainer(modifier = Modifier.questionSelectionWorkaround()) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.testTag(QUESTION_TITLE_TAG),
+                )
+            }
         }
+        // 浏览、评论和关注数在问题详情返回前未知，不显示占位的 0。
+        if (!isLoaded) return@Column
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp),

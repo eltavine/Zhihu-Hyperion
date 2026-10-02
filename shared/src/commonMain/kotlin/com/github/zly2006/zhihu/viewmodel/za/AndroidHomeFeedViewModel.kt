@@ -127,11 +127,11 @@ class AndroidHomeFeedViewModel(
                     null
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
-            if (e !is CancellationException) {
-                Log.e("AndroidHomeFeedViewModel", "Failed to fetch feeds", e)
-                environment.showFailureMessage("安卓端推荐加载失败: ${e.message}")
-            }
+            Log.e("AndroidHomeFeedViewModel", "Failed to fetch feeds", e)
+            environment.showFailureMessage("安卓端推荐加载失败: ${e.message}")
             throw e
         } finally {
             isLoading = false

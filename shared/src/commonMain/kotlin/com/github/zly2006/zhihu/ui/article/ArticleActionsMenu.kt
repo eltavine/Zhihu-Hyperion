@@ -266,13 +266,8 @@ fun ArticleActionsMenu(
                                         ReadingQueueItem(
                                             contentType = ReadingContentType.Answer,
                                             id = fallback.id,
-                                            title = fallback.title
-                                                .takeUnless { it == "loading..." }
-                                                .orEmpty()
-                                                .ifBlank { viewModel.title },
-                                            author = fallback.authorName
-                                                .takeUnless { it == "loading..." }
-                                                .orEmpty(),
+                                            title = fallback.title.ifBlank { viewModel.title },
+                                            author = fallback.authorName,
                                             questionId = viewModel.questionId.takeIf { it > 0 },
                                         )
                                     }
@@ -314,8 +309,10 @@ fun ArticleActionsMenu(
                                     }
                                 }
                             }
+                        } catch (e: CancellationException) {
+                            throw e
                         } catch (e: Exception) {
-                            withContext(Dispatchers.Main) { Unit }
+                            Log.e("ArticleActionsMenu", "Failed to prepare the text to read aloud", e)
                         }
                     }
                 }

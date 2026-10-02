@@ -87,6 +87,7 @@ import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Person
 import com.github.zly2006.zhihu.navigation.Search
 import com.github.zly2006.zhihu.navigation.Topic
+import com.github.zly2006.zhihu.navigation.requestLoginNavigation
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageDuration
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
@@ -105,6 +106,7 @@ import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.util.parseEmphasizedHtmlTextWithTheme
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.SearchContentType
 import com.github.zly2006.zhihu.viewmodel.feed.SearchEntity
@@ -306,7 +308,7 @@ fun SearchScreen(
 
     LaunchedEffect(showHotSearch.value, isMemberSearch) {
         if (!isMemberSearch && showHotSearch.value) {
-            runCatching { fetchHotSearch() }
+            suspendRunCatching { fetchHotSearch() }
         }
     }
 
@@ -568,7 +570,7 @@ fun SearchScreen(
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     IconButton(
                                         onClick = {
-                                            coroutineScope.launch { runCatching { fetchHotSearch() } }
+                                            coroutineScope.launch { suspendRunCatching { fetchHotSearch() } }
                                         },
                                         modifier = Modifier
                                             .size(40.dp)
@@ -753,13 +755,18 @@ fun SearchScreen(
                     item {
                         when {
                             viewModel.errorMessage != null -> {
+                                val apiError = viewModel.apiError
                                 EmptyState(
-                                    icon = AppIcons.Error,
-                                    title = "加载失败",
+                                    icon = if (apiError?.needLogin == true) AppIcons.Login else AppIcons.Error,
+                                    title = apiError?.message ?: "加载失败",
                                     modifier = Modifier.fillMaxWidth(),
-                                    description = viewModel.errorMessage,
-                                    action = EmptyStateAction("重试", AppIcons.Refresh, "search_retry_button") {
-                                        viewModel.retry(paginationEnvironment)
+                                    description = viewModel.errorMessage.takeIf { apiError == null },
+                                    action = if (apiError?.needLogin == true) {
+                                        EmptyStateAction("登录", AppIcons.Login, onClick = ::requestLoginNavigation)
+                                    } else {
+                                        EmptyStateAction("重试", AppIcons.Refresh, "search_retry_button") {
+                                            viewModel.retry(paginationEnvironment)
+                                        }
                                     },
                                 )
                             }
@@ -780,6 +787,10 @@ fun SearchScreen(
                         items = viewModel.entities,
                         listState = generalListState,
                         onLoadMore = { viewModel.loadMore(paginationEnvironment) },
+                        loadFailed = viewModel.errorMessage != null,
+                        onRetry = { viewModel.retry(paginationEnvironment) },
+                        loadFailureMessage = viewModel.apiError?.message,
+                        onLogin = (::requestLoginNavigation).takeIf { viewModel.apiError?.needLogin == true },
                         modifier = Modifier
                             .pageTurnViewportWithGuide(pageTurnTarget)
                             .testTag("search_general_results"),

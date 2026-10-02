@@ -260,6 +260,7 @@ Compose 页面需要在进入前台时刷新数据，应优先让协程直接跟
 ./gradlew jvmUnitTests       # shared 与全部 :core/:feature 模块的 JVM 测试，加上 app 单元测试
 ./gradlew checkKotlinAbi     # core 模块公开 API 与已提交 dump 一致；有意修改 API 时先运行 updateKotlinAbi 并提交 dump
 ./gradlew :app:assertModuleGraph :desktopApp:assertModuleGraph :macosApp:assertModuleGraph :macosUiDebug:assertModuleGraph :iosApp:assertModuleGraph
+./gradlew detektMainJvm detektMainAndroid :app:detektLiteDebug  # 协程取消不能被当成失败处理（detekt SuspendFunSwallowedCancellation），规则见 config/detekt/detekt.yml
 ```
 
 ## 项目结构

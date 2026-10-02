@@ -22,6 +22,7 @@ import com.github.zly2006.zhihu.data.Feed
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.navigation.zhihuQuestionFeedsUrl
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonArray
@@ -62,6 +63,8 @@ class CrawlingExecutor(
 
                 // 更新任务状态为已完成
                 dao.updateTask(task.copy(status = CrawlingStatus.Completed))
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 // 更新任务状态为失败
                 dao.updateTask(

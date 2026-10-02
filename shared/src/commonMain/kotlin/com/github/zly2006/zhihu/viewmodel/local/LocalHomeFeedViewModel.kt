@@ -30,6 +30,7 @@ import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedInteractionViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -78,6 +79,8 @@ class LocalHomeFeedViewModel(
                 addDisplayItems(loadedItems)
                 latestLoadedDisplayItems.value = loadedItems
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e("LocalHomeFeedViewModel", "Error fetching local feeds", e)
             if (e.message?.contains("does not exist. Is Room annotation processor correctly configured?") == true) {

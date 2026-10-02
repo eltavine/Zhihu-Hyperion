@@ -47,6 +47,9 @@ import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isFeedQualityFilterSupported
 import com.github.zly2006.zhihu.util.Log
+import com.github.zly2006.zhihu.util.ZhihuApiErrorException
+import com.github.zly2006.zhihu.util.suspendRunCatching
+import com.github.zly2006.zhihu.util.zhihuApiErrorOrNull
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
@@ -77,6 +80,10 @@ abstract class PaginationViewModel<T : Any>(
         protected set
     var errorMessage: String? by mutableStateOf(null)
         protected set
+
+    /** 知乎返回错误体时的原因，例如未登录时需要登录；页面据此显示知乎的原话和登录入口，而不是“重试”。 */
+    var apiError: ZhihuApiErrorException? by mutableStateOf(null)
+        private set
     var allowGuestAccess = false
     protected var lastPaging: ZhihuPaging? by mutableStateOf(null)
     open val isEnd: Boolean get() = lastPaging?.isEnd == true
@@ -97,6 +104,7 @@ abstract class PaginationViewModel<T : Any>(
         currentJob = null
         isLoading = false
         errorMessage = null
+        apiError = null
         debugData.clear()
         allData.clear()
         lastPaging = null // 重置 lastPaging
@@ -141,6 +149,10 @@ abstract class PaginationViewModel<T : Any>(
             @Suppress("HttpUrlsUsage")
             val json = environment.fetchJson(url.replace("http://", "https://"), include)
                 ?: throw RuntimeException("您可能已被风控，请重新登录。", Exception("cause: not json object."))
+            json.zhihuApiErrorOrNull()?.let { error ->
+                apiError = error
+                throw error
+            }
 
             val jsonArray = json["data"] as? JsonArray
                 ?: throw RuntimeException("您可能已被风控，请重新登录。", Exception("cause: no $.data"))
@@ -168,6 +180,8 @@ abstract class PaginationViewModel<T : Any>(
         currentJob = viewModelScope.launch {
             try {
                 fetchFeeds(environment)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 errorHandle(e)
             }
@@ -177,6 +191,7 @@ abstract class PaginationViewModel<T : Any>(
     /** 加载失败后从失败的那一页接着加载；第一页就失败时重新请求第一页。 */
     fun retry(environment: ZhihuApiEnvironment) {
         errorMessage = null
+        apiError = null
         loadMore(environment)
     }
 
@@ -201,7 +216,7 @@ interface ArticleImageExportRenderer {
 }
 
 suspend fun ZhihuApiEnvironment.fetchContentDetail(destination: NavDestination): DataHolder.Content? =
-    runCatching {
+    suspendRunCatching {
         fetchZhihuContentDetail(destination) { url, include ->
             fetchJson(url, include)
         }
@@ -212,7 +227,7 @@ suspend fun ZhihuApiEnvironment.fetchContentDetail(destination: NavDestination):
     }
 
 suspend fun ZhihuApiEnvironment.getOrFetchContentDetail(destination: NavDestination): DataHolder.Content? =
-    runCatching {
+    suspendRunCatching {
         ContentDetailCache.getOrFetchContentDetail(destination) { url, include ->
             fetchJson(url, include)
         }
@@ -227,7 +242,7 @@ suspend fun ZhihuApiEnvironment.addReadHistory(
     contentTypeName: String,
 ) {
     if (authenticatedCookies()["d_c0"] == null) return
-    runCatching {
+    suspendRunCatching {
         postSigned("https://www.zhihu.com/api/v4/read_history/add") {
             contentType(ContentType.Application.Json)
             setBody(

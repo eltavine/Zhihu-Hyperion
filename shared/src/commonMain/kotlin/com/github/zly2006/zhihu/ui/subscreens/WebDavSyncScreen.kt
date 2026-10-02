@@ -155,6 +155,7 @@ fun WebDavSyncScreen() {
                 SettingItem(
                     title = { Text("应用密码") },
                     description = { Text("建议在 WebDAV 服务里单独生成应用密码，而不是使用登录密码。") },
+                    icon = { Icon(AppIcons.Password, contentDescription = null) },
                     bottomAction = {
                         OutlinedTextField(
                             value = viewModel.config.password,

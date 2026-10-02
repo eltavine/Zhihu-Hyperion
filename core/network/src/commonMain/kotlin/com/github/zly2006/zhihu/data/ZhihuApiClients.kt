@@ -23,6 +23,9 @@ import com.github.zly2006.zhihu.util.json
 import com.github.zly2006.zhihu.util.raiseForStatus
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.cookies.CookiesStorage
+import io.ktor.client.plugins.cookies.HttpCookies
+import io.ktor.client.plugins.cookies.get
+import io.ktor.client.plugins.pluginOrNull
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
@@ -54,6 +57,8 @@ suspend fun executeZhihuAuthenticatedRequest(
         block()
     }
     if (response.status != HttpStatusCode.Unauthorized) return response
+    // 没有登录凭据（访客）时没有可刷新的 token，刷新接口只会返回 HTTP 500；把 401 原样交给调用方。
+    if (client.pluginOrNull(HttpCookies)?.get(Url("https://www.zhihu.com/"))?.get("z_c0") == null) return response
 
     val lastRefreshMillis = client.attributes.getOrNull(lastTokenRefreshMillis) ?: 0L
     if (Clock.System.now().toEpochMilliseconds() - lastRefreshMillis < 10_000) {

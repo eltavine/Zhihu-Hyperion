@@ -66,6 +66,38 @@ public final class com/github/zly2006/zhihu/ui/components/AnswerVerticalOverscro
 	public static final fun AnswerVerticalOverscroll (Lcom/github/zly2006/zhihu/ui/components/AnswerPreview;Lcom/github/zly2006/zhihu/ui/components/AnswerPreview;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/foundation/ScrollState;FZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;III)V
 }
 
+public final class com/github/zly2006/zhihu/ui/components/AppDialogAction {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getOnClick ()Lkotlin/jvm/functions/Function0;
+}
+
+public final class com/github/zly2006/zhihu/ui/components/AppDialogQueue {
+	public static final field $stable I
+	public fun <init> ()V
+	public final fun dismiss (Ljava/lang/String;)V
+	public final fun getRequests ()Lkotlinx/coroutines/flow/StateFlow;
+	public final fun show (Lcom/github/zly2006/zhihu/ui/components/AppDialogRequest;)V
+}
+
+public final class com/github/zly2006/zhihu/ui/components/AppDialogRequest {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/ui/components/AppDialogAction;Lcom/github/zly2006/zhihu/ui/components/AppDialogAction;Lcom/github/zly2006/zhihu/icons/AppIcon;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/zly2006/zhihu/ui/components/AppDialogAction;Lcom/github/zly2006/zhihu/ui/components/AppDialogAction;Lcom/github/zly2006/zhihu/icons/AppIcon;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getConfirm ()Lcom/github/zly2006/zhihu/ui/components/AppDialogAction;
+	public final fun getDismiss ()Lcom/github/zly2006/zhihu/ui/components/AppDialogAction;
+	public final fun getIcon ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getText ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/ui/components/AppDialogsKt {
+	public static final fun AppDialogHost (Lcom/github/zly2006/zhihu/ui/components/AppDialogQueue;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class com/github/zly2006/zhihu/ui/components/AppLoadingIndicatorKt {
 	public static final fun AppLoadingIndicator-iJQMabo (Landroidx/compose/ui/Modifier;JLandroidx/compose/runtime/Composer;II)V
 }
@@ -442,8 +474,9 @@ public final class com/github/zly2006/zhihu/ui/components/PageTurnTarget {
 }
 
 public final class com/github/zly2006/zhihu/ui/components/PaginatedListKt {
+	public static final field PAGINATED_LIST_LOGIN_TAG Ljava/lang/String;
 	public static final field PAGINATED_LIST_RETRY_TAG Ljava/lang/String;
-	public static final fun PaginatedList (Ljava/util/List;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/foundation/lazy/LazyListState;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;III)V
+	public static final fun PaginatedList (Ljava/util/List;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/foundation/lazy/LazyListState;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ZLkotlin/jvm/functions/Function0;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;III)V
 	public static final fun getLocalPullToRefreshInProgress ()Landroidx/compose/runtime/ProvidableCompositionLocal;
 	public static final fun getProgressIndicatorFooter ()Lkotlin/jvm/functions/Function3;
 }

@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,6 +21,7 @@ package com.github.zly2006.zhihu.nlp
 import android.annotation.SuppressLint
 import android.content.Context
 import com.ml.shubham0204.sentence_embeddings.SentenceEmbedding
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -82,6 +84,9 @@ object SentenceEmbeddingManager {
                 embedding = model
                 _state.value = ModelState.Ready
                 model
+            } catch (e: CancellationException) {
+                _state.value = ModelState.Uninitialized
+                throw e
             } catch (e: Exception) {
                 _state.value = ModelState.Error(e.message ?: "模型加载失败")
                 embedding?.close()

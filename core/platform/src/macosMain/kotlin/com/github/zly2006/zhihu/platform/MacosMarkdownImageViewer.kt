@@ -28,6 +28,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.cinterop.addressOf
@@ -116,7 +117,7 @@ internal class MacosMarkdownImageViewerController(
         viewerWindow.makeKeyAndOrderFront(null)
 
         loadJob = scope.launch {
-            runCatching {
+            suspendRunCatching {
                 val imageBytes = accountStore.client
                     .httpClient()
                     .get(imageUrl)

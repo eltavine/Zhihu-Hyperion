@@ -138,6 +138,7 @@ open_in_browser
 open_in_new
 paid
 palette
+password
 pause solid
 pause_circle solid
 person

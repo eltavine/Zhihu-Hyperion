@@ -228,13 +228,15 @@ actual fun PlatformPredictiveBackHandler(
     onCancel: () -> Unit,
     onBack: () -> Unit,
 ) = PredictiveBackHandler(enabled = enabled) { progress ->
+    // The progress flow is cancelled when the user abandons the gesture; it only completes on a committed back.
+    var committed = false
     try {
         progress.collect { backEvent ->
             onProgress(backEvent.progress)
         }
+        committed = true
         onBack()
-    } catch (e: CancellationException) {
-        onCancel()
-        throw e
+    } finally {
+        if (!committed) onCancel()
     }
 }

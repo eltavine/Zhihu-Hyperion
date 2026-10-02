@@ -79,6 +79,7 @@ import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.KeywordType
 import com.github.zly2006.zhihu.viewmodel.filter.MatchedKeywordInfo
 import com.github.zly2006.zhihu.viewmodel.filter.contentFilterSettings
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -137,6 +138,8 @@ fun NLPKeywordManagementScreen(
                 blockedRecords = withContext(Dispatchers.IO) {
                     database.blockedContentRecordDao().getRecentBlockedRecords(100)
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e(NLP_KEYWORD_MANAGEMENT_TAG, "Load NLP keyword data failed", e)
                 Toast.makeText(context, "加载失败: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -186,6 +189,8 @@ fun NLPKeywordManagementScreen(
                                 if (extractedKeywords.isEmpty()) {
                                     Toast.makeText(context, "未能提取到关键词", Toast.LENGTH_SHORT).show()
                                 }
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (e: Exception) {
                                 Log.e(NLP_KEYWORD_MANAGEMENT_TAG, "Extract NLP keywords failed", e)
                                 Toast.makeText(context, "提取失败: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -210,6 +215,8 @@ fun NLPKeywordManagementScreen(
                                 Toast.makeText(context, "已添加短语: $phrase", Toast.LENGTH_SHORT).show()
                                 loadData()
                                 extractedKeywords = emptyList()
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (e: Exception) {
                                 Log.e(NLP_KEYWORD_MANAGEMENT_TAG, "Add extracted NLP phrase failed", e)
                                 Toast.makeText(context, "添加失败: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -230,6 +237,8 @@ fun NLPKeywordManagementScreen(
                                 }
                                 Toast.makeText(context, "已删除", Toast.LENGTH_SHORT).show()
                                 loadData()
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (e: Exception) {
                                 Log.e(NLP_KEYWORD_MANAGEMENT_TAG, "Delete NLP keyword failed", e)
                                 Toast.makeText(context, "删除失败: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -244,6 +253,8 @@ fun NLPKeywordManagementScreen(
                                 }
                                 Toast.makeText(context, "已清空所有NLP短语", Toast.LENGTH_SHORT).show()
                                 loadData()
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (e: Exception) {
                                 Log.e(NLP_KEYWORD_MANAGEMENT_TAG, "Clear NLP keywords failed", e)
                                 Toast.makeText(context, "清空失败: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -256,6 +267,8 @@ fun NLPKeywordManagementScreen(
                             try {
                                 SentenceEmbeddingManager.ensureModel(context)
                                 Toast.makeText(context, "模型已加载", Toast.LENGTH_SHORT).show()
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (e: Exception) {
                                 Log.e(NLP_KEYWORD_MANAGEMENT_TAG, "Load NLP model failed", e)
                                 Toast.makeText(context, "模型加载失败: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -281,6 +294,8 @@ fun NLPKeywordManagementScreen(
                                 }
                                 Toast.makeText(context, "已删除记录", Toast.LENGTH_SHORT).show()
                                 loadData()
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (e: Exception) {
                                 Log.e(NLP_KEYWORD_MANAGEMENT_TAG, "Delete blocked NLP record failed", e)
                                 Toast.makeText(context, "删除失败: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -295,6 +310,8 @@ fun NLPKeywordManagementScreen(
                                 }
                                 Toast.makeText(context, "已清空所有记录", Toast.LENGTH_SHORT).show()
                                 loadData()
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (e: Exception) {
                                 Log.e(NLP_KEYWORD_MANAGEMENT_TAG, "Clear blocked NLP records failed", e)
                                 Toast.makeText(context, "清空失败: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -324,6 +341,8 @@ fun NLPKeywordManagementScreen(
                         Toast.makeText(context, "已添加短语", Toast.LENGTH_SHORT).show()
                         loadData()
                         showAddDialog = false
+                    } catch (e: CancellationException) {
+                        throw e
                     } catch (e: Exception) {
                         Log.e(NLP_KEYWORD_MANAGEMENT_TAG, "Add NLP phrase failed", e)
                         Toast.makeText(context, "添加失败: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -352,6 +371,8 @@ fun NLPKeywordManagementScreen(
                         loadData()
                         showEditDialog = false
                         keywordToEdit = null
+                    } catch (e: CancellationException) {
+                        throw e
                     } catch (e: Exception) {
                         Log.e(NLP_KEYWORD_MANAGEMENT_TAG, "Update NLP phrase failed", e)
                         Toast.makeText(context, "更新失败: ${e.message}", Toast.LENGTH_SHORT).show()

@@ -35,6 +35,7 @@ import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
@@ -121,9 +122,11 @@ class PeopleScreenProfileTest {
             ),
         )
         val viewModel = PersonViewModel(person(), MapSettingsStore())
+        assertFalse(viewModel.isLoaded)
 
         viewModel.load(environment, HistoryStorage(NoHistory), FakeBlockedUserDao(), FakeBlockedQuestionAuthorDao())
 
+        assertTrue(viewModel.isLoaded)
         assertTrue(viewModel.isBlocking)
         assertEquals("4.0k", viewModel.githubSocial?.starCount)
         assertEquals("https://github.com/zly2006", viewModel.githubSocial?.profileUrl)

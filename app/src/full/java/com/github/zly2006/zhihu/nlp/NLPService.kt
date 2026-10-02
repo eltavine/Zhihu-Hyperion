@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,6 +25,7 @@ import com.github.zly2006.zhihu.nlp.NlpDebugTrace
 import com.github.zly2006.zhihu.nlp.PhraseMatchResult
 import com.github.zly2006.zhihu.nlp.SegmentMatchDebug
 import com.hankcs.hanlp.HanLP
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.math.max
@@ -320,6 +322,8 @@ object NLPService {
             val embedding = SentenceEmbeddingManager.encode(normalized)
             logDebug("encodeText len=${normalized.length} dim=${embedding?.size} text='${normalized.take(80)}'")
             embedding
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG, "encodeText failed len=${normalized.length} text='${normalized.take(80)}'", e)
             null
@@ -381,6 +385,8 @@ object NLPService {
 
             // 按相似度降序排列
             matches.sortedByDescending { it.second }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG, "checkBlockedPhrases failed", e)
             emptyList()

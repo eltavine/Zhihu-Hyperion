@@ -32,6 +32,7 @@ import com.github.zly2006.zhihu.data.sourceLabel
 import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.jsonArray
@@ -95,6 +96,8 @@ class RecentMomentsViewModel : ViewModel() {
                         }
                     },
                 )
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 environment.handleFetchFailure("RecentMomentsVM", e)
                 errorMessage = "加载关注动态失败"

@@ -42,6 +42,16 @@ public final class com/github/zly2006/zhihu/util/HttpStatusException : java/lang
 	public final fun setDumpedCurlRequest (Ljava/lang/String;)V
 }
 
+public final class com/github/zly2006/zhihu/util/ZhihuApiErrorException : java/lang/Exception {
+	public fun <init> (Ljava/lang/String;Z)V
+	public fun getMessage ()Ljava/lang/String;
+	public final fun getNeedLogin ()Z
+}
+
+public final class com/github/zly2006/zhihu/util/ZhihuApiErrorKt {
+	public static final fun zhihuApiErrorOrNull (Lkotlinx/serialization/json/JsonObject;)Lcom/github/zly2006/zhihu/util/ZhihuApiErrorException;
+}
+
 public final class com/github/zly2006/zhihu/util/ZhihuCredentialRefresher {
 	public static final field INSTANCE Lcom/github/zly2006/zhihu/util/ZhihuCredentialRefresher;
 	public final fun fetchRefreshToken (Lio/ktor/client/HttpClient;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;

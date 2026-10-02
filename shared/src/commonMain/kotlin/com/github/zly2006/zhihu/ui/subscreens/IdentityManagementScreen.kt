@@ -80,6 +80,7 @@ import com.github.zly2006.zhihu.ui.components.SettingItem
 import com.github.zly2006.zhihu.ui.components.SettingItemGroup
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -443,7 +444,7 @@ fun IdentityManagementScreen() {
                     onClick = {
                         switchTarget = null
                         coroutineScope.launch {
-                            runCatching {
+                            suspendRunCatching {
                                 check(!state.busy) { "另一个账号操作正在进行" }
                                 state = state.copy(switchingToAccountId = account.id, errorMessage = null)
                                 try {
@@ -532,7 +533,7 @@ fun IdentityManagementScreen() {
                     onClick = {
                         showCreateDialog = false
                         coroutineScope.launch {
-                            runCatching {
+                            suspendRunCatching {
                                 check(!state.busy) { "另一个账号操作正在进行" }
                                 check(state.canCreateSubAccount) { "当前账号暂不能创建新账号" }
                                 state = state.copy(creating = true, errorMessage = null)

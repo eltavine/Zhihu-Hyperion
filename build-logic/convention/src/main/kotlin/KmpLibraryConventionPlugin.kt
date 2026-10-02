@@ -43,6 +43,7 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.multiplatform")
                 apply("com.android.kotlin.multiplatform.library")
                 apply("zhihu.ktlint")
+                apply("zhihu.detekt")
             }
             extensions.configure<KotlinMultiplatformExtension> {
                 compilerOptions {

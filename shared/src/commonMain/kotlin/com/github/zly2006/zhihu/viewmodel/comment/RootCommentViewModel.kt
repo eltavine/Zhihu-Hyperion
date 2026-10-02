@@ -42,6 +42,7 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
@@ -144,8 +145,9 @@ class RootCommentViewModel(
                     data = listOf(resolvedAnchor.root),
                     rawData = JsonArray(emptyList()),
                 )
+            } catch (e: CancellationException) {
+                throw e
             } catch (error: Exception) {
-                if (error is kotlin.coroutines.cancellation.CancellationException) throw error
                 Log.e("RootCommentViewModel", "Failed to resolve comment anchor", error)
             }
         }
@@ -208,6 +210,8 @@ class RootCommentViewModel(
                 } else {
                     errorMessage = "评论发送失败: ${response.status}"
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 errorMessage = "评论发送异常: ${e.message}"
             }
