@@ -78,7 +78,6 @@ import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Person
 import com.github.zly2006.zhihu.navigation.requestLoginNavigation
 import com.github.zly2006.zhihu.platform.SettingsStore
-import com.github.zly2006.zhihu.platform.UserMessageDuration
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
 import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
@@ -405,12 +404,6 @@ fun FollowRecommendScreen(
         }
     }
 
-    LaunchedEffect(viewModel.errorMessage) {
-        viewModel.errorMessage?.let {
-            userMessages.showMessage(it, UserMessageDuration.Long)
-        }
-    }
-
     var feedAuthorBlockRequest by remember { mutableStateOf<FeedAuthorBlockRequest?>(null) }
     val pageTurnTarget = rememberPageTurnTarget(
         listState = listState,
@@ -436,10 +429,12 @@ fun FollowRecommendScreen(
                 loadFailed = viewModel.errorMessage != null,
                 onRetry = { viewModel.retry(environment) },
                 loadFailureMessage = viewModel.apiError?.message,
+                loadFailureDescription = viewModel.errorMessage.takeIf { viewModel.apiError == null },
                 onLogin = (::requestLoginNavigation).takeIf { viewModel.apiError?.needLogin == true },
                 emptyContent = {
                     EmptyState(AppIcons.Group, "暂时没有推荐内容", Modifier.fillMaxWidth())
                 },
+                centerStatusWhenEmpty = true,
             ) { item ->
                 FeedCard(
                     item = item,
@@ -576,12 +571,6 @@ fun FollowDynamicScreen(
         }
     }
 
-    LaunchedEffect(viewModel.errorMessage) {
-        viewModel.errorMessage?.let {
-            userMessages.showMessage(it, UserMessageDuration.Long)
-        }
-    }
-
     var feedAuthorBlockRequest by remember { mutableStateOf<FeedAuthorBlockRequest?>(null) }
     val pageTurnTarget = rememberPageTurnTarget(
         listState = listState,
@@ -607,10 +596,12 @@ fun FollowDynamicScreen(
                 loadFailed = viewModel.errorMessage != null,
                 onRetry = { viewModel.retry(environment) },
                 loadFailureMessage = viewModel.apiError?.message,
+                loadFailureDescription = viewModel.errorMessage.takeIf { viewModel.apiError == null },
                 onLogin = (::requestLoginNavigation).takeIf { viewModel.apiError?.needLogin == true },
                 emptyContent = {
                     EmptyState(AppIcons.Group, "关注的人还没有新动态", Modifier.fillMaxWidth())
                 },
+                centerStatusWhenEmpty = true,
             ) { item ->
                 FeedCard(
                     item = item,

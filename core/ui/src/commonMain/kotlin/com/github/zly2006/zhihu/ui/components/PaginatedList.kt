@@ -132,13 +132,19 @@ fun <T> PaginatedList(
     key: ((T) -> Any)? = null,
     topContent: LazyListScope.() -> Unit = {},
     bottomContent: LazyListScope.() -> Unit = {},
-    /** 为 true 时列表底部不显示 [footer]，改为 [loadFailureMessage]（默认“加载失败”）和“重试”按钮；传了 [onLogin] 时按钮换成“登录”。 */
+    /**
+     * 为 true 时列表底部不显示 [footer]，改为 [loadFailureMessage]（默认“加载失败”）、[loadFailureDescription] 和“重试”按钮；
+     * 传了 [onLogin] 时按钮换成“登录”。
+     */
     loadFailed: Boolean = false,
     onRetry: (() -> Unit)? = null,
     loadFailureMessage: String? = null,
+    loadFailureDescription: String? = null,
     onLogin: (() -> Unit)? = null,
     /** 已经加载完却一条也没有时代替“已经到底啦”显示。 */
     emptyContent: (@Composable () -> Unit)? = null,
+    /** 列表为空时，失败、空状态和首次加载占满可视区域并居中；顶部内容很高（如问题详情）的列表不要开，否则状态会被挤到屏幕外。 */
+    centerStatusWhenEmpty: Boolean = false,
     itemContent: @Composable LazyItemScope.(T) -> Unit,
 ) {
     val settings = koinInject<SettingsStore>()
@@ -188,35 +194,41 @@ fun <T> PaginatedList(
         bottomContent(this)
 
         item {
-            if (loadFailed) {
-                EmptyState(
-                    icon = if (onLogin != null) AppIcons.Login else AppIcons.Error,
-                    title = loadFailureMessage ?: "加载失败",
-                    modifier = Modifier.fillMaxWidth(),
-                    action = if (onLogin != null) {
-                        EmptyStateAction("登录", AppIcons.Login, PAGINATED_LIST_LOGIN_TAG, onLogin)
-                    } else {
-                        onRetry?.let { EmptyStateAction("重试", AppIcons.Refresh, PAGINATED_LIST_RETRY_TAG, it) }
-                    },
-                )
-            } else if (isEnd() && items.isEmpty() && emptyContent != null) {
-                emptyContent()
-            } else if (isEnd()) {
-                if (!showContentEndMarker) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = "已经到底啦",
-                            textAlign = TextAlign.Center,
-                        )
+            Box(
+                modifier = if (centerStatusWhenEmpty && items.isEmpty()) Modifier.fillParentMaxSize() else Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center,
+            ) {
+                if (loadFailed) {
+                    EmptyState(
+                        icon = if (onLogin != null) AppIcons.Login else AppIcons.Error,
+                        title = loadFailureMessage ?: "加载失败",
+                        modifier = Modifier.fillMaxWidth(),
+                        description = loadFailureDescription,
+                        action = if (onLogin != null) {
+                            EmptyStateAction("登录", AppIcons.Login, PAGINATED_LIST_LOGIN_TAG, onLogin)
+                        } else {
+                            onRetry?.let { EmptyStateAction("重试", AppIcons.Refresh, PAGINATED_LIST_RETRY_TAG, it) }
+                        },
+                    )
+                } else if (isEnd() && items.isEmpty() && emptyContent != null) {
+                    emptyContent()
+                } else if (isEnd()) {
+                    if (!showContentEndMarker) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = "已经到底啦",
+                                textAlign = TextAlign.Center,
+                            )
+                        }
                     }
+                } else {
+                    footer?.invoke(listState)
                 }
-            } else {
-                footer?.invoke(listState)
             }
         }
         if (isEnd() && items.isNotEmpty() && showContentEndMarker) {
