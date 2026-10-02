@@ -748,6 +748,8 @@ fun PeopleScreen(
                                 coroutineScope.launch {
                                     try {
                                         viewModel.toggleFollow(paginationEnvironment)
+                                    } catch (e: CancellationException) {
+                                        throw e
                                     } catch (e: Exception) {
                                         userMessages.showShortMessage("操作失败: ${e.message}")
                                     }
@@ -757,6 +759,8 @@ fun PeopleScreen(
                                 coroutineScope.launch {
                                     try {
                                         viewModel.toggleBlock(paginationEnvironment)
+                                    } catch (e: CancellationException) {
+                                        throw e
                                     } catch (e: Exception) {
                                         userMessages.showShortMessage("操作失败: ${e.message}")
                                     }
@@ -767,6 +771,8 @@ fun PeopleScreen(
                                     try {
                                         viewModel.toggleRecommendationBlock(contentFilterDatabase.blockedUserDao())
                                         userMessages.showShortMessage(if (viewModel.isBlockedInRecommendations) "已屏蔽推荐" else "已取消屏蔽推荐")
+                                    } catch (e: CancellationException) {
+                                        throw e
                                     } catch (e: Exception) {
                                         userMessages.showShortMessage("操作失败: ${e.message}")
                                     }
@@ -777,6 +783,8 @@ fun PeopleScreen(
                                     try {
                                         viewModel.toggleQuestionAuthorBlock(contentFilterDatabase.blockedQuestionAuthorDao())
                                         userMessages.showShortMessage(if (viewModel.isBlockedAsQuestionAuthor) "已屏蔽其提问" else "已取消屏蔽其提问")
+                                    } catch (e: CancellationException) {
+                                        throw e
                                     } catch (e: Exception) {
                                         userMessages.showShortMessage("操作失败: ${e.message}")
                                     }

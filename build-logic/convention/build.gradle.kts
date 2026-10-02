@@ -29,6 +29,7 @@ dependencies {
     compileOnly(libs.ksp.gradlePlugin)
     compileOnly(libs.room.gradlePlugin)
     compileOnly(libs.ktlint.gradlePlugin)
+    compileOnly(libs.detekt.gradlePlugin)
     compileOnly(libs.module.graph.assertion.gradlePlugin)
     compileOnly(libs.aboutlibraries.gradlePlugin)
 }
@@ -38,6 +39,10 @@ gradlePlugin {
         register("ktlint") {
             id = "zhihu.ktlint"
             implementationClass = "KtlintConventionPlugin"
+        }
+        register("detekt") {
+            id = "zhihu.detekt"
+            implementationClass = "DetektConventionPlugin"
         }
         register("kmpLibrary") {
             id = "zhihu.kmp.library"

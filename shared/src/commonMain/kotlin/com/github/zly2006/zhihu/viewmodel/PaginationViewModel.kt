@@ -48,6 +48,7 @@ import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isFeedQualityFilterSupported
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.ZhihuApiErrorException
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import com.github.zly2006.zhihu.util.zhihuApiErrorOrNull
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.request.setBody
@@ -179,6 +180,8 @@ abstract class PaginationViewModel<T : Any>(
         currentJob = viewModelScope.launch {
             try {
                 fetchFeeds(environment)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 errorHandle(e)
             }
@@ -213,7 +216,7 @@ interface ArticleImageExportRenderer {
 }
 
 suspend fun ZhihuApiEnvironment.fetchContentDetail(destination: NavDestination): DataHolder.Content? =
-    runCatching {
+    suspendRunCatching {
         fetchZhihuContentDetail(destination) { url, include ->
             fetchJson(url, include)
         }
@@ -224,7 +227,7 @@ suspend fun ZhihuApiEnvironment.fetchContentDetail(destination: NavDestination):
     }
 
 suspend fun ZhihuApiEnvironment.getOrFetchContentDetail(destination: NavDestination): DataHolder.Content? =
-    runCatching {
+    suspendRunCatching {
         ContentDetailCache.getOrFetchContentDetail(destination) { url, include ->
             fetchJson(url, include)
         }
@@ -239,7 +242,7 @@ suspend fun ZhihuApiEnvironment.addReadHistory(
     contentTypeName: String,
 ) {
     if (authenticatedCookies()["d_c0"] == null) return
-    runCatching {
+    suspendRunCatching {
         postSigned("https://www.zhihu.com/api/v4/read_history/add") {
             contentType(ContentType.Application.Json)
             setBody(

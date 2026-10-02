@@ -32,6 +32,7 @@ import com.github.zly2006.zhihu.viewmodel.deleteSigned
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
 import com.github.zly2006.zhihu.viewmodel.postSigned
 import io.ktor.http.isSuccess
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
@@ -141,6 +142,8 @@ abstract class BaseCommentViewModel(
                 } else {
                     errorMessage = "操作失败：${response.status}"
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 errorMessage = "操作失败：${e.message}"
             } finally {
@@ -186,6 +189,8 @@ abstract class BaseCommentViewModel(
                 } else {
                     onFailure("删除失败：${response.status}")
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 onFailure("删除失败：${e.message}")
             }

@@ -32,6 +32,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.application")
                 apply("zhihu.ktlint")
+                apply("zhihu.detekt")
             }
             extensions.configure<ApplicationExtension> {
                 compileSdk = libs.version("android-compileSdk").toInt()

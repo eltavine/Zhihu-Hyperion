@@ -40,6 +40,7 @@ import com.github.zly2006.zhihu.viewmodel.filter.ContentDetailProvider
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.getOrFetchContentDetail
 import com.github.zly2006.zhihu.viewmodel.toFeedDisplaySettings
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonArray
 import org.koin.mp.KoinPlatform
@@ -78,6 +79,8 @@ abstract class BaseFeedViewModel(
         isLoading = true
         try {
             fetchFeeds(environment)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             errorHandle(e)
         }
@@ -170,6 +173,8 @@ abstract class BaseFeedViewModel(
                     .insertTopic(BlockedTopic(topicId = topicId, topicName = topicName))
                 userMessages.showShortMessage("已屏蔽主题「$topicName」")
                 removeFeedItemsByBlockedTopic(this@BaseFeedViewModel, topicId)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 userMessages.showShortMessage("屏蔽失败: ${e.message}")
             }

@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import kotlinx.coroutines.launch
@@ -106,7 +107,7 @@ actual fun rememberImageSharer(): ImageSharer {
         object : ImageSharer {
             override fun invoke(url: String) {
                 scope.launch {
-                    runCatching {
+                    suspendRunCatching {
                         val image = downloadNativeImage(accountStore, url)
                         // 分享图片文件而不是链接：收到的一方直接得到图片，GIF 也保持原格式。
                         val path = "${NSTemporaryDirectory()}zhihu-image-${Clock.System.now().toEpochMilliseconds()}.${image.extension}"

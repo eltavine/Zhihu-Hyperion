@@ -27,6 +27,7 @@ import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.ZhihuApiErrorException
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import com.github.zly2006.zhihu.util.zhihuApiErrorOrNull
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -171,7 +172,7 @@ suspend fun ContentDetailCache.getOrFetchContentDetail(
     destination: NavDestination,
     fetchJson: suspend (String, String) -> JsonObject?,
 ): DataHolder.Content? =
-    runCatching {
+    suspendRunCatching {
         getOrFetch(destination) { navDestination ->
             fetchZhihuContentDetail(navDestination, fetchJson)
         }

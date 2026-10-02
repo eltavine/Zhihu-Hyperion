@@ -68,7 +68,7 @@ import java.util.Locale
 class ContentReadingService : Service() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val environment by lazy {
-        ScreenZhihuApiEnvironment(get(), get(), get(), allowGuestAccess = true, failures = AndroidFetchFailurePresenter(applicationContext))
+        ScreenZhihuApiEnvironment(get(), get(), get(), allowGuestAccess = true, failures = AndroidFetchFailurePresenter(applicationContext, dialogs = null))
     }
     private val contentFilterDatabase: ContentFilterDatabase by inject()
     private val audioManager by lazy { getSystemService(AudioManager::class.java) }

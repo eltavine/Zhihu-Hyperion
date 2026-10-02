@@ -29,6 +29,7 @@ import com.github.zly2006.zhihu.desktop.copyDesktopPlainText
 import com.github.zly2006.zhihu.desktop.desktopZhihuDataDir
 import com.github.zly2006.zhihu.desktop.openDesktopExternalUrl
 import com.github.zly2006.zhihu.desktop.saveImageToDownloads
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import kotlinx.coroutines.launch
 import kotlinx.io.files.Path
 import org.koin.compose.koinInject
@@ -103,7 +104,7 @@ actual fun rememberImageSaver(): ImageSaver {
         object : ImageSaver {
             override fun invoke(url: String) {
                 scope.launch {
-                    runCatching {
+                    suspendRunCatching {
                         store.saveImageToDownloads(url, "image")
                     }.onSuccess { file ->
                         userMessages.showShortMessage("已保存图片: ${file.absolutePath}")

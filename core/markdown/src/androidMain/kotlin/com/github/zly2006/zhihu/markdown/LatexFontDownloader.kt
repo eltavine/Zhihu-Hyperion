@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,6 +34,7 @@ import com.hrm.latex.renderer.model.LatexFontFamilies
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsBytes
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -105,6 +107,8 @@ suspend fun downloadLatexFonts(context: Context, client: HttpClient): Downloaded
                     lmFile.writeBytes(bytes)
                     break
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 lastError = e
             }
@@ -187,6 +191,8 @@ fun rememberLatexFonts(context: Context, client: HttpClient): FontLoadResult {
         try {
             val fonts = downloadLatexFonts(context, client)
             result = FontLoadResult(FontLoadState.READY, fonts)
+        } catch (e: CancellationException) {
+            throw e
         } catch (_: Exception) {
             result = FontLoadResult(FontLoadState.ERROR)
         }

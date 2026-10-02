@@ -18,6 +18,7 @@
 
 package com.github.zly2006.zhihu.viewmodel.local
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -44,6 +45,8 @@ class TaskScheduler(
                     executePendingTasks()
                     cleanupLocalRecommendationData(dao)
                     delay(60_000) // 每分钟检查一次
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     // 记录错误但继续运行
                     delay(300_000) // 出错时等待5分钟再试

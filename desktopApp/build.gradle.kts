@@ -31,6 +31,7 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.kotlin.compose)
     id("zhihu.ktlint")
+    id("zhihu.detekt")
     id("zhihu.module.graph")
     id("zhihu.aboutlibraries")
 }

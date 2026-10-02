@@ -1,7 +1,6 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
- * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
- * Co-author: eltavine <me@eltavine.com>
+ * Copyright (C) 2026, eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,31 +17,32 @@
 
 package com.github.zly2006.zhihu.viewmodel
 
-import android.app.Activity
-import android.app.AlertDialog
 import android.content.ClipData
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.ZhihuJson.json
+import com.github.zly2006.zhihu.icons.AppIcons
 import com.github.zly2006.zhihu.navigation.requestLoginNavigation
 import com.github.zly2006.zhihu.platform.androidUserMessageSink
+import com.github.zly2006.zhihu.ui.components.AppDialogAction
+import com.github.zly2006.zhihu.ui.components.AppDialogQueue
+import com.github.zly2006.zhihu.ui.components.AppDialogRequest
 import com.github.zly2006.zhihu.util.HttpStatusException
 import com.github.zly2006.zhihu.util.clipboardManager
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import org.koin.compose.koinInject
 import org.koin.mp.KoinPlatform
 
-/** 登录过期与接口错误对话框需要可见的 Activity；传入应用 Context 时只用 Toast 提示。 */
+/** 登录过期与接口错误交给 [dialogs] 排队显示；后台服务没有界面，传 null 时只用 Toast 提示。 */
 class AndroidFetchFailurePresenter(
     private val context: Context,
+    private val dialogs: AppDialogQueue?,
 ) : FetchFailurePresenter {
     private val userMessageSink by lazy { androidUserMessageSink(context) }
 
@@ -52,10 +52,11 @@ class AndroidFetchFailurePresenter(
     ) {
         if (error is HttpStatusException) {
             Log.e(tag, "Response: ${error.bodyText}", error)
-            if (tryShowLoginExpiredDialog(error)) {
+            if (error.isLoginExpired()) {
+                dialogs?.show(loginExpiredDialog())
                 return
             }
-            showDebugErrorDialog(error)
+            dialogs?.show(httpErrorDialog(error))
         }
         Log.e(tag, "Failed to fetch feeds", error)
         userMessageSink.showShortMessage("加载失败: ${error.message}")
@@ -63,65 +64,42 @@ class AndroidFetchFailurePresenter(
 
     override fun showFailureMessage(message: String) = userMessageSink.showShortMessage(message)
 
-    private fun tryShowLoginExpiredDialog(error: HttpStatusException): Boolean {
-        try {
-            val body = json.parseToJsonElement(error.bodyText).jsonObject
-            val errorBody = body["error"]?.jsonObject ?: return false
-            if (errorBody["code"]?.jsonPrimitive?.int == 100 &&
-                errorBody["message"]?.jsonPrimitive?.content == "ERR_TICKET_NOT_EXIST"
-            ) {
-                ContextCompat.getMainExecutor(context).execute {
-                    if (context.canSafelyShowDialog()) {
-                        AlertDialog
-                            .Builder(context)
-                            .setTitle("登录已过期")
-                            .setMessage("请重新登录以继续使用完整功能。")
-                            .setPositiveButton("重新登录") { _, _ ->
-                                KoinPlatform.getKoin().get<ZhihuAccountStore>().clear()
-                                requestLoginNavigation()
-                            }.setNegativeButton("取消", null)
-                            .show()
-                    }
-                }
-                return true
-            }
-        } catch (_: Exception) {
-        }
-        return false
-    }
+    private fun loginExpiredDialog() = AppDialogRequest(
+        key = "login-expired",
+        title = "登录已过期",
+        text = "请重新登录以继续使用完整功能。",
+        icon = AppIcons.Login,
+        confirm = AppDialogAction("重新登录") {
+            KoinPlatform.getKoin().get<ZhihuAccountStore>().clear()
+            requestLoginNavigation()
+        },
+        dismiss = AppDialogAction("取消"),
+    )
 
-    private fun showDebugErrorDialog(error: HttpStatusException) {
-        ContextCompat.getMainExecutor(context).execute {
-            if (context.canSafelyShowDialog()) {
-                AlertDialog
-                    .Builder(context)
-                    .setTitle("错误 ${error.status}")
-                    .setMessage(error.bodyText)
-                    .setNeutralButton("复制curl") { _, _ ->
-                        val curl = error.dumpedCurlRequest
-                        context.clipboardManager
-                            .setPrimaryClip(
-                                ClipData.newPlainText(
-                                    "curl",
-                                    curl,
-                                ),
-                            )
-                        userMessageSink.showShortMessage("已复制到剪贴板")
-                    }.show()
-            }
-        }
-    }
+    private fun httpErrorDialog(error: HttpStatusException) = AppDialogRequest(
+        key = "http-error",
+        title = "请求失败（${error.status}）",
+        text = error.bodyText,
+        icon = AppIcons.Error,
+        confirm = AppDialogAction("复制 curl") {
+            context.clipboardManager.setPrimaryClip(ClipData.newPlainText("curl", error.dumpedCurlRequest))
+            userMessageSink.showShortMessage("已复制到剪贴板")
+        },
+        dismiss = AppDialogAction("关闭"),
+    )
+}
+
+private fun HttpStatusException.isLoginExpired(): Boolean = try {
+    val errorBody = json.parseToJsonElement(bodyText).jsonObject["error"]?.jsonObject
+    errorBody?.get("code")?.jsonPrimitive?.int == 100 &&
+        errorBody["message"]?.jsonPrimitive?.content == "ERR_TICKET_NOT_EXIST"
+} catch (_: Exception) {
+    false
 }
 
 @Composable
 actual fun rememberFetchFailurePresenter(): FetchFailurePresenter {
     val context = LocalContext.current
-    return remember(context) { AndroidFetchFailurePresenter(context) }
-}
-
-private fun Context.canSafelyShowDialog(): Boolean {
-    val activity = this as? Activity ?: return false
-    if (activity.isFinishing || activity.isDestroyed) return false
-    val lifecycleOwner = activity as? LifecycleOwner ?: return true
-    return lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
+    val dialogs = koinInject<AppDialogQueue>()
+    return remember(context, dialogs) { AndroidFetchFailurePresenter(context, dialogs) }
 }

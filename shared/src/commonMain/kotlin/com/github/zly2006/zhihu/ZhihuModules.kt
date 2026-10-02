@@ -19,6 +19,7 @@ package com.github.zly2006.zhihu
 
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.reading.ReadingQueueSourceRegistry
+import com.github.zly2006.zhihu.ui.components.AppDialogQueue
 import com.github.zly2006.zhihu.update.updateModule
 import com.github.zly2006.zhihu.viewmodel.AigcVoteService
 import com.github.zly2006.zhihu.viewmodel.ArticleAnswerSwitchState
@@ -34,6 +35,7 @@ val zhihuSharedModule = module {
     includes(updateModule)
     single { ReadingQueueSourceRegistry(get()) }
     single { ArticleAnswerSwitchState() }
+    single { AppDialogQueue() }
     single { AigcVoteService(get(), get(), get()) } onClose { it?.close() }
     single { ZhihuGuestClient(get(), get<ZhihuAccountStore>().session.userAgent) } onClose { it?.close() }
 }

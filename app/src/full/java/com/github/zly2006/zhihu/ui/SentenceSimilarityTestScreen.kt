@@ -60,6 +60,7 @@ import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.nlp.ModelState
 import com.github.zly2006.zhihu.nlp.SentenceEmbeddingManager
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -99,6 +100,8 @@ fun SentenceSimilarityTestScreen() {
             try {
                 SentenceEmbeddingManager.ensureModel(context)
                 computeError = null
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e("SentenceSimilarityTest", "Failed to load model", e)
                 computeError = e.localizedMessage ?: e.toString()
@@ -267,6 +270,8 @@ fun SentenceSimilarityTestScreen() {
                             val score = cosineSimilarity(first, second)
                             similarity = score
                             inferenceTimeMs = System.currentTimeMillis() - start
+                        } catch (e: CancellationException) {
+                            throw e
                         } catch (e: Exception) {
                             Log.e("SentenceSimilarityTest", "Compute similarity failed", e)
                             computeError = e.localizedMessage ?: e.toString()

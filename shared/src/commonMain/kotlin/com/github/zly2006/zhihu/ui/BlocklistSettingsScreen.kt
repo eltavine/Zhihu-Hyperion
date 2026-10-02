@@ -79,6 +79,7 @@ import com.github.zly2006.zhihu.viewmodel.filter.BlockedUser
 import com.github.zly2006.zhihu.viewmodel.filter.BlocklistStats
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.KeywordType
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -181,6 +182,8 @@ fun BlocklistSettingsScreen(
                     questionAuthorCount = database.blockedQuestionAuthorDao().getUserCount(),
                     topicCount = database.blockedTopicDao().getTopicCount(),
                 )
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e("BlocklistSettingsScreen", "Blocklist settings action failed", e)
                 userMessages.showShortMessage("加载数据失败: ${e.message}")
@@ -357,6 +360,8 @@ fun BlocklistSettingsScreen(
                                 database.blockedKeywordDao().deleteKeywordById(keyword.id)
                                 userMessages.showShortMessage("已删除关键词")
                                 loadData()
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (e: Exception) {
                                 Log.e("BlocklistSettingsScreen", "Blocklist settings action failed", e)
                                 userMessages.showShortMessage("删除失败: ${e.message}")
@@ -369,6 +374,8 @@ fun BlocklistSettingsScreen(
                                 database.blockedKeywordDao().clearAllKeywords()
                                 userMessages.showShortMessage("已清空所有关键词")
                                 loadData()
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (e: Exception) {
                                 Log.e("BlocklistSettingsScreen", "Blocklist settings action failed", e)
                                 userMessages.showShortMessage("清空失败: ${e.message}")
@@ -396,6 +403,8 @@ fun BlocklistSettingsScreen(
                                 database.blockedUserDao().deleteUserById(user.userId)
                                 userMessages.showShortMessage("已删除用户")
                                 loadData()
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (e: Exception) {
                                 Log.e("BlocklistSettingsScreen", "Blocklist settings action failed", e)
                                 userMessages.showShortMessage("删除失败: ${e.message}")
@@ -408,6 +417,8 @@ fun BlocklistSettingsScreen(
                                 database.blockedUserDao().clearAllUsers()
                                 userMessages.showShortMessage("已清空所有用户")
                                 loadData()
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (e: Exception) {
                                 Log.e("BlocklistSettingsScreen", "Blocklist settings action failed", e)
                                 userMessages.showShortMessage("清空失败: ${e.message}")
@@ -438,6 +449,8 @@ fun BlocklistSettingsScreen(
                                 database.blockedQuestionAuthorDao().deleteUserById(user.userId)
                                 userMessages.showShortMessage("已删除提问者")
                                 loadData()
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (e: Exception) {
                                 Log.e("BlocklistSettingsScreen", "Blocklist settings action failed", e)
                                 userMessages.showShortMessage("删除失败: ${e.message}")
@@ -450,6 +463,8 @@ fun BlocklistSettingsScreen(
                                 database.blockedQuestionAuthorDao().clearAllUsers()
                                 userMessages.showShortMessage("已清空所有屏蔽提问者")
                                 loadData()
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (e: Exception) {
                                 Log.e("BlocklistSettingsScreen", "Blocklist settings action failed", e)
                                 userMessages.showShortMessage("清空失败: ${e.message}")
@@ -475,6 +490,8 @@ fun BlocklistSettingsScreen(
                                 database.blockedTopicDao().deleteTopicById(topic.topicId)
                                 userMessages.showShortMessage("已删除主题")
                                 loadData()
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (e: Exception) {
                                 Log.e("BlocklistSettingsScreen", "Blocklist settings action failed", e)
                                 userMessages.showShortMessage("删除失败: ${e.message}")
@@ -487,6 +504,8 @@ fun BlocklistSettingsScreen(
                                 database.blockedTopicDao().clearAllTopics()
                                 userMessages.showShortMessage("已清空所有主题")
                                 loadData()
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (e: Exception) {
                                 Log.e("BlocklistSettingsScreen", "Blocklist settings action failed", e)
                                 userMessages.showShortMessage("清空失败: ${e.message}")
@@ -516,6 +535,8 @@ fun BlocklistSettingsScreen(
                         userMessages.showShortMessage("已添加关键词")
                         loadData()
                         showAddKeywordDialog = false
+                    } catch (e: CancellationException) {
+                        throw e
                     } catch (e: Exception) {
                         Log.e("BlocklistSettingsScreen", "Blocklist settings action failed", e)
                         userMessages.showShortMessage("添加失败: ${e.message}")
@@ -536,6 +557,8 @@ fun BlocklistSettingsScreen(
                         userMessages.showShortMessage("已添加主题")
                         loadData()
                         showAddTopicDialog = false
+                    } catch (e: CancellationException) {
+                        throw e
                     } catch (e: Exception) {
                         Log.e("BlocklistSettingsScreen", "Blocklist settings action failed", e)
                         userMessages.showShortMessage("添加失败: ${e.message}")
@@ -556,6 +579,8 @@ fun BlocklistSettingsScreen(
                         userMessages.showShortMessage("已添加用户")
                         loadData()
                         showAddUserDialog = false
+                    } catch (e: CancellationException) {
+                        throw e
                     } catch (e: Exception) {
                         Log.e("BlocklistSettingsScreen", "Blocklist settings action failed", e)
                         userMessages.showShortMessage("添加失败: ${e.message}")
@@ -579,6 +604,8 @@ fun BlocklistSettingsScreen(
                         userMessages.showShortMessage("已添加屏蔽提问者")
                         loadData()
                         showAddQuestionAuthorDialog = false
+                    } catch (e: CancellationException) {
+                        throw e
                     } catch (e: Exception) {
                         Log.e("BlocklistSettingsScreen", "Blocklist settings action failed", e)
                         userMessages.showShortMessage("添加失败: ${e.message}")

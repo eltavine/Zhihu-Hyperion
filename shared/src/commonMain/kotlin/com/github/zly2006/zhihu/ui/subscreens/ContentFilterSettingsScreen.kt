@@ -87,6 +87,7 @@ import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.viewmodel.feed.AUTO_REFRESH_HOME_ON_STARTUP_PREFERENCE_KEY
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -651,6 +652,8 @@ fun ContentFilterSettingsScreen(
             LaunchedEffect(Unit) {
                 try {
                     filterStats = contentFilterDao.loadFilterStats()
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     Log.e("ContentFilterSettingsScreen", "Failed to load filter stats", e)
                 }
@@ -693,6 +696,8 @@ fun ContentFilterSettingsScreen(
                                             filterStats = contentFilterDao.clearAllData()
                                             userMessages.showMessage("已清除曝光记录")
                                             showStatsDialog = false
+                                        } catch (e: CancellationException) {
+                                            throw e
                                         } catch (e: Exception) {
                                             // 忽略分享异常。
                                         }
