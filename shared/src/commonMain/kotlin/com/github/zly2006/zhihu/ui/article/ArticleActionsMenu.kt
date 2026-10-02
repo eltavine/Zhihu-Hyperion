@@ -266,13 +266,8 @@ fun ArticleActionsMenu(
                                         ReadingQueueItem(
                                             contentType = ReadingContentType.Answer,
                                             id = fallback.id,
-                                            title = fallback.title
-                                                .takeUnless { it == "loading..." }
-                                                .orEmpty()
-                                                .ifBlank { viewModel.title },
-                                            author = fallback.authorName
-                                                .takeUnless { it == "loading..." }
-                                                .orEmpty(),
+                                            title = fallback.title.ifBlank { viewModel.title },
+                                            author = fallback.authorName,
                                             questionId = viewModel.questionId.takeIf { it > 0 },
                                         )
                                     }

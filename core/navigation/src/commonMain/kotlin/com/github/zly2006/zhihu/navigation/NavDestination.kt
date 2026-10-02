@@ -235,12 +235,12 @@ enum class ArticleType {
 
 @Serializable
 data class Article(
-    var title: String = "loading...",
+    var title: String = "",
     @SerialName("article_type_1")
     val type: ArticleType,
     val id: Long,
-    var authorName: String = "loading...",
-    var authorBio: String = "loading...",
+    var authorName: String = "",
+    var authorBio: String = "",
     var avatarSrc: String? = null,
     var excerpt: String? = null,
     val readingQueueSourceId: String? = null,
@@ -270,7 +270,7 @@ data class SegmentCommentHolder(
 @Serializable
 data class Question(
     val questionId: Long,
-    val title: String = "loading...",
+    val title: String = "",
     val readingQueueSourceId: String? = null,
 ) : NavDestination {
     override fun hashCode(): Int = questionId.hashCode()
@@ -317,7 +317,7 @@ data class Person(
      * 用在 URL 中的可读 token。
      */
     var urlToken: String,
-    val name: String = "loading...",
+    val name: String = "",
     val jumpTo: String = "",
 ) : NavDestination {
     override fun hashCode(): Int {

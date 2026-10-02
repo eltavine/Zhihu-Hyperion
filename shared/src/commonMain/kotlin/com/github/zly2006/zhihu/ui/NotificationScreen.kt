@@ -603,7 +603,7 @@ internal fun MobileNotificationTimelineItem.navDestination(): NavDestination? {
                 Person(
                     id = it.id.ifBlank { Person.EMPTY_ID },
                     urlToken = it.urlToken,
-                    name = it.name.ifBlank { "loading..." },
+                    name = it.name,
                 )
             }
     }
