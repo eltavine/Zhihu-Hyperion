@@ -277,6 +277,8 @@ final object com.github.zly2006.zhihu.icons/AppIcons { // com.github.zly2006.zhi
         final fun <get-Paid>(): com.github.zly2006.zhihu.icons/AppIcon // com.github.zly2006.zhihu.icons/AppIcons.Paid.<get-Paid>|<get-Paid>(){}[0]
     final val Palette // com.github.zly2006.zhihu.icons/AppIcons.Palette|{}Palette[0]
         final fun <get-Palette>(): com.github.zly2006.zhihu.icons/AppIcon // com.github.zly2006.zhihu.icons/AppIcons.Palette.<get-Palette>|<get-Palette>(){}[0]
+    final val Password // com.github.zly2006.zhihu.icons/AppIcons.Password|{}Password[0]
+        final fun <get-Password>(): com.github.zly2006.zhihu.icons/AppIcon // com.github.zly2006.zhihu.icons/AppIcons.Password.<get-Password>|<get-Password>(){}[0]
     final val Pause // com.github.zly2006.zhihu.icons/AppIcons.Pause|{}Pause[0]
         final fun <get-Pause>(): com.github.zly2006.zhihu.icons/AppIcon // com.github.zly2006.zhihu.icons/AppIcons.Pause.<get-Pause>|<get-Pause>(){}[0]
     final val PauseCircle // com.github.zly2006.zhihu.icons/AppIcons.PauseCircle|{}PauseCircle[0]

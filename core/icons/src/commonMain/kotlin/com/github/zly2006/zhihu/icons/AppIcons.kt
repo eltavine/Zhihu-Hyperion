@@ -154,6 +154,7 @@ import zhihu.core.icons.generated.resources.open_in_browser
 import zhihu.core.icons.generated.resources.open_in_new
 import zhihu.core.icons.generated.resources.paid
 import zhihu.core.icons.generated.resources.palette
+import zhihu.core.icons.generated.resources.password
 import zhihu.core.icons.generated.resources.pause_circle_filled
 import zhihu.core.icons.generated.resources.pause_filled
 import zhihu.core.icons.generated.resources.person
@@ -366,6 +367,7 @@ object AppIcons {
     val OpenInNew = AppIcon(Res.drawable.open_in_new)
     val Paid = AppIcon(Res.drawable.paid)
     val Palette = AppIcon(Res.drawable.palette)
+    val Password = AppIcon(Res.drawable.password)
     val Pause = AppIcon(Res.drawable.pause_filled)
     val PauseCircle = AppIcon(Res.drawable.pause_circle_filled)
     val Person = AppIcon(Res.drawable.person)

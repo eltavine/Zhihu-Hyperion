@@ -143,6 +143,7 @@ public final class com/github/zly2006/zhihu/icons/AppIcons {
 	public final fun getOpenInNew ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getPaid ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getPalette ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getPassword ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getPause ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getPauseCircle ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getPerson ()Lcom/github/zly2006/zhihu/icons/AppIcon;
