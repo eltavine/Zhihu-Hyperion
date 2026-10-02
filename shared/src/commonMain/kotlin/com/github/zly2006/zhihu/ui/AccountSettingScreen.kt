@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -44,7 +45,6 @@ import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -62,6 +62,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
@@ -80,8 +82,11 @@ import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
 import com.github.zly2006.zhihu.platform.rememberSystemUrlOpener
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.reading.isReadingPlayerSupported
+import com.github.zly2006.zhihu.ui.components.IconShape
+import com.github.zly2006.zhihu.ui.components.MediumActionButton
 import com.github.zly2006.zhihu.ui.components.SettingItem
 import com.github.zly2006.zhihu.ui.components.SettingItemGroup
+import com.github.zly2006.zhihu.ui.components.ShapedIcon
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.ui.subscreens.BOTTOM_BAR_ITEMS_PREFERENCE_KEY
@@ -103,6 +108,7 @@ const val ACCOUNT_SETTINGS_LOGIN_ITEM_TAG = "accountSettings.loginItem"
 const val ACCOUNT_SETTINGS_PROFILE_HEADER_TAG = "accountSettings.profileHeader"
 const val ACCOUNT_SETTINGS_PROFILE_NAME_TAG = "accountSettings.profileName"
 const val ACCOUNT_SETTINGS_SCAN_TAG = "accountSettings.scan"
+const val ACCOUNT_SETTINGS_LOGOUT_TAG = "accountSettings.logout"
 const val ACCOUNT_SETTINGS_SHORTCUT_COLLECTIONS_TAG = "accountSettings.shortcutCollections"
 const val ACCOUNT_SETTINGS_SHORTCUT_SUBSCRIPTIONS_TAG = "accountSettings.shortcutSubscriptions"
 const val ACCOUNT_SETTINGS_SHORTCUT_NOTIFICATION_TAG = "accountSettings.shortcutNotification"
@@ -176,7 +182,10 @@ fun AccountSettingScreen(
     val data = liveData
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        // 外层已按 innerPadding 让出状态栏和导航栏，这里不能再按系统栏重复留白。
+        modifier = Modifier
+            .fillMaxSize()
+            .consumeWindowInsets(innerPadding),
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
     ) { padding ->
         Column(
@@ -202,80 +211,101 @@ fun AccountSettingScreen(
             }
 
             if (data.login) {
-                Row(
-                    Modifier
-                        .testTag(ACCOUNT_SETTINGS_PROFILE_HEADER_TAG)
-                        .padding(16.dp, 0.dp, 16.dp, 16.dp)
-                        .clickable {
-                            navigator.onNavigate(
-                                Person(
-                                    id = data.id,
-                                    urlToken = data.urlToken ?: "",
-                                    name = data.username,
-                                ),
-                            )
-                        },
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    AsyncImage(
-                        model = data.avatarUrl,
-                        contentDescription = "头像",
-                        modifier = Modifier
-                            .size(64.dp)
-                            .background(MaterialTheme.colorScheme.primaryContainer, CircleShape)
-                            .clip(CircleShape),
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(
-                        text = data.username,
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier.testTag(ACCOUNT_SETTINGS_PROFILE_NAME_TAG),
-                    )
-                    Spacer(Modifier.weight(1f))
-                    if (launchQrScanner != null) {
-                        FilledTonalIconButton(
-                            onClick = launchQrScanner,
-                            modifier = Modifier.size(40.dp).testTag(ACCOUNT_SETTINGS_SCAN_TAG),
-                        ) {
-                            Icon(AppIcons.QrCodeScanner, contentDescription = "扫码登录")
-                        }
-                        Spacer(Modifier.width(8.dp))
-                    }
-                    FilledTonalIconButton(
-                        onClick = {
-                            showLogoutDialog = true
-                        },
-                        modifier = Modifier.size(40.dp),
-                        colors = IconButtonDefaults.iconButtonColors().copy(
-                            containerColor = MaterialTheme.colorScheme.errorContainer,
-                            contentColor = MaterialTheme.colorScheme.onErrorContainer,
-                        ),
-                    ) {
-                        Icon(
-                            AppIcons.Logout,
-                            contentDescription = "退出登录",
-                            modifier = Modifier.size(24.dp),
+                Surface(
+                    onClick = {
+                        navigator.onNavigate(
+                            Person(
+                                id = data.id,
+                                urlToken = data.urlToken ?: "",
+                                name = data.username,
+                            ),
                         )
+                    },
+                    shape = MaterialTheme.shapes.extraLarge,
+                    color = MaterialTheme.colorScheme.surface,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                        .testTag(ACCOUNT_SETTINGS_PROFILE_HEADER_TAG),
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        AsyncImage(
+                            model = data.avatarUrl,
+                            contentDescription = "头像",
+                            modifier = Modifier
+                                .size(64.dp)
+                                .background(MaterialTheme.colorScheme.primaryContainer, CircleShape)
+                                .clip(CircleShape),
+                        )
+                        Column(Modifier.weight(1f)) {
+                            Text(
+                                text = data.username,
+                                style = MaterialTheme.typography.titleLargeEmphasized,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.testTag(ACCOUNT_SETTINGS_PROFILE_NAME_TAG),
+                            )
+                            Text(
+                                text = "查看个人主页",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                        if (launchQrScanner != null) {
+                            FilledTonalIconButton(
+                                onClick = launchQrScanner,
+                                modifier = Modifier.testTag(ACCOUNT_SETTINGS_SCAN_TAG),
+                            ) {
+                                Icon(AppIcons.QrCodeScanner, contentDescription = "扫码登录")
+                            }
+                        }
                     }
                 }
             } else {
-                SettingItemGroup {
-                    SettingItem(
-                        title = { Text("登录知乎") },
-                        icon = { Icon(AppIcons.Login, null) },
-                        modifier = Modifier.testTag(ACCOUNT_SETTINGS_LOGIN_ITEM_TAG),
-                        onClick = {
-                            requestLogin()
-                        },
-                    )
+                Surface(
+                    shape = MaterialTheme.shapes.extraLarge,
+                    color = MaterialTheme.colorScheme.surface,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        ShapedIcon(
+                            AppIcons.Login,
+                            shape = IconShape.Flower,
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        )
+                        Text("登录知乎", style = MaterialTheme.typography.headlineSmallEmphasized)
+                        Text(
+                            "登录后可查看关注、收藏、通知和浏览历史。",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center,
+                        )
+                        MediumActionButton(
+                            text = "登录",
+                            onClick = requestLogin,
+                            icon = AppIcons.Login,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag(ACCOUNT_SETTINGS_LOGIN_ITEM_TAG),
+                        )
+                    }
                 }
             }
 
             if (useDuo3HomeAccount) {
                 Row(
                     Modifier
-                        .padding(horizontal = 16.dp)
-                        .padding(top = 16.dp, bottom = 32.dp)
+                        .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
                         .clip(RoundedCornerShape(24.dp)),
                     horizontalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
@@ -397,34 +427,31 @@ fun AccountSettingScreen(
                         }
                     }
                 }
-            } else {
-                Spacer(Modifier.height(32.dp))
+            } else if (data.login) {
                 SettingItemGroup {
-                    if (data.login) {
-                        SettingItem(
-                            title = { Text("查看收藏夹") },
-                            icon = { Icon(AppIcons.Bookmarks, null) },
-                            onClick = {
-                                data.urlToken?.let { navigator.onNavigate(Collections(it)) }
-                            },
-                        )
-                        SettingItem(
-                            title = { Text("查看关注订阅") },
-                            description = { Text("话题、问题、专栏和收藏夹") },
-                            icon = { Icon(AppIcons.Groups, null) },
-                            modifier = Modifier.testTag(ACCOUNT_SETTINGS_SHORTCUT_SUBSCRIPTIONS_TAG),
-                            onClick = {
-                                navigator.onNavigate(
-                                    Person(
-                                        id = data.id,
-                                        urlToken = data.urlToken ?: "",
-                                        name = data.username,
-                                        jumpTo = "关注订阅",
-                                    ),
-                                )
-                            },
-                        )
-                    }
+                    SettingItem(
+                        title = { Text("查看收藏夹") },
+                        icon = { Icon(AppIcons.Bookmarks, null) },
+                        onClick = {
+                            data.urlToken?.let { navigator.onNavigate(Collections(it)) }
+                        },
+                    )
+                    SettingItem(
+                        title = { Text("查看关注订阅") },
+                        description = { Text("话题、问题、专栏和收藏夹") },
+                        icon = { Icon(AppIcons.Groups, null) },
+                        modifier = Modifier.testTag(ACCOUNT_SETTINGS_SHORTCUT_SUBSCRIPTIONS_TAG),
+                        onClick = {
+                            navigator.onNavigate(
+                                Person(
+                                    id = data.id,
+                                    urlToken = data.urlToken ?: "",
+                                    name = data.username,
+                                    jumpTo = "关注订阅",
+                                ),
+                            )
+                        },
+                    )
                 }
             }
 
@@ -537,6 +564,17 @@ fun AccountSettingScreen(
                     }
 
                     else -> {}
+                }
+            }
+
+            if (data.login) {
+                SettingItemGroup {
+                    SettingItem(
+                        title = { Text("退出登录", color = MaterialTheme.colorScheme.error) },
+                        icon = { Icon(AppIcons.Logout, contentDescription = null) },
+                        modifier = Modifier.testTag(ACCOUNT_SETTINGS_LOGOUT_TAG),
+                        onClick = { showLogoutDialog = true },
+                    )
                 }
             }
 
