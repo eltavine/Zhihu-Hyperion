@@ -42,8 +42,10 @@ import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.OfficialBadge
 import com.github.zly2006.zhihu.data.VoteUpState
+import com.github.zly2006.zhihu.data.ZhihuContentUnavailableException
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.decodeZhihuCommentData
+import com.github.zly2006.zhihu.data.fetchZhihuContentDetail
 import com.github.zly2006.zhihu.data.officialBadge
 import com.github.zly2006.zhihu.filter.ContentOpenTracker
 import com.github.zly2006.zhihu.markdown.htmlToMdAst
@@ -249,6 +251,10 @@ class ArticleViewModel(
     val isFavorited: Boolean
         get() = collections.any { it.isFavorited }
 
+    /** 正文加载失败的原因；不为 null 时页面显示错误状态，而不是正文和作者信息。 */
+    var loadFailure: ArticleLoadFailure? by mutableStateOf(null)
+        private set
+
     @OptIn(ExperimentalStdlibApi::class)
     fun loadArticle(
         environment: ZhihuApiEnvironment,
@@ -257,12 +263,13 @@ class ArticleViewModel(
         answerSwitchState: ArticleAnswerSwitchState,
     ) {
         if (httpClient == null) return
+        loadFailure = null
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
                 try {
                     if (article.type == ArticleType.Answer) {
                         val sharedData = answerSwitchState
-                        val answer = environment.fetchContentDetail(article) as? DataHolder.Answer
+                        val answer = fetchZhihuContentDetail(article, environment::fetchJson) as? DataHolder.Answer
                         if (answer != null) {
                             exportSourceContent = answer
                             title = answer.question.title
@@ -337,12 +344,11 @@ class ArticleViewModel(
                                 }
                             }
                         } else {
-                            content = "<h1>你似乎来到了没有知识存在的荒原</h1>"
                             endorsements = emptyList()
-                            Log.e("ArticleViewModel", "Answer not found")
+                            loadFailure = ArticleLoadFailure("这条回答不存在或已被删除", needLogin = false)
                         }
                     } else if (article.type == ArticleType.Article) {
-                        val article = environment.fetchContentDetail(article) as? DataHolder.Article
+                        val article = fetchZhihuContentDetail(article, environment::fetchJson) as? DataHolder.Article
                         if (article != null) {
                             endorsements = emptyList()
                             exportSourceContent = article
@@ -382,14 +388,16 @@ class ArticleViewModel(
                             )
                             contentOpens.record(this@ArticleViewModel.article)
                         } else {
-                            content = "<h1>你似乎来到了没有知识存在的荒原</h1>"
-                            Log.e("ArticleViewModel", "Article not found")
+                            loadFailure = ArticleLoadFailure("这篇文章不存在或已被删除", needLogin = false)
                         }
                     }
                 } catch (e: CancellationException) {
                     throw e
+                } catch (e: ZhihuContentUnavailableException) {
+                    loadFailure = ArticleLoadFailure(e.message, e.needLogin)
                 } catch (e: Exception) {
                     Log.e("ArticleViewModel", "Failed to load content", e)
+                    loadFailure = ArticleLoadFailure("内容加载失败，请稍后重试", needLogin = false)
                 }
             }
         }
@@ -1173,4 +1181,10 @@ fun formatArticleDateTime(seconds: Long): String {
 private data class AnswerRelationshipEndorsement(
     val type: String = "",
     val text: String = "",
+)
+
+/** [message] 直接展示给用户；[needLogin] 为 true 时提供登录入口，否则提供重试。 */
+class ArticleLoadFailure(
+    val message: String,
+    val needLogin: Boolean,
 )

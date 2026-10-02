@@ -53,6 +53,15 @@ final class com.github.zly2006.zhihu.data/HistoryStorage { // com.github.zly2006
     final suspend fun entries(): kotlin.collections/List<com.github.zly2006.zhihu.navigation/NavDestination> // com.github.zly2006.zhihu.data/HistoryStorage.entries|entries(){}[0]
 }
 
+final class com.github.zly2006.zhihu.data/ZhihuContentUnavailableException : kotlin/Exception { // com.github.zly2006.zhihu.data/ZhihuContentUnavailableException|null[0]
+    constructor <init>(kotlin/String, kotlin/Boolean) // com.github.zly2006.zhihu.data/ZhihuContentUnavailableException.<init>|<init>(kotlin.String;kotlin.Boolean){}[0]
+
+    final val message // com.github.zly2006.zhihu.data/ZhihuContentUnavailableException.message|{}message[0]
+        final fun <get-message>(): kotlin/String // com.github.zly2006.zhihu.data/ZhihuContentUnavailableException.message.<get-message>|<get-message>(){}[0]
+    final val needLogin // com.github.zly2006.zhihu.data/ZhihuContentUnavailableException.needLogin|{}needLogin[0]
+        final fun <get-needLogin>(): kotlin/Boolean // com.github.zly2006.zhihu.data/ZhihuContentUnavailableException.needLogin.<get-needLogin>|<get-needLogin>(){}[0]
+}
+
 final class com.github.zly2006.zhihu.filter/ContentFilterStats { // com.github.zly2006.zhihu.filter/ContentFilterStats|null[0]
     constructor <init>(kotlin/Int, kotlin/Int, kotlin/Float) // com.github.zly2006.zhihu.filter/ContentFilterStats.<init>|<init>(kotlin.Int;kotlin.Int;kotlin.Float){}[0]
 

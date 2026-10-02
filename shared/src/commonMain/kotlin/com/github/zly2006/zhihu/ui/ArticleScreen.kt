@@ -110,6 +110,7 @@ import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.Topic
+import com.github.zly2006.zhihu.navigation.requestLoginNavigation
 import com.github.zly2006.zhihu.platform.PlatformBackHandler
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isAnswerSwipeSupported
@@ -150,6 +151,8 @@ import com.github.zly2006.zhihu.ui.components.ContentEndMarker
 import com.github.zly2006.zhihu.ui.components.DEFAULT_ANSWER_SWITCH_SENSITIVITY
 import com.github.zly2006.zhihu.ui.components.DEFAULT_PAGE_TURN_SWITCH_ANSWER
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
+import com.github.zly2006.zhihu.ui.components.EmptyState
+import com.github.zly2006.zhihu.ui.components.EmptyStateAction
 import com.github.zly2006.zhihu.ui.components.ExportDialogComponent
 import com.github.zly2006.zhihu.ui.components.MyModalBottomSheet
 import com.github.zly2006.zhihu.ui.components.PREF_PAGE_TURN_SWITCH_ANSWER
@@ -527,6 +530,7 @@ fun ArticleScreen(
                                 )
                             },
                             subtitle = { expanded ->
+                                if (viewModel.loadFailure != null) return@ZhihuTwoRowsTopAppBar
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier
@@ -604,7 +608,7 @@ fun ArticleScreen(
                     }
                 }
             },
-            bottomBar = if (isImmersiveMode) {
+            bottomBar = if (isImmersiveMode || viewModel.loadFailure != null) {
                 {}
             } else {
                 @Composable {
@@ -842,6 +846,23 @@ fun ArticleScreen(
                 }
             },
         ) { innerPadding ->
+            viewModel.loadFailure?.let { failure ->
+                Box(Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center) {
+                    EmptyState(
+                        icon = if (failure.needLogin) AppIcons.Login else AppIcons.Error,
+                        title = failure.message,
+                        modifier = Modifier.testTag("article_load_failure"),
+                        action = if (failure.needLogin) {
+                            EmptyStateAction("登录", AppIcons.Login, onClick = ::requestLoginNavigation)
+                        } else {
+                            EmptyStateAction("重试", AppIcons.Refresh) {
+                                viewModel.loadArticle(environment, history, contentOpens, answerSwitchState)
+                            }
+                        },
+                    )
+                }
+                return@Scaffold
+            }
             CompositionLocalProvider(LocalBringIntoViewSpec provides articleBringIntoViewSpec) {
                 Box {
                     Column(

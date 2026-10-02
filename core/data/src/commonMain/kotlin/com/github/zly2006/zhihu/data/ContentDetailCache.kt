@@ -30,7 +30,10 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.long
 import kotlin.coroutines.cancellation.CancellationException
@@ -147,6 +150,13 @@ fun zhihuContentDetailInclude(destination: NavDestination): String = when (desti
     else -> ""
 }
 
+/** 知乎没有返回内容，而是返回了错误体；[message] 是知乎给用户看的原话，[needLogin] 表示登录后才能查看。 */
+class ZhihuContentUnavailableException(
+    override val message: String,
+    val needLogin: Boolean,
+) : Exception(message)
+
+/** @throws ZhihuContentUnavailableException 知乎返回错误体时，例如未登录查看回答得到的 `need_login`。 */
 suspend fun fetchZhihuContentDetail(
     destination: NavDestination,
     fetchJson: suspend (String, String) -> JsonObject?,
@@ -154,6 +164,12 @@ suspend fun fetchZhihuContentDetail(
     val url = zhihuContentDetailUrl(destination) ?: return null
     val include = zhihuContentDetailInclude(destination)
     val json = fetchJson(url, include) ?: return null
+    json["error"]?.jsonObject?.let { error ->
+        throw ZhihuContentUnavailableException(
+            message = error["message"]?.jsonPrimitive?.contentOrNull ?: "这条内容暂时无法查看",
+            needLogin = error["need_login"]?.jsonPrimitive?.booleanOrNull == true,
+        )
+    }
 
     return when (destination) {
         is Article -> decodeArticleContentDetail(destination, json)
