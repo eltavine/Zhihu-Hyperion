@@ -292,7 +292,11 @@ fun HomeScreen(
     }
 
     var unreadCount by remember { mutableIntStateOf(0) }
-    LaunchedEffect(Unit) {
+    LaunchedEffect(account.login) {
+        if (!account.login) {
+            unreadCount = 0
+            return@LaunchedEffect
+        }
         try {
             unreadCount = mobileClient
                 .withClient { client ->
