@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,12 +24,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.github.zly2006.zhihu.ui.components.AppPullToRefreshBox
-import com.github.zly2006.zhihu.ui.components.LocalPullToRefreshInProgress
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
@@ -67,9 +66,6 @@ fun FeedPullToRefresh(
         },
         modifier = Modifier.fillMaxSize(),
         indicatorPadding = padding,
-    ) {
-        CompositionLocalProvider(LocalPullToRefreshInProgress provides viewModel.isPullToRefresh) {
-            content()
-        }
-    }
+        content = content,
+    )
 }

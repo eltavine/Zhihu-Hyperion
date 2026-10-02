@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -239,6 +240,7 @@ fun ReadingSettingsScreen() {
             val publishedTimeEnabled = ReadingTemplateField.PublishedAt in preferences.enabledFields
             SettingItemGroup(
                 title = "发布时间朗读",
+                footer = { Text("启用上方“发布时间”字段后才能设置；相对时间精度只在时间形式为“相对时间”时生效。") },
             ) {
                 SettingItem(
                     title = { Text("时间形式") },

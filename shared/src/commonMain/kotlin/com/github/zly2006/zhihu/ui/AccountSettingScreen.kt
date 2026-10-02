@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -292,7 +293,7 @@ fun AccountSettingScreen(
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Icon(
-                                AppIcons.BookmarkFilled,
+                                AppIcons.BookmarksFilled,
                                 null,
                                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
                             )
@@ -402,7 +403,7 @@ fun AccountSettingScreen(
                     if (data.login) {
                         SettingItem(
                             title = { Text("查看收藏夹") },
-                            icon = { Icon(AppIcons.Bookmark, null) },
+                            icon = { Icon(AppIcons.Bookmarks, null) },
                             onClick = {
                                 data.urlToken?.let { navigator.onNavigate(Collections(it)) }
                             },
