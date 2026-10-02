@@ -8,7 +8,7 @@
 
 [![Release](https://img.shields.io/github/v/release/eltavine/Zhihu-Hyperion?include_prereleases&color=7B4AA8)](https://github.com/eltavine/Zhihu-Hyperion/releases)
 [![License](https://img.shields.io/github/license/eltavine/Zhihu-Hyperion?color=2D2F86)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Android%20%7C%20Windows%20%7C%20Linux%20%7C%20macOS-FFB23F)](#下载)
+[![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS%20%7C%20Windows%20%7C%20Linux%20%7C%20macOS-FFB23F)](#下载)
 [![Kotlin Multiplatform](https://img.shields.io/badge/Kotlin%20Multiplatform-Compose-0F1135?logo=kotlin)](https://kotlinlang.org/docs/multiplatform.html)
 
 [下载](#下载) · [功能一览](#功能一览) · [隐私](#隐私) · [从源码构建](#从源码构建) · [致谢与许可](#致谢与许可)
@@ -27,7 +27,7 @@ Zhihu-Hyperion 是一个第三方知乎客户端。它把广告、推广软文�
 - **轻量**：Lite 版安装包不到 5 MB，官方 Android 客户端则超过 110 MB。
 - **AI 加持**：借助知乎直答一键总结回答与文章；Full 版在本机离线运行语义模型，按语义而不只是关键词屏蔽内容；还可以记名标记疑似 AIGC 内容，并查看其他人的标记。
 - **由你掌控**：沿用 Zhihu++ 独创的本地推荐算法，推荐完全在本机计算、权重可自由定制；也可以选择网页端、安卓端或混合推荐，并切换登录与非登录状态的推荐，跳出信息茧房。应用不含任何遥测。
-- **多平台**：基于 Kotlin Multiplatform 与 Compose Multiplatform，Android、Windows、Linux 和 macOS 共用同一套界面与核心代码。
+- **多平台**：基于 Kotlin Multiplatform 与 Compose Multiplatform，Android、iOS、Windows、Linux 和 macOS 共用同一套界面与核心代码。
 
 ## 应用截图
 
@@ -47,6 +47,8 @@ Zhihu-Hyperion 是一个第三方知乎客户端。它把广告、推广软文�
 | Full | 较大 | 想用语义屏蔽的用户。内置 ONNX Runtime，可在本机离线运行语义模型 |
 
 **桌面版** 提供 Windows MSI 安装包和 Linux AppImage，均内置 Java 运行时，安装即用；macOS 提供 Apple Silicon 原生应用。
+
+**iOS** 提供适用于 iPhone 和 iPad（iOS 16 及以上）的 IPA。它没有签名，需要先用 AltStore、SideStore、Sideloadly 或自己的开发者证书签名再安装；应用内检查到新版本时会打开下载页，不能自动安装。
 
 ## 功能一览
 
@@ -142,9 +144,12 @@ Zhihu-Hyperion 是一个第三方知乎客户端。它把广告、推广软文�
 ./gradlew assembleFullDebug                 # Android Full 版，需要与 Lite 分开执行
 ./gradlew :desktopApp:run                   # 运行桌面版
 ./gradlew :macosApp:packageReleaseMacosApp  # 打包 macOS 原生应用，需要 Apple Silicon
+iosApp/scripts/package-ios.sh device build/zhihu-hyperion-ios.ipa  # 打包未签名的 iOS 应用，需要 Xcode
 ```
 
-项目按 Kotlin Multiplatform 分层：`core` 模块提供数据、网络、数据库与基础界面，`feature` 模块承载独立功能（如编辑器、视频页和更新检查），`shared` 组装各页面，`app`、`desktopApp` 和 `macosApp` 分别是 Android、桌面与 macOS 的应用入口。
+在 Xcode 中打开 `iosApp/ZhihuHyperion.xcodeproj` 可以直接在模拟器上运行；要装到自己的设备上，在 `iosApp/Configuration/Local.xcconfig` 里写上 `DEVELOPMENT_TEAM`。
+
+项目按 Kotlin Multiplatform 分层：`core` 模块提供数据、网络、数据库与基础界面，`feature` 模块承载独立功能（如编辑器、视频页和更新检查），`shared` 组装各页面，`app`、`desktopApp`、`macosApp` 和 `iosApp` 分别是 Android、桌面、macOS 与 iOS 的应用入口。
 
 `versionCode` 等于 `gradle.properties` 中的 `app.versionCodeOffset` 加上 HEAD 的提交数，每次构建都比上一次大，应用的更新检查只比较它，因此构建需要完整的 git 历史，浅克隆会直接失败。
 

@@ -29,6 +29,11 @@
       "url": "https://github.com/eltavine/Zhihu-Hyperion/releases/download/nightly/zhihu-hyperion-desktop-macos-arm64.app.zip",
       "size": 42,
       "sha256": "a3e8a42250be22cd90ea95ed688215dca339069109d9968d30b08da493bbdf7f"
+    },
+    "ios-arm64": {
+      "url": "https://github.com/eltavine/Zhihu-Hyperion/releases/download/nightly/zhihu-hyperion-ios-arm64-unsigned.ipa",
+      "size": 37,
+      "sha256": "33ecc78868ec49d53098c29ca1b4faf9d3c9be0ec12782525557669dda89b4ba"
     }
   }
 }

@@ -163,6 +163,7 @@ jobs:
             cat <<'EOF'
           Android 请下载 APK 安装：Full 版带端侧语义模型，支持智能内容过滤；Lite 版体积更小。mapping-lite.zip 只用于分析混淆后的崩溃。
           桌面端提供内置 Java 运行时的 Windows MSI 与 Linux AppImage，macOS 为 Apple Silicon 原生应用。
+          iOS 的 IPA 没有签名，需要先用 AltStore、SideStore、Sideloadly 或自己的开发者证书签名再安装。
 
           下载后可以用 `SHA256SUMS.txt` 核对文件，或用 `gh attestation verify <文件> --repo eltavine/Zhihu-Hyperion` 确认它由本仓库的发布流程构建。
 

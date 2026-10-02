@@ -103,7 +103,7 @@ jobs:
         uses: ./.github/actions/setup-build
 
       - name: Run KtLint, ABI and module graph checks
-        run: ./gradlew ktlintCheck checkKotlinAbi :app:assertModuleGraph :desktopApp:assertModuleGraph :macosApp:assertModuleGraph :macosUiDebug:assertModuleGraph
+        run: ./gradlew ktlintCheck checkKotlinAbi :app:assertModuleGraph :desktopApp:assertModuleGraph :macosApp:assertModuleGraph :macosUiDebug:assertModuleGraph :iosApp:assertModuleGraph
 
       - name: Verify the update manifest contract
         run: python3 .github/scripts/test_write_update_manifest.py
@@ -222,6 +222,48 @@ jobs:
       - name: Build desktop release package
         run: ./gradlew :desktopApp:packageReleaseDistributionForCurrentOS --max-workers=2
 
+  ios:
+    name: iOS simulator debug build
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up build toolchain
+        uses: ./.github/actions/setup-build
+        with:
+          kotlin-native: "true"
+
+      - name: Verify the Xcode project matches project.yml
+        run: |
+          xcodegen_version="2.46.0"
+          xcodegen_sha256="4d9e34b62172d645eed6457cac13fc222569974098ef4ee9c3368bedf0196806"
+          curl -fsSL -o "$RUNNER_TEMP/xcodegen.zip" \
+            "https://github.com/yonaskolb/XcodeGen/releases/download/$xcodegen_version/xcodegen.zip"
+          printf '%s  %s\n' "$xcodegen_sha256" "$RUNNER_TEMP/xcodegen.zip" | shasum -a 256 --check --status -
+          unzip -q "$RUNNER_TEMP/xcodegen.zip" -d "$RUNNER_TEMP"
+          "$RUNNER_TEMP/xcodegen/bin/xcodegen" generate --spec iosApp/project.yml --quiet
+          if [ -n "$(git status --porcelain -- iosApp)" ]; then
+            echo "::error::iosApp/ZhihuHyperion.xcodeproj is out of date; run xcodegen generate --spec iosApp/project.yml and commit the result."
+            git status --short -- iosApp
+            git diff -- iosApp
+            exit 1
+          fi
+
+      # Each Release iOS build took 27–39 minutes on this runner, so pull requests build Debug;
+      # package.yml builds the Release IPA.
+      - name: Build the simulator app
+        run: >-
+          xcodebuild -project iosApp/ZhihuHyperion.xcodeproj -scheme ZhihuHyperion -configuration Debug
+          -sdk iphonesimulator -destination 'generic/platform=iOS Simulator'
+          -derivedDataPath iosApp/build/derived-data build
+
   instrumented-tests:
     name: Mock instrumented shard (${{ matrix.shard_label }}/5)
     if: needs.changes.outputs.instrumented == 'true'
@@ -312,6 +354,7 @@ jobs:
       - unit-tests
       - android
       - desktop
+      - ios
       - instrumented-tests
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -325,6 +368,7 @@ jobs:
           UNIT_TESTS: ${{ needs.unit-tests.result }}
           ANDROID: ${{ needs.android.result }}
           DESKTOP: ${{ needs.desktop.result }}
+          IOS: ${{ needs.ios.result }}
           INSTRUMENTED_TESTS: ${{ needs.instrumented-tests.result }}
         run: |
           test "$CHANGES" = success
@@ -333,7 +377,7 @@ jobs:
           if [[ "$CODE" == "true" ]]; then
             expected=success
           fi
-          for result in "$CHECKS" "$UNIT_TESTS" "$ANDROID" "$DESKTOP"; do
+          for result in "$CHECKS" "$UNIT_TESTS" "$ANDROID" "$DESKTOP" "$IOS"; do
             test "$result" = "$expected"
           done
           if [[ "$CODE" == "true" && "$INSTRUMENTED" == "true" ]]; then

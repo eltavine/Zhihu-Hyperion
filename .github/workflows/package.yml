@@ -301,7 +301,7 @@ jobs:
         if: runner.os == 'macOS'
         shell: bash
         run: |
-          ./gradlew -Dorg.gradle.jvmargs="-Xmx5120m -Dfile.encoding=UTF-8" :macosApp:packageReleaseMacosApp :macosUiDebug:verifyMacosReleaseIsolation
+          ./gradlew :macosApp:packageReleaseMacosApp :macosUiDebug:verifyMacosReleaseIsolation
 
           app_bundle="macosApp/build/bin/macosArm64/releaseApp/Zhihu-Hyperion.app"
           app_executable="$app_bundle/Contents/MacOS/ZhihuHyperion"
@@ -321,6 +321,35 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: desktop-${{ steps.desktop_suffix.outputs.suffix }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
+
+  ios:
+    name: iOS unsigned IPA
+    runs-on: macos-15
+    timeout-minutes: 90
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up build toolchain
+        uses: ./.github/actions/setup-build
+        with:
+          cache-read-only: "false"
+          kotlin-native: "true"
+
+      - name: Build the unsigned IPA
+        run: iosApp/scripts/package-ios.sh device dist/zhihu-hyperion-ios-arm64-unsigned.ipa
+
+      - name: Upload iOS package
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ios
           path: dist/
           if-no-files-found: error
           retention-days: 7

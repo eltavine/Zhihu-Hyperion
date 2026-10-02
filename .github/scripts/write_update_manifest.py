@@ -34,6 +34,7 @@ ASSETS = {
     "windows-x64": "zhihu-hyperion-desktop-windows-x64.msi",
     "linux-x64": "zhihu-hyperion-desktop-linux-x64.AppImage",
     "macos-arm64": "zhihu-hyperion-desktop-macos-arm64.app.zip",
+    "ios-arm64": "zhihu-hyperion-ios-arm64-unsigned.ipa",
 }
 
 

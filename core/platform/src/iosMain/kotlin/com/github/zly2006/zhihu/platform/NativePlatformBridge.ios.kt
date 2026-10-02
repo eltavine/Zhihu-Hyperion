@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,9 +21,8 @@ package com.github.zly2006.zhihu.platform
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import kotlinx.cinterop.ExperimentalForeignApi
-import platform.Foundation.NSDocumentDirectory
+import platform.Foundation.NSApplicationSupportDirectory
 import platform.Foundation.NSFileManager
-import platform.Foundation.NSTemporaryDirectory
 import platform.Foundation.NSURL
 import platform.Foundation.NSUserDomainMask
 import platform.UIKit.UIApplication
@@ -32,12 +32,6 @@ actual val nativeIsDesktop: Boolean = false
 
 // iPhone tab bars show at most five items, the same limit as Android phones.
 actual val platformBottomBarItemLimit: Int? = 5
-
-actual val isAigcVoteSupported: Boolean = false
-
-actual val isFeedQualityFilterSupported: Boolean = false
-
-actual val isLegacyWebViewSupported: Boolean = false
 
 @Composable
 @OptIn(ExperimentalForeignApi::class)
@@ -79,21 +73,19 @@ actual fun copyNativePlainText(text: String) {
 @OptIn(ExperimentalForeignApi::class)
 actual fun nativeAccountFilePath(): String = "${nativeAppPrivateDirectoryPath()}/account.json"
 
+/** 应用私有数据放在 Application Support：不出现在“文件”App 里，但会随设备备份。 */
 @OptIn(ExperimentalForeignApi::class)
-actual fun nativeAppPrivateDirectoryPath(): String {
-    val urls = NSFileManager.defaultManager.URLsForDirectory(NSDocumentDirectory, NSUserDomainMask)
-    return (urls.firstOrNull() as? NSURL)?.path ?: NSTemporaryDirectory()
-}
+actual fun nativeAppPrivateDirectoryPath(): String = checkNotNull(
+    NSFileManager.defaultManager
+        .URLForDirectory(
+            directory = NSApplicationSupportDirectory,
+            inDomain = NSUserDomainMask,
+            appropriateForURL = null,
+            create = true,
+            error = null,
+        )?.path,
+) { "iOS 没有提供 Application Support 目录" }
 
 internal actual fun nativeDownloadsDirectoryPath(): String = "${nativeAppPrivateDirectoryPath()}/Downloads"
 
 actual fun nativeChooseBlocklistImportFilePath(): String? = null
-
-actual fun nativeSettingsStore(relativePath: String): SettingsStore = noopSettingsStore()
-
-@Composable
-actual fun rememberUserMessageSink(): UserMessageSink = remember {
-    object : UserMessageSink {
-        override fun showShortMessage(message: String) = println(message)
-    }
-}
