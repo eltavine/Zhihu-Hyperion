@@ -223,7 +223,7 @@ fun CollectionBrowseScreen(
                             enabled = collections.isNotEmpty(),
                             modifier = Modifier.testTag(COLLECTION_BROWSE_FOLDER_SWITCH_BUTTON_TAG),
                         ) {
-                            Icon(AppIcons.Folder, contentDescription = "切换收藏夹")
+                            Icon(AppIcons.Bookmarks, contentDescription = "切换收藏夹")
                         }
                         DropdownMenu(
                             expanded = folderMenuExpanded,
@@ -233,7 +233,7 @@ fun CollectionBrowseScreen(
                             collections.forEach { collection ->
                                 DropdownMenuItem(
                                     text = { Text(collection.title) },
-                                    leadingIcon = { Icon(AppIcons.Folder, contentDescription = null) },
+                                    leadingIcon = { Icon(AppIcons.Bookmarks, contentDescription = null) },
                                     trailingIcon = {
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             if (collection.id == selectedCollectionId) {
@@ -307,7 +307,7 @@ fun CollectionBrowseScreen(
                     contentAlignment = Alignment.Center,
                 ) {
                     EmptyState(
-                        icon = AppIcons.Folder,
+                        icon = AppIcons.Bookmarks,
                         title = "还没有收藏夹",
                         modifier = Modifier.testTag(COLLECTION_BROWSE_EMPTY_COLLECTIONS_TAG),
                     )

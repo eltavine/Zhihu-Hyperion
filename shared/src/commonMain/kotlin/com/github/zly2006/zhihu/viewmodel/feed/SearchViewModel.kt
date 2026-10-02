@@ -112,11 +112,6 @@ open class SearchViewModel(
         super.refresh(environment)
     }
 
-    fun retry(environment: ZhihuApiEnvironment) {
-        errorMessage = null
-        loadMore(environment)
-    }
-
     override fun decodePage(
         environment: ZhihuApiEnvironment,
         rawData: JsonArray,

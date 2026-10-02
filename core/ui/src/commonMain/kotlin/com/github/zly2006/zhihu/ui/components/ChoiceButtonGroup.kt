@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
@@ -64,6 +65,7 @@ fun <T> ChoiceButtonGroup(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
+    val colorScheme = MaterialTheme.colorScheme
     Row(
         modifier = modifier.fillMaxWidth().selectableGroup(),
         horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
@@ -71,6 +73,15 @@ fun <T> ChoiceButtonGroup(
         options.forEachIndexed { index, option ->
             val checked = option.value == selected
             ToggleButton(
+                // ToggleButton 只有一组禁用色，禁用时选中项会和其他项一样；让选中项深一档，仍能看出当前值。
+                colors = if (checked) {
+                    ToggleButtonDefaults.toggleButtonColors(
+                        disabledContainerColor = colorScheme.onSurface.copy(alpha = 0.32f),
+                        disabledContentColor = colorScheme.onSurface.copy(alpha = 0.7f),
+                    )
+                } else {
+                    ToggleButtonDefaults.toggleButtonColors()
+                },
                 checked = checked,
                 onCheckedChange = { if (!checked) onSelect(option.value) },
                 modifier = Modifier

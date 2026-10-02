@@ -8,7 +8,7 @@
 
 [![Release](https://img.shields.io/github/v/release/eltavine/Zhihu-Hyperion?include_prereleases&color=7B4AA8)](https://github.com/eltavine/Zhihu-Hyperion/releases)
 [![License](https://img.shields.io/github/license/eltavine/Zhihu-Hyperion?color=2D2F86)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Android%20%7C%20Windows%20%7C%20Linux%20%7C%20macOS-FFB23F)](#下载)
+[![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS%20%7C%20Windows%20%7C%20Linux%20%7C%20macOS-FFB23F)](#下载)
 [![Kotlin Multiplatform](https://img.shields.io/badge/Kotlin%20Multiplatform-Compose-0F1135?logo=kotlin)](https://kotlinlang.org/docs/multiplatform.html)
 
 [下载](#下载) · [功能一览](#功能一览) · [隐私](#隐私) · [从源码构建](#从源码构建) · [致谢与许可](#致谢与许可)
@@ -27,7 +27,7 @@ Zhihu-Hyperion 是一个第三方知乎客户端。它把广告、推广软文�
 - **轻量**：Lite 版安装包不到 5 MB，官方 Android 客户端则超过 110 MB。
 - **AI 加持**：借助知乎直答一键总结回答与文章；Full 版在本机离线运行语义模型，按语义而不只是关键词屏蔽内容；还可以记名标记疑似 AIGC 内容，并查看其他人的标记。
 - **由你掌控**：沿用 Zhihu++ 独创的本地推荐算法，推荐完全在本机计算、权重可自由定制；也可以选择网页端、安卓端或混合推荐，并切换登录与非登录状态的推荐，跳出信息茧房。应用不含任何遥测。
-- **多平台**：基于 Kotlin Multiplatform 与 Compose Multiplatform，Android、Windows、Linux 和 macOS 共用同一套界面与核心代码。
+- **多平台**：基于 Kotlin Multiplatform 与 Compose Multiplatform，Android、iOS、Windows、Linux 和 macOS 共用同一套界面与核心代码。
 
 ## 应用截图
 
@@ -47,6 +47,8 @@ Zhihu-Hyperion 是一个第三方知乎客户端。它把广告、推广软文�
 | Full | 较大 | 想用语义屏蔽的用户。内置 ONNX Runtime，可在本机离线运行语义模型 |
 
 **桌面版** 提供 Windows MSI 安装包和 Linux AppImage，均内置 Java 运行时，安装即用；macOS 提供 Apple Silicon 原生应用。
+
+**iOS** 提供适用于 iPhone 和 iPad（iOS 16 及以上）的 IPA。它没有签名，需要先用 AltStore、SideStore、Sideloadly 或自己的开发者证书签名再安装；应用内检查到新版本时会打开下载页，不能自动安装。
 
 ## 功能一览
 
@@ -142,9 +144,12 @@ Zhihu-Hyperion 是一个第三方知乎客户端。它把广告、推广软文�
 ./gradlew assembleFullDebug                 # Android Full 版，需要与 Lite 分开执行
 ./gradlew :desktopApp:run                   # 运行桌面版
 ./gradlew :macosApp:packageReleaseMacosApp  # 打包 macOS 原生应用，需要 Apple Silicon
+iosApp/scripts/package-ios.sh device build/zhihu-hyperion-ios.ipa  # 打包未签名的 iOS 应用，需要 Xcode
 ```
 
-项目按 Kotlin Multiplatform 分层：`core` 模块提供数据、网络、数据库与基础界面，`feature` 模块承载独立功能（如编辑器、视频页和更新检查），`shared` 组装各页面，`app`、`desktopApp` 和 `macosApp` 分别是 Android、桌面与 macOS 的应用入口。
+在 Xcode 中打开 `iosApp/ZhihuHyperion.xcodeproj` 可以直接在模拟器上运行；要装到自己的设备上，在 `iosApp/Configuration/Local.xcconfig` 里写上 `DEVELOPMENT_TEAM`。
+
+项目按 Kotlin Multiplatform 分层：`core` 模块提供数据、网络、数据库与基础界面，`feature` 模块承载独立功能（如编辑器、视频页和更新检查），`shared` 组装各页面，`app`、`desktopApp`、`macosApp` 和 `iosApp` 分别是 Android、桌面、macOS 与 iOS 的应用入口。
 
 `versionCode` 等于 `gradle.properties` 中的 `app.versionCodeOffset` 加上 HEAD 的提交数，每次构建都比上一次大，应用的更新检查只比较它，因此构建需要完整的 git 历史，浅克隆会直接失败。
 
@@ -159,11 +164,15 @@ Android release 构建只在下面四个环境变量都非空时使用发布密�
 
 CI 的签名密钥只存放在仓库的 `android-signing` 环境中（`ANDROID_KEYSTORE_BASE64` 即 keystore 文件的 Base64，以及后三项），该环境只允许 `master` 分支使用：
 
-- Pull Request 的检查（`ci.yml`：KtLint、ABI、模块依赖图、单元测试、构建和模拟器上的 mock 测试）不引用这个环境，PR 中的代码拿不到密钥。
-- 每次推送到 `master`，`build.yml` 签名打包并更新[开发版](https://github.com/eltavine/Zhihu-Hyperion/releases/tag/nightly)。
-- 正式版在 `master` 上手动运行 Release（`release.yml`）发布：它按 `app.versionName` 在所构建的提交上创建 `v` 开头的标签，标签已存在时拒绝发布。改版本号可以先运行 Bump Version。
+- Pull Request 的检查（`ci.yml`：KtLint、ABI、模块依赖图、单元测试、构建和模拟器上的 mock 测试）不引用这个环境，PR 中的代码拿不到密钥。只改文档的提交跳过全部构建，`CI result` 照常给出结果。
+- 每次推送到 `master`（只改文档的除外），`build.yml` 签名打包并更新[开发版](https://github.com/eltavine/Zhihu-Hyperion/releases/tag/nightly)：新版本先作为草稿传完全部文件，再替换旧的开发版，检查更新时不会长时间找不到 `update.json`。
+- 正式版在 `master` 上手动运行 Release（`release.yml`）并填写版本号：它把 `app.versionName` 改成这个版本并提交到 `master`（已经相同则跳过），构建这个提交，再在上面创建 `v` 开头的标签；标签已存在时拒绝发布。带 `-` 后缀的版本（如 `1.1.0-beta.1`）发布为预发布，不进入正式版更新渠道。
 
-打包后会用 `apksigner` 核对安装包的签名证书。每个发布都附带应用检查更新时读取的 `update.json`，记录版本号、更新说明以及各平台安装包的地址和 SHA-256。
+更新说明由 [git-cliff](https://git-cliff.org) 按约定式提交（`feat`、`fix`、`refactor` 等，分组见 `cliff.toml`）生成。打包后会用 `apksigner` 核对安装包的签名证书。每个发布都附带：
+
+- 应用检查更新时读取的 `update.json`，记录版本号、更新说明以及各平台安装包的地址和 SHA-256；
+- `SHA256SUMS.txt`，下载后可用 `sha256sum -c SHA256SUMS.txt` 核对；
+- [构建来源证明](https://docs.github.com/actions/security-for-github-actions/using-artifact-attestations)，可用 `gh attestation verify <文件> --repo eltavine/Zhihu-Hyperion` 确认文件由本仓库的发布流程构建。
 
 ## 参与贡献
 

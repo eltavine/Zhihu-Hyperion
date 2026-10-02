@@ -18,11 +18,16 @@ name: Nightly
 
 # Every push to master publishes a signed nightly under the moving nightly tag: the APKs, the desktop packages
 # and the update.json the app reads. A newer push waits for a running publish instead of cancelling it, because
-# cancelling between deleting and recreating the release would leave no nightly at all.
+# cancelling halfway would leave the nightly release half replaced. Documentation-only pushes publish nothing.
 on:
   push:
     branches:
       - master
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+      - ".agents/**"
+      - ".claude/**"
   workflow_dispatch:
 
 concurrency:
@@ -48,6 +53,9 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: write
+      # Build provenance attestations: a Sigstore certificate for the workflow's identity, recorded on the repository.
+      id-token: write
+      attestations: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -61,70 +69,75 @@ jobs:
           path: dist
           merge-multiple: true
 
-      - name: Write release notes and update manifest
-        id: manifest
+      - name: Choose the commits for the notes
+        id: range
         run: |
           set -euo pipefail
 
-          notes="$RUNNER_TEMP/notes.md"
           last_release="$(git describe --tags --match 'v*' --abbrev=0 2>/dev/null || true)"
           if [ -n "${last_release}" ]; then
-            printf '自 %s 以来的提交：\n\n' "${last_release}" > "${notes}"
-            range="${last_release}..HEAD"
+            echo "range=${last_release}..HEAD" >> "$GITHUB_OUTPUT"
+            echo "intro=自 ${last_release} 以来的变更：" >> "$GITHUB_OUTPUT"
           else
-            printf '最近的提交：\n\n' > "${notes}"
-            range="HEAD"
+            echo "range=HEAD~50..HEAD" >> "$GITHUB_OUTPUT"
+            echo "intro=最近的变更：" >> "$GITHUB_OUTPUT"
           fi
-          git log --no-merges --max-count=50 --format='- %s (%h)' "${range}" >> "${notes}"
 
+      - name: Write the changelog
+        uses: orhun/git-cliff-action@a9a95522b26fe6403f7bb24031f21fb573d0f5ff # v4.9.1
+        with:
+          args: --strip all --output ${{ runner.temp }}/changes.md ${{ steps.range.outputs.range }}
+
+      - name: Write the release notes, update manifest and checksums
+        id: manifest
+        env:
+          INTRO: ${{ steps.range.outputs.intro }}
+        run: |
+          set -euo pipefail
+
+          notes="${RUNNER_TEMP}/notes.md"
+          { echo "${INTRO}"; echo; cat "${RUNNER_TEMP}/changes.md"; } > "${notes}"
           python3 .github/scripts/write_update_manifest.py \
             --dist dist \
             --repository "${GITHUB_REPOSITORY}" \
             --tag nightly \
             --commit "${GITHUB_SHA}" \
             --notes "${notes}"
+          rm dist/build-info.json
+          (cd dist && sha256sum zhihu-hyperion-* mapping-lite.zip > SHA256SUMS.txt)
           echo "notes=${notes}" >> "$GITHUB_OUTPUT"
           echo "title=Nightly $(jq -r .versionName dist/update.json) ($(jq -r .versionCode dist/update.json))" >> "$GITHUB_OUTPUT"
 
-      - name: Delete the previous nightly
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
-          script: |
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const tagName = 'nightly';
+          subject-path: dist/zhihu-hyperion-*
 
-            const releases = await github.paginate(github.rest.repos.listReleases, { owner, repo, per_page: 100 });
-            for (const release of releases.filter(r => r.tag_name === tagName)) {
-              core.info(`Deleting nightly release ${release.id}`);
-              await github.rest.repos.deleteRelease({ owner, repo, release_id: release.id });
-            }
-
-            try {
-              await github.rest.git.deleteRef({ owner, repo, ref: `tags/${tagName}` });
-              core.info(`Deleted tag ${tagName}`);
-            } catch (error) {
-              if (error.status !== 422) throw error;
-              core.info(`Tag ${tagName} does not exist`);
-            }
-
+      # The new nightly is a draft until every asset is uploaded; only then is the old release removed and the draft
+      # published under the nightly tag, so clients go without a nightly for seconds instead of the whole upload.
       - name: Publish nightly release
-        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
-        with:
-          tag_name: nightly
-          target_commitish: ${{ github.sha }}
-          name: ${{ steps.manifest.outputs.title }}
-          body_path: ${{ steps.manifest.outputs.notes }}
-          prerelease: true
-          files: |
-            dist/update.json
-            dist/zhihu-hyperion-lite.apk
-            dist/zhihu-hyperion-full.apk
-            dist/mapping-lite.zip
-            dist/zhihu-hyperion-desktop-*.AppImage
-            dist/zhihu-hyperion-desktop-*.msi
-            dist/zhihu-hyperion-desktop-*.app.zip
-          fail_on_unmatched_files: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TITLE: ${{ steps.manifest.outputs.title }}
+          NOTES: ${{ steps.manifest.outputs.notes }}
+        run: |
+          set -euo pipefail
+
+          # Drafts left behind by runs that failed before publishing.
+          gh release list --limit 100 --json tagName,isDraft \
+            --jq '.[] | select(.isDraft and (.tagName | startswith("nightly-staging-"))) | .tagName' \
+            | xargs -r -n 1 gh release delete --yes
+
+          staging="nightly-staging-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          gh release create "${staging}" dist/* \
+            --draft --prerelease --target "${GITHUB_SHA}" --title "${TITLE}" --notes-file "${NOTES}"
+
+          if gh release view nightly > /dev/null 2>&1; then
+            gh release delete nightly --yes --cleanup-tag
+          elif gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/nightly" > /dev/null 2>&1; then
+            gh api -X DELETE "repos/${GITHUB_REPOSITORY}/git/refs/tags/nightly"
+          fi
+          gh release edit "${staging}" --tag nightly --target "${GITHUB_SHA}" --draft=false --prerelease --latest=false
 
       - name: Verify the published update manifest
         run: |

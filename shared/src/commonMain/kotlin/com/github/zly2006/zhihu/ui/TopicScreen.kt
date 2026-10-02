@@ -487,8 +487,9 @@ fun TopicScreen(topic: Topic) {
                 } else {
                     EmptyState(
                         icon = AppIcons.Error,
-                        title = "加载失败：${viewModel.errorMessage}",
+                        title = "加载失败",
                         modifier = Modifier.fillMaxWidth(),
+                        description = viewModel.errorMessage,
                         action = EmptyStateAction("重试", AppIcons.Refresh, TOPIC_RETRY_BUTTON_TAG) {
                             viewModel.retry(environment)
                         },

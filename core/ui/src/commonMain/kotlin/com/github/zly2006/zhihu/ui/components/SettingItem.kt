@@ -521,7 +521,7 @@ private fun SettingRow(
                 .heightIn(min = 56.dp)
                 .padding(contentPadding),
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(verticalAlignment = ListItemDefaults.verticalAlignment()) {
                 leading?.let { Box(Modifier.padding(end = 12.dp)) { it() } }
                 Column(Modifier.weight(1f)) {
                     ProvideContentColorTextStyle(

@@ -1,0 +1,51 @@
+# Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
+# Copyright (C) 2026, eltavine <me@eltavine.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation (version 3 only).
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# git-cliff (https://git-cliff.org) groups the conventional commits of a release into the notes of the nightly and
+# stable releases; .github/scripts/write_update_manifest.py turns the same Markdown into the plain text of update.json.
+# Squash-merged pull requests keep their "(#123)" suffix, which GitHub links on the release page.
+
+[changelog]
+body = """
+{% for group, commits in commits | group_by(attribute="group") %}
+### {{ group | striptags | trim }}
+{% for commit in commits %}
+- {{ commit.message | split(pat="\n") | first | trim }}{% if commit.breaking %}（不兼容变更）{% endif %} ({{ commit.id | truncate(length=7, end="") }})
+{%- endfor %}
+{% endfor %}
+"""
+trim = true
+
+[git]
+conventional_commits = true
+filter_unconventional = true
+filter_commits = true
+protect_breaking_commits = true
+tag_pattern = "v[0-9].*"
+sort_commits = "newest"
+# The leading HTML comments only order the groups; striptags removes them from the headings.
+commit_parsers = [
+  { message = "^feat", group = "<!-- 0 -->新功能" },
+  { message = "^fix", group = "<!-- 1 -->修复" },
+  { message = "^perf", group = "<!-- 2 -->性能" },
+  { message = "^refactor", group = "<!-- 3 -->重构" },
+  { message = "^docs?", group = "<!-- 4 -->文档" },
+  { message = "^(build|ci)", group = "<!-- 5 -->构建与发布" },
+  { message = "^test", group = "<!-- 6 -->测试" },
+  { message = "^style", skip = true },
+  # The release workflow's own version commit says nothing about the release.
+  { message = "^chore: 版本号改为", skip = true },
+  { message = "^chore", group = "<!-- 7 -->其他" },
+]

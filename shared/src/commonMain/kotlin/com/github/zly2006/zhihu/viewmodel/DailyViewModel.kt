@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.github.zly2006.zhihu.data.DailySection
 import com.github.zly2006.zhihu.data.DailyStoriesResponse
+import com.github.zly2006.zhihu.data.DailyTopStory
 import com.github.zly2006.zhihu.data.fetchDailyStoriesBefore
 import com.github.zly2006.zhihu.data.fetchLatestDailyStories
 import com.github.zly2006.zhihu.util.Log
@@ -33,6 +35,8 @@ import kotlinx.datetime.plus
 
 class DailyViewModel : ViewModel() {
     var sections by mutableStateOf<List<DailySection>>(emptyList())
+        private set
+    var topStories by mutableStateOf<List<DailyTopStory>>(emptyList())
         private set
     var isLoading by mutableStateOf(true)
         private set
@@ -47,6 +51,7 @@ class DailyViewModel : ViewModel() {
         try {
             val data: DailyStoriesResponse = httpClient.fetchLatestDailyStories()
             sections = if (data.stories.isEmpty()) emptyList() else listOf(DailySection(data.date, data.stories))
+            topStories = data.topStories
             nextDate = data.date
             error = null
         } catch (e: Exception) {
@@ -59,6 +64,7 @@ class DailyViewModel : ViewModel() {
     suspend fun loadDate(httpClient: HttpClient, date: String) {
         isLoading = true
         sections = emptyList()
+        topStories = emptyList()
         try {
             val nextApiDate = LocalDate
                 .parse("${date.substring(0, 4)}-${date.substring(4, 6)}-${date.substring(6, 8)}")

@@ -46,6 +46,4 @@ final class com.github.zly2006.zhihu.platform/MapSettingsStore : com.github.zly2
 }
 
 final fun com.github.zly2006.zhihu.platform/noopSettingsStore(): com.github.zly2006.zhihu.platform/SettingsStore // com.github.zly2006.zhihu.platform/noopSettingsStore|noopSettingsStore(){}[0]
-
-// Targets: [macosArm64]
-final fun com.github.zly2006.zhihu.platform/macosSettingsStore(kotlin/String): com.github.zly2006.zhihu.platform/SettingsStore // com.github.zly2006.zhihu.platform/macosSettingsStore|macosSettingsStore(kotlin.String){}[0]
+final fun com.github.zly2006.zhihu.platform/propertiesFileSettingsStore(kotlin/String): com.github.zly2006.zhihu.platform/SettingsStore // com.github.zly2006.zhihu.platform/propertiesFileSettingsStore|propertiesFileSettingsStore(kotlin.String){}[0]

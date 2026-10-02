@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +24,17 @@ import kotlinx.serialization.Serializable
 data class DailyStoriesResponse(
     val date: String,
     val stories: List<DailyStory>,
+    /** 当天的头条大图，只有 `latest` 返回，按日期查询的 `before/<日期>` 没有这个字段。 */
+    val topStories: List<DailyTopStory> = emptyList(),
+)
+
+@Serializable
+data class DailyTopStory(
+    val id: Long,
+    val title: String,
+    val url: String,
+    val hint: String,
+    val image: String,
 )
 
 @Serializable

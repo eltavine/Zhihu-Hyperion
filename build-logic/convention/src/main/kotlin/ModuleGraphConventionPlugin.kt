@@ -60,7 +60,7 @@ class ModuleGraphConventionPlugin : Plugin<Project> {
 
     private companion object {
         const val VENDORED = ":(markdown|latex|codehighlight)-.*"
-        const val APPLICATIONS = "app|desktopApp|macosApp|macosUiDebug|sentence_embeddings"
+        const val APPLICATIONS = "app|desktopApp|macosApp|macosUiDebug|iosApp|sentence_embeddings"
         val KMP_SOURCE_SETS = listOf(
             "commonMain",
             "androidMain",

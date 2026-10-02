@@ -198,11 +198,12 @@ fun SystemAndUpdateSettingsScreen(
                                     SelectionContainer {
                                         Text(
                                             buildAnnotatedString {
-                                                val prRegex = Regex("https://github.com/eltavine/Zhihu-Hyperion/pull/(\\d+)")
+                                                // git-cliff writes "(#123)"; manifests published before it link the whole URL.
+                                                val prRegex = Regex("https://github.com/eltavine/Zhihu-Hyperion/pull/(\\d+)|#(\\d+)")
                                                 var lastIndex = 0
                                                 prRegex.findAll(update.notes).forEach { matchResult ->
                                                     append(update.notes.substring(lastIndex, matchResult.range.first))
-                                                    val prNumber = matchResult.groupValues[1]
+                                                    val prNumber = matchResult.groupValues[1].ifEmpty { matchResult.groupValues[2] }
                                                     withLink(LinkAnnotation.Url("https://github.com/eltavine/Zhihu-Hyperion/pull/$prNumber")) {
                                                         withStyle(
                                                             MaterialTheme.typography.bodyMedium
@@ -315,7 +316,7 @@ fun SystemAndUpdateSettingsScreen(
                 var checkNightlyUpdates by remember { mutableStateOf(settings.getBoolean(CHECK_NIGHTLY_UPDATES_PREFERENCE_KEY, false)) }
                 SettingItemWithSwitch(
                     title = { Text("检查 Nightly 版本更新") },
-                    icon = { Icon(AppIcons.Nightlight, contentDescription = null) },
+                    icon = { Icon(AppIcons.Science, contentDescription = null) },
                     description = { Text("检查每日构建版本 (可能不稳定)") },
                     checked = checkNightlyUpdates,
                     onCheckedChange = {
@@ -427,6 +428,11 @@ fun SystemAndUpdateSettingsScreen(
                                 reminderOptions.forEach { (minutes, label) ->
                                     DropdownMenuItem(
                                         text = { Text(label) },
+                                        trailingIcon = if (minutes == reminderIntervalMinutes) {
+                                            { Icon(AppIcons.Check, contentDescription = "当前设置") }
+                                        } else {
+                                            null
+                                        },
                                         onClick = {
                                             reminderIntervalMinutes = minutes
                                             settings.putInt(CONTINUOUS_USAGE_REMINDER_INTERVAL_MINUTES_KEY, minutes)

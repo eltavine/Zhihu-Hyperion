@@ -69,7 +69,10 @@ actual fun decodePhoneLoginCaptchaImage(content: String) = runCatching {
 }.getOrNull()
 
 @Composable
-actual fun QrLoginPane(onLoginSuccess: (String) -> Unit) {
+actual fun QrLoginPane(
+    onLoginSuccess: (String) -> Unit,
+    onUsePhoneLogin: () -> Unit,
+) {
     val store = koinInject<ZhihuAccountStore>()
     SharedQrLoginPane(
         onLoginSuccess = { cookies ->
@@ -80,6 +83,7 @@ actual fun QrLoginPane(onLoginSuccess: (String) -> Unit) {
                 false
             }
         },
+        onUsePhoneLogin = onUsePhoneLogin,
         initialCookies = store.session.cookies,
     )
 }

@@ -44,7 +44,7 @@ class RoomConventionPlugin : Plugin<Project> {
                 }
             }
             dependencies {
-                listOf("kspAndroid", "kspJvm", "kspMacosArm64").forEach { configuration ->
+                listOf("kspAndroid", "kspJvm", "kspMacosArm64", "kspIosArm64", "kspIosSimulatorArm64").forEach { configuration ->
                     add(configuration, libs.library("androidx-room-compiler"))
                 }
             }

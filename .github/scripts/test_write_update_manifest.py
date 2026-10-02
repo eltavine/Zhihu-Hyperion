@@ -40,7 +40,7 @@ def generate() -> str:
         for name in ASSETS.values():
             (dist / name).write_bytes(name.encode())
         notes = dist / "notes.md"
-        notes.write_text("- 修复更新检查 (abc1234)\n", encoding="utf-8")
+        notes.write_text("### 修复\n\n- 修复更新检查 (#12) (abc1234)\n", encoding="utf-8")
         subprocess.run(
             [
                 sys.executable, str(SCRIPTS / "write_update_manifest.py"),

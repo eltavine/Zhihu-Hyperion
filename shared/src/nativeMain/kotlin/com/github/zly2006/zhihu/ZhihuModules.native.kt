@@ -47,13 +47,13 @@ fun nativeZhihuModules(): List<Module> = listOf(
     module {
         single { nativeSettingsStore("settings.properties") }
         single {
-            // Both macOS bundles fill these keys from MacosAppBundle's Info.plist tokens.
+            // MacosAppBundle (both macOS bundles) and syncIosAppBundle write these keys into Info.plist.
             val versionCode = NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleVersion") as? String
             InstalledBuild(
                 versionName = nativeAppVersionName,
                 versionCode = checkNotNull(versionCode?.toIntOrNull()) { "Info.plist has no numeric CFBundleVersion" },
                 commit = NSBundle.mainBundle.objectForInfoDictionaryKey("ZhihuGitCommit") as? String ?: "unknown",
-                target = if (nativeIsDesktop) UpdateTarget.MACOS_ARM64 else null,
+                target = if (nativeIsDesktop) UpdateTarget.MACOS_ARM64 else UpdateTarget.IOS_ARM64,
             )
         }
         single { WebDavConfigFile(AtomicTextFile(Path("${nativeAppPrivateDirectoryPath()}/webdav.json"))) }

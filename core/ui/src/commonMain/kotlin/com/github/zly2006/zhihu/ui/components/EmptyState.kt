@@ -15,24 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
-
 package com.github.zly2006.zhihu.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
@@ -53,15 +46,17 @@ class EmptyStateAction(
 )
 
 /**
- * 空列表或加载失败时的占位：Expressive 异形容器里的图标、一句说明和可选的操作按钮。
+ * 空列表或加载失败时的占位：Expressive 异形容器里的图标、一句标题、可选的说明和操作按钮。
  *
  * 用于整页空状态和列表底部的失败提示，让这些状态有统一的样子；只有一行的轻提示（如“已经到底啦”）不必用它。
+ * 标题只写状态本身（如“加载失败”），原因和下一步放进 [description]。
  */
 @Composable
 fun EmptyState(
     icon: AppIcon,
     title: String,
     modifier: Modifier = Modifier,
+    description: String? = null,
     action: EmptyStateAction? = null,
 ) {
     Column(
@@ -69,25 +64,21 @@ fun EmptyState(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Box(
-            Modifier
-                .size(72.dp)
-                .background(MaterialTheme.colorScheme.secondaryContainer, MaterialShapes.Cookie9Sided.toShape()),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                icon,
-                contentDescription = null,
-                modifier = Modifier.size(36.dp),
-                tint = MaterialTheme.colorScheme.onSecondaryContainer,
-            )
-        }
+        ShapedIcon(icon)
         Text(
             title,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
         )
+        description?.let {
+            Text(
+                it,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+            )
+        }
         action?.let {
             FilledTonalButton(
                 onClick = it.onClick,

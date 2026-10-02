@@ -259,7 +259,7 @@ Compose 页面需要在进入前台时刷新数据，应优先让协程直接跟
 ```bash
 ./gradlew jvmUnitTests       # shared 与全部 :core/:feature 模块的 JVM 测试，加上 app 单元测试
 ./gradlew checkKotlinAbi     # core 模块公开 API 与已提交 dump 一致；有意修改 API 时先运行 updateKotlinAbi 并提交 dump
-./gradlew :app:assertModuleGraph :desktopApp:assertModuleGraph :macosApp:assertModuleGraph :macosUiDebug:assertModuleGraph
+./gradlew :app:assertModuleGraph :desktopApp:assertModuleGraph :macosApp:assertModuleGraph :macosUiDebug:assertModuleGraph :iosApp:assertModuleGraph
 ```
 
 ## 项目结构
@@ -279,6 +279,7 @@ Compose 页面需要在进入前台时刷新数据，应优先让协程直接跟
     - `src/full`: Full variant（含 NLP）
     - `src/lite`: Lite variant（轻量级）
 - **desktopApp / macosApp / macosUiDebug**：桌面 JVM、macOS 原生应用与后台 UI 调试器，各自在 `main()` 中启动 Koin。
+- **iosApp**：iOS 应用。Gradle 模块产出 `ZhihuHyperionKit` 静态框架，SwiftUI `App` 初始化时调用 `startZhihuApp()` 启动 Koin，`mainViewController()` 返回共享 Compose 界面；SwiftUI 宿主与 Xcode 工程由 `iosApp/project.yml` 经 XcodeGen 生成，改动 spec 后必须重新生成并提交工程。`iosApp/scripts/package-ios.sh` 打出未签名 IPA 或模拟器包。
 - **Module**: `sentence_embeddings`（Rust tokenizer，仅 full variant）
 
 ### 依赖注入

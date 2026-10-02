@@ -293,7 +293,7 @@ fun AccountSettingScreen(
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Icon(
-                                AppIcons.BookmarkFilled,
+                                AppIcons.BookmarksFilled,
                                 null,
                                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
                             )
@@ -403,7 +403,7 @@ fun AccountSettingScreen(
                     if (data.login) {
                         SettingItem(
                             title = { Text("查看收藏夹") },
-                            icon = { Icon(AppIcons.Bookmark, null) },
+                            icon = { Icon(AppIcons.Bookmarks, null) },
                             onClick = {
                                 data.urlToken?.let { navigator.onNavigate(Collections(it)) }
                             },

@@ -719,14 +719,17 @@ public final class com/github/zly2006/zhihu/data/DailySection {
 
 public final class com/github/zly2006/zhihu/data/DailyStoriesResponse {
 	public static final field Companion Lcom/github/zly2006/zhihu/data/DailyStoriesResponse$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/util/List;)V
+	public fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/util/List;
-	public final fun copy (Ljava/lang/String;Ljava/util/List;)Lcom/github/zly2006/zhihu/data/DailyStoriesResponse;
-	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/data/DailyStoriesResponse;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/data/DailyStoriesResponse;
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;Ljava/util/List;)Lcom/github/zly2006/zhihu/data/DailyStoriesResponse;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/data/DailyStoriesResponse;Ljava/lang/String;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/data/DailyStoriesResponse;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDate ()Ljava/lang/String;
 	public final fun getStories ()Ljava/util/List;
+	public final fun getTopStories ()Ljava/util/List;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -780,6 +783,41 @@ public final synthetic class com/github/zly2006/zhihu/data/DailyStory$$serialize
 }
 
 public final class com/github/zly2006/zhihu/data/DailyStory$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/data/DailyTopStory {
+	public static final field Companion Lcom/github/zly2006/zhihu/data/DailyTopStory$Companion;
+	public fun <init> (JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()J
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun copy (JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/github/zly2006/zhihu/data/DailyTopStory;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/data/DailyTopStory;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/data/DailyTopStory;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getHint ()Ljava/lang/String;
+	public final fun getId ()J
+	public final fun getImage ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public final fun getUrl ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/github/zly2006/zhihu/data/DailyTopStory$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/data/DailyTopStory$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/github/zly2006/zhihu/data/DailyTopStory;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/github/zly2006/zhihu/data/DailyTopStory;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/data/DailyTopStory$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 

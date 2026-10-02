@@ -63,6 +63,10 @@ gradlePlugin {
             id = "zhihu.macos.app"
             implementationClass = "MacosAppConventionPlugin"
         }
+        register("iosApp") {
+            id = "zhihu.ios.app"
+            implementationClass = "IosAppConventionPlugin"
+        }
         register("moduleGraph") {
             id = "zhihu.module.graph"
             implementationClass = "ModuleGraphConventionPlugin"

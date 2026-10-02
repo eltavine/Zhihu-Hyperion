@@ -29,12 +29,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalWindowInfo
@@ -79,6 +81,8 @@ fun DraggableRefreshButton(
     }
     var offsetY by remember { mutableFloatStateOf(settings.getFloat("$preferenceName-y", Float.MAX_VALUE)) }
     var pressing by remember { mutableStateOf(false) }
+    // 横向范围以按钮所在容器为准：宽屏左侧有导航轨时，容器比窗口窄，按窗口宽度贴右边会跑出屏幕。
+    var containerWidthPx by remember { mutableIntStateOf(screenSize.width) }
     val maxStoredOffsetY = with(density) {
         (screenSize.height - 250.dp.toPx()).coerceAtLeast(0f)
     }
@@ -88,7 +92,7 @@ fun DraggableRefreshButton(
 
     fun adjustFabPosition() {
         with(density) {
-            offsetX = offsetX.coerceIn(0f, screenSize.width - 56.dp.toPx())
+            offsetX = offsetX.coerceIn(0f, (containerWidthPx - 56.dp.toPx()).coerceAtLeast(0f))
             offsetY = offsetY.coerceIn(0f, maxStoredOffsetY)
         }
     }
@@ -124,7 +128,12 @@ fun DraggableRefreshButton(
             FloatingActionButtonDefaults.elevation()
         },
         modifier = modifier
-            .offset { IntOffset(displayedOffsetX.roundToInt(), displayedOffsetY.roundToInt()) }
+            .onPlaced { coordinates ->
+                coordinates.parentLayoutCoordinates
+                    ?.size
+                    ?.width
+                    ?.let { containerWidthPx = it }
+            }.offset { IntOffset(displayedOffsetX.roundToInt(), displayedOffsetY.roundToInt()) }
             .pointerInput(Unit) {
                 detectDragGestures(
                     onDragStart = {
@@ -136,13 +145,13 @@ fun DraggableRefreshButton(
                     onDragEnd = {
                         pressing = false
                         adjustFabPosition()
-                        val screenWidth = screenSize.width.toFloat()
+                        val containerWidth = containerWidthPx.toFloat()
                         with(density) {
                             offsetX =
-                                if (offsetX < screenWidth / 2) {
+                                if (offsetX < containerWidth / 2) {
                                     0f
                                 } else {
-                                    screenWidth - 56.dp.toPx()
+                                    containerWidth - 56.dp.toPx()
                                 }
                         }
                         settings.putFloat("$preferenceName-x", offsetX)

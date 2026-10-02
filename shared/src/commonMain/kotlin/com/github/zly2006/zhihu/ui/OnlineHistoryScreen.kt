@@ -19,6 +19,7 @@
 package com.github.zly2006.zhihu.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AlertDialog
@@ -50,6 +51,7 @@ import com.github.zly2006.zhihu.platform.PlatformBackHandler
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
+import com.github.zly2006.zhihu.ui.components.EmptyState
 import com.github.zly2006.zhihu.ui.components.FeedCard
 import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
@@ -213,6 +215,11 @@ fun OnlineHistoryScreen(
                 onLoadMore = { viewModel.loadMore(paginationEnvironment) },
                 isEnd = { viewModel.isEnd },
                 key = { item -> item.stableKey },
+                loadFailed = viewModel.errorMessage != null,
+                onRetry = { viewModel.retry(paginationEnvironment) },
+                emptyContent = {
+                    EmptyState(AppIcons.History, "还没有浏览记录", Modifier.fillMaxWidth())
+                },
             ) { item ->
                 FeedCard(
                     item,

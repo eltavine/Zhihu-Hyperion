@@ -42,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.icons.AppIcons
 import com.github.zly2006.zhihu.platform.SettingsStore
 import kotlinx.coroutines.delay
 import org.koin.compose.koinInject
@@ -63,6 +64,7 @@ val ProgressIndicatorFooter: @Composable (LazyListState) -> Unit = { state ->
 }
 
 private const val DUPLICATE_KEY_PREFIX = "PaginatedListDuplicateKey"
+const val PAGINATED_LIST_RETRY_TAG = "paginated_list_retry"
 
 internal fun <T> uniquePaginatedListKeys(
     items: List<T>,
@@ -129,6 +131,11 @@ fun <T> PaginatedList(
     key: ((T) -> Any)? = null,
     topContent: LazyListScope.() -> Unit = {},
     bottomContent: LazyListScope.() -> Unit = {},
+    /** 为 true 时列表底部不显示 [footer]，改为“加载失败”和 [onRetry] 对应的“重试”按钮。 */
+    loadFailed: Boolean = false,
+    onRetry: (() -> Unit)? = null,
+    /** 已经加载完却一条也没有时代替“已经到底啦”显示。 */
+    emptyContent: (@Composable () -> Unit)? = null,
     itemContent: @Composable LazyItemScope.(T) -> Unit,
 ) {
     val settings = koinInject<SettingsStore>()
@@ -178,7 +185,16 @@ fun <T> PaginatedList(
         bottomContent(this)
 
         item {
-            if (isEnd()) {
+            if (loadFailed) {
+                EmptyState(
+                    icon = AppIcons.Error,
+                    title = "加载失败",
+                    modifier = Modifier.fillMaxWidth(),
+                    action = onRetry?.let { EmptyStateAction("重试", AppIcons.Refresh, PAGINATED_LIST_RETRY_TAG, it) },
+                )
+            } else if (isEnd() && items.isEmpty() && emptyContent != null) {
+                emptyContent()
+            } else if (isEnd()) {
                 if (!showContentEndMarker) {
                     Box(
                         modifier = Modifier

@@ -16,11 +16,16 @@
 
 name: Release
 
-# Publishes the current master as a stable release. Signing is only possible on master, so a release is never
-# built from a pushed tag: this workflow builds master and then creates the v<app.versionName> tag on exactly
-# that commit. It refuses to run elsewhere or to reuse an existing tag; bump app.versionName first.
+# Publishes master as a stable release in one run: set app.versionName to the given version (committing it to master
+# when it differs), build that exact commit, then create the v<version> tag on it. Signing is only possible on master,
+# so a release is never built from a pushed tag. It refuses to run elsewhere or to reuse an existing tag.
 on:
   workflow_dispatch:
+    inputs:
+      version_name:
+        description: 版本号，例如 1.0.0 或 1.1.0-beta.1
+        required: true
+        type: string
 
 concurrency:
   group: release
@@ -31,11 +36,15 @@ permissions:
 
 jobs:
   prepare:
-    name: Check the release tag
+    name: Prepare the release commit
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 10
+    permissions:
+      # Pushes the version commit to master.
+      contents: write
     outputs:
-      tag: ${{ steps.tag.outputs.tag }}
+      tag: ${{ steps.version.outputs.tag }}
+      sha: ${{ steps.commit.outputs.sha }}
     steps:
       - name: Require master
         if: github.ref != 'refs/heads/master'
@@ -47,29 +56,49 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-          persist-credentials: false
 
-      - name: Resolve the release tag
-        id: tag
+      - name: Validate the version
+        id: version
+        env:
+          VERSION: ${{ inputs.version_name }}
         run: |
           set -euo pipefail
 
-          version="$(sed -n 's/^app\.versionName=//p' gradle.properties)"
-          tag="v${version}"
-          if ! git check-ref-format "refs/tags/${tag}"; then
-            echo "app.versionName '${version}' does not form a valid tag." >&2
+          if ! [[ "${VERSION}" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$ ]]; then
+            echo "version_name must be X.Y, X.Y.Z or a pre-release such as 1.0.0-beta.1." >&2
             exit 1
           fi
-          if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
-            echo "${tag} already exists; bump app.versionName before releasing." >&2
+          tag="v${VERSION}"
+          if git ls-remote --exit-code --tags origin "refs/tags/${tag}" > /dev/null; then
+            echo "${tag} already exists." >&2
             exit 1
           fi
           echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+
+      # versionCode follows the commit count, so only the name needs a commit. GITHUB_TOKEN pushes do not start other
+      # workflows, which keeps the nightly from racing this release.
+      - name: Commit the version
+        id: commit
+        env:
+          VERSION: ${{ inputs.version_name }}
+        run: |
+          set -euo pipefail
+
+          sed -i "s/^app\.versionName=.*/app.versionName=${VERSION}/" gradle.properties
+          if ! git diff --quiet -- gradle.properties; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -qm "chore: 版本号改为 ${VERSION}" -- gradle.properties
+            git push origin HEAD:master
+          fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
   package:
     name: Package
     needs: prepare
     uses: ./.github/workflows/package.yml
+    with:
+      ref: ${{ needs.prepare.outputs.sha }}
     # A reusable workflow's job only sees the secrets its caller passes, environment secrets included; without
     # this the android-signing job gets empty values. package.yml runs only for master and reads only the signing keys.
     secrets: inherit
@@ -81,12 +110,16 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: write
+      id-token: write
+      attestations: write
     env:
       TAG: ${{ needs.prepare.outputs.tag }}
+      SHA: ${{ needs.prepare.outputs.sha }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ needs.prepare.outputs.sha }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -96,19 +129,24 @@ jobs:
           path: dist
           merge-multiple: true
 
-      - name: Generate release notes
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        with:
-          script: |
-            const { data } = await github.rest.repos.generateReleaseNotes({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag_name: process.env.TAG,
-              target_commitish: context.sha,
-            });
-            require('fs').writeFileSync(`${process.env.RUNNER_TEMP}/notes.md`, data.body);
+      - name: Choose the commits for the notes
+        id: range
+        run: |
+          set -euo pipefail
 
-      - name: Write update manifest and release body
+          previous="$(git describe --tags --match 'v*' --abbrev=0 2>/dev/null || true)"
+          if [ -n "${previous}" ]; then
+            echo "range=${previous}..HEAD" >> "$GITHUB_OUTPUT"
+          else
+            echo "range=HEAD~50..HEAD" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Write the changelog
+        uses: orhun/git-cliff-action@a9a95522b26fe6403f7bb24031f21fb573d0f5ff # v4.9.1
+        with:
+          args: --strip all --output ${{ runner.temp }}/changes.md ${{ steps.range.outputs.range }}
+
+      - name: Write the update manifest, release body and checksums
         run: |
           set -euo pipefail
 
@@ -116,36 +154,49 @@ jobs:
             --dist dist \
             --repository "${GITHUB_REPOSITORY}" \
             --tag "${TAG}" \
-            --commit "${GITHUB_SHA}" \
-            --notes "${RUNNER_TEMP}/notes.md"
+            --commit "${SHA}" \
+            --notes "${RUNNER_TEMP}/changes.md"
+          rm dist/build-info.json
+          (cd dist && sha256sum zhihu-hyperion-* mapping-lite.zip > SHA256SUMS.txt)
 
           {
-            echo 'Android 请下载 APK 安装：Full 版带端侧语义模型，支持智能内容过滤；Lite 版体积更小。mapping-lite.zip 只用于分析混淆后的崩溃。'
-            echo '桌面端提供内置 Java 运行时的 Windows MSI 与 Linux AppImage，macOS 为 Apple Silicon 原生应用。'
-            echo
-            cat "${RUNNER_TEMP}/notes.md"
+            cat <<'EOF'
+          Android 请下载 APK 安装：Full 版带端侧语义模型，支持智能内容过滤；Lite 版体积更小。mapping-lite.zip 只用于分析混淆后的崩溃。
+          桌面端提供内置 Java 运行时的 Windows MSI 与 Linux AppImage，macOS 为 Apple Silicon 原生应用。
+          iOS 的 IPA 没有签名，需要先用 AltStore、SideStore、Sideloadly 或自己的开发者证书签名再安装。
+
+          下载后可以用 `SHA256SUMS.txt` 核对文件，或用 `gh attestation verify <文件> --repo eltavine/Zhihu-Hyperion` 确认它由本仓库的发布流程构建。
+
+          EOF
+            cat "${RUNNER_TEMP}/changes.md"
           } > "${RUNNER_TEMP}/body.md"
 
-      - name: Publish release
-        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
-          tag_name: ${{ env.TAG }}
-          target_commitish: ${{ github.sha }}
-          name: ${{ env.TAG }}
-          body_path: ${{ runner.temp }}/body.md
-          make_latest: "true"
-          files: |
-            dist/update.json
-            dist/zhihu-hyperion-lite.apk
-            dist/zhihu-hyperion-full.apk
-            dist/mapping-lite.zip
-            dist/zhihu-hyperion-desktop-*.AppImage
-            dist/zhihu-hyperion-desktop-*.msi
-            dist/zhihu-hyperion-desktop-*.app.zip
-          fail_on_unmatched_files: true
+          subject-path: dist/zhihu-hyperion-*
+
+      # The stable channel reads releases/latest, which GitHub never points at a pre-release such as 1.1.0-beta.1.
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          if [[ "${TAG}" == *-* ]]; then
+            channel=(--prerelease --latest=false)
+          else
+            channel=(--latest)
+          fi
+          gh release create "${TAG}" dist/* \
+            --target "${SHA}" --title "${TAG}" --notes-file "${RUNNER_TEMP}/body.md" "${channel[@]}"
 
       - name: Verify the published update manifest
         run: |
-          curl -fsSL --retry 5 --retry-all-errors \
-            "https://github.com/${GITHUB_REPOSITORY}/releases/latest/download/update.json" \
-            | cmp - dist/update.json
+          set -euo pipefail
+
+          url="https://github.com/${GITHUB_REPOSITORY}/releases/latest/download/update.json"
+          if [[ "${TAG}" == *-* ]]; then
+            url="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/update.json"
+          fi
+          curl -fsSL --retry 5 --retry-all-errors "${url}" | cmp - dist/update.json

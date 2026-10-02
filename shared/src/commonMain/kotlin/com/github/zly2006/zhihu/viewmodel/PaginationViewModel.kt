@@ -75,7 +75,7 @@ abstract class PaginationViewModel<T : Any>(
     val debugData: MutableList<JsonElement> = mutableListOf()
     var isLoading: Boolean by mutableStateOf(false)
         protected set
-    var errorMessage: String? = null
+    var errorMessage: String? by mutableStateOf(null)
         protected set
     var allowGuestAccess = false
     protected var lastPaging: ZhihuPaging? by mutableStateOf(null)
@@ -172,6 +172,12 @@ abstract class PaginationViewModel<T : Any>(
                 errorHandle(e)
             }
         }
+    }
+
+    /** 加载失败后从失败的那一页接着加载；第一页就失败时重新请求第一页。 */
+    fun retry(environment: ZhihuApiEnvironment) {
+        errorMessage = null
+        loadMore(environment)
     }
 
     protected fun errorHandle(e: Exception) {

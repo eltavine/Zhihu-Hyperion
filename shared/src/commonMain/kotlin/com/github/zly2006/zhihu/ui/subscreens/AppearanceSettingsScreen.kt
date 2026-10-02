@@ -1024,6 +1024,11 @@ fun AppearanceSettingsScreen(
                                 AnswerDoubleTapAction.entries.forEach { action ->
                                     DropdownMenuItem(
                                         text = { Text(action.label) },
+                                        trailingIcon = if (action == answerDoubleTapAction.value) {
+                                            { Icon(AppIcons.Check, contentDescription = "当前设置") }
+                                        } else {
+                                            null
+                                        },
                                         leadingIcon = {
                                             Icon(
                                                 when (action) {
@@ -1147,6 +1152,11 @@ fun AppearanceSettingsScreen(
                                     DropdownMenuItem(
                                         modifier = Modifier.testTag("appearanceSettings:startDestination:option:$key"),
                                         text = { Text(item.label) },
+                                        trailingIcon = if (key == startDestinationKey) {
+                                            { Icon(AppIcons.Check, contentDescription = "当前设置") }
+                                        } else {
+                                            null
+                                        },
                                         leadingIcon = { Icon(item.icon, contentDescription = null) },
                                         onClick = {
                                             startDestinationKey = key
@@ -1289,7 +1299,7 @@ fun AppearanceSettingsScreen(
                 SettingItemWithSwitch(
                     modifier = Modifier.testTag(APPEARANCE_SETTINGS_COLLECTION_DIRECT_BROWSE_TAG),
                     title = { Text("收藏直达浏览（测试）") },
-                    icon = { Icon(AppIcons.CollectionsBookmark, contentDescription = null) },
+                    icon = { Icon(AppIcons.Bookmarks, contentDescription = null) },
                     description = {
                         Text("测试功能，请谨慎开启，可能存在问题。开启后支持收藏夹直览、顺序模式与随机模式，欢迎提交 Issue。")
                     },
@@ -1499,6 +1509,11 @@ fun AppearanceSettingsScreen(
                                 shareActionOptions.forEach { (mode, label, icon) ->
                                     DropdownMenuItem(
                                         text = { Text(label) },
+                                        trailingIcon = if (mode == shareActionMode.value) {
+                                            { Icon(AppIcons.Check, contentDescription = "当前设置") }
+                                        } else {
+                                            null
+                                        },
                                         leadingIcon = { Icon(icon, contentDescription = null) },
                                         onClick = {
                                             shareActionMode.value = mode
