@@ -115,6 +115,7 @@ import kotlin.time.Instant
 fun DailyScreen(
     scrollToTopTrigger: Int = 0,
     isActive: Boolean = true,
+    innerPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     val navigator = LocalNavigator.current
     val httpClient = rememberZhihuApiEnvironment(allowGuestAccess = false).httpClient()
@@ -283,6 +284,7 @@ fun DailyScreen(
 
     // 分段列表项是 surface 色，放在 surfaceContainer 底色上才能看出分组，与设置页一致。
     Scaffold(
+        modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
         topBar = {
             TopAppBar(
