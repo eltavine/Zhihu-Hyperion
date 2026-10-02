@@ -440,6 +440,13 @@ python3 .agents/skills/ui-review-memory/memory_store.py update-status \
 
 为解决本机依赖解析而生成的 Maven 仓库、编译产物和发布附件不属于源码，未经用户明确授权不得提交到 PR。需要尚未正式发布的跨平台依赖时，应优先使用可审查的源码组合构建或先完成独立依赖发布；不能把本地仓库里的 `.jar`、`.klib`、资源压缩包和元数据整目录纳入版本控制。提交前必须按相对基线审计新增二进制文件和异常体积文件，确认每个产物都是明确交付物，而不是因为构建能够通过就直接推送。例如，本地发布一个 Native 库供 Gradle 解析，只证明本机构建输入可用，不代表其 Maven 发布目录应随应用源码一起进入 PR。
 
+## 源文件署名
+
+- 新建源文件使用仓库根目录 `.copyright` 的许可头（版权人 eltavine）；Python、Shell、YAML、TOML 用 `#` 注释写同样的内容。
+- 修改他人编写、带本项目许可头的文件时，在版权行下加一行 `Co-author: eltavine <me@eltavine.com>`，已有就不重复；没有许可头的上游文件先补上游许可头（`Copyright (C) 2024-2026, zly2006 <i@zly2006.me>`），再加这一行。
+- 来自其他项目的代码（`third_party/`、带 Apache 等其他许可头的文件）只保留原许可头，不加本项目许可头，也不加 Co-author。
+- 核对或批量更新时运行 `python3 tools/update_attribution.py --report`，它按 `git blame -w -M -C -C` 与 `.git-blame-ignore-revs` 判定作者：只移动代码不算编写，纯改名（R100）不算修改；不带参数运行会改写许可头。格式化、全局改名、只移动文件这类机械提交要记进 `.git-blame-ignore-revs`。
+
 ## 代码风格
 - Kotlin Serialization with `@Serializable`
 - 只在必要时注释，不过度注释
