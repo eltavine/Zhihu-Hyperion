@@ -794,13 +794,13 @@ fun ZhihuMain(
                                     )
                                 }
                                 composable<Daily> {
-                                    DailyScreen()
+                                    DailyScreen(innerPadding = innerPadding)
                                 }
                                 composable<History> {
                                     LegacyLocalHistoryScreen(innerPadding)
                                 }
                                 composable<OnlineHistory> {
-                                    OnlineHistoryScreen()
+                                    OnlineHistoryScreen(innerPadding = innerPadding)
                                 }
                                 composable<Account> {
                                     AccountSettingScreen(innerPadding)
@@ -1040,11 +1040,13 @@ private fun MainTabsPager(
             MainTabPage.DailyPage -> DailyScreen(
                 scrollToTopTrigger = scrollToTopTrigger,
                 isActive = pagerState.currentPage == pageIndex,
+                innerPadding = innerPadding,
             )
 
             MainTabPage.OnlineHistoryPage -> OnlineHistoryScreen(
                 scrollToTopTrigger = scrollToTopTrigger,
                 isActive = pagerState.currentPage == pageIndex,
+                innerPadding = innerPadding,
             )
 
             MainTabPage.MyCollectionsPage -> MyCollectionsTopLevelPage(

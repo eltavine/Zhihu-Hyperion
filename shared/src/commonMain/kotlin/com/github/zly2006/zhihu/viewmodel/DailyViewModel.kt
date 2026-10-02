@@ -43,11 +43,21 @@ class DailyViewModel : ViewModel() {
         private set
     var isLoadingMore by mutableStateOf(false)
         private set
+
+    /** 首屏加载失败的原因，页面显示在失败状态里。 */
     var error by mutableStateOf<String?>(null)
+        private set
+
+    /** 加载更早日期失败的原因，列表底部据此显示失败和重试。 */
+    var loadMoreError by mutableStateOf<String?>(null)
         private set
     private var nextDate: String? = null
 
+    /** 最近一次首屏请求的日期，null 表示最新一期；[retry] 重复这次请求。 */
+    private var requestedDate: String? = null
+
     suspend fun loadLatest(httpClient: HttpClient) {
+        requestedDate = null
         isLoading = true
         try {
             val data: DailyStoriesResponse = httpClient.fetchLatestDailyStories()
@@ -58,13 +68,18 @@ class DailyViewModel : ViewModel() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            error = "加载失败: ${e.message}"
+            error = e.message ?: "未知错误"
         } finally {
             isLoading = false
         }
     }
 
+    suspend fun retry(httpClient: HttpClient) {
+        requestedDate?.let { loadDate(httpClient, it) } ?: loadLatest(httpClient)
+    }
+
     suspend fun loadDate(httpClient: HttpClient, date: String) {
+        requestedDate = date
         isLoading = true
         sections = emptyList()
         topStories = emptyList()
@@ -81,7 +96,7 @@ class DailyViewModel : ViewModel() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            error = "加载失败: ${e.message}"
+            error = e.message ?: "未知错误"
         } finally {
             isLoading = false
         }
@@ -91,6 +106,7 @@ class DailyViewModel : ViewModel() {
         val date = nextDate ?: return
         if (isLoadingMore) return
         isLoadingMore = true
+        loadMoreError = null
         try {
             val data: DailyStoriesResponse = httpClient.fetchDailyStoriesBefore(date)
             if (data.stories.isNotEmpty()) {
@@ -101,6 +117,7 @@ class DailyViewModel : ViewModel() {
             throw e
         } catch (e: Exception) {
             Log.e("DailyViewModel", "Failed to load more daily stories", e)
+            loadMoreError = e.message ?: "未知错误"
         } finally {
             isLoadingMore = false
         }

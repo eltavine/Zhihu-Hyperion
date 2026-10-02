@@ -19,6 +19,7 @@
 package com.github.zly2006.zhihu.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -43,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.icons.AppIcons
@@ -58,8 +60,10 @@ import com.github.zly2006.zhihu.ui.components.EmptyState
 import com.github.zly2006.zhihu.ui.components.EmptyStateAction
 import com.github.zly2006.zhihu.ui.components.FeedCard
 import com.github.zly2006.zhihu.ui.components.PaginatedList
+import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import com.github.zly2006.zhihu.viewmodel.deleteOnlineHistory
 import com.github.zly2006.zhihu.viewmodel.feed.OnlineHistoryViewModel
 import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
@@ -80,6 +84,7 @@ const val ONLINE_HISTORY_OVERFLOW_TAG = "online_history_overflow"
 fun OnlineHistoryScreen(
     scrollToTopTrigger: Int = 0,
     isActive: Boolean = true,
+    innerPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     val navigator = LocalNavigator.current
     val history = koinInject<HistoryStorage>()
@@ -137,7 +142,9 @@ fun OnlineHistoryScreen(
     }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = innerPadding.calculateBottomPadding()),
         topBar = {
             TopAppBar(
                 title = { Text("历史记录") },
@@ -191,11 +198,17 @@ fun OnlineHistoryScreen(
                         showClearHistoryDialog = false
                         coroutineScope.launch {
                             history.clear()
-                            if ("d_c0" in paginationEnvironment.authenticatedCookies()) {
-                                paginationEnvironment.deleteOnlineHistory(emptyList(), clear = true)
+                            suspendRunCatching {
+                                if ("d_c0" in paginationEnvironment.authenticatedCookies()) {
+                                    paginationEnvironment.deleteOnlineHistory(emptyList(), clear = true)
+                                }
+                            }.onSuccess {
+                                userMessages.showShortMessage("已清除所有历史记录")
+                            }.onFailure {
+                                userMessages.showShortMessage("在线历史记录清除失败：${it.message}")
                             }
-                            viewModel.displayItems.clear()
-                            userMessages.showShortMessage("已清除所有历史记录")
+                            // 重新加载而不是只清空本地列表：历史超过一页时只清空列表不会到底，“还没有浏览记录”不会出现。
+                            viewModel.refresh(paginationEnvironment)
                         }
                     }) {
                         Text("确认")
@@ -230,13 +243,16 @@ fun OnlineHistoryScreen(
                 onLoadMore = { viewModel.loadMore(paginationEnvironment) },
                 isEnd = { viewModel.isEnd },
                 key = { item -> item.stableKey },
+                footer = ProgressIndicatorFooter,
                 loadFailed = viewModel.errorMessage != null,
                 onRetry = { viewModel.retry(paginationEnvironment) },
                 loadFailureMessage = viewModel.apiError?.message,
+                loadFailureDescription = viewModel.errorMessage.takeIf { viewModel.apiError == null },
                 onLogin = (::requestLoginNavigation).takeIf { viewModel.apiError?.needLogin == true },
                 emptyContent = {
                     EmptyState(AppIcons.History, "还没有浏览记录", Modifier.fillMaxWidth())
                 },
+                centerStatusWhenEmpty = true,
             ) { item ->
                 FeedCard(
                     item,

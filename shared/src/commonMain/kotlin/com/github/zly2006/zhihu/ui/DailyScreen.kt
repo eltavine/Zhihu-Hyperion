@@ -31,13 +31,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -74,6 +78,7 @@ import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.resolveContent
 import com.github.zly2006.zhihu.platform.isLiteVariant
+import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
 import com.github.zly2006.zhihu.ui.components.AppPullToRefreshBox
 import com.github.zly2006.zhihu.ui.components.EmptyState
@@ -87,9 +92,11 @@ import com.github.zly2006.zhihu.util.twoDigitString
 import com.github.zly2006.zhihu.viewmodel.DailyViewModel
 import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import io.ktor.client.request.get
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.jsonPrimitive
@@ -108,13 +115,15 @@ import kotlin.time.Instant
 fun DailyScreen(
     scrollToTopTrigger: Int = 0,
     isActive: Boolean = true,
+    innerPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     val navigator = LocalNavigator.current
     val httpClient = rememberZhihuApiEnvironment(allowGuestAccess = false).httpClient()
     val uriHandler = LocalUriHandler.current
     val viewModel = viewModel { DailyViewModel() }
-    var isRefreshing by remember { mutableStateOf(false) }
+    val userMessages = rememberUserMessageSink()
     var showDatePicker by remember { mutableStateOf(false) }
+    var openingStoryId by remember { mutableStateOf<Long?>(null) }
     var missingOriginStoryUrl by remember { mutableStateOf<String?>(null) }
     var pendingDateSelection by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
@@ -151,46 +160,59 @@ fun DailyScreen(
             // dialog has yielded its focus and measure work back to the main content window.
             withFrameNanos { }
             viewModel.loadDate(httpClient, selectedDate)
-            listState.scrollToItem(0)
+            listState.requestScrollToItem(0)
             if (pendingDateSelection == selectedDate) {
                 pendingDateSelection = null
             }
         }
     }
 
+    // 失败和空状态里没有列表：scrollToItem 会一直等列表首次布局而永远不返回，requestScrollToItem 不等。
     val doRefresh: () -> Unit = {
         scope.launch {
-            isRefreshing = true
             viewModel.loadLatest(httpClient)
-            listState.scrollToItem(0)
-            isRefreshing = false
+            listState.requestScrollToItem(0)
+        }
+    }
+    val retry: () -> Unit = {
+        scope.launch {
+            viewModel.retry(httpClient)
+            listState.requestScrollToItem(0)
         }
     }
     // 日报条目只给出日报站内的链接，先取日报正文里的“查看知乎原文”，能解析成站内内容就在应用内打开。
+    // 取正文期间忽略重复点击，免得慢网络下连点后打开好几个页面。
     val openStory: (id: Long, url: String) -> Unit = { id, url ->
-        scope.launch {
-            val response = withContext(Dispatchers.Default) {
-                httpClient
-                    .get("https://daily.zhihu.com/api/7/story/$id")
-                    .jsonObject()
-            }
-            val body = response["body"]?.jsonPrimitive?.content
-            if (body == null) {
-                missingOriginStoryUrl = url
-                return@launch
-            }
-            val doc = Ksoup.parse(body)
-            val originUrl = doc.selectFirst("a.originUrl")?.attr("href")
-            val destination = originUrl
-                ?.let(::resolveContent)
-                ?: doc
-                    .selectFirst("div.view-more a")
-                    ?.attr("href")
-                    ?.let(::resolveContent)
-            if (destination != null) {
-                navigator.onNavigate(destination)
-            } else {
-                missingOriginStoryUrl = url
+        if (openingStoryId == null) {
+            openingStoryId = id
+            scope.launch {
+                try {
+                    val response = withContext(Dispatchers.Default) {
+                        httpClient
+                            .get("https://daily.zhihu.com/api/7/story/$id")
+                            .jsonObject()
+                    }
+                    val doc = response["body"]?.jsonPrimitive?.content?.let(Ksoup::parse)
+                    val destination = doc
+                        ?.selectFirst("a.originUrl")
+                        ?.attr("href")
+                        ?.let(::resolveContent)
+                        ?: doc
+                            ?.selectFirst("div.view-more a")
+                            ?.attr("href")
+                            ?.let(::resolveContent)
+                    if (destination != null) {
+                        navigator.onNavigate(destination)
+                    } else {
+                        missingOriginStoryUrl = url
+                    }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    userMessages.showShortMessage("日报正文加载失败：${e.message}")
+                } finally {
+                    openingStoryId = null
+                }
             }
         }
     }
@@ -219,6 +241,7 @@ fun DailyScreen(
     if (!isLiteVariant && showDatePicker) {
         val datePickerState = rememberDatePickerState(
             initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
+            selectableDates = DailySelectableDates,
         )
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
@@ -261,6 +284,7 @@ fun DailyScreen(
 
     // 分段列表项是 surface 色，放在 surfaceContainer 底色上才能看出分组，与设置页一致。
     Scaffold(
+        modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
         topBar = {
             TopAppBar(
@@ -285,15 +309,16 @@ fun DailyScreen(
             )
         },
     ) { scaffoldPadding ->
+        // 已有内容时刷新保留列表，只显示下拉指示器；没有内容时只显示页面中央的加载指示器。
         AppPullToRefreshBox(
-            isRefreshing = isRefreshing,
+            isRefreshing = viewModel.isLoading && viewModel.sections.isNotEmpty(),
             onRefresh = doRefresh,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = scaffoldPadding.calculateTopPadding()),
         ) {
             when {
-                viewModel.isLoading -> {
+                viewModel.isLoading && viewModel.sections.isEmpty() -> {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -305,19 +330,27 @@ fun DailyScreen(
                 }
 
                 viewModel.error != null || viewModel.sections.isEmpty() -> {
-                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    // 可以滚动才会把下拉手势交给外层的下拉刷新。
+                    Box(
+                        Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState()),
+                        contentAlignment = Alignment.Center,
+                    ) {
                         if (viewModel.error != null) {
                             EmptyState(
                                 icon = AppIcons.Error,
                                 title = "日报加载失败",
                                 modifier = Modifier.testTag(DAILY_SCREEN_ERROR_TAG),
-                                action = EmptyStateAction("重试", AppIcons.Refresh, DAILY_SCREEN_RETRY_TAG, doRefresh),
+                                description = viewModel.error,
+                                action = EmptyStateAction("重试", AppIcons.Refresh, DAILY_SCREEN_RETRY_TAG, retry),
                             )
                         } else {
                             EmptyState(
                                 icon = AppIcons.Newspaper,
                                 title = "这一天没有日报",
                                 modifier = Modifier.testTag(DAILY_SCREEN_EMPTY_TAG),
+                                action = EmptyStateAction("回到最新", AppIcons.CalendarToday, DAILY_SCREEN_LATEST_TAG, doRefresh),
                             )
                         }
                     }
@@ -352,7 +385,7 @@ fun DailyScreen(
                                         Modifier
                                             .fillMaxSize()
                                             .maskClip(MaterialTheme.shapes.extraLarge)
-                                            .clickable(onClickLabel = story.title) { openStory(story.id, story.url) }
+                                            .clickable { openStory(story.id, story.url) }
                                             .testTag("daily_screen_top_story_${story.id}"),
                                     ) {
                                         AsyncImage(
@@ -373,7 +406,9 @@ fun DailyScreen(
                                                     } else {
                                                         1f
                                                     }
-                                                }.background(Brush.verticalGradient(listOf(Color.Transparent, Color.Black.copy(alpha = 0.72f))))
+                                                }
+                                                // 渐变在文字上方的留白里完成，文字背后至少 85% 黑：底图最亮时白字也有 4.5:1 的对比度。
+                                                .background(Brush.verticalGradient(0f to Color.Transparent, 0.3f to Color.Black.copy(alpha = 0.85f)))
                                                 .padding(start = 16.dp, top = 32.dp, end = 16.dp, bottom = 16.dp),
                                         ) {
                                             Text(
@@ -386,7 +421,7 @@ fun DailyScreen(
                                             Text(
                                                 story.hint,
                                                 style = MaterialTheme.typography.labelMedium,
-                                                color = Color.White.copy(alpha = 0.8f),
+                                                color = Color.White.copy(alpha = 0.9f),
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis,
                                             )
@@ -432,7 +467,7 @@ fun DailyScreen(
                                         }
                                     },
                                 ) {
-                                    Text(story.title, maxLines = 3, overflow = TextOverflow.Ellipsis)
+                                    Text(story.title, maxLines = 4, overflow = TextOverflow.Ellipsis)
                                 }
                             }
                         }
@@ -451,19 +486,59 @@ fun DailyScreen(
                                     )
                                 }
                             }
+                        } else {
+                            viewModel.loadMoreError?.let { reason ->
+                                item(key = "load_more_failed") {
+                                    EmptyState(
+                                        icon = AppIcons.Error,
+                                        title = "加载失败",
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .testTag(DAILY_SCREEN_LOAD_MORE_ERROR_TAG),
+                                        description = reason,
+                                        action = EmptyStateAction("重试", AppIcons.Refresh, DAILY_SCREEN_LOAD_MORE_RETRY_TAG) {
+                                            scope.launch { viewModel.loadMore(httpClient) }
+                                        },
+                                    )
+                                }
+                            }
                         }
                     }
                 }
+            }
+            if (openingStoryId != null) {
+                LinearProgressIndicator(
+                    Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.TopCenter)
+                        .testTag(DAILY_SCREEN_OPENING_STORY_TAG),
+                )
             }
         }
     }
 }
 
-private fun formatDailyDatePickerSelection(millis: Long): String {
-    val date = Instant
-        .fromEpochMilliseconds(millis)
+/** 日期选择器给出的是所选日期的 UTC 零点，按本地时区换算会在 UTC 以西的时区变成前一天。 */
+private fun datePickerDate(utcMillis: Long): LocalDate = Instant.fromEpochMilliseconds(utcMillis).toLocalDateTime(TimeZone.UTC).date
+
+/** 知乎日报从 2013-05-19 开始；更早的日期接口返回的不是日报数据，未来的日期会静默返回当天的日报。 */
+@OptIn(ExperimentalMaterial3Api::class)
+private object DailySelectableDates : SelectableDates {
+    private val firstDate = LocalDate(2013, 5, 19)
+
+    @OptIn(ExperimentalTime::class)
+    private fun today() = Clock.System
+        .now()
         .toLocalDateTime(TimeZone.currentSystemDefault())
         .date
+
+    override fun isSelectableDate(utcTimeMillis: Long) = datePickerDate(utcTimeMillis) in firstDate..today()
+
+    override fun isSelectableYear(year: Int) = year in firstDate.year..today().year
+}
+
+private fun formatDailyDatePickerSelection(millis: Long): String {
+    val date = datePickerDate(millis)
     return date.year.toString().padStart(4, '0') +
         (date.month.ordinal + 1).twoDigitString() +
         date.day.twoDigitString()
@@ -475,5 +550,9 @@ private const val DAILY_SCREEN_LOADING_TAG = "daily_screen_loading"
 private const val DAILY_SCREEN_ERROR_TAG = "daily_screen_error"
 private const val DAILY_SCREEN_RETRY_TAG = "daily_screen_retry"
 private const val DAILY_SCREEN_EMPTY_TAG = "daily_screen_empty"
+private const val DAILY_SCREEN_LATEST_TAG = "daily_screen_latest"
+private const val DAILY_SCREEN_LOAD_MORE_ERROR_TAG = "daily_screen_load_more_error"
+private const val DAILY_SCREEN_LOAD_MORE_RETRY_TAG = "daily_screen_load_more_retry"
+private const val DAILY_SCREEN_OPENING_STORY_TAG = "daily_screen_opening_story"
 private const val DAILY_SCREEN_LIST_TAG = "daily_screen_list"
 private const val DAILY_SCREEN_TOP_STORIES_TAG = "daily_screen_top_stories"
