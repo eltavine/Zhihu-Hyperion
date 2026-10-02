@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,6 +18,7 @@
 
 package com.github.zly2006.zhihu.nlp
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -34,11 +36,13 @@ object KeywordAnalyzerCore {
     ): List<KeywordWithWeight> = withContext(Dispatchers.Default) {
         if (title.isBlank()) return@withContext emptyList()
 
-        runCatching {
+        try {
             val weightedText = buildWeightedText(title, excerpt, content)
             val keywordsWithWeight = extractor.extractKeywordsWithWeight(weightedText, topN * 3)
             processKeywordsWithWeight(keywordsWithWeight, topN)
-        }.getOrElse {
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
             emptyList()
         }
     }

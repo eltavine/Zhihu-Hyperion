@@ -30,6 +30,7 @@ import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.util.raiseForStatus
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
@@ -94,7 +95,7 @@ open class SearchViewModel(
 
         changingTopicIds += topicId
         entities[index] = previous.copy(isFollowing = following)
-        return runCatching {
+        return suspendRunCatching {
             val endpoint = "https://www.zhihu.com/api/v4/topics/$topicId/followers"
             val response = if (following) environment.postSigned(endpoint) else environment.deleteSigned(endpoint)
             response.raiseForStatus()
@@ -249,7 +250,7 @@ suspend fun fetchSearchSuggest(
     environment: ZhihuApiEnvironment,
     query: String,
 ): List<SearchSuggestItem> {
-    val json = runCatching {
+    val json = suspendRunCatching {
         environment.fetchJson("$ZHIHU_SEARCH_SUGGEST_URL?q=${query.encodeURLParameter()}", "")
     }.getOrNull() ?: return emptyList()
     val suggest = json["suggest"] as? JsonArray ?: return emptyList()

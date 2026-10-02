@@ -57,6 +57,7 @@ import com.github.zly2006.zhihu.platform.rememberPlainTextClipboard
 import com.github.zly2006.zhihu.ui.components.MyModalBottomSheet
 import com.github.zly2006.zhihu.util.SegmentHighlightSpan
 import com.github.zly2006.zhihu.util.json
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
 import com.github.zly2006.zhihu.viewmodel.postSigned
@@ -205,7 +206,7 @@ internal fun SegmentHighlightInteractionHost(
                 },
                 onLikeClick = {
                     coroutineScope.launch {
-                        val updatedMeta = runCatching {
+                        val updatedMeta = suspendRunCatching {
                             toggleSegmentLike(environment, selected.copy(meta = selectedMeta))
                         }.getOrElse { selectedMeta }
                         metaStates[selectedKey] = updatedMeta

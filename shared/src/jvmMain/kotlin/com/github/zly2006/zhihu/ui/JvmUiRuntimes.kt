@@ -41,6 +41,7 @@ import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.encodeBlocklistBackup
 import com.github.zly2006.zhihu.viewmodel.filter.importBlocklistBackupFromJsonText
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.koin.compose.koinInject
@@ -140,6 +141,8 @@ actual fun rememberBlocklistRuleImporter(
                                 text = selectedFile.readText(),
                             )
                             currentOnImported(summary)
+                        } catch (e: CancellationException) {
+                            throw e
                         } catch (e: Exception) {
                             Log.e("BlocklistSettings", "Failed to import blocklist", e)
                             userMessages.showShortMessage("导入失败: ${e.message}")

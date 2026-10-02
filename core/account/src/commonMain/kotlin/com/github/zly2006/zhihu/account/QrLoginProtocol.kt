@@ -20,6 +20,7 @@ package com.github.zly2006.zhihu.account
 
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.util.ZHIHU_WEB_ZSE93
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.header
@@ -96,7 +97,7 @@ suspend fun prefetchQrLoginContext(
         }
     }
 
-    runCatching {
+    suspendRunCatching {
         client.post(UDID_URL) {
             createZhihuLoginHeaders(cookies, ZHIHU_SIGNIN_REFERER_URL).forEach { (key, value) ->
                 header(key, value)
@@ -105,7 +106,7 @@ suspend fun prefetchQrLoginContext(
         }
     }
 
-    runCatching {
+    suspendRunCatching {
         client.get(CAPTCHA_V2_URL) {
             createZhihuLoginHeaders(cookies, ZHIHU_SIGNIN_REFERER_URL).forEach { (key, value) ->
                 header(key, value)
@@ -195,7 +196,7 @@ suspend fun pollQrCodeLogin(
             val loginSucceeded = isQrLoginSuccessful(scanInfo)
             if (loginSucceeded || cookies.containsKey("z_c0")) {
                 if (!cookies.containsKey("z_c0")) {
-                    runCatching {
+                    suspendRunCatching {
                         client.get(ZHIHU_ME_URL) {
                             createZhihuLoginHeaders(cookies, ZHIHU_SIGNIN_URL, isPolling = true).forEach { (key, value) ->
                                 header(key, value)

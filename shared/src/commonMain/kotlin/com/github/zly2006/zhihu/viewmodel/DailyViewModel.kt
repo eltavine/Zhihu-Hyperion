@@ -29,6 +29,7 @@ import com.github.zly2006.zhihu.data.fetchDailyStoriesBefore
 import com.github.zly2006.zhihu.data.fetchLatestDailyStories
 import com.github.zly2006.zhihu.util.Log
 import io.ktor.client.HttpClient
+import kotlinx.coroutines.CancellationException
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
@@ -54,6 +55,8 @@ class DailyViewModel : ViewModel() {
             topStories = data.topStories
             nextDate = data.date
             error = null
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             error = "加载失败: ${e.message}"
         } finally {
@@ -75,6 +78,8 @@ class DailyViewModel : ViewModel() {
             sections = if (data.stories.isEmpty()) emptyList() else listOf(DailySection(data.date, data.stories))
             nextDate = data.date
             error = null
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             error = "加载失败: ${e.message}"
         } finally {
@@ -92,6 +97,8 @@ class DailyViewModel : ViewModel() {
                 sections = sections + DailySection(data.date, data.stories)
             }
             nextDate = data.date
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e("DailyViewModel", "Failed to load more daily stories", e)
         } finally {

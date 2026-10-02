@@ -99,6 +99,7 @@ import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.ui.components.rememberShareActionExecutor
 import com.github.zly2006.zhihu.util.raiseForStatus
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
 import com.github.zly2006.zhihu.viewmodel.postSigned
@@ -226,7 +227,7 @@ class TopicViewModel(
 
     suspend fun loadDetail(environment: ZhihuApiEnvironment) {
         detailErrorMessage = null
-        runCatching {
+        suspendRunCatching {
             environment.fetchJson(
                 "https://www.zhihu.com/api/v5.1/topics/$topicId",
                 "name,excerpt,avatar_url,followers_count,questions_count,is_following,topic_id,total_pv,discuss_count",
@@ -314,8 +315,9 @@ class TopicViewModel(
             } else {
                 paging?.isEnd ?: true
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (error: Throwable) {
-            if (error is CancellationException) throw error
             if (generation == requestGeneration) {
                 errorMessage = error.message ?: error::class.simpleName ?: "未知错误"
             }
@@ -354,7 +356,7 @@ class TopicViewModel(
             isFollowing = following,
             followersCount = (current.followersCount + if (following) 1 else -1).coerceAtLeast(0),
         )
-        return runCatching {
+        return suspendRunCatching {
             val endpoint = "https://www.zhihu.com/api/v4/topics/$topicId/followers"
             if (following) environment.postSigned(endpoint) else environment.deleteSigned(endpoint)
         }.mapCatching { response ->

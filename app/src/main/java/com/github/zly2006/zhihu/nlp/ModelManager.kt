@@ -29,6 +29,7 @@ import io.ktor.client.statement.bodyAsChannel
 import io.ktor.http.contentLength
 import io.ktor.http.etag
 import io.ktor.utils.io.jvm.javaio.toInputStream
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -112,6 +113,8 @@ object ModelManager {
                     fileSizes[file.url] = remoteSize
                     totalBytesToDownload += remoteSize
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to check update for ${file.url}", e)
                 // If we have a local file, verify its integrity before using it

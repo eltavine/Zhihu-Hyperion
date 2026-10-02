@@ -386,7 +386,7 @@ suspend fun inlineArticleExportImages(
             .map { imageUrl ->
                 async {
                     imageUrl to if (useOriginalOnImageFetchFailure) {
-                        runCatching {
+                        suspendRunCatching {
                             semaphore.withPermit {
                                 resolveDataUrl(imageUrl)
                             }

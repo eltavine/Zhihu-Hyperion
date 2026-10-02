@@ -105,6 +105,7 @@ import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.util.parseEmphasizedHtmlTextWithTheme
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.SearchContentType
 import com.github.zly2006.zhihu.viewmodel.feed.SearchEntity
@@ -306,7 +307,7 @@ fun SearchScreen(
 
     LaunchedEffect(showHotSearch.value, isMemberSearch) {
         if (!isMemberSearch && showHotSearch.value) {
-            runCatching { fetchHotSearch() }
+            suspendRunCatching { fetchHotSearch() }
         }
     }
 
@@ -568,7 +569,7 @@ fun SearchScreen(
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     IconButton(
                                         onClick = {
-                                            coroutineScope.launch { runCatching { fetchHotSearch() } }
+                                            coroutineScope.launch { suspendRunCatching { fetchHotSearch() } }
                                         },
                                         modifier = Modifier
                                             .size(40.dp)

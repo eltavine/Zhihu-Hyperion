@@ -139,6 +139,7 @@ import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.za.AndroidHomeFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.za.MixedHomeFeedViewModel
 import io.ktor.client.request.get
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
@@ -298,6 +299,8 @@ fun HomeScreen(
                 .withClient { client ->
                     client.get("$MOBILE_NOTIFICATION_MESSAGE_URL?limit=20").json<MobileNotificationMessageOverview>()
                 }.totalUnreadCount
+        } catch (e: CancellationException) {
+            throw e
         } catch (_: Exception) {
             // 忽略错误
         }

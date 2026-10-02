@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,6 +19,7 @@
 package com.github.zly2006.zhihu.viewmodel.filter
 
 import com.github.zly2006.zhihu.util.Log
+import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.json.Json
 
 fun interface KeywordSemanticMatcher {
@@ -115,6 +117,8 @@ class BlockedKeywordService(
             recordDao.insertRecord(record)
             // 维护记录数量限制
             recordDao.maintainRecordLimit()
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e("BlockedKeywordService", "Failed to save blocked content record", e)
         }

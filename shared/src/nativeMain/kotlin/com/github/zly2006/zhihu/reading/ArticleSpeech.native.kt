@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -52,6 +53,8 @@ actual fun rememberArticleSpeechToggler(): ArticleSpeechToggler {
                                     userMessages.showMessage("朗读启动失败")
                                 }
                             }
+                        } catch (e: CancellationException) {
+                            throw e
                         } catch (e: Exception) {
                             userMessages.showMessage("朗读失败：${e.message}")
                         }

@@ -32,6 +32,7 @@ class MacosAppConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.compose")
                 apply("org.jetbrains.kotlin.plugin.compose")
                 apply("zhihu.ktlint")
+                apply("zhihu.detekt")
                 apply("zhihu.aboutlibraries")
             }
             extensions.configure<KotlinMultiplatformExtension> {

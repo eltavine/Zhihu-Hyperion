@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,8 +41,10 @@ suspend fun HttpClient.fetchDailyStoriesBefore(date: String): DailyStoriesRespon
 private suspend fun HttpClient.fetchDailyStories(path: String): DailyStoriesResponse = ZhihuJson.decodeJson(
     try {
         get("$DAILY_PRIMARY_API_BASE$path").jsonObject()
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: Exception) {
-        if (e is CancellationException || !e.isHostResolutionFailure()) {
+        if (!e.isHostResolutionFailure()) {
             throw e
         }
         // Do not broaden this to arbitrary network failures: the fallback is

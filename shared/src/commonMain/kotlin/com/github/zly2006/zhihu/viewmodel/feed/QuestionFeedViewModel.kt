@@ -35,6 +35,7 @@ import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.deleteSigned
 import com.github.zly2006.zhihu.viewmodel.filter.BlockedUserDao
 import com.github.zly2006.zhihu.viewmodel.postSigned
+import kotlinx.coroutines.CancellationException
 
 open class QuestionFeedViewModel(
     private val questionId: Long,
@@ -100,6 +101,8 @@ open class QuestionFeedViewModel(
             } else {
                 environment.deleteSigned(url)
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             environment.handleFetchFailure("QuestionFeedViewModel", e)
         }

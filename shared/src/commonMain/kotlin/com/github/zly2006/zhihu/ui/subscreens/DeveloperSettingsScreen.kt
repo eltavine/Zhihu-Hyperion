@@ -73,6 +73,7 @@ import com.github.zly2006.zhihu.ui.components.SettingItemOverall
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -350,6 +351,8 @@ fun DeveloperSettingsScreen() {
                                             } else {
                                                 userMessages.showShortMessage("Cookie设置成功，但验证登录失败，请检查Cookie是否有效")
                                             }
+                                        } catch (e: CancellationException) {
+                                            throw e
                                         } catch (e: Exception) {
                                             userMessages.showShortMessage("验证登录时发生错误：${e.message}")
                                         }
@@ -446,6 +449,8 @@ fun DeveloperSettingsScreen() {
                                     copyPlainText("Signed Request Response", body)
                                     responseText = body
                                     userMessages.showShortMessage("响应已复制到剪贴板")
+                                } catch (e: CancellationException) {
+                                    throw e
                                 } catch (e: Exception) {
                                     responseText = "错误: ${e.message}"
                                     userMessages.showShortMessage("请求失败: ${e.message}")
