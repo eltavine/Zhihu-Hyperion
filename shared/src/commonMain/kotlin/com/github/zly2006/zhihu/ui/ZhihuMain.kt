@@ -146,6 +146,7 @@ import com.github.zly2006.zhihu.reading.ReadingPlayerBar
 import com.github.zly2006.zhihu.reading.ReadingQueueSheet
 import com.github.zly2006.zhihu.reading.rememberReadingPlayerController
 import com.github.zly2006.zhihu.reading.saveReadingPlaybackSpeed
+import com.github.zly2006.zhihu.ui.components.AppDialogHost
 import com.github.zly2006.zhihu.ui.components.LocalSelectedContentDestination
 import com.github.zly2006.zhihu.ui.components.NoOpPagerNestedScrollConnection
 import com.github.zly2006.zhihu.ui.subscreens.AppearanceSettingsScreen
@@ -273,6 +274,7 @@ fun ZhihuMain(
     val readingPlayerState by readingPlayer.state
     val settings = koinInject<SettingsStore>()
     UpdateOnLaunch()
+    AppDialogHost()
 
     /** 右侧详情独立持有返回栈；栏内导航保留上级，从左侧重新选项时清空。 */
     val paneStateHolder = rememberSaveableStateHolder()
