@@ -20,6 +20,7 @@ package com.github.zly2006.zhihu.account
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,11 +32,13 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -48,19 +51,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PlatformImeOptions
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import com.github.zly2006.zhihu.icons.AppIcons
 import com.github.zly2006.zhihu.icons.Icon
+import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
 import com.github.zly2006.zhihu.ui.components.ActionEmphasis
 import com.github.zly2006.zhihu.ui.components.MediumActionButton
 import io.ktor.client.HttpClient
@@ -101,6 +114,22 @@ fun PhoneLoginPane(onLoginSuccess: (String) -> Unit) {
     var isLoggingIn by remember { mutableStateOf(false) }
     var resendSeconds by remember { mutableIntStateOf(0) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+    val digitsFocusRequester = remember { FocusRequester() }
+    // 未勾选协议时按钮照常可点，点击后先弹窗征求同意，同意后接着执行这次操作。
+    var pendingAgreementAction by remember { mutableStateOf<(() -> Unit)?>(null) }
+    val afterAgreement: (() -> Unit) -> Unit = { action ->
+        if (agreementAccepted) action() else pendingAgreementAction = action
+    }
+    val openExternalUrl = rememberExternalUrlOpener()
+    val linkStyles = TextLinkStyles(SpanStyle(color = MaterialTheme.colorScheme.primary))
+    val agreementDocuments = buildAnnotatedString {
+        for ((title, url) in listOf(
+            "《知乎协议》" to "https://www.zhihu.com/term/zhihu-terms",
+            "《个人信息保护指引》" to "https://www.zhihu.com/term/privacy",
+        )) {
+            withLink(LinkAnnotation.Url(url, linkStyles) { openExternalUrl(url) }) { append(title) }
+        }
+    }
 
     LaunchedEffect(resendSeconds) {
         if (resendSeconds > 0) {
@@ -120,6 +149,8 @@ fun PhoneLoginPane(onLoginSuccess: (String) -> Unit) {
                     captchaImageBase64 = null
                     captchaInput = ""
                     resendSeconds = 60
+                    // 聚焦后键盘直接切到验证码框，iOS 键盘上方也会出现“来自信息”的验证码。
+                    digitsFocusRequester.requestFocus()
                 }
 
                 is ZhihuPhoneDigitsResult.CaptchaRequired -> {
@@ -156,6 +187,31 @@ fun PhoneLoginPane(onLoginSuccess: (String) -> Unit) {
             isSendingDigits = false
         }
     }
+    val canSignIn = hasRequestedDigits &&
+        phoneNumber.length == 11 &&
+        digits.length == 6 &&
+        !isSendingDigits &&
+        !isLoggingIn
+    val signIn: () -> Unit = {
+        scope.launch {
+            isLoggingIn = true
+            errorMessage = null
+            try {
+                val token = loginClient.signIn(phoneNumber, digits)
+                if (accountStore.login(token)) {
+                    onLoginSuccess(accountStore.session.username)
+                } else {
+                    errorMessage = "登录凭证验证失败，请重试"
+                }
+            } catch (error: CancellationException) {
+                throw error
+            } catch (error: Exception) {
+                errorMessage = error.message ?: "登录失败"
+            } finally {
+                isLoggingIn = false
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -164,12 +220,6 @@ fun PhoneLoginPane(onLoginSuccess: (String) -> Unit) {
             .padding(bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Text(
-            text = "使用知乎官方 Android 登录协议。是否需要图形验证码由知乎风控实时决定。",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-
         OutlinedTextField(
             value = phoneNumber,
             onValueChange = { value ->
@@ -296,22 +346,45 @@ fun PhoneLoginPane(onLoginSuccess: (String) -> Unit) {
                     imeAction = ImeAction.Done,
                     platformImeOptions = smsCodeImeOptions,
                 ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        if (canSignIn) afterAgreement(signIn) else defaultKeyboardAction(ImeAction.Done)
+                    },
+                ),
                 modifier = Modifier
                     .weight(1f)
+                    .focusRequester(digitsFocusRequester)
                     .semantics { contentType = ContentType.SmsOtpCode }
                     .testTag("phone_login_digits"),
             )
-            MediumActionButton(
-                text = if (resendSeconds > 0) "${resendSeconds}s" else "发送验证码",
-                onClick = { scope.launch { sendDigits() } },
-                emphasis = ActionEmphasis.Tonal,
-                enabled = agreementAccepted &&
-                    phoneNumber.length == 11 &&
-                    resendSeconds == 0 &&
-                    !isLoggingIn,
-                loading = isSendingDigits,
-                modifier = Modifier.testTag("phone_login_send_digits"),
-            )
+            // 隐形的占位按钮撑住最宽文案的宽度，倒计时和“重新发送”切换时按钮不缩放，验证码框也不横向跳动。
+            Box {
+                for (widestLabel in listOf("发送验证码", "60 秒后重发")) {
+                    MediumActionButton(
+                        text = widestLabel,
+                        onClick = {},
+                        emphasis = ActionEmphasis.Tonal,
+                        enabled = false,
+                        modifier = Modifier
+                            .alpha(0f)
+                            .clearAndSetSemantics {},
+                    )
+                }
+                MediumActionButton(
+                    text = when {
+                        resendSeconds > 0 -> "$resendSeconds 秒后重发"
+                        hasRequestedDigits -> "重新发送"
+                        else -> "发送验证码"
+                    },
+                    onClick = { afterAgreement { scope.launch { sendDigits() } } },
+                    emphasis = ActionEmphasis.Tonal,
+                    enabled = phoneNumber.length == 11 && resendSeconds == 0 && !isLoggingIn,
+                    loading = isSendingDigits,
+                    modifier = Modifier
+                        .matchParentSize()
+                        .testTag("phone_login_send_digits"),
+                )
+            }
         }
 
         Row(
@@ -332,7 +405,10 @@ fun PhoneLoginPane(onLoginSuccess: (String) -> Unit) {
                 modifier = Modifier.padding(12.dp),
             )
             Text(
-                text = "我已阅读并同意《知乎协议》《个人信息保护指引》",
+                text = buildAnnotatedString {
+                    append("我已阅读并同意")
+                    append(agreementDocuments)
+                },
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(1f),
             )
@@ -340,31 +416,8 @@ fun PhoneLoginPane(onLoginSuccess: (String) -> Unit) {
 
         MediumActionButton(
             text = "登录",
-            onClick = {
-                scope.launch {
-                    isLoggingIn = true
-                    errorMessage = null
-                    try {
-                        val token = loginClient.signIn(phoneNumber, digits)
-                        if (accountStore.login(token)) {
-                            onLoginSuccess(accountStore.session.username)
-                        } else {
-                            errorMessage = "登录凭证验证失败，请重试"
-                        }
-                    } catch (error: CancellationException) {
-                        throw error
-                    } catch (error: Exception) {
-                        errorMessage = error.message ?: "登录失败"
-                    } finally {
-                        isLoggingIn = false
-                    }
-                }
-            },
-            enabled = agreementAccepted &&
-                hasRequestedDigits &&
-                phoneNumber.length == 11 &&
-                digits.length == 6 &&
-                !isSendingDigits,
+            onClick = { afterAgreement(signIn) },
+            enabled = canSignIn,
             loading = isLoggingIn,
             modifier = Modifier
                 .fillMaxWidth()
@@ -389,5 +442,39 @@ fun PhoneLoginPane(onLoginSuccess: (String) -> Unit) {
                 }
             }
         }
+    }
+
+    pendingAgreementAction?.let { action ->
+        AlertDialog(
+            onDismissRequest = { pendingAgreementAction = null },
+            icon = { Icon(AppIcons.License, contentDescription = null) },
+            title = { Text("请先阅读并同意") },
+            text = {
+                Text(
+                    buildAnnotatedString {
+                        append("登录前需要阅读并同意")
+                        append(agreementDocuments)
+                        append("。")
+                    },
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        agreementAccepted = true
+                        pendingAgreementAction = null
+                        action()
+                    },
+                    modifier = Modifier.testTag("phone_login_agreement_accept"),
+                ) {
+                    Text("同意并继续")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { pendingAgreementAction = null }) {
+                    Text("取消")
+                }
+            },
+        )
     }
 }

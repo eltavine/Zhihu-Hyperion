@@ -67,7 +67,7 @@ public final class com/github/zly2006/zhihu/ui/components/AnswerVerticalOverscro
 }
 
 public final class com/github/zly2006/zhihu/ui/components/AppLoadingIndicatorKt {
-	public static final fun AppLoadingIndicator (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun AppLoadingIndicator-iJQMabo (Landroidx/compose/ui/Modifier;JLandroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/github/zly2006/zhihu/ui/components/AppPullToRefreshBoxKt {

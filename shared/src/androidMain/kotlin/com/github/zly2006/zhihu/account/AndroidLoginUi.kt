@@ -21,6 +21,7 @@ package com.github.zly2006.zhihu.account
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Environment
@@ -30,6 +31,7 @@ import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -38,11 +40,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.PlatformImeOptions
 import androidx.core.app.NotificationManagerCompat
 import com.github.zly2006.zhihu.data.AccountData
+import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
 import com.github.zly2006.zhihu.ui.components.WebviewComp
 import com.github.zly2006.zhihu.ui.components.setupUpWebviewClient
 import io.ktor.client.HttpClient
@@ -81,7 +86,10 @@ actual fun decodePhoneLoginCaptchaImage(content: String) = runCatching {
 }.getOrNull()
 
 @Composable
-actual fun QrLoginPane(onLoginSuccess: (String) -> Unit) {
+actual fun QrLoginPane(
+    onLoginSuccess: (String) -> Unit,
+    onUsePhoneLogin: () -> Unit,
+) {
     val accountStore = koinInject<ZhihuAccountStore>()
     SharedQrLoginPane(
         onLoginSuccess = { cookies ->
@@ -92,6 +100,7 @@ actual fun QrLoginPane(onLoginSuccess: (String) -> Unit) {
                 false
             }
         },
+        onUsePhoneLogin = onUsePhoneLogin,
         initialCookies = AccountData.data.cookies,
     )
 }
@@ -129,17 +138,24 @@ actual fun LoginRiskControlPane(
     cookies: Map<String, String>,
     onCookiesChanged: (Map<String, String>) -> Unit,
 ) {
-    WebviewComp(
-        modifier = Modifier.fillMaxSize(),
-        onLoad = { webView ->
-            configureRiskControlWebView(
-                webView = webView,
-                url = url,
-                cookies = cookies,
-                onCookiesChanged = onCookiesChanged,
-            )
-        },
-    )
+    var loading by remember(url) { mutableStateOf(true) }
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        WebviewComp(
+            modifier = Modifier.fillMaxSize(),
+            onLoad = { webView ->
+                configureRiskControlWebView(
+                    webView = webView,
+                    url = url,
+                    cookies = cookies,
+                    onCookiesChanged = onCookiesChanged,
+                    onLoadingChanged = { loading = it },
+                )
+            },
+        )
+        if (loading) {
+            AppLoadingIndicator(Modifier.testTag("qr_risk_control_loading"))
+        }
+    }
 }
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -179,6 +195,7 @@ private fun configureRiskControlWebView(
     url: String,
     cookies: Map<String, String>,
     onCookiesChanged: (Map<String, String>) -> Unit,
+    onLoadingChanged: (Boolean) -> Unit,
 ) {
     webView.setupUpWebviewClient()
     webView.settings.javaScriptEnabled = true
@@ -195,8 +212,20 @@ private fun configureRiskControlWebView(
             request: WebResourceRequest,
         ): Boolean = request.url?.scheme == "zhihu"
 
+        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+            super.onPageStarted(view, url, favicon)
+            onLoadingChanged(true)
+        }
+
+        // 验证页的子资源要十几秒才全部加载完（onPageFinished），页面内容早已可见、可以操作。
+        override fun onPageCommitVisible(view: WebView?, url: String?) {
+            super.onPageCommitVisible(view, url)
+            onLoadingChanged(false)
+        }
+
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
+            onLoadingChanged(false)
             onCookiesChanged(readWebViewCookies(url))
         }
     }

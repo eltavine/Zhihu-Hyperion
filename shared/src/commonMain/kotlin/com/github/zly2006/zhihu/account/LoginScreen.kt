@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -37,10 +38,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -50,6 +55,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -59,6 +65,7 @@ import com.github.zly2006.zhihu.icons.AppIcon
 import com.github.zly2006.zhihu.icons.AppIcons
 import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.platform.PlatformBackHandler
+import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
 import com.github.zly2006.zhihu.ui.components.ActionEmphasis
 import com.github.zly2006.zhihu.ui.components.ChoiceButtonGroup
@@ -66,6 +73,7 @@ import com.github.zly2006.zhihu.ui.components.ChoiceOption
 import com.github.zly2006.zhihu.ui.components.IconShape
 import com.github.zly2006.zhihu.ui.components.MediumActionButton
 import com.github.zly2006.zhihu.ui.components.ShapedIcon
+import org.koin.compose.koinInject
 
 enum class LoginMethod(
     val label: String,
@@ -80,7 +88,10 @@ enum class LoginMethod(
 expect val supportedLoginMethods: List<LoginMethod>
 
 @Composable
-expect fun QrLoginPane(onLoginSuccess: (String) -> Unit)
+expect fun QrLoginPane(
+    onLoginSuccess: (String) -> Unit,
+    onUsePhoneLogin: () -> Unit,
+)
 
 @Composable
 expect fun WebLoginPane(onLoginSuccess: (String) -> Unit)
@@ -88,16 +99,24 @@ expect fun WebLoginPane(onLoginSuccess: (String) -> Unit)
 /** 登录页和声明页的内容宽度上限：平板、桌面窗口里不把按钮和文字拉满整个窗口。 */
 private val LoginContentMaxWidth = 560.dp
 
+private const val LOGIN_NOTICES_ACCEPTED_KEY = "loginNoticesAccepted"
+
 /**
- * 首次登录前依次确认 [loginNotices] 中的声明，然后选择登录方式。
+ * 首次登录前依次确认 [loginNotices] 中的声明，然后选择登录方式；确认过的声明之后不再出现。
  *
- * 声明页之间可以返回上一页；进入登录方式后返回键交给导航，与其他页面一致。
+ * 声明页之间可以返回上一页；第一页和登录方式页的返回交给导航，与其他页面一致。
+ * [onNavigateBack] 为 null 表示离开登录页没有去处（未登录且推荐必须登录时，主页会立刻再打开登录页），不显示返回按钮。
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(onLoginComplete: () -> Unit) {
+fun LoginScreen(
+    onLoginComplete: () -> Unit,
+    onNavigateBack: (() -> Unit)? = null,
+) {
     val openExternalUrl = rememberExternalUrlOpener()
+    val settings = koinInject<SettingsStore>()
     var noticeStep by rememberSaveable {
-        mutableIntStateOf(0)
+        mutableIntStateOf(if (settings.getBoolean(LOGIN_NOTICES_ACCEPTED_KEY, false)) loginNotices.size else 0)
     }
     var selectedMethod by rememberSaveable(supportedLoginMethods) {
         mutableStateOf(supportedLoginMethods.first())
@@ -105,35 +124,58 @@ fun LoginScreen(onLoginComplete: () -> Unit) {
     var loggedInUsername by remember { mutableStateOf<String?>(null) }
     val onLoginSuccess: (String) -> Unit = { username -> loggedInUsername = username }
     val motion = MaterialTheme.motionScheme
+    val back: (() -> Unit)? = if (noticeStep in 1 until loginNotices.size) ({ noticeStep-- }) else onNavigateBack
 
     PlatformBackHandler(enabled = noticeStep in 1 until loginNotices.size) { noticeStep-- }
 
-    AnimatedContent(
-        targetState = noticeStep,
-        modifier = Modifier
+    Column(
+        Modifier
             .fillMaxSize()
             .safeDrawingPadding(),
-        transitionSpec = {
-            val direction = if (targetState > initialState) 1 else -1
-            (slideInHorizontally(motion.defaultSpatialSpec()) { it / 4 * direction } + fadeIn(motion.defaultEffectsSpec()))
-                .togetherWith(slideOutHorizontally(motion.defaultSpatialSpec()) { -it / 4 * direction } + fadeOut(motion.defaultEffectsSpec()))
-        },
-        label = "login_step",
-    ) { step ->
-        val notice = loginNotices.getOrNull(step)
-        if (notice != null) {
-            LoginNoticePage(
-                step = step,
-                notice = notice,
-                onSecondaryAction = { openExternalUrl(notice.secondaryUrl) },
-                onConfirm = { noticeStep++ },
-            )
-        } else {
-            LoginMethodsPage(
-                selectedMethod = selectedMethod,
-                onSelectMethod = { selectedMethod = it },
-                onLoginSuccess = onLoginSuccess,
-            )
+    ) {
+        // 没有返回按钮时也保留顶栏高度，声明页之间切换时内容不上下跳。
+        TopAppBar(
+            title = {},
+            navigationIcon = {
+                if (back != null) {
+                    IconButton(onClick = back, modifier = Modifier.testTag("login_back")) {
+                        Icon(AppIcons.ArrowBack, contentDescription = "返回")
+                    }
+                }
+            },
+            windowInsets = WindowInsets(0),
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
+        )
+        AnimatedContent(
+            targetState = noticeStep,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            transitionSpec = {
+                val direction = if (targetState > initialState) 1 else -1
+                (slideInHorizontally(motion.defaultSpatialSpec()) { it / 4 * direction } + fadeIn(motion.defaultEffectsSpec()))
+                    .togetherWith(slideOutHorizontally(motion.defaultSpatialSpec()) { -it / 4 * direction } + fadeOut(motion.defaultEffectsSpec()))
+            },
+            label = "login_step",
+        ) { step ->
+            val notice = loginNotices.getOrNull(step)
+            if (notice != null) {
+                LoginNoticePage(
+                    step = step,
+                    notice = notice,
+                    onSecondaryAction = { openExternalUrl(notice.secondaryUrl) },
+                    onConfirm = {
+                        if (step == loginNotices.lastIndex) settings.putBoolean(LOGIN_NOTICES_ACCEPTED_KEY, true)
+                        noticeStep++
+                    },
+                )
+            } else {
+                LoginMethodsPage(
+                    selectedMethod = selectedMethod,
+                    onSelectMethod = { selectedMethod = it },
+                    onLoginSuccess = onLoginSuccess,
+                )
+            }
         }
     }
 
@@ -168,7 +210,7 @@ private fun LoginMethodsPage(
             modifier = Modifier
                 .widthIn(max = LoginContentMaxWidth)
                 .fillMaxWidth()
-                .padding(top = 24.dp, bottom = 16.dp),
+                .padding(bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             Row(
@@ -199,7 +241,7 @@ private fun LoginMethodsPage(
         ) {
             when (selectedMethod) {
                 LoginMethod.Phone -> PhoneLoginPane(onLoginSuccess)
-                LoginMethod.Qr -> QrLoginPane(onLoginSuccess)
+                LoginMethod.Qr -> QrLoginPane(onLoginSuccess, onUsePhoneLogin = { onSelectMethod(LoginMethod.Phone) })
                 LoginMethod.Web -> WebLoginPane(onLoginSuccess)
             }
         }
