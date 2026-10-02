@@ -53,6 +53,7 @@ import com.github.zly2006.zhihu.util.fuckHonorService
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.encodeBlocklistBackup
 import com.github.zly2006.zhihu.viewmodel.filter.importBlocklistBackupFromJsonText
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -159,6 +160,8 @@ actual fun rememberBlocklistRuleImporter(
                         )
                     }
                     currentOnImported(summary)
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     Log.e("BlocklistSettings", "Failed to import blocklist", e)
                     userMessages.showShortMessage("导入失败: ${e.message}")

@@ -115,6 +115,7 @@ import com.github.zly2006.zhihu.viewmodel.addReadHistory
 import com.github.zly2006.zhihu.viewmodel.feed.QuestionFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import kotlin.math.roundToInt
@@ -233,6 +234,8 @@ fun QuestionScreen(
             } else {
                 userMessages.showShortMessage("获取问题详情失败")
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             userMessages.showShortMessage("加载失败: ${e.message}")
         }

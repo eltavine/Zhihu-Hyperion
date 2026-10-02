@@ -26,6 +26,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.github.zly2006.zhihu.platform.UserMessageSink
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -70,6 +71,8 @@ private object DesktopArticleSpeechController {
                     if (textToRead.isNotBlank()) {
                         speakText(textToRead, title, userMessages)
                     }
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     currentTtsState = TtsState.Error
                     userMessages.showMessage("朗读失败：${e.message}")

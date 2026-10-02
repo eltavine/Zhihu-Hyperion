@@ -83,6 +83,7 @@ import com.github.zly2006.zhihu.util.ZhihuCredentialRefresher
 import com.github.zly2006.zhihu.util.clearShareImageCache
 import com.github.zly2006.zhihu.util.clipboardManager
 import com.github.zly2006.zhihu.util.enableEdgeToEdgeCompat
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -146,6 +147,8 @@ class MainActivity : ComponentActivity() {
                     val refreshToken = ZhihuCredentialRefresher.fetchRefreshToken(client)
                     ZhihuCredentialRefresher.refreshZhihuToken(refreshToken, client)
                     Log.i(TAG, "Zhihu token refreshed successfully")
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to refresh Zhihu token", e)
                     androidUserMessageSink(this@MainActivity)
@@ -168,6 +171,8 @@ class MainActivity : ComponentActivity() {
                 EmojiManager
                     .initialize(this@MainActivity)
                 Log.i(TAG, "Emoji manager initialized")
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to initialize emoji manager", e)
             }

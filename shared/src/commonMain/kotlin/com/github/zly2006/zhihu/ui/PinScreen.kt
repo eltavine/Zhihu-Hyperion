@@ -120,6 +120,7 @@ import com.github.zly2006.zhihu.viewmodel.replaceOrAppendUniqueVoters
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -235,6 +236,8 @@ fun PinScreen(
             pinContent = loadedPin
             isLiked = loadedPin.virtuals.booleanCompat("isLiked", "is_liked")
             likeCount = loadedPin.likeCount
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             errorMessage = e.message ?: "未知错误"
         } finally {
@@ -272,6 +275,8 @@ fun PinScreen(
                 val total = page.paging.totals.takeIf { it > 0 } ?: likeCount
                 likeCount = total
                 votersNextUrl = page.nextUrlOrNull()
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 votersError = e.message ?: "加载赞同者失败"
             } finally {
@@ -444,6 +449,8 @@ fun PinScreen(
                                     isLiked = result.isLiked
                                     likeCount = result.likeCount
                                     pollVotingOptionId = null
+                                } catch (e: CancellationException) {
+                                    throw e
                                 } catch (e: Exception) {
                                     pollVotingOptionId = null
                                     pollErrorMessage = e.message ?: "投票失败"

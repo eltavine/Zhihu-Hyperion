@@ -314,8 +314,10 @@ fun ArticleActionsMenu(
                                     }
                                 }
                             }
+                        } catch (e: CancellationException) {
+                            throw e
                         } catch (e: Exception) {
-                            withContext(Dispatchers.Main) { Unit }
+                            Log.e("ArticleActionsMenu", "Failed to prepare the text to read aloud", e)
                         }
                     }
                 }

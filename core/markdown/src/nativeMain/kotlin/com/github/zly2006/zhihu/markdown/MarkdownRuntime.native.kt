@@ -31,6 +31,7 @@ import androidx.compose.ui.text.platform.Font
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.toCookieHeaderString
 import com.github.zly2006.zhihu.platform.nativeAppPrivateDirectoryPath
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import com.hrm.latex.renderer.font.MathFont
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -41,6 +42,7 @@ import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.readBytes
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.usePinned
+import kotlinx.coroutines.CancellationException
 import org.koin.compose.koinInject
 import platform.Foundation.NSData
 import platform.Foundation.NSFileManager
@@ -58,7 +60,7 @@ actual fun rememberMarkdownMathFont(): MathFont? {
     var mathFont by remember { mutableStateOf<MathFont?>(null) }
 
     LaunchedEffect(store) {
-        mathFont = runCatching { loadNativeMathFont(store) }.getOrNull()
+        mathFont = suspendRunCatching { loadNativeMathFont(store) }.getOrNull()
     }
 
     return mathFont
@@ -117,6 +119,8 @@ private suspend fun downloadNativeMathFont(store: ZhihuAccountStore, fontFilePat
                 )
             }
             return bytes
+        } catch (error: CancellationException) {
+            throw error
         } catch (error: Exception) {
             lastError = error
         }

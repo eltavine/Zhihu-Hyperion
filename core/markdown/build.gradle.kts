@@ -37,6 +37,7 @@ kotlin {
             api(projects.core.ui)
             api(projects.markdownParser)
             implementation(projects.core.account)
+            implementation(projects.core.common)
             implementation(projects.core.network)
             implementation(projects.latexRenderer)
             implementation(projects.markdownRenderer)

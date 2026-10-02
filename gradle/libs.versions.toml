@@ -27,6 +27,9 @@ aboutlibraries = "15.2.0"
 ktlint-gradle = "14.2.0"
 # The Gradle plugin defaults to an older engine; pin the linter itself so formatting is reproducible.
 ktlint = "1.8.0"
+# detekt 2.0 is the line that analyzes Kotlin 2.4 sources (1.23.x stops at Kotlin 2.0.21). It is still an alpha, so
+# config/detekt/detekt.yml enables only the rules that guard a verified bug class instead of the default rule set.
+detekt = "2.0.0-alpha.6"
 foojay-resolver = "1.0.0"
 module-graph-assertion = "2.9.1"
 android-compileSdk = "37"
@@ -95,6 +98,7 @@ compose-multiplatform-gradlePlugin = { module = "org.jetbrains.compose:compose-g
 ksp-gradlePlugin = { module = "com.google.devtools.ksp:symbol-processing-gradle-plugin", version.ref = "ksp" }
 room-gradlePlugin = { module = "androidx.room:room-gradle-plugin", version.ref = "androidx-room" }
 ktlint-gradlePlugin = { module = "org.jlleitschuh.gradle:ktlint-gradle", version.ref = "ktlint-gradle" }
+detekt-gradlePlugin = { module = "dev.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 module-graph-assertion-gradlePlugin = { module = "com.jraska.module.graph.assertion:plugin", version.ref = "module-graph-assertion" }
 
 # ---- Compose Multiplatform ----
@@ -212,4 +216,5 @@ room = { id = "androidx.room", version.ref = "androidx-room" }
 aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutlibraries" }
 aboutlibraries-android = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutlibraries" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
 module-graph-assertion = { id = "com.jraska.module.graph.assertion", version.ref = "module-graph-assertion" }

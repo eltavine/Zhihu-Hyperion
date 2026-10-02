@@ -37,6 +37,7 @@ import com.github.zly2006.zhihu.notification.matchNotificationType
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.ZhihuMessageBodyEncryptor
 import com.github.zly2006.zhihu.util.jsonObject
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
@@ -144,8 +145,9 @@ class NotificationViewModel(
                 )
             }
             lastPaging = page.paging ?: ZhihuPaging(isEnd = true, next = "")
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
-            if (e is CancellationException) throw e
             environment.handleFetchFailure(this::class.simpleName, e)
         } finally {
             refreshingFirstPage = false
@@ -166,8 +168,9 @@ class NotificationViewModel(
                 unreadCount = categoryUnreadCounts.values.sum()
                 true
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
-            if (e is CancellationException) throw e
             Log.e("NotificationViewModel", "Failed to mark ${category.entryName} notifications as read", e)
             false
         }
@@ -235,8 +238,9 @@ class NotificationTimelineViewModel(
             if (!markedAsRead && notificationSettings.getAutoMarkAsReadEnabled()) {
                 markedAsRead = markAsRead()
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
-            if (e is CancellationException) throw e
             environment.handleFetchFailure(this::class.simpleName, e)
         } finally {
             isLoading = false
@@ -263,8 +267,9 @@ class NotificationTimelineViewModel(
         } else {
             true
         }
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: Exception) {
-        if (e is CancellationException) throw e
         Log.e("NotificationTimelineViewModel", "Failed to mark $entryName notifications as read", e)
         false
     }
@@ -327,8 +332,9 @@ class PrivateMessageViewModel(
                     true
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
-            if (e is CancellationException) throw e
             Log.e("PrivateMessageViewModel", "Failed to send private message", e)
             errorMessage = e.message ?: "发送失败"
             false
@@ -368,7 +374,7 @@ class PrivateMessageViewModel(
                     lastPaging = page.paging
 
                     peerRequest?.let { request ->
-                        runCatching {
+                        suspendRunCatching {
                             peer = ZhihuJson.decodeJson<MobileNotificationAuthor>(request.await())
                         }.onFailure { error ->
                             if (error is CancellationException) throw error
@@ -377,8 +383,9 @@ class PrivateMessageViewModel(
                     }
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
-            if (e is CancellationException) throw e
             environment.handleFetchFailure(this::class.simpleName, e)
         } finally {
             isLoading = false

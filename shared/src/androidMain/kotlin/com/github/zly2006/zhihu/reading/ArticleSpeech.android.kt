@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.platform.androidSettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -85,6 +86,8 @@ actual fun rememberArticleSpeechToggler(): ArticleSpeechToggler {
                                     }
                                 }
                             }
+                        } catch (e: CancellationException) {
+                            throw e
                         } catch (e: Exception) {
                             userMessages.showMessage("朗读失败：${e.message}")
                         }

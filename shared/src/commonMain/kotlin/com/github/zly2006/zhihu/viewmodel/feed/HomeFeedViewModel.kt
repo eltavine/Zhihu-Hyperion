@@ -233,6 +233,8 @@ class HomeFeedViewModel(
     override suspend fun recordContentInteraction(environment: ZhihuApiEnvironment, feed: Feed) {
         try {
             filter.recordInteraction(feed)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             environment.handleFetchFailure("HomeFeedViewModel", e)
         }
@@ -305,6 +307,8 @@ class HomeFeedViewModel(
                     Log.e("Browse-Touch", response.bodyAsText())
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             environment.handleFetchFailure("FeedViewModel", e)
         }

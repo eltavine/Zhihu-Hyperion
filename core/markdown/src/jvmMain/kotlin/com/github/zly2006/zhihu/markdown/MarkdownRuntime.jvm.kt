@@ -29,9 +29,11 @@ import androidx.compose.ui.text.platform.asComposeFontFamily
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
 import com.github.zly2006.zhihu.data.toCookieHeaderString
 import com.github.zly2006.zhihu.desktop.desktopZhihuDataFile
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import com.hrm.latex.renderer.font.MathFont
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.compose.koinInject
@@ -49,7 +51,7 @@ actual fun rememberMarkdownMathFont(): MathFont? {
     var mathFont by remember { mutableStateOf<MathFont?>(null) }
 
     LaunchedEffect(store) {
-        mathFont = runCatching {
+        mathFont = suspendRunCatching {
             loadDesktopMathFont(store)
         }.getOrNull()
     }
@@ -92,6 +94,8 @@ private suspend fun downloadDesktopMathFont(
                 fontFile.writeBytes(bytes)
                 return
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             lastError = e
         }

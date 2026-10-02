@@ -33,6 +33,10 @@ public final class com/github/zly2006/zhihu/util/Log {
 	public static synthetic fun w$default (Lcom/github/zly2006/zhihu/util/Log;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 }
 
+public final class com/github/zly2006/zhihu/util/SuspendRunCatchingKt {
+	public static final fun suspendRunCatching (Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;
+}
+
 public abstract interface class com/github/zly2006/zhihu/util/TextDocumentStore {
 	public abstract fun delete ()V
 	public abstract fun readText ()Ljava/lang/String;

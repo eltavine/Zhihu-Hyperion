@@ -26,6 +26,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import com.github.zly2006.zhihu.account.ZhihuAccountStore
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.cinterop.BetaInteropApi
@@ -55,7 +56,7 @@ actual fun rememberImageSaver(): ImageSaver {
         object : ImageSaver {
             override fun invoke(url: String) {
                 scope.launch {
-                    runCatching {
+                    suspendRunCatching {
                         val image = downloadNativeImage(accountStore, url)
                         storeNativeImage(image.bytes, image.extension)
                     }.onSuccess(userMessages::showShortMessage).onFailure { error ->

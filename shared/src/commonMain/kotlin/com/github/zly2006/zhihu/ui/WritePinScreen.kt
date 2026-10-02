@@ -101,6 +101,7 @@ import com.github.zly2006.zhihu.ui.components.WriteContentFabColumn
 import com.github.zly2006.zhihu.ui.components.WriteContentMarkdownEditor
 import com.github.zly2006.zhihu.util.json
 import com.github.zly2006.zhihu.util.raiseForStatus
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import com.github.zly2006.zhihu.viewmodel.postSigned
 import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import io.ktor.client.request.header
@@ -280,8 +281,9 @@ fun WritePinScreen(destination: WritePin = WritePin()) {
                 if (activePinTopicQuery(content, selectedTopics) == query) {
                     topicSuggestions = pinTopicSuggestion.data.list
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (error: Throwable) {
-                if (error is CancellationException) throw error
                 if (activePinTopicQuery(content, selectedTopics) == query) {
                     topicSuggestions = emptyList()
                     topicSuggestionError = error.message ?: error::class.simpleName ?: "未知错误"
@@ -331,7 +333,7 @@ fun WritePinScreen(destination: WritePin = WritePin()) {
         if (isSubmitting) return
         isSubmitting = true
         coroutineScope.launch {
-            runCatching {
+            suspendRunCatching {
                 val html = compilePinMarkdownToZhihuHtml(markdownSnapshot, topicsSnapshot)
                 val textLength = calculatePinHtmlTextLength(html)
                 val topics = topicsSnapshot.map(PinContentTopicMarker::topic).distinctBy(PinContentTopicItem::topicId)
@@ -394,7 +396,7 @@ fun WritePinScreen(destination: WritePin = WritePin()) {
             }
             isUploadingImage = true
             coroutineScope.launch {
-                runCatching {
+                suspendRunCatching {
                     uploadZhihuImage(
                         environment,
                         picked.bytes,

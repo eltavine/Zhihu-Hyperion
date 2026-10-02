@@ -33,6 +33,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.readRawBytes
 import io.ktor.http.HttpHeaders
+import kotlinx.coroutines.CancellationException
 import java.io.OutputStream
 
 /**
@@ -56,6 +57,8 @@ suspend fun saveImageToGallery(
             bytes = bytes,
         )
         userMessages.showShortMessage("图片已保存到相册")
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: Exception) {
         userMessages.showShortMessage("保存失败: ${e.message}")
     }
@@ -85,6 +88,8 @@ suspend fun shareImage(
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
         context.startActivity(Intent.createChooser(shareIntent, "分享图片"))
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: Exception) {
         userMessages.showShortMessage("分享失败: ${e.message}")
     }

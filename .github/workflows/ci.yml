@@ -91,7 +91,7 @@ jobs:
               - "gradle/**"
 
   checks:
-    name: KtLint, ABI and module graph
+    name: KtLint, detekt, ABI and module graph
     needs: changes
     if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-24.04
@@ -109,6 +109,10 @@ jobs:
 
       - name: Run KtLint, ABI and module graph checks
         run: ./gradlew ktlintCheck checkKotlinAbi :app:assertModuleGraph :desktopApp:assertModuleGraph :macosApp:assertModuleGraph :macosUiDebug:assertModuleGraph :iosApp:assertModuleGraph
+
+      # Type-resolved detekt runs only on JVM and Android compilations; the Lite app task keeps the default flavor.
+      - name: Run detekt
+        run: ./gradlew detektMainJvm detektMainAndroid :app:detektLiteDebug
 
       - name: Verify the update manifest contract
         run: python3 .github/scripts/test_write_update_manifest.py

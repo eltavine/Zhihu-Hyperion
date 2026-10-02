@@ -125,6 +125,8 @@ fun FeedAuthorBlockConfirmDialog(
                     onConfirm()
                     val targetName = if (request.type == FeedAuthorBlockType.QUESTION_AUTHOR) "提问者" else "用户"
                     userMessages.showShortMessage("已屏蔽$targetName：${author.name}")
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     Log.e("FeedBlocking", "Failed to block feed author", e)
                     userMessages.showShortMessage("屏蔽失败: ${e.message}")
@@ -158,6 +160,8 @@ fun BlockByKeywordsDialog(
                 val keywordsWithWeight = extractFeedKeywords(feedTitle, feedExcerpt)
                 keywordInfoList = keywordsWithWeight
                 extractedKeywords = keywordsWithWeight.take(8).map { it.keyword }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e("FeedBlocking", "Failed to extract block keywords", e)
                 userMessages.showShortMessage("提取关键词失败: ${e.message}")
@@ -188,6 +192,8 @@ fun BlockByKeywordsDialog(
                     )
                     userMessages.showShortMessage("已添加NLP屏蔽短语: $phrase")
                     onConfirm()
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     Log.e("FeedBlocking", "Failed to add NLP block phrase", e)
                     userMessages.showShortMessage("添加失败: ${e.message}")

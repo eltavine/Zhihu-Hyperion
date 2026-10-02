@@ -93,6 +93,7 @@ import com.github.zly2006.zhihu.ui.components.WriteContentMarkdownEditor
 import com.github.zly2006.zhihu.ui.components.replaceSelection
 import com.github.zly2006.zhihu.util.json
 import com.github.zly2006.zhihu.util.raiseForStatus
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import com.github.zly2006.zhihu.viewmodel.fetchContentDetail
 import com.github.zly2006.zhihu.viewmodel.postSigned
 import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
@@ -148,7 +149,7 @@ fun WriteAnswerScreen(
         val cached = existingAnswerId
         if (cached != null) return cached
         if (environment.authenticatedCookies()["d_c0"].isNullOrBlank()) return null
-        val element = runCatching {
+        val element = suspendRunCatching {
             environment.fetchJson(
                 "https://api.zhihu.com/questions/${destination.questionId}",
                 "relationship,relationship.my_answer",
@@ -201,7 +202,7 @@ fun WriteAnswerScreen(
         if (isSubmitting) return
         isSubmitting = true
         coroutineScope.launch {
-            runCatching {
+            suspendRunCatching {
                 val html = compileMdToZhihuHtml(markdown = content.text)
                 val answerId = ensureAnswerId()
                 val xsrf = environment.authenticatedCookies()["_xsrf"]
@@ -278,7 +279,7 @@ fun WriteAnswerScreen(
             if (isSubmitting || isUploadingImage) return@rememberImagePickerLauncher
             isUploadingImage = true
             coroutineScope.launch {
-                runCatching {
+                suspendRunCatching {
                     uploadZhihuImage(
                         environment,
                         picked.bytes,
@@ -318,7 +319,7 @@ fun WriteAnswerScreen(
 
     LaunchedEffect(destination.questionId) {
         isDetecting = true
-        existingAnswerId = runCatching {
+        existingAnswerId = suspendRunCatching {
             ensureAnswerId()
         }.onFailure { e ->
             errorDialogMessage = buildWriteOperationErrorMessage("检测已有回答失败", e)
@@ -328,7 +329,7 @@ fun WriteAnswerScreen(
         val answerId = existingAnswerId ?: return@LaunchedEffect
         if (content.text.isNotBlank()) return@LaunchedEffect
         isLoadingExistingAnswer = true
-        runCatching {
+        suspendRunCatching {
             environment.fetchContentDetail(
                 Article(type = ArticleType.Answer, id = answerId),
             ) as? DataHolder.Answer

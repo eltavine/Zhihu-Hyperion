@@ -34,7 +34,7 @@ internal fun VersionCatalog.version(alias: String): String = findVersion(alias).
 
 internal fun VersionCatalog.library(alias: String): Provider<MinimalExternalModuleDependency> = findLibrary(alias).get()
 
-private val androidVariantTaskPattern = Regex("^(?:assemble|bundle|install|test|connected|compile)(Full|Lite)")
+private val androidVariantTaskPattern = Regex("^(?:assemble|bundle|install|test|connected|compile|detekt)(Full|Lite)")
 
 /**
  * App flavor (`Full` or `Lite`) whose Android `actual`s this invocation compiles. The Android KMP library plugin has a
