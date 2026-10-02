@@ -112,10 +112,10 @@ actual fun WebLoginPane(onLoginSuccess: (String) -> Unit) {
     var currentUrl by remember { mutableStateOf<String?>(null) }
     var isVerifying by remember { mutableStateOf(false) }
 
+    // 与 Android 一致，网页登录从空的 cookie 开始，免得页面直接沿用当前账号的登录态。
     DesktopWebviewComp(
         url = ZHIHU_SIGNIN_URL,
         modifier = Modifier.fillMaxSize(),
-        initialCookies = store.session.cookies,
         onPageFinished = { currentUrl = it },
         onCookiesChanged = { cookies ->
             if (currentUrl == ZHIHU_HOME_URL && !isVerifying) {
