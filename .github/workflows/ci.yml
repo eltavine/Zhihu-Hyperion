@@ -40,16 +40,20 @@ jobs:
     name: Detect changes
     runs-on: ubuntu-24.04
     timeout-minutes: 5
+    # Only pull requests are filtered by path. A newer push to master cancels the run of the previous one, and the
+    # surviving run would only see its own push, so master and manual runs always run everything.
     outputs:
-      code: ${{ github.event_name == 'workflow_dispatch' || steps.code.outputs.code == 'true' }}
-      instrumented: ${{ github.event_name == 'workflow_dispatch' || steps.instrumented.outputs.instrumented == 'true' }}
+      code: ${{ github.event_name != 'pull_request' || steps.code.outputs.code == 'true' }}
+      instrumented: ${{ github.event_name != 'pull_request' || steps.instrumented.outputs.instrumented == 'true' }}
     steps:
       - name: Checkout repository
+        if: github.event_name == 'pull_request'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Detect code changes
+        if: github.event_name == 'pull_request'
         id: code
         uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
         with:
@@ -66,6 +70,7 @@ jobs:
               - "!LICENSE"
 
       - name: Detect changes that need instrumented tests
+        if: github.event_name == 'pull_request'
         id: instrumented
         uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
         with:
