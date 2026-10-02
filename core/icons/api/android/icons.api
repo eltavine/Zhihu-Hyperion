@@ -140,6 +140,7 @@ public final class com/github/zly2006/zhihu/icons/AppIcons {
 	public final fun getNotificationsUnread ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getOpacity ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getOpenInBrowser ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getOpenInNew ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getPaid ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getPalette ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getPause ()Lcom/github/zly2006/zhihu/icons/AppIcon;
@@ -176,6 +177,8 @@ public final class com/github/zly2006/zhihu/icons/AppIcons {
 	public final fun getSkipPrevious ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getSmartButton ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getSmartToy ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getSmartphone ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getSms ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getSort ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getSpeed ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getStop ()Lcom/github/zly2006/zhihu/icons/AppIcon;

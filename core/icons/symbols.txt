@@ -135,6 +135,7 @@ notifications
 notifications_unread
 opacity
 open_in_browser
+open_in_new
 paid
 palette
 pause solid
@@ -171,6 +172,8 @@ skip_next solid
 skip_previous solid
 smart_button
 smart_toy
+smartphone
+sms
 sort
 speed
 stop solid

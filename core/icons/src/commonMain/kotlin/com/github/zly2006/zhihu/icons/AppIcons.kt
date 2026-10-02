@@ -151,6 +151,7 @@ import zhihu.core.icons.generated.resources.notifications
 import zhihu.core.icons.generated.resources.notifications_unread
 import zhihu.core.icons.generated.resources.opacity
 import zhihu.core.icons.generated.resources.open_in_browser
+import zhihu.core.icons.generated.resources.open_in_new
 import zhihu.core.icons.generated.resources.paid
 import zhihu.core.icons.generated.resources.palette
 import zhihu.core.icons.generated.resources.pause_circle_filled
@@ -187,6 +188,8 @@ import zhihu.core.icons.generated.resources.skip_next_filled
 import zhihu.core.icons.generated.resources.skip_previous_filled
 import zhihu.core.icons.generated.resources.smart_button
 import zhihu.core.icons.generated.resources.smart_toy
+import zhihu.core.icons.generated.resources.smartphone
+import zhihu.core.icons.generated.resources.sms
 import zhihu.core.icons.generated.resources.sort
 import zhihu.core.icons.generated.resources.speed
 import zhihu.core.icons.generated.resources.stop_filled
@@ -360,6 +363,7 @@ object AppIcons {
     val NotificationsUnread = AppIcon(Res.drawable.notifications_unread)
     val Opacity = AppIcon(Res.drawable.opacity)
     val OpenInBrowser = AppIcon(Res.drawable.open_in_browser)
+    val OpenInNew = AppIcon(Res.drawable.open_in_new)
     val Paid = AppIcon(Res.drawable.paid)
     val Palette = AppIcon(Res.drawable.palette)
     val Pause = AppIcon(Res.drawable.pause_filled)
@@ -396,6 +400,8 @@ object AppIcons {
     val SkipPrevious = AppIcon(Res.drawable.skip_previous_filled)
     val SmartButton = AppIcon(Res.drawable.smart_button)
     val SmartToy = AppIcon(Res.drawable.smart_toy)
+    val Smartphone = AppIcon(Res.drawable.smartphone)
+    val Sms = AppIcon(Res.drawable.sms)
     val Sort = AppIcon(Res.drawable.sort)
     val Speed = AppIcon(Res.drawable.speed)
     val Stop = AppIcon(Res.drawable.stop_filled)

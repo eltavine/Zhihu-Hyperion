@@ -750,7 +750,13 @@ fun ZhihuMain(
                                     )
                                 }
                                 composable<Login> {
-                                    LoginScreen(onLoginComplete = { navController.popBackStack() })
+                                    // 与主页自动打开登录页的条件相反：只有离开后主页不会立刻再把登录页打开时才提供返回。
+                                    val canLeave = rememberAccountSettingsAccountState().value.login ||
+                                        !settings.getBoolean("loginForRecommendation", true)
+                                    LoginScreen(
+                                        onLoginComplete = { navController.popBackStack() },
+                                        onNavigateBack = if (canLeave) ({ navController.popBackStack() }) else null,
+                                    )
                                 }
                                 composable<Question> { navEntry ->
                                     val question: Question = navEntry.toRoute()
