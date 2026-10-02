@@ -252,7 +252,7 @@ class ArticleViewModel(
         get() = collections.any { it.isFavorited }
 
     /** 正文加载失败的原因；不为 null 时页面显示错误状态，而不是正文和作者信息。 */
-    var loadFailure: ArticleLoadFailure? by mutableStateOf(null)
+    var loadFailure: ContentLoadFailure? by mutableStateOf(null)
         private set
 
     @OptIn(ExperimentalStdlibApi::class)
@@ -345,7 +345,7 @@ class ArticleViewModel(
                             }
                         } else {
                             endorsements = emptyList()
-                            loadFailure = ArticleLoadFailure("这条回答不存在或已被删除", needLogin = false)
+                            loadFailure = ContentLoadFailure("这条回答不存在或已被删除", needLogin = false)
                         }
                     } else if (article.type == ArticleType.Article) {
                         val article = fetchZhihuContentDetail(article, environment::fetchJson) as? DataHolder.Article
@@ -388,16 +388,16 @@ class ArticleViewModel(
                             )
                             contentOpens.record(this@ArticleViewModel.article)
                         } else {
-                            loadFailure = ArticleLoadFailure("这篇文章不存在或已被删除", needLogin = false)
+                            loadFailure = ContentLoadFailure("这篇文章不存在或已被删除", needLogin = false)
                         }
                     }
                 } catch (e: CancellationException) {
                     throw e
                 } catch (e: ZhihuApiErrorException) {
-                    loadFailure = ArticleLoadFailure(e.message, e.needLogin)
+                    loadFailure = ContentLoadFailure(e.message, e.needLogin)
                 } catch (e: Exception) {
                     Log.e("ArticleViewModel", "Failed to load content", e)
-                    loadFailure = ArticleLoadFailure("内容加载失败，请稍后重试", needLogin = false)
+                    loadFailure = ContentLoadFailure("内容加载失败，请稍后重试", needLogin = false)
                 }
             }
         }
@@ -1181,10 +1181,4 @@ fun formatArticleDateTime(seconds: Long): String {
 private data class AnswerRelationshipEndorsement(
     val type: String = "",
     val text: String = "",
-)
-
-/** [message] 直接展示给用户；[needLogin] 为 true 时提供登录入口，否则提供重试。 */
-class ArticleLoadFailure(
-    val message: String,
-    val needLogin: Boolean,
 )
