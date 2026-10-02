@@ -18,6 +18,7 @@
 
 package com.github.zly2006.zhihu.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -39,6 +40,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,11 +49,13 @@ import com.github.zly2006.zhihu.icons.AppIcons
 import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.History
 import com.github.zly2006.zhihu.navigation.LocalNavigator
+import com.github.zly2006.zhihu.navigation.requestLoginNavigation
 import com.github.zly2006.zhihu.platform.PlatformBackHandler
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
 import com.github.zly2006.zhihu.ui.components.EmptyState
+import com.github.zly2006.zhihu.ui.components.EmptyStateAction
 import com.github.zly2006.zhihu.ui.components.FeedCard
 import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
@@ -100,8 +104,9 @@ fun OnlineHistoryScreen(
         enabled = isActive && !showClearHistoryDialog && !showActionsMenu,
     )
 
-    LaunchedEffect(Unit) {
-        if (viewModel.displayItems.isEmpty()) {
+    val account by rememberAccountSettingsAccountState()
+    LaunchedEffect(account.login) {
+        if (account.login && viewModel.displayItems.isEmpty()) {
             viewModel.refresh(paginationEnvironment)
         }
     }
@@ -203,6 +208,16 @@ fun OnlineHistoryScreen(
                 },
             )
         }
+        if (!account.login) {
+            Box(Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center) {
+                EmptyState(
+                    icon = AppIcons.Login,
+                    title = "登录后查看浏览历史",
+                    action = EmptyStateAction("登录", AppIcons.Login, onClick = ::requestLoginNavigation),
+                )
+            }
+            return@Scaffold
+        }
         FeedPullToRefresh(viewModel, paginationEnvironment, padding = innerPadding) {
             PaginatedList(
                 modifier = Modifier
@@ -217,6 +232,8 @@ fun OnlineHistoryScreen(
                 key = { item -> item.stableKey },
                 loadFailed = viewModel.errorMessage != null,
                 onRetry = { viewModel.retry(paginationEnvironment) },
+                loadFailureMessage = viewModel.apiError?.message,
+                onLogin = (::requestLoginNavigation).takeIf { viewModel.apiError?.needLogin == true },
                 emptyContent = {
                     EmptyState(AppIcons.History, "还没有浏览记录", Modifier.fillMaxWidth())
                 },

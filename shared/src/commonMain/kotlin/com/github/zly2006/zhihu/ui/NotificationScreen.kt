@@ -46,6 +46,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -73,11 +74,14 @@ import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.navigation.Notification
 import com.github.zly2006.zhihu.navigation.Person
+import com.github.zly2006.zhihu.navigation.requestLoginNavigation
 import com.github.zly2006.zhihu.navigation.resolveContent
 import com.github.zly2006.zhihu.notification.NotificationSettingsStore
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.ui.components.AppPullToRefreshBox
+import com.github.zly2006.zhihu.ui.components.EmptyState
+import com.github.zly2006.zhihu.ui.components.EmptyStateAction
 import com.github.zly2006.zhihu.ui.components.PaginatedList
 import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.util.formatRelativeTime
@@ -109,7 +113,10 @@ fun NotificationScreen() {
     val userMessages = rememberUserMessageSink()
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(lifecycleOwner, environment) {
+    val account by rememberAccountSettingsAccountState()
+    LaunchedEffect(lifecycleOwner, environment, account.login) {
+        // 未登录时知乎仍会对匿名请求返回一份通知数据，那不是当前用户的通知，不能展示。
+        if (!account.login) return@LaunchedEffect
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
             viewModel.refresh(environment)
         }
@@ -149,6 +156,16 @@ fun NotificationScreen() {
             )
         },
     ) { paddingValues ->
+        if (!account.login) {
+            Box(Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
+                EmptyState(
+                    icon = AppIcons.Login,
+                    title = "登录后查看通知",
+                    action = EmptyStateAction("登录", AppIcons.Login, onClick = ::requestLoginNavigation),
+                )
+            }
+            return@Scaffold
+        }
         AppPullToRefreshBox(
             isRefreshing = viewModel.isLoading,
             onRefresh = { viewModel.refresh(environment) },

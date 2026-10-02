@@ -26,7 +26,9 @@ import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.util.Log
+import com.github.zly2006.zhihu.util.ZhihuApiErrorException
 import com.github.zly2006.zhihu.util.suspendRunCatching
+import com.github.zly2006.zhihu.util.zhihuApiErrorOrNull
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.JsonObject
@@ -148,6 +150,7 @@ fun zhihuContentDetailInclude(destination: NavDestination): String = when (desti
     else -> ""
 }
 
+/** @throws ZhihuApiErrorException 知乎返回错误体时，例如未登录查看回答得到的 `need_login`。 */
 suspend fun fetchZhihuContentDetail(
     destination: NavDestination,
     fetchJson: suspend (String, String) -> JsonObject?,
@@ -155,6 +158,7 @@ suspend fun fetchZhihuContentDetail(
     val url = zhihuContentDetailUrl(destination) ?: return null
     val include = zhihuContentDetailInclude(destination)
     val json = fetchJson(url, include) ?: return null
+    json.zhihuApiErrorOrNull()?.let { throw it }
 
     return when (destination) {
         is Article -> decodeArticleContentDetail(destination, json)

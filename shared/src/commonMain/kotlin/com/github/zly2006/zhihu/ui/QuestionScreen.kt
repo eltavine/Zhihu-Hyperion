@@ -96,6 +96,7 @@ import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.navigation.Topic
 import com.github.zly2006.zhihu.navigation.WriteAnswer
+import com.github.zly2006.zhihu.navigation.requestLoginNavigation
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.platform.rememberZhihuWebUrlOpener
@@ -280,6 +281,10 @@ fun QuestionScreen(
                     .testTag(QUESTION_SCREEN_LIST_TAG),
                 contentPadding = PaddingValues(bottom = readingPlayerOverlayPadding),
                 footer = ProgressIndicatorFooter,
+                loadFailed = viewModel.errorMessage != null,
+                onRetry = { viewModel.retry(paginationEnvironment) },
+                loadFailureMessage = viewModel.apiError?.message,
+                onLogin = (::requestLoginNavigation).takeIf { viewModel.apiError?.needLogin == true },
                 topContent = {
                     item {
                         Column(
