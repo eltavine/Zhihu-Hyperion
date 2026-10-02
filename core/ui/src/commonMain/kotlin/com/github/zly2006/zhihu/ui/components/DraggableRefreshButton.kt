@@ -53,7 +53,7 @@ import kotlin.math.roundToInt
  * 可拖动并自动贴边的刷新按钮。
  *
  * 这个 FAB 用于首页和其他列表页的手动刷新入口。位置按 [preferenceName] 分别保存到 `-x`、`-y` 两个 preference key，
- * 拖动结束后会限制在屏幕内并贴近左右边缘，避免遮挡内容或被系统栏吞掉。需要多个可拖动按钮时必须使用不同的 [preferenceName]，
+ * 拖动结束后会限制在屏幕内并停靠到左右两侧，避免遮挡内容或被系统栏吞掉。需要多个可拖动按钮时必须使用不同的 [preferenceName]，
  * 并可用 [initiallyOnLeft] 把新按钮放到另一侧；用户已保存的位置仍始终优先。
  */
 @Composable
@@ -90,9 +90,12 @@ fun DraggableRefreshButton(
         (maxStoredOffsetY - bottomAvoidance.toPx()).coerceAtLeast(0f)
     }
 
+    // 停靠时与边缘留出 Scaffold 给悬浮按钮的 16dp 间距，和同一侧的其它悬浮按钮对齐。
+    val edgeMarginPx = with(density) { 16.dp.toPx() }
+
     fun adjustFabPosition() {
         with(density) {
-            offsetX = offsetX.coerceIn(0f, (containerWidthPx - 56.dp.toPx()).coerceAtLeast(0f))
+            offsetX = offsetX.coerceIn(edgeMarginPx, (containerWidthPx - 56.dp.toPx() - edgeMarginPx).coerceAtLeast(edgeMarginPx))
             offsetY = offsetY.coerceIn(0f, maxStoredOffsetY)
         }
     }
@@ -149,9 +152,9 @@ fun DraggableRefreshButton(
                         with(density) {
                             offsetX =
                                 if (offsetX < containerWidth / 2) {
-                                    0f
+                                    edgeMarginPx
                                 } else {
-                                    containerWidth - 56.dp.toPx()
+                                    containerWidth - 56.dp.toPx() - edgeMarginPx
                                 }
                         }
                         settings.putFloat("$preferenceName-x", offsetX)
