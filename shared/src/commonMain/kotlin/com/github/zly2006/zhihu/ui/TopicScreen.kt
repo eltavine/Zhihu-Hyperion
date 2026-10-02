@@ -109,6 +109,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonPrimitive
 import org.koin.compose.koinInject
@@ -228,14 +229,15 @@ class TopicViewModel(
     suspend fun loadDetail(environment: ZhihuApiEnvironment) {
         detailErrorMessage = null
         suspendRunCatching {
-            environment.fetchJson(
+            val json = environment.fetchJson(
                 "https://www.zhihu.com/api/v5.1/topics/$topicId",
                 "name,excerpt,avatar_url,followers_count,questions_count,is_following,topic_id,total_pv,discuss_count",
             ) ?: error("话题详情响应为空")
-        }.onSuccess { detail = ZhihuJson.decodeJson(TopicDetail.serializer(), it) }
+            ZhihuJson.decodeJson(TopicDetail.serializer(), json)
+        }.onSuccess { detail = it }
             .onFailure {
                 if (it is CancellationException) throw it
-                detailErrorMessage = it.message
+                detailErrorMessage = if (it is SerializationException) "知乎返回的话题数据无法识别" else it.message
             }
     }
 

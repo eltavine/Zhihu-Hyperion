@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,6 +41,8 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class TopicContractTest {
@@ -203,5 +206,34 @@ class TopicContractTest {
         assertEquals(11, viewModel.detail?.followersCount)
         assertEquals(listOf(HttpMethod.Post, HttpMethod.Delete), methods)
         assertEquals(List(2) { "https://www.zhihu.com/api/v4/topics/19554298/followers" }, urls)
+    }
+
+    @Test
+    fun errorBodyForTopicDetailIsReportedInsteadOfCrashing() = runTest {
+        // 不带登录凭据时知乎对这个接口的真实响应（HTTP 403），没有 id 等话题字段。
+        val client = HttpClient(
+            MockEngine {
+                respond(
+                    """{"error":{"message":"请求参数异常，请升级客户端后重试。","code":10003}}""",
+                    HttpStatusCode.Forbidden,
+                    headersOf(HttpHeaders.ContentType, "application/json"),
+                )
+            },
+        ) {
+            installZhihuCommonClientConfig(mutableMapOf(), "test-agent")
+        }
+        val environment = object : ZhihuApiEnvironment {
+            override fun httpClient() = client
+
+            override fun authenticatedCookies() = mapOf("d_c0" to "test")
+
+            override suspend fun handleFetchFailure(tag: String?, error: Exception) = Unit
+        }
+        val viewModel = TopicViewModel("19550517")
+
+        viewModel.loadDetail(environment)
+
+        assertNull(viewModel.detail)
+        assertNotNull(viewModel.detailErrorMessage)
     }
 }

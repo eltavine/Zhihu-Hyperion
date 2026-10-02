@@ -124,6 +124,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.add
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.intOrNull
@@ -239,7 +240,7 @@ fun PinScreen(
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            errorMessage = e.message ?: "未知错误"
+            errorMessage = if (e is SerializationException) "知乎返回的想法数据无法识别" else e.message ?: "未知错误"
         } finally {
             isLoading = false
         }
