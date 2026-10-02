@@ -21,6 +21,12 @@ name: Package
 # holds the key admits master alone, so a workflow edited on another branch or in a pull request cannot read it.
 on:
   workflow_call:
+    inputs:
+      ref:
+        description: Commit to build; the calling run's commit when empty.
+        type: string
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -36,6 +42,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ inputs.ref }}
           # versionCode counts commits, so the build needs the full history.
           fetch-depth: 0
           persist-credentials: false
@@ -186,6 +193,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ inputs.ref }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -193,6 +201,7 @@ jobs:
         uses: ./.github/actions/setup-build
         with:
           cache-read-only: "false"
+          kotlin-native: ${{ runner.os == 'macOS' }}
 
       - name: Set desktop artifact suffix
         id: desktop_suffix
@@ -324,6 +333,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ inputs.ref }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -331,6 +341,7 @@ jobs:
         uses: ./.github/actions/setup-build
         with:
           cache-read-only: "false"
+          kotlin-native: "true"
 
       - name: Build the unsigned IPA
         run: iosApp/scripts/package-ios.sh device dist/zhihu-hyperion-ios-arm64-unsigned.ipa

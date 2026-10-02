@@ -164,11 +164,15 @@ Android release 构建只在下面四个环境变量都非空时使用发布密�
 
 CI 的签名密钥只存放在仓库的 `android-signing` 环境中（`ANDROID_KEYSTORE_BASE64` 即 keystore 文件的 Base64，以及后三项），该环境只允许 `master` 分支使用：
 
-- Pull Request 的检查（`ci.yml`：KtLint、ABI、模块依赖图、单元测试、构建和模拟器上的 mock 测试）不引用这个环境，PR 中的代码拿不到密钥。
-- 每次推送到 `master`，`build.yml` 签名打包并更新[开发版](https://github.com/eltavine/Zhihu-Hyperion/releases/tag/nightly)。
-- 正式版在 `master` 上手动运行 Release（`release.yml`）发布：它按 `app.versionName` 在所构建的提交上创建 `v` 开头的标签，标签已存在时拒绝发布。改版本号可以先运行 Bump Version。
+- Pull Request 的检查（`ci.yml`：KtLint、ABI、模块依赖图、单元测试、构建和模拟器上的 mock 测试）不引用这个环境，PR 中的代码拿不到密钥。只改文档的提交跳过全部构建，`CI result` 照常给出结果。
+- 每次推送到 `master`（只改文档的除外），`build.yml` 签名打包并更新[开发版](https://github.com/eltavine/Zhihu-Hyperion/releases/tag/nightly)：新版本先作为草稿传完全部文件，再替换旧的开发版，检查更新时不会长时间找不到 `update.json`。
+- 正式版在 `master` 上手动运行 Release（`release.yml`）并填写版本号：它把 `app.versionName` 改成这个版本并提交到 `master`（已经相同则跳过），构建这个提交，再在上面创建 `v` 开头的标签；标签已存在时拒绝发布。带 `-` 后缀的版本（如 `1.1.0-beta.1`）发布为预发布，不进入正式版更新渠道。
 
-打包后会用 `apksigner` 核对安装包的签名证书。每个发布都附带应用检查更新时读取的 `update.json`，记录版本号、更新说明以及各平台安装包的地址和 SHA-256。
+更新说明由 [git-cliff](https://git-cliff.org) 按约定式提交（`feat`、`fix`、`refactor` 等，分组见 `cliff.toml`）生成。打包后会用 `apksigner` 核对安装包的签名证书。每个发布都附带：
+
+- 应用检查更新时读取的 `update.json`，记录版本号、更新说明以及各平台安装包的地址和 SHA-256；
+- `SHA256SUMS.txt`，下载后可用 `sha256sum -c SHA256SUMS.txt` 核对；
+- [构建来源证明](https://docs.github.com/actions/security-for-github-actions/using-artifact-attestations)，可用 `gh attestation verify <文件> --repo eltavine/Zhihu-Hyperion` 确认文件由本仓库的发布流程构建。
 
 ## 参与贡献
 
