@@ -42,7 +42,6 @@ import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.OfficialBadge
 import com.github.zly2006.zhihu.data.VoteUpState
-import com.github.zly2006.zhihu.data.ZhihuContentUnavailableException
 import com.github.zly2006.zhihu.data.ZhihuJson
 import com.github.zly2006.zhihu.data.decodeZhihuCommentData
 import com.github.zly2006.zhihu.data.fetchZhihuContentDetail
@@ -58,6 +57,7 @@ import com.github.zly2006.zhihu.platform.isAigcVoteSupported
 import com.github.zly2006.zhihu.util.ArticleExportComment
 import com.github.zly2006.zhihu.util.Log
 import com.github.zly2006.zhihu.util.ZhidaSummarySsePayload
+import com.github.zly2006.zhihu.util.ZhihuApiErrorException
 import com.github.zly2006.zhihu.util.ZhihuFetchSignature
 import com.github.zly2006.zhihu.util.applySegmentInfosToHtml
 import com.github.zly2006.zhihu.util.buildArticleExportCommentsHtml
@@ -393,7 +393,7 @@ class ArticleViewModel(
                     }
                 } catch (e: CancellationException) {
                     throw e
-                } catch (e: ZhihuContentUnavailableException) {
+                } catch (e: ZhihuApiErrorException) {
                     loadFailure = ArticleLoadFailure(e.message, e.needLogin)
                 } catch (e: Exception) {
                     Log.e("ArticleViewModel", "Failed to load content", e)

@@ -497,8 +497,9 @@ public final class com/github/zly2006/zhihu/ui/components/PageTurnTarget {
 }
 
 public final class com/github/zly2006/zhihu/ui/components/PaginatedListKt {
+	public static final field PAGINATED_LIST_LOGIN_TAG Ljava/lang/String;
 	public static final field PAGINATED_LIST_RETRY_TAG Ljava/lang/String;
-	public static final fun PaginatedList (Ljava/util/List;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/foundation/lazy/LazyListState;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;III)V
+	public static final fun PaginatedList (Ljava/util/List;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/foundation/lazy/LazyListState;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ZLkotlin/jvm/functions/Function0;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;III)V
 	public static final fun getLocalPullToRefreshInProgress ()Landroidx/compose/runtime/ProvidableCompositionLocal;
 	public static final fun getProgressIndicatorFooter ()Lkotlin/jvm/functions/Function3;
 }

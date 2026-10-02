@@ -76,6 +76,7 @@ import com.github.zly2006.zhihu.icons.AppIcons
 import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Person
+import com.github.zly2006.zhihu.navigation.requestLoginNavigation
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageDuration
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
@@ -83,6 +84,7 @@ import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
 import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
 import com.github.zly2006.zhihu.ui.components.EmptyState
+import com.github.zly2006.zhihu.ui.components.EmptyStateAction
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockConfirmDialog
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockRequest
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockType
@@ -132,12 +134,25 @@ fun FollowScreen(
     innerPadding: PaddingValues,
     parentPagerState: PagerState,
     isActive: Boolean = true,
-): Unit = FollowScreenContent(
-    scrollToTopTrigger = scrollToTopTrigger,
-    innerPadding = innerPadding,
-    parentPagerState = parentPagerState,
-    isActive = isActive,
-)
+) {
+    val account by rememberAccountSettingsAccountState()
+    if (!account.login) {
+        Box(Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center) {
+            EmptyState(
+                icon = AppIcons.Login,
+                title = "登录后查看关注的人和话题的动态",
+                action = EmptyStateAction("登录", AppIcons.Login, onClick = ::requestLoginNavigation),
+            )
+        }
+        return
+    }
+    FollowScreenContent(
+        scrollToTopTrigger = scrollToTopTrigger,
+        innerPadding = innerPadding,
+        parentPagerState = parentPagerState,
+        isActive = isActive,
+    )
+}
 
 /**
  * 关注页的实际布局实现。
@@ -420,6 +435,8 @@ fun FollowRecommendScreen(
                 footer = ProgressIndicatorFooter,
                 loadFailed = viewModel.errorMessage != null,
                 onRetry = { viewModel.retry(environment) },
+                loadFailureMessage = viewModel.apiError?.message,
+                onLogin = (::requestLoginNavigation).takeIf { viewModel.apiError?.needLogin == true },
                 emptyContent = {
                     EmptyState(AppIcons.Group, "暂时没有推荐内容", Modifier.fillMaxWidth())
                 },
@@ -589,6 +606,8 @@ fun FollowDynamicScreen(
                 footer = ProgressIndicatorFooter,
                 loadFailed = viewModel.errorMessage != null,
                 onRetry = { viewModel.retry(environment) },
+                loadFailureMessage = viewModel.apiError?.message,
+                onLogin = (::requestLoginNavigation).takeIf { viewModel.apiError?.needLogin == true },
                 emptyContent = {
                     EmptyState(AppIcons.Group, "关注的人还没有新动态", Modifier.fillMaxWidth())
                 },

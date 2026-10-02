@@ -19,6 +19,7 @@ package com.github.zly2006.zhihu.data
 
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
+import com.github.zly2006.zhihu.util.ZhihuApiErrorException
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
@@ -36,7 +37,7 @@ class ContentDetailErrorTest {
 
     @Test
     fun loginRequiredResponseIsReportedInsteadOfDecodedAsAnAnswer() = runTest {
-        val error = assertFailsWith<ZhihuContentUnavailableException> {
+        val error = assertFailsWith<ZhihuApiErrorException> {
             fetchZhihuContentDetail(Article(type = ArticleType.Answer, id = 2011835173877092640)) { _, _ -> loginRequiredBody }
         }
 
