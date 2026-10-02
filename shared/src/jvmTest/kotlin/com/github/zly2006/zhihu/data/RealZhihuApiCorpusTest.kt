@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,6 +59,12 @@ class RealZhihuApiCorpusTest {
                 .first()
                 .images
                 .single(),
+        )
+        assertEquals(5, daily.topStories.size)
+        assertEquals(9791925L, daily.topStories.first().id)
+        assertEquals(
+            "https://picx.zhimg.com/v2-bff5caf6513414ba1830501acf0d7656.jpg?source=8673f162",
+            daily.topStories.first().image,
         )
 
         val mobile = assertNotNull(parseMobileHomeFeedDisplayItem(fixtureJson("mobile-home-card.json").jsonObject))

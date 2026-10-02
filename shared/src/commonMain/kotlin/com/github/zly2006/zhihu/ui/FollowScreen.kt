@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,6 +19,7 @@
 package com.github.zly2006.zhihu.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -64,7 +66,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
@@ -81,6 +82,7 @@ import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
 import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
 import com.github.zly2006.zhihu.ui.components.DraggableRefreshButton
+import com.github.zly2006.zhihu.ui.components.EmptyState
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockConfirmDialog
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockRequest
 import com.github.zly2006.zhihu.ui.components.FeedAuthorBlockType
@@ -321,17 +323,18 @@ fun FollowingUsersRow() {
                                 contentDescription = user.actor.name,
                                 modifier = Modifier
                                     .size(56.dp)
-                                    .clip(CircleShape),
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.surfaceContainerHighest),
                             )
                         }
                         Spacer(Modifier.height(4.dp))
                         Text(
                             text = user.actor.name,
-                            fontSize = 12.sp,
+                            style = MaterialTheme.typography.labelMedium,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.size(width = 60.dp, height = 18.dp),
+                            modifier = Modifier.width(64.dp),
                         )
                     }
                 }
@@ -413,7 +416,13 @@ fun FollowRecommendScreen(
                     }
                 },
                 onLoadMore = { viewModel.loadMore(environment) },
+                isEnd = { viewModel.isEnd },
                 footer = ProgressIndicatorFooter,
+                loadFailed = viewModel.errorMessage != null,
+                onRetry = { viewModel.retry(environment) },
+                emptyContent = {
+                    EmptyState(AppIcons.Group, "暂时没有推荐内容", Modifier.fillMaxWidth())
+                },
             ) { item ->
                 FeedCard(
                     item = item,
@@ -576,7 +585,13 @@ fun FollowDynamicScreen(
                         Spacer(modifier = Modifier.height(8.dp))
                     }
                 },
+                isEnd = { viewModel.isEnd },
                 footer = ProgressIndicatorFooter,
+                loadFailed = viewModel.errorMessage != null,
+                onRetry = { viewModel.retry(environment) },
+                emptyContent = {
+                    EmptyState(AppIcons.Group, "关注的人还没有新动态", Modifier.fillMaxWidth())
+                },
             ) { item ->
                 FeedCard(
                     item = item,

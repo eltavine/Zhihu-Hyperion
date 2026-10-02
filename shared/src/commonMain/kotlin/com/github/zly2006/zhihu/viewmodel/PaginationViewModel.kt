@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -74,7 +75,7 @@ abstract class PaginationViewModel<T : Any>(
     val debugData: MutableList<JsonElement> = mutableListOf()
     var isLoading: Boolean by mutableStateOf(false)
         protected set
-    var errorMessage: String? = null
+    var errorMessage: String? by mutableStateOf(null)
         protected set
     var allowGuestAccess = false
     protected var lastPaging: ZhihuPaging? by mutableStateOf(null)
@@ -171,6 +172,12 @@ abstract class PaginationViewModel<T : Any>(
                 errorHandle(e)
             }
         }
+    }
+
+    /** 加载失败后从失败的那一页接着加载；第一页就失败时重新请求第一页。 */
+    fun retry(environment: ZhihuApiEnvironment) {
+        errorMessage = null
+        loadMore(environment)
     }
 
     protected fun errorHandle(e: Exception) {

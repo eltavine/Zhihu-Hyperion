@@ -1647,16 +1647,19 @@ final class com.github.zly2006.zhihu.data/DailySection { // com.github.zly2006.z
 }
 
 final class com.github.zly2006.zhihu.data/DailyStoriesResponse { // com.github.zly2006.zhihu.data/DailyStoriesResponse|null[0]
-    constructor <init>(kotlin/String, kotlin.collections/List<com.github.zly2006.zhihu.data/DailyStory>) // com.github.zly2006.zhihu.data/DailyStoriesResponse.<init>|<init>(kotlin.String;kotlin.collections.List<com.github.zly2006.zhihu.data.DailyStory>){}[0]
+    constructor <init>(kotlin/String, kotlin.collections/List<com.github.zly2006.zhihu.data/DailyStory>, kotlin.collections/List<com.github.zly2006.zhihu.data/DailyTopStory> = ...) // com.github.zly2006.zhihu.data/DailyStoriesResponse.<init>|<init>(kotlin.String;kotlin.collections.List<com.github.zly2006.zhihu.data.DailyStory>;kotlin.collections.List<com.github.zly2006.zhihu.data.DailyTopStory>){}[0]
 
     final val date // com.github.zly2006.zhihu.data/DailyStoriesResponse.date|{}date[0]
         final fun <get-date>(): kotlin/String // com.github.zly2006.zhihu.data/DailyStoriesResponse.date.<get-date>|<get-date>(){}[0]
     final val stories // com.github.zly2006.zhihu.data/DailyStoriesResponse.stories|{}stories[0]
         final fun <get-stories>(): kotlin.collections/List<com.github.zly2006.zhihu.data/DailyStory> // com.github.zly2006.zhihu.data/DailyStoriesResponse.stories.<get-stories>|<get-stories>(){}[0]
+    final val topStories // com.github.zly2006.zhihu.data/DailyStoriesResponse.topStories|{}topStories[0]
+        final fun <get-topStories>(): kotlin.collections/List<com.github.zly2006.zhihu.data/DailyTopStory> // com.github.zly2006.zhihu.data/DailyStoriesResponse.topStories.<get-topStories>|<get-topStories>(){}[0]
 
     final fun component1(): kotlin/String // com.github.zly2006.zhihu.data/DailyStoriesResponse.component1|component1(){}[0]
     final fun component2(): kotlin.collections/List<com.github.zly2006.zhihu.data/DailyStory> // com.github.zly2006.zhihu.data/DailyStoriesResponse.component2|component2(){}[0]
-    final fun copy(kotlin/String = ..., kotlin.collections/List<com.github.zly2006.zhihu.data/DailyStory> = ...): com.github.zly2006.zhihu.data/DailyStoriesResponse // com.github.zly2006.zhihu.data/DailyStoriesResponse.copy|copy(kotlin.String;kotlin.collections.List<com.github.zly2006.zhihu.data.DailyStory>){}[0]
+    final fun component3(): kotlin.collections/List<com.github.zly2006.zhihu.data/DailyTopStory> // com.github.zly2006.zhihu.data/DailyStoriesResponse.component3|component3(){}[0]
+    final fun copy(kotlin/String = ..., kotlin.collections/List<com.github.zly2006.zhihu.data/DailyStory> = ..., kotlin.collections/List<com.github.zly2006.zhihu.data/DailyTopStory> = ...): com.github.zly2006.zhihu.data/DailyStoriesResponse // com.github.zly2006.zhihu.data/DailyStoriesResponse.copy|copy(kotlin.String;kotlin.collections.List<com.github.zly2006.zhihu.data.DailyStory>;kotlin.collections.List<com.github.zly2006.zhihu.data.DailyTopStory>){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.data/DailyStoriesResponse.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.data/DailyStoriesResponse.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // com.github.zly2006.zhihu.data/DailyStoriesResponse.toString|toString(){}[0]
@@ -1717,6 +1720,44 @@ final class com.github.zly2006.zhihu.data/DailyStory { // com.github.zly2006.zhi
         final val $childSerializers // com.github.zly2006.zhihu.data/DailyStory.Companion.$childSerializers|{}$childSerializers[0]
 
         final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.data/DailyStory> // com.github.zly2006.zhihu.data/DailyStory.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.data/DailyTopStory { // com.github.zly2006.zhihu.data/DailyTopStory|null[0]
+    constructor <init>(kotlin/Long, kotlin/String, kotlin/String, kotlin/String, kotlin/String) // com.github.zly2006.zhihu.data/DailyTopStory.<init>|<init>(kotlin.Long;kotlin.String;kotlin.String;kotlin.String;kotlin.String){}[0]
+
+    final val hint // com.github.zly2006.zhihu.data/DailyTopStory.hint|{}hint[0]
+        final fun <get-hint>(): kotlin/String // com.github.zly2006.zhihu.data/DailyTopStory.hint.<get-hint>|<get-hint>(){}[0]
+    final val id // com.github.zly2006.zhihu.data/DailyTopStory.id|{}id[0]
+        final fun <get-id>(): kotlin/Long // com.github.zly2006.zhihu.data/DailyTopStory.id.<get-id>|<get-id>(){}[0]
+    final val image // com.github.zly2006.zhihu.data/DailyTopStory.image|{}image[0]
+        final fun <get-image>(): kotlin/String // com.github.zly2006.zhihu.data/DailyTopStory.image.<get-image>|<get-image>(){}[0]
+    final val title // com.github.zly2006.zhihu.data/DailyTopStory.title|{}title[0]
+        final fun <get-title>(): kotlin/String // com.github.zly2006.zhihu.data/DailyTopStory.title.<get-title>|<get-title>(){}[0]
+    final val url // com.github.zly2006.zhihu.data/DailyTopStory.url|{}url[0]
+        final fun <get-url>(): kotlin/String // com.github.zly2006.zhihu.data/DailyTopStory.url.<get-url>|<get-url>(){}[0]
+
+    final fun component1(): kotlin/Long // com.github.zly2006.zhihu.data/DailyTopStory.component1|component1(){}[0]
+    final fun component2(): kotlin/String // com.github.zly2006.zhihu.data/DailyTopStory.component2|component2(){}[0]
+    final fun component3(): kotlin/String // com.github.zly2006.zhihu.data/DailyTopStory.component3|component3(){}[0]
+    final fun component4(): kotlin/String // com.github.zly2006.zhihu.data/DailyTopStory.component4|component4(){}[0]
+    final fun component5(): kotlin/String // com.github.zly2006.zhihu.data/DailyTopStory.component5|component5(){}[0]
+    final fun copy(kotlin/Long = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String = ...): com.github.zly2006.zhihu.data/DailyTopStory // com.github.zly2006.zhihu.data/DailyTopStory.copy|copy(kotlin.Long;kotlin.String;kotlin.String;kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.data/DailyTopStory.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.data/DailyTopStory.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.data/DailyTopStory.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<com.github.zly2006.zhihu.data/DailyTopStory> { // com.github.zly2006.zhihu.data/DailyTopStory.$serializer|null[0]
+        final val descriptor // com.github.zly2006.zhihu.data/DailyTopStory.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // com.github.zly2006.zhihu.data/DailyTopStory.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // com.github.zly2006.zhihu.data/DailyTopStory.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): com.github.zly2006.zhihu.data/DailyTopStory // com.github.zly2006.zhihu.data/DailyTopStory.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, com.github.zly2006.zhihu.data/DailyTopStory) // com.github.zly2006.zhihu.data/DailyTopStory.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;com.github.zly2006.zhihu.data.DailyTopStory){}[0]
+    }
+
+    final object Companion { // com.github.zly2006.zhihu.data/DailyTopStory.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.data/DailyTopStory> // com.github.zly2006.zhihu.data/DailyTopStory.Companion.serializer|serializer(){}[0]
     }
 }
 
