@@ -932,9 +932,6 @@ private fun formatReadingRelativeTime(
 }
 
 private fun String?.cleanReadingMetadata(): String {
-    val value = orEmpty()
-        .takeUnless { it.equals("loading...", ignoreCase = true) }
-        .orEmpty()
-        .trim()
+    val value = orEmpty().trim()
     return if ('<' in value || '&' in value) Ksoup.parse(value).text().trim() else value
 }

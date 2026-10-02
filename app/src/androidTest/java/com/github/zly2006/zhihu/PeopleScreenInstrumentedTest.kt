@@ -349,6 +349,7 @@ class PeopleScreenInstrumentedTest {
             seededViewModel.isBlockedInRecommendations = false
             seededViewModel.isBlockedAsQuestionAuthor = false
             seededViewModel.memberHashId = ROOT_PERSON.id
+            seededViewModel.isLoaded = true
 
             seededViewModel.answersFeedModel.allData.clear()
             seededViewModel.answersFeedModel.allData.addAll(answerData)

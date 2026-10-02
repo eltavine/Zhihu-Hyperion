@@ -42,7 +42,7 @@ val Feed.Target.navDestination: NavDestination?
             title = question.title,
             type = ArticleType.Answer,
             id = id,
-            authorName = author?.name ?: "loading...",
+            authorName = author?.name.orEmpty(),
             authorBio = author?.headline ?: "",
             avatarSrc = author?.avatarUrl,
             excerpt = excerpt,

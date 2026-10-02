@@ -285,6 +285,7 @@ fun QuestionScreen(
                         ) {
                             QuestionHeaderSection(
                                 title = title,
+                                isLoaded = isQuestionLoaded,
                                 visitCount = visitCount,
                                 commentCount = commentCount,
                                 followerCount = followerCount,
@@ -408,20 +409,25 @@ private fun QuestionTopBar(
 @Composable
 private fun QuestionHeaderSection(
     title: String,
+    isLoaded: Boolean,
     visitCount: Int,
     commentCount: Int,
     followerCount: Int,
     onShowComments: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        SelectionContainer(modifier = Modifier.questionSelectionWorkaround()) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.testTag(QUESTION_TITLE_TAG),
-            )
+        if (title.isNotBlank()) {
+            SelectionContainer(modifier = Modifier.questionSelectionWorkaround()) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.testTag(QUESTION_TITLE_TAG),
+                )
+            }
         }
+        // 浏览、评论和关注数在问题详情返回前未知，不显示占位的 0。
+        if (!isLoaded) return@Column
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp),

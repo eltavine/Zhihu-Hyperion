@@ -348,6 +348,9 @@ class PersonViewModel(
     var isBlockedAsQuestionAuthor by mutableStateOf(false)
     var memberHashId by mutableStateOf(person.id)
 
+    /** 用户资料已加载；之前不显示关注、拉黑等操作和占位的 0 计数。 */
+    var isLoaded by mutableStateOf(false)
+
     // 只实现已有数据类型的 ViewModel
     val answersFeedModel = PeopleAnswersViewModel(person)
     val articlesFeedModel = PeopleArticlesViewModel(person)
@@ -473,6 +476,7 @@ class PersonViewModel(
         if (urlToken != null) {
             this.person.urlToken = urlToken
         }
+        isLoaded = true
 
         this.githubSocial = try {
             val detailUrl =
@@ -1733,6 +1737,7 @@ private fun UserInfoHeader(
                 }
             }
         }
+        if (!viewModel.isLoaded) return@Column
         FlowRow(
             modifier = Modifier
                 .fillMaxWidth()
