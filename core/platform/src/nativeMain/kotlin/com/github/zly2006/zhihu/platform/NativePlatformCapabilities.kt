@@ -47,9 +47,6 @@ actual fun rememberSystemUrlOpener(): SystemUrlOpener = rememberExternalUrlOpene
 actual fun rememberZhihuWebUrlOpener(): ZhihuWebUrlOpener = rememberExternalUrlOpener()
 
 @Composable
-actual fun rememberImagePreviewOpener(): ImagePreviewOpener = rememberExternalUrlOpener()
-
-@Composable
 actual fun rememberImageSaver(): ImageSaver {
     val scope = rememberCoroutineScope()
     val userMessages = rememberUserMessageSink()
@@ -59,10 +56,9 @@ actual fun rememberImageSaver(): ImageSaver {
             override fun invoke(url: String) {
                 scope.launch {
                     runCatching {
-                        saveNativeImageToDownloads(accountStore, url)
-                    }.onSuccess { filePath ->
-                        userMessages.showShortMessage("已保存图片: $filePath")
-                    }.onFailure { error ->
+                        val image = downloadNativeImage(accountStore, url)
+                        storeNativeImage(image.bytes, image.extension)
+                    }.onSuccess(userMessages::showShortMessage).onFailure { error ->
                         userMessages.showShortMessage("保存失败: ${error.message}")
                     }
                 }
@@ -71,29 +67,16 @@ actual fun rememberImageSaver(): ImageSaver {
     }
 }
 
-@Composable
-actual fun rememberImageSharer(): ImageSharer {
-    val userMessages = rememberUserMessageSink()
-    return remember(userMessages) {
-        object : ImageSharer {
-            override fun invoke(url: String) {
-                runCatching {
-                    copyNativePlainText(url)
-                    userMessages.showShortMessage("已复制图片链接")
-                }.onFailure { error ->
-                    userMessages.showShortMessage("分享失败: ${error.message}")
-                }
-            }
-        }
-    }
-}
+internal class NativeImage(
+    val bytes: ByteArray,
+    val extension: String,
+)
 
-@OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
-private suspend fun saveNativeImageToDownloads(
+internal suspend fun downloadNativeImage(
     accountStore: ZhihuAccountStore,
     imageUrl: String,
-): String {
-    val imageBytes = accountStore.client
+): NativeImage {
+    val bytes = accountStore.client
         .httpClient()
         .get(imageUrl)
         .body<ByteArray>()
@@ -102,23 +85,17 @@ private suspend fun saveNativeImageToDownloads(
         .substringAfterLast('/')
         .substringAfterLast('.', "")
         .takeIf { it.length in 2..5 } ?: "jpg"
-    val downloadsDirectory = nativeDownloadsDirectoryPath()
-    NSFileManager.defaultManager.createDirectoryAtPath(
-        downloadsDirectory,
-        withIntermediateDirectories = true,
-        attributes = null,
-        error = null,
-    )
-    val filePath = "$downloadsDirectory/image_${Clock.System.now().toEpochMilliseconds()}.$extension"
-    val written = imageBytes.usePinned { pinned ->
-        NSFileManager.defaultManager.createFileAtPath(
-            filePath,
-            contents = NSData.dataWithBytes(pinned.addressOf(0), imageBytes.size.toULong()),
-            attributes = null,
-        )
-    }
-    check(written) { "无法写入 $filePath" }
-    return filePath
+    return NativeImage(bytes, extension)
+}
+
+/** 把下载好的图片存到用户能找到的位置，返回给用户看的提示。 */
+internal expect suspend fun storeNativeImage(bytes: ByteArray, extension: String): String
+
+@OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
+internal fun ByteArray.toNSData(): NSData = if (isEmpty()) {
+    NSData()
+} else {
+    usePinned { pinned -> NSData.dataWithBytes(pinned.addressOf(0), size.toULong()) }
 }
 
 @Composable

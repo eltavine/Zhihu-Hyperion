@@ -30,8 +30,6 @@ expect fun nativeAccountFilePath(): String
 
 expect fun nativeAppPrivateDirectoryPath(): String
 
-internal expect fun nativeDownloadsDirectoryPath(): String
-
 expect fun nativeChooseBlocklistImportFilePath(): String?
 
 fun nativeBundledResourcePath(relativePath: String): String? =

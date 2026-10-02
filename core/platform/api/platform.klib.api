@@ -1,5 +1,6 @@
 // Klib ABI Dump
 // Targets: [iosArm64, iosSimulatorArm64, macosArm64]
+// Alias: ios => [iosArm64, iosSimulatorArm64]
 // Rendering settings:
 // - Signature version: 2
 // - Show manifest properties: true
@@ -134,6 +135,9 @@ final fun com.github.zly2006.zhihu.platform/rememberWebViewUrlOpener(androidx.co
 final fun com.github.zly2006.zhihu.platform/rememberZhihuWebUrlOpener(androidx.compose.runtime/Composer?, kotlin/Int): com.github.zly2006.zhihu.platform/ZhihuWebUrlOpener // com.github.zly2006.zhihu.platform/rememberZhihuWebUrlOpener|rememberZhihuWebUrlOpener(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
 final fun com.github.zly2006.zhihu.platform/showNativeUserMessage(kotlin/String, com.github.zly2006.zhihu.platform/UserMessageDuration = ...) // com.github.zly2006.zhihu.platform/showNativeUserMessage|showNativeUserMessage(kotlin.String;com.github.zly2006.zhihu.platform.UserMessageDuration){}[0]
 final fun com.github.zly2006.zhihu.ui.components/OpenImagePreviewContent(kotlin.collections/List<kotlin/String>, kotlin/Int, kotlin/Function0<kotlin/Unit>, kotlin/Function1<kotlin/String, kotlin/Unit>, kotlin/Function6<kotlin/String, kotlin/Function0<kotlin/Unit>, kotlin/Function1<androidx.compose.ui.geometry/Offset, kotlin/Unit>, kotlin/Function1<kotlin/Boolean, kotlin/Unit>, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int) // com.github.zly2006.zhihu.ui.components/OpenImagePreviewContent|OpenImagePreviewContent(kotlin.collections.List<kotlin.String>;kotlin.Int;kotlin.Function0<kotlin.Unit>;kotlin.Function1<kotlin.String,kotlin.Unit>;kotlin.Function6<kotlin.String,kotlin.Function0<kotlin.Unit>,kotlin.Function1<androidx.compose.ui.geometry.Offset,kotlin.Unit>,kotlin.Function1<kotlin.Boolean,kotlin.Unit>,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+// Targets: [ios]
+final fun com.github.zly2006.zhihu.platform/presentShareSheet(kotlin.collections/List<kotlin/Any>) // com.github.zly2006.zhihu.platform/presentShareSheet|presentShareSheet(kotlin.collections.List<kotlin.Any>){}[0]
 
 // Targets: [macosArm64]
 final const val com.github.zly2006.zhihu.data/BACKGROUND_UI_DEBUG_DATA_HOME_ENV // com.github.zly2006.zhihu.data/BACKGROUND_UI_DEBUG_DATA_HOME_ENV|{}BACKGROUND_UI_DEBUG_DATA_HOME_ENV[0]

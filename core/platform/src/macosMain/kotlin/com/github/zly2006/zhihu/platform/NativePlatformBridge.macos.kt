@@ -30,8 +30,10 @@ import platform.AppKit.NSOpenPanel
 import platform.AppKit.NSPasteboard
 import platform.AppKit.NSPasteboardTypeString
 import platform.AppKit.NSWorkspace
+import platform.Foundation.NSFileManager
 import platform.Foundation.NSHomeDirectory
 import platform.Foundation.NSURL
+import kotlin.time.Clock
 
 actual val nativeIsDesktop: Boolean = true
 
@@ -73,9 +75,42 @@ actual fun nativeAccountFilePath(): String =
 actual fun nativeAppPrivateDirectoryPath(): String =
     macosAppDataDirectoryPath()
 
-internal actual fun nativeDownloadsDirectoryPath(): String =
-    macosBackgroundUiDebugDataDirectoryPath()?.let { "$it/Downloads" }
+@OptIn(ExperimentalForeignApi::class)
+internal actual suspend fun storeNativeImage(bytes: ByteArray, extension: String): String {
+    val downloadsDirectory = macosBackgroundUiDebugDataDirectoryPath()?.let { "$it/Downloads" }
         ?: "${NSHomeDirectory()}/Downloads"
+    NSFileManager.defaultManager.createDirectoryAtPath(
+        downloadsDirectory,
+        withIntermediateDirectories = true,
+        attributes = null,
+        error = null,
+    )
+    val filePath = "$downloadsDirectory/image_${Clock.System.now().toEpochMilliseconds()}.$extension"
+    check(NSFileManager.defaultManager.createFileAtPath(filePath, contents = bytes.toNSData(), attributes = null)) {
+        "无法写入 $filePath"
+    }
+    return "已保存图片: $filePath"
+}
+
+@Composable
+actual fun rememberImagePreviewOpener(): ImagePreviewOpener = rememberExternalUrlOpener()
+
+@Composable
+actual fun rememberImageSharer(): ImageSharer {
+    val userMessages = rememberUserMessageSink()
+    return remember(userMessages) {
+        object : ImageSharer {
+            override fun invoke(url: String) {
+                runCatching {
+                    copyNativePlainText(url)
+                    userMessages.showShortMessage("已复制图片链接")
+                }.onFailure { error ->
+                    userMessages.showShortMessage("分享失败: ${error.message}")
+                }
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalForeignApi::class)
 actual fun nativeChooseBlocklistImportFilePath(): String? {
