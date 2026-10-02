@@ -39,16 +39,12 @@ import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedInteractionViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.replaceHomeFeedItemsWithFilteredResult
+import com.github.zly2006.zhihu.viewmodel.feed.reportContentRead
 import com.github.zly2006.zhihu.viewmodel.filter.ContentDetailProvider
 import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
 import com.github.zly2006.zhihu.viewmodel.getOrFetchContentDetail
-import com.github.zly2006.zhihu.viewmodel.postSigned
 import com.github.zly2006.zhihu.viewmodel.toFeedDisplaySettings
-import io.ktor.client.request.forms.MultiPartFormDataContent
-import io.ktor.client.request.forms.formData
 import io.ktor.client.request.get
-import io.ktor.client.request.header
-import io.ktor.client.request.setBody
 import io.ktor.http.decodeURLPart
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.CancellationException
@@ -144,26 +140,7 @@ class AndroidHomeFeedViewModel(
 
     override fun onUiContentClick(environment: ZhihuApiEnvironment, feed: Feed, item: FeedDisplayItem) {
         viewModelScope.launch(Dispatchers.Default) {
-            if (environment.authenticatedCookies()["d_c0"] != null) {
-                val payloadItem = when (val target = feed.target) {
-                    is Feed.AnswerTarget -> listOf("answer", target.id.toString(), "read")
-                    is Feed.ArticleTarget -> listOf("article", target.id.toString(), "read")
-                    is Feed.PinTarget -> listOf("pin", target.id.toString(), "read")
-                    else -> null
-                }
-                if (payloadItem != null) {
-                    environment.postSigned("https://www.zhihu.com/lastread/touch") {
-                        header("x-requested-with", "fetch")
-                        setBody(
-                            MultiPartFormDataContent(
-                                formData {
-                                    append("items", ZhihuJson.json.encodeToString(listOf(payloadItem)))
-                                },
-                            ),
-                        )
-                    }
-                }
-            }
+            environment.reportContentRead(feed)
         }
     }
 }

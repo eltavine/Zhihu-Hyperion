@@ -31,6 +31,7 @@ import com.github.zly2006.zhihu.data.target
 import com.github.zly2006.zhihu.navigation.Question
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.util.Log
+import com.github.zly2006.zhihu.util.suspendRunCatching
 import com.github.zly2006.zhihu.viewmodel.HomeFeedFilterResult
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.filter.ContentDetailProvider
@@ -162,6 +163,29 @@ interface HomeFeedInteractionViewModel {
     fun onUiContentClick(environment: ZhihuApiEnvironment, feed: Feed, item: FeedDisplayItem)
 }
 
+/** 向知乎上报点开的回答、文章或想法已读。这只是同步阅读记录，失败（例如断网）时只记日志，不打扰用户。 */
+internal suspend fun ZhihuApiEnvironment.reportContentRead(feed: Feed) {
+    if (authenticatedCookies()["d_c0"] == null) return
+    val payloadItem = when (val target = feed.target) {
+        is Feed.AnswerTarget -> listOf("answer", target.id.toString(), "read")
+        is Feed.ArticleTarget -> listOf("article", target.id.toString(), "read")
+        is Feed.PinTarget -> listOf("pin", target.id.toString(), "read")
+        else -> return
+    }
+    suspendRunCatching {
+        postSigned("https://www.zhihu.com/lastread/touch") {
+            header("x-requested-with", "fetch")
+            setBody(
+                MultiPartFormDataContent(
+                    formData {
+                        append("items", ZhihuJson.json.encodeToString(listOf(payloadItem)))
+                    },
+                ),
+            )
+        }
+    }.onFailure { Log.w("HomeFeedViewModel", "Failed to report content read", it) }
+}
+
 class HomeFeedViewModel(
     settings: SettingsStore,
     private val filter: HomeFeedFilter,
@@ -246,26 +270,7 @@ class HomeFeedViewModel(
      */
     override fun onUiContentClick(environment: ZhihuApiEnvironment, feed: Feed, item: FeedDisplayItem) {
         viewModelScope.launch(Dispatchers.Default) {
-            if (environment.authenticatedCookies()["d_c0"] != null) {
-                val payloadItem = when (val target = feed.target) {
-                    is Feed.AnswerTarget -> listOf("answer", target.id.toString(), "read")
-                    is Feed.ArticleTarget -> listOf("article", target.id.toString(), "read")
-                    is Feed.PinTarget -> listOf("pin", target.id.toString(), "read")
-                    else -> null
-                }
-                if (payloadItem != null) {
-                    environment.postSigned("https://www.zhihu.com/lastread/touch") {
-                        header("x-requested-with", "fetch")
-                        setBody(
-                            MultiPartFormDataContent(
-                                formData {
-                                    append("items", ZhihuJson.json.encodeToString(listOf(payloadItem)))
-                                },
-                            ),
-                        )
-                    }
-                }
-            }
+            environment.reportContentRead(feed)
             recordContentInteraction(environment, feed)
         }
     }
