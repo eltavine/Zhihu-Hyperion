@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -197,11 +198,12 @@ fun SystemAndUpdateSettingsScreen(
                                     SelectionContainer {
                                         Text(
                                             buildAnnotatedString {
-                                                val prRegex = Regex("https://github.com/eltavine/Zhihu-Hyperion/pull/(\\d+)")
+                                                // git-cliff writes "(#123)"; manifests published before it link the whole URL.
+                                                val prRegex = Regex("https://github.com/eltavine/Zhihu-Hyperion/pull/(\\d+)|#(\\d+)")
                                                 var lastIndex = 0
                                                 prRegex.findAll(update.notes).forEach { matchResult ->
                                                     append(update.notes.substring(lastIndex, matchResult.range.first))
-                                                    val prNumber = matchResult.groupValues[1]
+                                                    val prNumber = matchResult.groupValues[1].ifEmpty { matchResult.groupValues[2] }
                                                     withLink(LinkAnnotation.Url("https://github.com/eltavine/Zhihu-Hyperion/pull/$prNumber")) {
                                                         withStyle(
                                                             MaterialTheme.typography.bodyMedium
