@@ -142,6 +142,7 @@ public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$B
 	public final fun getLambda$1107857112$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda$126848883$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$1419712380$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$611794132$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$BlockUserDialogKt {
@@ -169,11 +170,11 @@ public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$C
 public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$CreateCollectionDialogKt {
 	public static final field INSTANCE Lcom/github/zly2006/zhihu/ui/components/ComposableSingletons$CreateCollectionDialogKt;
 	public fun <init> ()V
-	public final fun getLambda$-1041727573$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-1871376566$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-2090611148$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-712665230$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$1086175635$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-118259998$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1999347619$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-655871894$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-917834527$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1308659571$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$DraggablePageTurnButtonsKt {
@@ -191,12 +192,11 @@ public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$D
 public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$ExportDialogComponentKt {
 	public static final field INSTANCE Lcom/github/zly2006/zhihu/ui/components/ComposableSingletons$ExportDialogComponentKt;
 	public fun <init> ()V
-	public final fun getLambda$-1417860080$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-368247858$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-893053969$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$156558253$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$861778855$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$978024890$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1137851587$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-2064606340$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-560897930$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$247714155$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$280310542$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$FeedCardKt {
@@ -336,7 +336,7 @@ public final class com/github/zly2006/zhihu/ui/components/FeedCardKt {
 }
 
 public final class com/github/zly2006/zhihu/ui/components/GroupedListItemKt {
-	public static final fun GroupedListItem (IILkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun GroupedListItem (IILkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/github/zly2006/zhihu/ui/components/IconShape : java/lang/Enum {

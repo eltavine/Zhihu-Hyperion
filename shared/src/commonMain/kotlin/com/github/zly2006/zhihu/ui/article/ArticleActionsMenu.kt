@@ -48,6 +48,8 @@ import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.platform.SettingsStore
+import com.github.zly2006.zhihu.platform.isArticleHtmlExportSupported
+import com.github.zly2006.zhihu.platform.isArticleImageExportSupported
 import com.github.zly2006.zhihu.reading.ReadingContentType
 import com.github.zly2006.zhihu.reading.ReadingQueueItem
 import com.github.zly2006.zhihu.reading.ReadingQueueSourceRegistry
@@ -381,7 +383,11 @@ fun ArticleActionsMenu(
         Spacer(modifier = Modifier.height(12.dp))
         MenuActionButton(
             icon = AppIcons.Download,
-            text = "导出文章 (Markdown、图片、HTML、PDF)",
+            text = listOfNotNull(
+                "Markdown",
+                "图片".takeIf { isArticleImageExportSupported },
+                "HTML".takeIf { isArticleHtmlExportSupported },
+            ).joinToString("、", prefix = "导出文章（", postfix = "）"),
             onClick = {
                 onDismissRequest()
                 onExportRequest()

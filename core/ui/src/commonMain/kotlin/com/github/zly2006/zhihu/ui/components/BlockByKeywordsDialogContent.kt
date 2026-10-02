@@ -89,6 +89,7 @@ fun BlockByKeywordsDialogContent(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = onDismiss,
+            icon = { Icon(AppIcons.MatchWord, contentDescription = null) },
             title = { Text("按关键词屏蔽") },
             text = {
                 Column(
