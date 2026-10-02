@@ -50,6 +50,8 @@ targets:
         # Compose Multiplatform renders at 120 Hz on ProMotion displays only with this key.
         CADisableMinimumFrameDurationOnPhone: true
         ITSAppUsesNonExemptEncryption: false
+        # Saving an image (long press in the image viewer or the share sheet's Save Image) adds it to Photos.
+        NSPhotoLibraryAddUsageDescription: 把你要保存的图片存入“照片”。
         UILaunchScreen:
           UIColorName: LaunchBackground
         UIApplicationSceneManifest:

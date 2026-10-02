@@ -47,5 +47,10 @@ kotlin {
         macosMain.dependencies {
             implementation(libs.jetbrains.navigationevent.compose)
         }
+        // telephoto 的缩放手势支持 iOS 但没有 macOS 目标，所以只有 iOS 用它做应用内看图。
+        iosMain.dependencies {
+            implementation(libs.telephoto.zoomable)
+            implementation(libs.coil.compose)
+        }
     }
 }

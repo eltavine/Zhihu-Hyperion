@@ -52,20 +52,6 @@ actual fun rememberWebViewUrlOpener(): WebViewUrlOpener = remember {
     }
 }
 
-@Composable
-actual fun rememberImageGalleryOpener(): ImageGalleryOpener {
-    val openExternalUrl = rememberExternalUrlOpener()
-    return remember(openExternalUrl) {
-        object : ImageGalleryOpener {
-            override fun invoke(urls: List<String>, initialIndex: Int) {
-                if (urls.isNotEmpty()) {
-                    openExternalUrl(urls[initialIndex.coerceIn(0, urls.lastIndex)])
-                }
-            }
-        }
-    }
-}
-
 actual fun copyNativePlainText(text: String) {
     UIPasteboard.generalPasteboard.string = text
 }
@@ -85,7 +71,5 @@ actual fun nativeAppPrivateDirectoryPath(): String = checkNotNull(
             error = null,
         )?.path,
 ) { "iOS 没有提供 Application Support 目录" }
-
-internal actual fun nativeDownloadsDirectoryPath(): String = "${nativeAppPrivateDirectoryPath()}/Downloads"
 
 actual fun nativeChooseBlocklistImportFilePath(): String? = null
