@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,7 +18,11 @@
 
 package com.github.zly2006.zhihu
 
+import android.graphics.Bitmap
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
+import android.view.PixelCopy
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -38,6 +43,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import androidx.compose.ui.graphics.Color as ComposeColor
 
 @RunWith(AndroidJUnit4::class)
@@ -97,7 +104,22 @@ class SystemBarsInstrumentedTest {
     }
 
     private fun sampleStatusBarColors(activity: MainActivity): List<Int> {
-        val screenshot = InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
+        // Copy only the app's own window: a system window on top, such as a splash screen whose exit animation stalled
+        // on a slow CI emulator, dims a full-screen screenshot but says nothing about what the app draws under the bar.
+        val window = activity.window
+        val screenshot = Bitmap.createBitmap(window.decorView.width, window.decorView.height, Bitmap.Config.ARGB_8888)
+        val copied = CountDownLatch(1)
+        var copyResult = PixelCopy.ERROR_UNKNOWN
+        PixelCopy.request(
+            window,
+            screenshot,
+            { result ->
+                copyResult = result
+                copied.countDown()
+            },
+            Handler(Looper.getMainLooper()),
+        )
+        check(copied.await(5, TimeUnit.SECONDS) && copyResult == PixelCopy.SUCCESS) { "PixelCopy failed: $copyResult" }
         val statusBarHeight = ViewCompat
             .getRootWindowInsets(activity.window.decorView)
             ?.getInsets(WindowInsetsCompat.Type.statusBars())

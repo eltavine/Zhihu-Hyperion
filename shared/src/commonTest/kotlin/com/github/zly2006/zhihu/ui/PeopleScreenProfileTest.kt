@@ -154,6 +154,23 @@ class PeopleScreenProfileTest {
         assertNull(viewModel.githubSocial)
     }
 
+    @Test
+    fun zhihuErrorForProfileIsShownInsteadOfThrown() = runTest {
+        val environment = RecordingProfileEnvironment(
+            baseProfile = ZhihuJson.json
+                .parseToJsonElement("""{"error":{"need_login":true,"code":40353,"message":"请您登录后查看更多专业优质内容。"}}""")
+                .jsonObject,
+            detailResult = Result.success(null),
+        )
+        val viewModel = PersonViewModel(person(), MapSettingsStore())
+
+        viewModel.load(environment, HistoryStorage(NoHistory), FakeBlockedUserDao(), FakeBlockedQuestionAuthorDao())
+
+        assertFalse(viewModel.isLoaded)
+        assertEquals("请您登录后查看更多专业优质内容。", viewModel.loadFailure?.message)
+        assertEquals(true, viewModel.loadFailure?.needLogin)
+    }
+
     private fun person() = Person(
         id = "profile-id",
         name = "Profile User",

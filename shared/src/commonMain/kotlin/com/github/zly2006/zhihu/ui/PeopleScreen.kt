@@ -53,6 +53,7 @@ import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -101,6 +102,7 @@ import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.Person
 import com.github.zly2006.zhihu.navigation.Pin
 import com.github.zly2006.zhihu.navigation.Question
+import com.github.zly2006.zhihu.navigation.requestLoginNavigation
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.rememberExternalUrlOpener
 import com.github.zly2006.zhihu.platform.rememberImagePreviewOpener
@@ -108,6 +110,8 @@ import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.platform.rememberZhihuWebUrlOpener
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
 import com.github.zly2006.zhihu.ui.components.AuthorBadge
+import com.github.zly2006.zhihu.ui.components.EmptyState
+import com.github.zly2006.zhihu.ui.components.EmptyStateAction
 import com.github.zly2006.zhihu.ui.components.FeedCard
 import com.github.zly2006.zhihu.ui.components.PageTurnTarget
 import com.github.zly2006.zhihu.ui.components.PaginatedList
@@ -115,8 +119,11 @@ import com.github.zly2006.zhihu.ui.components.ProgressIndicatorFooter
 import com.github.zly2006.zhihu.ui.components.pageTurnViewportWithGuide
 import com.github.zly2006.zhihu.ui.components.rememberPageTurnTarget
 import com.github.zly2006.zhihu.util.Log
+import com.github.zly2006.zhihu.util.ZhihuApiErrorException
 import com.github.zly2006.zhihu.util.jsonObject
 import com.github.zly2006.zhihu.util.raiseForStatus
+import com.github.zly2006.zhihu.util.zhihuApiErrorOrNull
+import com.github.zly2006.zhihu.viewmodel.ContentLoadFailure
 import com.github.zly2006.zhihu.viewmodel.PaginationViewModel
 import com.github.zly2006.zhihu.viewmodel.ZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.addReadHistory
@@ -351,6 +358,10 @@ class PersonViewModel(
     /** 用户资料已加载；之前不显示关注、拉黑等操作和占位的 0 计数。 */
     var isLoaded by mutableStateOf(false)
 
+    /** 用户资料加载失败的原因；不为 null 时整页显示错误状态，不再显示资料头和各个标签页。 */
+    var loadFailure: ContentLoadFailure? by mutableStateOf(null)
+        private set
+
     // 只实现已有数据类型的 ViewModel
     val answersFeedModel = PeopleAnswersViewModel(person)
     val articlesFeedModel = PeopleArticlesViewModel(person)
@@ -441,13 +452,25 @@ class PersonViewModel(
         blockedUsers: BlockedUserDao,
         blockedQuestionAuthors: BlockedQuestionAuthorDao,
     ) {
+        loadFailure = null
         environment.addReadHistory(person.id, "profile")
 
         val profileUrl = "https://api.zhihu.com/people/${person.urlToken.takeIf(String::isNotBlank) ?: person.id}"
-        val jojo = environment.fetchJson(profileUrl, PEOPLE_PROFILE_INCLUDE_PATH)
-            ?: error("用户资料为空")
-
-        val loadedPerson = ZhihuJson.decodeJson<DataHolder.People>(jojo)
+        val loadedPerson = try {
+            val jojo = environment.fetchJson(profileUrl, PEOPLE_PROFILE_INCLUDE_PATH)
+                ?: error("用户资料为空")
+            jojo.zhihuApiErrorOrNull()?.let { throw it }
+            ZhihuJson.decodeJson<DataHolder.People>(jojo)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: ZhihuApiErrorException) {
+            loadFailure = ContentLoadFailure(e.message, e.needLogin)
+            return
+        } catch (e: Exception) {
+            Log.e("PersonViewModel", "Failed to load profile", e)
+            loadFailure = ContentLoadFailure("用户资料加载失败，请稍后重试", needLogin = false)
+            return
+        }
         val urlToken = loadedPerson.urlToken
 
         history.add(
@@ -566,6 +589,7 @@ private val PEOPLE_SCREEN_SUBSCRIPTION_TITLES = listOf(
 )
 
 const val PEOPLE_SCREEN_ROOT_TAG = "people_screen_root"
+const val PEOPLE_SCREEN_LOAD_FAILURE_TAG = "people_screen_load_failure"
 const val PEOPLE_SCREEN_HEADER_TAG = "people_screen_header"
 const val PEOPLE_SCREEN_AVATAR_TAG = "people_screen_avatar"
 const val PEOPLE_SCREEN_TAB_ROW_TAG = "people_screen_tab_row"
@@ -727,6 +751,40 @@ fun PeopleScreen(
         }
     }
     val collapsedFraction = scrollBehavior.state.collapsedFraction
+
+    viewModel.loadFailure?.let { failure ->
+        Scaffold(
+            modifier = Modifier.testTag(PEOPLE_SCREEN_ROOT_TAG).fillMaxSize(),
+            topBar = {
+                TopAppBar(
+                    title = { Text(person.name) },
+                    navigationIcon = {
+                        IconButton(onClick = navigator.onNavigateBack) {
+                            Icon(AppIcons.ArrowBack, contentDescription = "返回")
+                        }
+                    },
+                )
+            },
+        ) { innerPadding ->
+            Box(Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center) {
+                EmptyState(
+                    icon = if (failure.needLogin) AppIcons.Login else AppIcons.Error,
+                    title = failure.message,
+                    modifier = Modifier.testTag(PEOPLE_SCREEN_LOAD_FAILURE_TAG),
+                    action = if (failure.needLogin) {
+                        EmptyStateAction("登录", AppIcons.Login, onClick = ::requestLoginNavigation)
+                    } else {
+                        EmptyStateAction("重试", AppIcons.Refresh) {
+                            coroutineScope.launch {
+                                viewModel.load(paginationEnvironment, history, contentFilterDatabase.blockedUserDao(), contentFilterDatabase.blockedQuestionAuthorDao())
+                            }
+                        }
+                    },
+                )
+            }
+        }
+        return
+    }
 
     Scaffold(
         modifier = Modifier
