@@ -66,5 +66,10 @@ kotlin {
                 compileOnly(javafx(module))
             }
         }
+        jvmTest.dependencies {
+            listOf("base", "graphics", "web").forEach { module ->
+                implementation(javafx(module))
+            }
+        }
     }
 }

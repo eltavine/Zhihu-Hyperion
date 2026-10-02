@@ -22,6 +22,7 @@ import com.github.zly2006.zhihu.buildlogic.gitShortHash
 import com.github.zly2006.zhihu.buildlogic.javafx
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import java.util.zip.ZipFile
 
 val appVersionName = property("app.versionName").toString()
 val desktopPackageVersion = if (appVersionName.count { it == '.' } >= 2) appVersionName else "$appVersionName.0"
@@ -117,6 +118,50 @@ tasks.withType<Jar>().configureEach {
     }
 }
 
+// ProGuard 看不到只经 ServiceLoader（META-INF/services）发现的实现类，会当作无用代码删掉，缺失只在 release 包运行时才暴露
+// （Coil 的网络图片 fetcher 就这样失效过）。打包前核对 release jar 里每条服务登记的实现类都还在。
+val verifyReleaseServiceProviders =
+    tasks.register("verifyReleaseServiceProviders") {
+        val proguardOutput = layout.buildDirectory.dir("compose/tmp/main-release/proguard")
+        dependsOn("proguardReleaseJars")
+        inputs.dir(proguardOutput)
+        doLast {
+            val jars =
+                proguardOutput
+                    .get()
+                    .asFile
+                    .listFiles { file -> file.extension == "jar" }
+                    .orEmpty()
+            check(jars.isNotEmpty()) { "没有找到 ProGuard 输出的 jar：${proguardOutput.get().asFile}" }
+            val classes = mutableSetOf<String>()
+            val providers = mutableMapOf<String, String>()
+            jars.forEach { jar ->
+                ZipFile(jar).use { zip ->
+                    zip.entries().asSequence().forEach { entry ->
+                        if (entry.name.endsWith(".class")) {
+                            classes += entry.name.removeSuffix(".class").replace('/', '.')
+                        } else if (entry.name.startsWith("META-INF/services/") && !entry.isDirectory) {
+                            zip.getInputStream(entry).bufferedReader().useLines { lines ->
+                                lines
+                                    .map { it.substringBefore('#').trim() }
+                                    .filter { it.isNotEmpty() }
+                                    .forEach { providers[it] = entry.name.removePrefix("META-INF/services/") }
+                            }
+                        }
+                    }
+                }
+            }
+            val missing = providers.filterKeys { it !in classes }
+            check(missing.isEmpty()) {
+                "ProGuard 删掉了这些 ServiceLoader 实现类，需要在 proguard-release.pro 里保留：" +
+                    missing.entries.joinToString { (impl, service) -> "$impl（$service）" }
+            }
+        }
+    }
+tasks
+    .matching { it.name == "packageReleaseDistributionForCurrentOS" || it.name == "packageReleaseUberJarForCurrentOS" }
+    .configureEach { dependsOn(verifyReleaseServiceProviders) }
+
 compose.desktop {
     application {
         mainClass = "com.github.zly2006.zhihu.desktop.MainKt"
@@ -140,6 +185,8 @@ compose.desktop {
             // 其余模块按依赖补齐（JavaFX WebView 的 JS 互操作、JDBC、HTTP、中文扩展字符集等）。
             // 依赖变化后用 ./gradlew :desktopApp:suggestModules 校对；注意 checkRuntime 不会
             // 校验模块是否齐全，缺模块只会在启动时报错，改完列表要实际跑一次安装包。
+            // JavaFX 走 classpath，suggestModules 看不到它的 module-info：javafx.swing（JFXPanel）要
+            // jdk.unsupported.desktop，javafx.web 要 jdk.xml.dom，少了前者网页登录和风控验证的 WebView 根本建不起来。
             modules(
                 "java.management",
                 "java.naming",
@@ -151,6 +198,8 @@ compose.desktop {
                 "jdk.charsets",
                 "jdk.jsobject",
                 "jdk.unsupported",
+                "jdk.unsupported.desktop",
+                "jdk.xml.dom",
                 "jdk.zipfs",
             )
 
