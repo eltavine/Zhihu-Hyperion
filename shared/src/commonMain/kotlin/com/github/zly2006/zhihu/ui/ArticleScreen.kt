@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,6 +51,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -60,6 +63,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -131,16 +135,16 @@ import com.github.zly2006.zhihu.ui.article.rememberArticleAnswerNavigationState
 import com.github.zly2006.zhihu.ui.article.rememberArticleBottomBarState
 import com.github.zly2006.zhihu.ui.article.rememberArticleTopBarState
 import com.github.zly2006.zhihu.ui.article.rememberBottomBarAvoidingBringIntoViewSpec
-import com.github.zly2006.zhihu.ui.article.voteUpActiveButtonColors
-import com.github.zly2006.zhihu.ui.article.voteUpNeutralButtonColors
 import com.github.zly2006.zhihu.ui.article.voteUpNeutralContent
 import com.github.zly2006.zhihu.ui.article.voteUpNeutralContentDuo3
 import com.github.zly2006.zhihu.ui.components.ANSWER_SWITCH_SENSITIVITY_PREFERENCE_KEY
+import com.github.zly2006.zhihu.ui.components.ActionToggleButton
 import com.github.zly2006.zhihu.ui.components.AnswerHorizontalOverscroll
 import com.github.zly2006.zhihu.ui.components.AnswerPreview
 import com.github.zly2006.zhihu.ui.components.AnswerVerticalOverscroll
 import com.github.zly2006.zhihu.ui.components.AppLoadingIndicator
 import com.github.zly2006.zhihu.ui.components.AuthorBadge
+import com.github.zly2006.zhihu.ui.components.BottomFloatingToolbar
 import com.github.zly2006.zhihu.ui.components.CollectionDialogComponent
 import com.github.zly2006.zhihu.ui.components.ContentEndMarker
 import com.github.zly2006.zhihu.ui.components.DEFAULT_ANSWER_SWITCH_SENSITIVITY
@@ -609,114 +613,48 @@ fun ArticleScreen(
                     @Composable
                     fun ActionBarContent() {
                         if (!useDuo3ArticleActions) {
-                            // ── 主视觉：按钮式投票与操作区 ────────────────────────
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp)
-                                    .padding(bottom = WindowInsets.systemBars.asPaddingValues().calculateBottomPadding() + 8.dp)
-                                    .height(36.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                            ) {
-                                Row(
-                                    modifier = Modifier
-                                        .clip(RoundedCornerShape(50))
-                                        .background(
-                                            color = if (viewModel.voteUpState == VoteUpState.Neutral) {
-                                                voteUpNeutralContent().copy(alpha = 0.1f)
-                                            } else {
-                                                voteUpNeutralContent()
-                                            },
-                                        ),
-                                    horizontalArrangement = Arrangement.Start,
+                            // ── 主视觉：Expressive 浮动操作栏 ─────────────────────
+                            BottomFloatingToolbar {
+                                val voteColor = voteUpNeutralContent()
+                                ActionToggleButton(
+                                    checked = viewModel.voteUpState == VoteUpState.Up,
+                                    onCheckedChange = { checked ->
+                                        viewModel.toggleVoteUp(environment, if (checked) VoteUpState.Up else VoteUpState.Neutral)
+                                    },
+                                    icon = { Icon(painterResource(Res.drawable.ic_vote_up_24dp), "赞同") },
+                                    label = viewModel.voteUpCount.toString(),
+                                    checkedContainerColor = voteColor,
+                                    checkedContentColor = Color.White,
+                                )
+                                ActionToggleButton(
+                                    checked = viewModel.voteUpState == VoteUpState.Down,
+                                    onCheckedChange = { checked ->
+                                        viewModel.toggleVoteUp(environment, if (checked) VoteUpState.Down else VoteUpState.Neutral)
+                                    },
+                                    icon = { Icon(painterResource(Res.drawable.ic_vote_down_24dp), "反对") },
+                                    checkedContainerColor = voteColor,
+                                    checkedContentColor = Color.White,
+                                )
+                                TextButton(
+                                    onClick = { showComments = true },
+                                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onSurface),
+                                    contentPadding = ButtonDefaults.TextButtonWithIconContentPadding,
                                 ) {
-                                    when (viewModel.voteUpState) {
-                                        VoteUpState.Neutral -> {
-                                            Button(
-                                                onClick = { viewModel.toggleVoteUp(environment, VoteUpState.Up) },
-                                                colors = voteUpNeutralButtonColors(),
-                                                shape = RectangleShape,
-                                                contentPadding = PaddingValues(horizontal = 0.dp),
-                                            ) {
-                                                Spacer(modifier = Modifier.width(4.dp))
-                                                Icon(painterResource(Res.drawable.ic_vote_up_24dp), "赞同")
-                                                Spacer(modifier = Modifier.width(4.dp))
-                                                Text(text = viewModel.voteUpCount.toString())
-                                            }
-                                            Button(
-                                                onClick = { viewModel.toggleVoteUp(environment, VoteUpState.Down) },
-                                                colors = voteUpNeutralButtonColors(),
-                                                shape = RectangleShape,
-                                                modifier = Modifier.height(ButtonDefaults.MinHeight).width(ButtonDefaults.MinHeight),
-                                                contentPadding = PaddingValues(horizontal = 0.dp),
-                                            ) {
-                                                Icon(painterResource(Res.drawable.ic_vote_down_24dp), "反对")
-                                            }
-                                        }
-
-                                        VoteUpState.Up -> {
-                                            Button(
-                                                onClick = { viewModel.toggleVoteUp(environment, VoteUpState.Neutral) },
-                                                colors = voteUpActiveButtonColors(),
-                                                shape = RectangleShape,
-                                                contentPadding = PaddingValues(horizontal = 0.dp),
-                                            ) {
-                                                Spacer(modifier = Modifier.width(4.dp))
-                                                Icon(painterResource(Res.drawable.ic_vote_up_24dp), "赞同")
-                                                Spacer(modifier = Modifier.width(4.dp))
-                                                Text(text = viewModel.voteUpCount.toString())
-                                                Spacer(modifier = Modifier.width(8.dp))
-                                            }
-                                        }
-
-                                        VoteUpState.Down -> {
-                                            Button(
-                                                onClick = { viewModel.toggleVoteUp(environment, VoteUpState.Neutral) },
-                                                colors = voteUpActiveButtonColors(),
-                                                shape = RectangleShape,
-                                                modifier = Modifier.height(ButtonDefaults.MinHeight),
-                                                contentPadding = PaddingValues(horizontal = 0.dp),
-                                            ) {
-                                                Icon(painterResource(Res.drawable.ic_vote_down_24dp), "反对")
-                                                Spacer(modifier = Modifier.width(4.dp))
-                                                Text("反对")
-                                                Spacer(modifier = Modifier.width(8.dp))
-                                            }
-                                        }
-                                    }
+                                    Icon(AppIcons.Comment, contentDescription = "评论")
+                                    Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+                                    Text(text = "${viewModel.commentCount}")
                                 }
-                                Row(horizontalArrangement = Arrangement.End) {
-                                    IconButton(
-                                        onClick = { showCollectionDialog = true },
-                                        colors = IconButtonDefaults.iconButtonColors(
-                                            containerColor = if (viewModel.isFavorited) Color(0xFFF57C00) else MaterialTheme.colorScheme.secondaryContainer,
-                                            contentColor = if (viewModel.isFavorited) Color.White else MaterialTheme.colorScheme.onSecondaryContainer,
-                                        ),
-                                    ) {
+                                ActionToggleButton(
+                                    checked = viewModel.isFavorited,
+                                    // 收藏要选收藏夹，点击总是打开收藏夹列表，选中态只反映结果。
+                                    onCheckedChange = { showCollectionDialog = true },
+                                    icon = {
                                         Icon(if (viewModel.isFavorited) AppIcons.BookmarkFilled else AppIcons.Bookmark, contentDescription = "收藏")
-                                    }
-                                    Button(
-                                        onClick = { showComments = true },
-                                        contentPadding = PaddingValues(start = 8.dp, end = 12.dp),
-                                        colors = voteUpNeutralButtonColors(),
-                                    ) {
-                                        Icon(AppIcons.Comment, contentDescription = "评论")
-                                        Spacer(modifier = Modifier.width(4.dp))
-                                        Text(text = "${viewModel.commentCount}")
-                                    }
-
-                                    IconButton(
-                                        onClick = { showActionsMenu = true },
-                                        colors = IconButtonDefaults.iconButtonColors(
-                                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        ),
-                                    ) {
-                                        Icon(
-                                            AppIcons.MoreVert,
-                                            contentDescription = "更多选项",
-                                        )
-                                    }
+                                    },
+                                    checkedContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                )
+                                IconButton(onClick = { showActionsMenu = true }) {
+                                    Icon(AppIcons.MoreVert, contentDescription = "更多选项")
                                 }
                             }
                         } else {
@@ -961,14 +899,14 @@ fun ArticleScreen(
                         fun ColumnScope.DateTexts() {
                             Text(
                                 "发布于 " + formatArticleDateTime(viewModel.createdAt),
-                                color = Color.Gray,
-                                fontSize = 11.sp,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                             if (viewModel.createdAt != viewModel.updatedAt) {
                                 Text(
                                     "编辑于 " + formatArticleDateTime(viewModel.updatedAt),
-                                    color = Color.Gray,
-                                    fontSize = 11.sp,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
                             }
                         }
@@ -1022,10 +960,12 @@ fun ArticleScreen(
                                     verticalArrangement = Arrangement.spacedBy(8.dp),
                                 ) {
                                     viewModel.topics.forEach { topic ->
-                                        androidx.compose.material3.FilterChip(
-                                            selected = false,
+                                        AssistChip(
                                             onClick = { navigator.onNavigate(Topic(topic.id, topic.name)) },
-                                            label = { Text("# ${topic.name}") },
+                                            label = { Text(topic.name) },
+                                            leadingIcon = {
+                                                Icon(AppIcons.Tag, contentDescription = null, modifier = Modifier.size(AssistChipDefaults.IconSize))
+                                            },
                                         )
                                     }
                                 }
@@ -1083,8 +1023,8 @@ fun ArticleScreen(
                                     if (viewModel.ipInfo != null) {
                                         Text(
                                             "IP属地：${viewModel.ipInfo}",
-                                            color = Color.Gray,
-                                            fontSize = 11.sp,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         )
                                     }
                                 }
@@ -1112,8 +1052,8 @@ fun ArticleScreen(
                                             if (viewModel.ipInfo != null) {
                                                 Text(
                                                     "IP属地：${viewModel.ipInfo}",
-                                                    color = Color.Gray,
-                                                    fontSize = 11.sp,
+                                                    style = MaterialTheme.typography.labelSmall,
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 )
                                             }
                                         }

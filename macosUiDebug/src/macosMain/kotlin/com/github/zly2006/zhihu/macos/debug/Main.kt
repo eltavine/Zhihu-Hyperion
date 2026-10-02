@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,9 +57,9 @@ import com.github.zly2006.zhihu.account.LoginScreen
 import com.github.zly2006.zhihu.data.BACKGROUND_UI_DEBUG_DATA_HOME_ENV
 import com.github.zly2006.zhihu.data.macosBackgroundUiDebugDataDirectoryPath
 import com.github.zly2006.zhihu.nativeZhihuModules
-import com.github.zly2006.zhihu.platform.MacosUserMessageHost
+import com.github.zly2006.zhihu.platform.NativeUserMessageHost
 import com.github.zly2006.zhihu.platform.UserMessageDuration
-import com.github.zly2006.zhihu.platform.showMacosUserMessage
+import com.github.zly2006.zhihu.platform.showNativeUserMessage
 import com.github.zly2006.zhihu.theme.ZhihuTheme
 import com.github.zly2006.zhihu.ui.MacosZhihuMain
 import kotlinx.cinterop.addressOf
@@ -165,13 +166,13 @@ fun main(args: Array<String>) {
                     }
                     if (rootName == "login") {
                         ZhihuTheme {
-                            MacosUserMessageHost {
+                            NativeUserMessageHost {
                                 LoginScreen(onLoginComplete = {})
                             }
                         }
                     } else {
                         ZhihuTheme {
-                            MacosUserMessageHost {
+                            NativeUserMessageHost {
                                 MacosZhihuMain()
                             }
                         }
@@ -341,7 +342,7 @@ private fun SkikoComposeUiTest.execute(
                 "long" -> UserMessageDuration.Long
                 else -> error("Unsupported user message duration")
             }
-            showMacosUserMessage(command.requiredString("message"), duration)
+            showNativeUserMessage(command.requiredString("message"), duration)
             waitForIdle()
             JsonNull
         }

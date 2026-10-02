@@ -8,6 +8,15 @@ public final class com/github/zly2006/zhihu/navigation/AndroidArticleNavigationH
 	public final fun prepareComment (Lcom/github/zly2006/zhihu/navigation/CommentHolder;)V
 }
 
+public final class com/github/zly2006/zhihu/ui/components/ActionEmphasis : java/lang/Enum {
+	public static final field Filled Lcom/github/zly2006/zhihu/ui/components/ActionEmphasis;
+	public static final field Outlined Lcom/github/zly2006/zhihu/ui/components/ActionEmphasis;
+	public static final field Tonal Lcom/github/zly2006/zhihu/ui/components/ActionEmphasis;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/zly2006/zhihu/ui/components/ActionEmphasis;
+	public static fun values ()[Lcom/github/zly2006/zhihu/ui/components/ActionEmphasis;
+}
+
 public final class com/github/zly2006/zhihu/ui/components/AndroidComponentsKt {
 	public static final fun extractFeedKeywords (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun rememberShareActionExecutor (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/ui/components/ShareActionExecutor;
@@ -77,7 +86,7 @@ public final class com/github/zly2006/zhihu/ui/components/AnswerVerticalOverscro
 }
 
 public final class com/github/zly2006/zhihu/ui/components/AppLoadingIndicatorKt {
-	public static final fun AppLoadingIndicator (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun AppLoadingIndicator-iJQMabo (Landroidx/compose/ui/Modifier;JLandroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/github/zly2006/zhihu/ui/components/AppPullToRefreshBoxKt {
@@ -114,6 +123,11 @@ public final class com/github/zly2006/zhihu/ui/components/BlockedFeedAuthor {
 	public final fun getUrlToken ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/ui/components/BottomFloatingToolbarKt {
+	public static final fun ActionToggleButton-SxpAMN0 (ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/Modifier;Ljava/lang/String;ZJJLandroidx/compose/runtime/Composer;II)V
+	public static final fun BottomFloatingToolbar (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/github/zly2006/zhihu/ui/components/ChoiceButtonGroupKt {
@@ -332,7 +346,7 @@ public final class com/github/zly2006/zhihu/ui/components/EmptyStateAction {
 }
 
 public final class com/github/zly2006/zhihu/ui/components/EmptyStateKt {
-	public static final fun EmptyState (Lcom/github/zly2006/zhihu/icons/AppIcon;Ljava/lang/String;Landroidx/compose/ui/Modifier;Lcom/github/zly2006/zhihu/ui/components/EmptyStateAction;Landroidx/compose/runtime/Composer;II)V
+	public static final fun EmptyState (Lcom/github/zly2006/zhihu/icons/AppIcon;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Lcom/github/zly2006/zhihu/ui/components/EmptyStateAction;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/github/zly2006/zhihu/ui/components/ExportDialogComponentKt {
@@ -386,6 +400,16 @@ public final class com/github/zly2006/zhihu/ui/components/GroupedListItemKt {
 	public static final fun GroupedListItem (IILkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
 }
 
+public final class com/github/zly2006/zhihu/ui/components/IconShape : java/lang/Enum {
+	public static final field Clover Lcom/github/zly2006/zhihu/ui/components/IconShape;
+	public static final field Cookie Lcom/github/zly2006/zhihu/ui/components/IconShape;
+	public static final field Flower Lcom/github/zly2006/zhihu/ui/components/IconShape;
+	public static final field Sunny Lcom/github/zly2006/zhihu/ui/components/IconShape;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/zly2006/zhihu/ui/components/IconShape;
+	public static fun values ()[Lcom/github/zly2006/zhihu/ui/components/IconShape;
+}
+
 public final class com/github/zly2006/zhihu/ui/components/MarkdownShortcut : java/lang/Enum {
 	public static final field Bold Lcom/github/zly2006/zhihu/ui/components/MarkdownShortcut;
 	public static final field CodeBlock Lcom/github/zly2006/zhihu/ui/components/MarkdownShortcut;
@@ -408,6 +432,10 @@ public final class com/github/zly2006/zhihu/ui/components/MarkdownShotcutToolbar
 	public static final fun MarkdownShortcutToolbar (Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;ZLjava/util/List;Landroidx/compose/runtime/Composer;II)V
 	public static final fun applyMarkdownShortcut (Landroidx/compose/ui/text/input/TextFieldValue;Lcom/github/zly2006/zhihu/ui/components/MarkdownShortcut;)Landroidx/compose/ui/text/input/TextFieldValue;
 	public static final fun replaceSelection (Landroidx/compose/ui/text/input/TextFieldValue;Ljava/lang/String;I)Landroidx/compose/ui/text/input/TextFieldValue;
+}
+
+public final class com/github/zly2006/zhihu/ui/components/MediumActionButtonKt {
+	public static final fun MediumActionButton (Ljava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Lcom/github/zly2006/zhihu/ui/components/ActionEmphasis;Lcom/github/zly2006/zhihu/icons/AppIcon;ZZLandroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/github/zly2006/zhihu/ui/components/MyModalBottomSheetKt {
@@ -497,6 +525,10 @@ public final class com/github/zly2006/zhihu/ui/components/SettingItemKt {
 	public static final fun SwitchWithIcon (ZLkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;ZLandroidx/compose/material3/SwitchColors;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/runtime/Composer;II)V
 	public static final fun highlightSetting-Z-9qirU (Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Landroidx/compose/foundation/relocation/BringIntoViewRequester;Landroidx/compose/ui/graphics/Shape;Landroidx/compose/ui/graphics/Color;)Landroidx/compose/ui/Modifier;
 	public static synthetic fun highlightSetting-Z-9qirU$default (Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Landroidx/compose/foundation/relocation/BringIntoViewRequester;Landroidx/compose/ui/graphics/Shape;Landroidx/compose/ui/graphics/Color;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+}
+
+public final class com/github/zly2006/zhihu/ui/components/ShapedIconKt {
+	public static final fun ShapedIcon-i2-NWbI (Lcom/github/zly2006/zhihu/icons/AppIcon;Landroidx/compose/ui/Modifier;FLcom/github/zly2006/zhihu/ui/components/IconShape;JLandroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/github/zly2006/zhihu/ui/components/ShareAction : java/lang/Enum {
