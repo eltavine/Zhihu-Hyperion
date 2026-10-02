@@ -8,3 +8,5 @@
 67f2675ab7c3e7279dacca2315b54356c0b991de
 # refactor: move shared-local-db into the core:database module
 d942d34a47a362712750e3a0fb5f0314b01d036c
+# refactor: 按 git 历史为源文件署名 eltavine (#15)：批量改写许可头
+397e2d9999ab488fc21c67cd3741fcb7bf434b55
