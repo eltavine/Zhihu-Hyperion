@@ -27,7 +27,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -35,34 +34,38 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
-const val NATIVE_USER_MESSAGE_HOST_TAG = "native_user_message_host"
+const val USER_MESSAGE_HOST_TAG = "user_message_host"
 
-data class NativeUserMessage(
+private class QueuedUserMessage(
     val text: String,
     val duration: UserMessageDuration,
 )
 
-internal val nativeUserMessages = Channel<NativeUserMessage>(capacity = Channel.UNLIMITED)
+private val queuedUserMessages = Channel<QueuedUserMessage>(capacity = Channel.UNLIMITED)
 
-fun showNativeUserMessage(
-    message: String,
-    duration: UserMessageDuration = UserMessageDuration.Short,
-) {
-    println(message)
-    check(nativeUserMessages.trySend(NativeUserMessage(message, duration)).isSuccess) {
-        "native user message queue is unavailable"
+/** 桌面与 iOS 的应用内提示：消息排进队列，由 [SnackbarUserMessageHost] 显示。Android 用 Toast，不经过这里。 */
+object SnackbarUserMessages : UserMessageSink {
+    override fun showShortMessage(message: String) = enqueue(message, UserMessageDuration.Short)
+
+    override fun showLongMessage(message: String) = enqueue(message, UserMessageDuration.Long)
+
+    private fun enqueue(message: String, duration: UserMessageDuration) {
+        println(message)
+        check(queuedUserMessages.trySend(QueuedUserMessage(message, duration)).isSuccess) {
+            "user message queue is unavailable"
+        }
     }
 }
 
-/** macOS 与 iOS 的应用内提示：把 [rememberUserMessageSink] 发出的消息显示成 Material Snackbar，宿主在内容外包一层即可。 */
+/** 把 [SnackbarUserMessages] 收到的消息显示成 Material Snackbar，宿主在内容外包一层即可。 */
 @Composable
-fun NativeUserMessageHost(
+fun SnackbarUserMessageHost(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(snackbarHostState) {
-        nativeUserMessages.receiveAsFlow().collect { message ->
+        queuedUserMessages.receiveAsFlow().collect { message ->
             snackbarHostState.showSnackbar(
                 message = message.text,
                 duration = when (message.duration) {
@@ -79,22 +82,7 @@ fun NativeUserMessageHost(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(16.dp)
-                .testTag(NATIVE_USER_MESSAGE_HOST_TAG),
+                .testTag(USER_MESSAGE_HOST_TAG),
         )
-    }
-}
-
-/**
- * 盖在主窗口上的界面（iOS 的看图页）显示自己的提示条：主窗口的 [NativeUserMessageHost] 被挡在下面，
- * 消息若仍进全局队列，用户在看图页里看不到“已保存”之类的结果。
- */
-internal val LocalNativeUserMessageSink = staticCompositionLocalOf<UserMessageSink?> { null }
-
-@Composable
-actual fun rememberUserMessageSink(): UserMessageSink = LocalNativeUserMessageSink.current ?: remember {
-    object : UserMessageSink {
-        override fun showShortMessage(message: String) = showNativeUserMessage(message)
-
-        override fun showLongMessage(message: String) = showNativeUserMessage(message, UserMessageDuration.Long)
     }
 }

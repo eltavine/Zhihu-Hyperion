@@ -37,7 +37,7 @@ import com.github.zly2006.zhihu.platform.nativeAppPrivateDirectoryPath
 import com.github.zly2006.zhihu.platform.nativeAppVersionName
 import com.github.zly2006.zhihu.platform.nativeBundledResourcePath
 import com.github.zly2006.zhihu.platform.nativeChooseBlocklistImportFilePath
-import com.github.zly2006.zhihu.platform.nativeIsDesktop
+import com.github.zly2006.zhihu.platform.nativeDeliverExportedFile
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.encodeBlocklistBackup
@@ -56,6 +56,8 @@ import platform.Foundation.NSString
 import platform.Foundation.NSUTF8StringEncoding
 import platform.Foundation.create
 import platform.Foundation.dataUsingEncoding
+import kotlin.experimental.ExperimentalNativeApi
+import kotlin.native.Platform
 import org.jetbrains.skia.Image as SkiaImage
 
 @Composable
@@ -138,8 +140,9 @@ private fun readNativeFileBytes(filePath: String): ByteArray? {
     return data.bytes?.reinterpret<ByteVar>()?.readBytes(data.length.toInt())
 }
 
+@OptIn(ExperimentalNativeApi::class)
 @Composable
-actual fun rememberHomeIsDebuggable(): Boolean = nativeIsDesktop
+actual fun rememberHomeIsDebuggable(): Boolean = Platform.isDebugBinary
 
 @Composable
 actual fun rememberAppVersionInfo(): String = nativeAppVersionName
@@ -158,25 +161,23 @@ actual fun rememberBlocklistRuleImporter(
     return remember(database, coroutineScope, userMessages) {
         object : BlocklistRuleImporter {
             override fun invoke() {
-                val selectedFilePath = nativeChooseBlocklistImportFilePath()
-                if (selectedFilePath != null) {
-                    coroutineScope.launch {
-                        try {
-                            val text = readNativeFileBytes(selectedFilePath)?.decodeToString()
-                                ?: error("读取文件失败")
-                            val summary = importBlocklistBackupFromJsonText(
-                                keywordDao = database.blockedKeywordDao(),
-                                userDao = database.blockedUserDao(),
-                                questionAuthorDao = database.blockedQuestionAuthorDao(),
-                                topicDao = database.blockedTopicDao(),
-                                text = text,
-                            )
-                            currentOnImported(summary)
-                        } catch (error: CancellationException) {
-                            throw error
-                        } catch (error: Exception) {
-                            userMessages.showShortMessage("导入失败：${error.message}")
-                        }
+                coroutineScope.launch {
+                    val selectedFilePath = nativeChooseBlocklistImportFilePath() ?: return@launch
+                    try {
+                        val text = readNativeFileBytes(selectedFilePath)?.decodeToString()
+                            ?: error("读取文件失败")
+                        val summary = importBlocklistBackupFromJsonText(
+                            keywordDao = database.blockedKeywordDao(),
+                            userDao = database.blockedUserDao(),
+                            questionAuthorDao = database.blockedQuestionAuthorDao(),
+                            topicDao = database.blockedTopicDao(),
+                            text = text,
+                        )
+                        currentOnImported(summary)
+                    } catch (error: CancellationException) {
+                        throw error
+                    } catch (error: Exception) {
+                        userMessages.showShortMessage("导入失败：${error.message}")
                     }
                 }
             }
@@ -214,7 +215,7 @@ actual fun rememberBlocklistRuleExporter(): BlocklistRuleExporter {
                 check(fileManager.createFileAtPath(outputFile, contents = data, attributes = null)) {
                     "无法写入导出文件"
                 }
-                return "已导出到 $outputFile"
+                return nativeDeliverExportedFile(outputFile)
             }
         }
     }

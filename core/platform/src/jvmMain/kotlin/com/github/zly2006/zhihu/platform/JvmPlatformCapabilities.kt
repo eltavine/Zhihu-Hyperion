@@ -145,17 +145,7 @@ actual fun rememberPlainTextClipboard(): PlainTextClipboard =
     }
 
 @Composable
-actual fun rememberUserMessageSink(): UserMessageSink = remember {
-    object : UserMessageSink {
-        override fun showShortMessage(message: String) {
-            println(message)
-            runCatching {
-                ProcessBuilder("terminal-notifier", "-message", message, "-sound", "default")
-                    .start()
-            }
-        }
-    }
-}
+actual fun rememberUserMessageSink(): UserMessageSink = SnackbarUserMessages
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -185,6 +175,8 @@ actual val isAigcVoteSupported: Boolean = true
 actual val isFeedQualityFilterSupported: Boolean = true
 
 actual val isLegacyWebViewSupported: Boolean = false
+
+actual val isInAppBrowserSupported: Boolean = false
 
 actual val isBlocklistNlpSupported: Boolean = false
 

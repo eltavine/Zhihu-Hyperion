@@ -61,6 +61,7 @@ import com.github.zly2006.zhihu.navigation.ArticleType
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.requestLoginNavigation
 import com.github.zly2006.zhihu.platform.PlatformBackHandler
+import com.github.zly2006.zhihu.platform.isArticleHtmlExportSupported
 import com.github.zly2006.zhihu.reading.RegisterReadingQueueSource
 import com.github.zly2006.zhihu.ui.components.FeedCard
 import com.github.zly2006.zhihu.ui.components.PaginatedList
@@ -129,29 +130,31 @@ fun CollectionContentScreen(
                     }
                 },
                 actions = {
-                    Box {
-                        IconButton(
-                            onClick = { showActionsMenu = true },
-                            enabled = screenViewModel.exportDialogState?.isCompleted != false,
-                            modifier = Modifier.testTag("collection_content_more_button"),
-                        ) {
-                            Icon(AppIcons.MoreVert, contentDescription = "更多")
-                        }
-                        DropdownMenu(
-                            expanded = showActionsMenu,
-                            onDismissRequest = { showActionsMenu = false },
-                            modifier = Modifier.testTag("collection_content_more_menu"),
-                        ) {
-                            DropdownMenuItem(
-                                modifier = Modifier.testTag("collection_content_export_action"),
-                                text = { Text("全部导出HTML") },
-                                leadingIcon = { Icon(AppIcons.Html, contentDescription = null) },
+                    if (isArticleHtmlExportSupported) {
+                        Box {
+                            IconButton(
+                                onClick = { showActionsMenu = true },
                                 enabled = screenViewModel.exportDialogState?.isCompleted != false,
-                                onClick = {
-                                    showActionsMenu = false
-                                    showExportOptionsDialog = true
-                                },
-                            )
+                                modifier = Modifier.testTag("collection_content_more_button"),
+                            ) {
+                                Icon(AppIcons.MoreVert, contentDescription = "更多")
+                            }
+                            DropdownMenu(
+                                expanded = showActionsMenu,
+                                onDismissRequest = { showActionsMenu = false },
+                                modifier = Modifier.testTag("collection_content_more_menu"),
+                            ) {
+                                DropdownMenuItem(
+                                    modifier = Modifier.testTag("collection_content_export_action"),
+                                    text = { Text("全部导出HTML") },
+                                    leadingIcon = { Icon(AppIcons.Html, contentDescription = null) },
+                                    enabled = screenViewModel.exportDialogState?.isCompleted != false,
+                                    onClick = {
+                                        showActionsMenu = false
+                                        showExportOptionsDialog = true
+                                    },
+                                )
+                            }
                         }
                     }
                 },

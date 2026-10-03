@@ -75,6 +75,8 @@ final val com.github.zly2006.zhihu.theme/Typography // com.github.zly2006.zhihu.
     final fun <get-Typography>(): androidx.compose.material3/Typography // com.github.zly2006.zhihu.theme/Typography.<get-Typography>|<get-Typography>(){}[0]
 final val com.github.zly2006.zhihu.theme/com_github_zly2006_zhihu_theme_ThemeManager$stableprop // com.github.zly2006.zhihu.theme/com_github_zly2006_zhihu_theme_ThemeManager$stableprop|#static{}com_github_zly2006_zhihu_theme_ThemeManager$stableprop[0]
 final val com.github.zly2006.zhihu.theme/com_github_zly2006_zhihu_theme_ThemeSnapshot$stableprop // com.github.zly2006.zhihu.theme/com_github_zly2006_zhihu_theme_ThemeSnapshot$stableprop|#static{}com_github_zly2006_zhihu_theme_ThemeSnapshot$stableprop[0]
+final val com.github.zly2006.zhihu.theme/isDynamicColorSupported // com.github.zly2006.zhihu.theme/isDynamicColorSupported|{}isDynamicColorSupported[0]
+    final fun <get-isDynamicColorSupported>(): kotlin/Boolean // com.github.zly2006.zhihu.theme/isDynamicColorSupported.<get-isDynamicColorSupported>|<get-isDynamicColorSupported>(){}[0]
 
 final fun com.github.zly2006.zhihu.theme/PlatformSystemBarEffect(kotlin/Boolean, androidx.compose.runtime/Composer?, kotlin/Int) // com.github.zly2006.zhihu.theme/PlatformSystemBarEffect|PlatformSystemBarEffect(kotlin.Boolean;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
 final fun com.github.zly2006.zhihu.theme/ZhihuTheme(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int) // com.github.zly2006.zhihu.theme/ZhihuTheme|ZhihuTheme(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int){}[0]

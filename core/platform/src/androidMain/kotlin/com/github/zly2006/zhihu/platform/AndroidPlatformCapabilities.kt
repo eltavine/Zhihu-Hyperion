@@ -85,6 +85,8 @@ actual val isFeedQualityFilterSupported: Boolean = true
 
 actual val isLegacyWebViewSupported: Boolean = true
 
+actual val isInAppBrowserSupported: Boolean = true
+
 actual val isArticleHtmlExportSupported: Boolean = true
 
 actual val isArticleImageExportSupported: Boolean = true

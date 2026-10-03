@@ -19,7 +19,7 @@ package com.github.zly2006.zhihu.ios
 
 import androidx.compose.ui.window.ComposeUIViewController
 import com.github.zly2006.zhihu.nativeZhihuModules
-import com.github.zly2006.zhihu.platform.NativeUserMessageHost
+import com.github.zly2006.zhihu.platform.SnackbarUserMessageHost
 import com.github.zly2006.zhihu.theme.ZhihuTheme
 import com.github.zly2006.zhihu.ui.NativeZhihuMain
 import org.koin.core.context.startKoin
@@ -42,7 +42,7 @@ fun startZhihuApp() {
 /** SwiftUI 场景承载的共享 Compose 界面。 */
 fun mainViewController(): UIViewController = ComposeUIViewController {
     ZhihuTheme {
-        NativeUserMessageHost {
+        SnackbarUserMessageHost {
             NativeZhihuMain()
         }
     }

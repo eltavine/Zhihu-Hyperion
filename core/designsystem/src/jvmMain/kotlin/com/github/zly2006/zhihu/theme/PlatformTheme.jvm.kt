@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +24,8 @@ import androidx.compose.runtime.Composable
 
 @Composable
 actual fun currentSystemInDarkTheme(): Boolean = isSystemInDarkTheme()
+
+actual val isDynamicColorSupported: Boolean = false
 
 @Composable
 actual fun platformDynamicColorScheme(darkTheme: Boolean): ColorScheme? = null
