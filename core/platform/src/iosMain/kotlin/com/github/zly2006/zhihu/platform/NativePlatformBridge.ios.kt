@@ -38,7 +38,8 @@ actual val platformBottomBarItemLimit: Int? = 5
 actual fun rememberExternalUrlOpener(): ExternalUrlOpener = remember {
     object : ExternalUrlOpener {
         override fun invoke(url: String) {
-            NSURL.URLWithString(url)?.let(UIApplication.sharedApplication::openURL)
+            // iOS 18 起单参数的 openURL(url) 不再打开链接、只返回 false，而 Kotlin 绑定没有把它标成废弃。
+            NSURL.URLWithString(url)?.let { UIApplication.sharedApplication.openURL(it, emptyMap<Any?, Any>(), null) }
         }
     }
 }
@@ -47,7 +48,7 @@ actual fun rememberExternalUrlOpener(): ExternalUrlOpener = remember {
 actual fun rememberWebViewUrlOpener(): WebViewUrlOpener = remember {
     object : WebViewUrlOpener {
         override fun invoke(url: String) {
-            NSURL.URLWithString(url)?.let(UIApplication.sharedApplication::openURL)
+            NSURL.URLWithString(url)?.let { UIApplication.sharedApplication.openURL(it, emptyMap<Any?, Any>(), null) }
         }
     }
 }
