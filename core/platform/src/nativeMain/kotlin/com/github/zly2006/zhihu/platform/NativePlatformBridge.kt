@@ -30,7 +30,10 @@ expect fun nativeAccountFilePath(): String
 
 expect fun nativeAppPrivateDirectoryPath(): String
 
-expect fun nativeChooseBlocklistImportFilePath(): String?
+expect suspend fun nativeChooseBlocklistImportFilePath(): String?
+
+/** 把应用数据目录里刚导出的 [path] 交给用户，返回给用户看的提示。 */
+expect suspend fun nativeDeliverExportedFile(path: String): String
 
 fun nativeBundledResourcePath(relativePath: String): String? =
     NSBundle.mainBundle.resourcePath?.let { resourceDirectory -> "$resourceDirectory/$relativePath" }
@@ -43,3 +46,5 @@ actual val isAigcVoteSupported: Boolean = true
 actual val isFeedQualityFilterSupported: Boolean = true
 
 actual val isLegacyWebViewSupported: Boolean = false
+
+actual val isInAppBrowserSupported: Boolean = false

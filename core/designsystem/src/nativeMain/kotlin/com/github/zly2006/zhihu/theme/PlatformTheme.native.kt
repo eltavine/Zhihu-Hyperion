@@ -21,5 +21,7 @@ package com.github.zly2006.zhihu.theme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
 
+actual val isDynamicColorSupported: Boolean = false
+
 @Composable
 actual fun platformDynamicColorScheme(darkTheme: Boolean): ColorScheme? = null

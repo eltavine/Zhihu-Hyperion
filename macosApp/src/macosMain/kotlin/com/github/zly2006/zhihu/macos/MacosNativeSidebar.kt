@@ -37,7 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.github.zly2006.zhihu.platform.NativeUserMessageHost
+import com.github.zly2006.zhihu.platform.SnackbarUserMessageHost
 import com.github.zly2006.zhihu.platform.macosContentAreaInsetState
 import com.github.zly2006.zhihu.ui.MacosWindowChrome
 import com.github.zly2006.zhihu.ui.MacosWindowNavigationItem
@@ -105,7 +105,7 @@ internal fun MacosNativeWindowChrome(
 
     Box(Modifier.fillMaxSize()) {
         val contentAreaModifier = Modifier.padding(start = sidebarInset)
-        NativeUserMessageHost(modifier = contentAreaModifier) {
+        SnackbarUserMessageHost(modifier = contentAreaModifier) {
             content(Modifier.fillMaxSize())
         }
     }

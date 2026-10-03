@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.github.zly2006.zhihu.desktopZhihuModules
+import com.github.zly2006.zhihu.platform.SnackbarUserMessageHost
 import com.github.zly2006.zhihu.theme.ZhihuTheme
 import com.github.zly2006.zhihu.ui.DesktopZhihuMain
 import org.koin.core.context.startKoin
@@ -36,7 +37,9 @@ fun main() {
             icon = painterResource("desktop-icon.png"),
         ) {
             ZhihuTheme {
-                DesktopZhihuMain()
+                SnackbarUserMessageHost {
+                    DesktopZhihuMain()
+                }
             }
         }
     }

@@ -11,6 +11,7 @@ public final class com/github/zly2006/zhihu/theme/AndroidThemeSettings {
 public final class com/github/zly2006/zhihu/theme/AndroidThemeSupportKt {
 	public static final fun PlatformSystemBarEffect (ZLandroidx/compose/runtime/Composer;I)V
 	public static final fun currentSystemInDarkTheme (Landroidx/compose/runtime/Composer;I)Z
+	public static final fun isDynamicColorSupported ()Z
 	public static final fun platformDynamicColorScheme (ZLandroidx/compose/runtime/Composer;I)Landroidx/compose/material3/ColorScheme;
 }
 

@@ -55,7 +55,7 @@ actual fun rememberCommentEmojiInlineContent(emojiKeys: Set<String>): Map<String
     remember(emojiKeys) {
         emojiKeys
             .mapNotNull { emojiKey ->
-                val imageFile = desktopEmojiFileByInlineKey(emojiKey) ?: return@mapNotNull null
+                val imageBytes = desktopEmojiBytesByInlineKey(emojiKey) ?: return@mapNotNull null
                 emojiKey to InlineTextContent(
                     placeholder = Placeholder(
                         width = 1.3.em,
@@ -63,9 +63,9 @@ actual fun rememberCommentEmojiInlineContent(emojiKeys: Set<String>): Map<String
                         placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
                     ),
                 ) {
-                    val image = remember(imageFile) {
+                    val image = remember(imageBytes) {
                         runCatching {
-                            ImageIO.read(imageFile)?.toComposeImageBitmap()
+                            ImageIO.read(imageBytes.inputStream())?.toComposeImageBitmap()
                         }.getOrNull()
                     }
                     image?.let {
@@ -81,42 +81,39 @@ actual fun rememberCommentEmojiInlineContent(emojiKeys: Set<String>): Map<String
 
 @Composable
 actual fun rememberCommentEmojis(): List<CommentEmoji> = remember {
-    desktopEmojiMapping().mapNotNull { (placeholder, fileName) ->
+    desktopEmojiMapping.mapNotNull { (placeholder, fileName) ->
         val inlineKey = "emoji_$fileName"
-        desktopEmojiFileByInlineKey(inlineKey)?.let {
+        desktopEmojiBytesByInlineKey(inlineKey)?.let {
             CommentEmoji(placeholder = placeholder, inlineKey = inlineKey)
         }
     }
 }
 
 actual fun commentEmojiInlineKey(placeholder: String): String? =
-    desktopEmojiMapping()[placeholder]?.let { fileName -> "emoji_$fileName" }
+    desktopEmojiMapping[placeholder]?.let { fileName -> "emoji_$fileName" }
 
 actual fun Modifier.commentSelectionWorkaround(): Modifier = this
 
-private fun desktopEmojiFileByInlineKey(emojiKey: String): File? {
-    val fileName = emojiKey.removePrefix("emoji_")
-    return desktopProjectRoots()
-        .map { root -> File(root, "misc/emojis/$fileName") }
-        .firstOrNull { it.isFile }
-}
-
-private fun desktopEmojiMapping(): Map<String, String> {
-    val mappingFile = desktopProjectRoots()
-        .map { root -> File(root, "misc/emoji_mapping.json") }
-        .firstOrNull { it.isFile } ?: return emptyMap()
-    return runCatching {
-        Json.decodeFromString<Map<String, String>>(mappingFile.readText())
+private val desktopEmojiMapping: Map<String, String> by lazy {
+    val mappingBytes = desktopResourceBytes("misc/emoji_mapping.json") ?: return@lazy emptyMap()
+    runCatching {
+        Json.decodeFromString<Map<String, String>>(mappingBytes.decodeToString())
     }.getOrDefault(emptyMap())
 }
 
-private fun desktopProjectRoots(): List<File> =
-    generateSequence(File(System.getProperty("user.dir")).absoluteFile) { it.parentFile }
-        .take(6)
-        .toList()
+private fun desktopEmojiBytesByInlineKey(emojiKey: String): ByteArray? =
+    desktopResourceBytes("misc/emojis/${emojiKey.removePrefix("emoji_")}")
 
+private fun desktopResourceBytes(path: String): ByteArray? =
+    Thread
+        .currentThread()
+        .contextClassLoader
+        ?.getResourceAsStream(path)
+        ?.use { it.readBytes() }
+
+// 安装包（MSI、AppImage）由 jpackage 启动器运行，启动器会传入 jpackage.app-version；从 Gradle 直接运行的开发版没有。
 @Composable
-actual fun rememberHomeIsDebuggable(): Boolean = true
+actual fun rememberHomeIsDebuggable(): Boolean = System.getProperty("jpackage.app-version") == null
 
 @Composable
 actual fun rememberBlocklistRuleImporter(

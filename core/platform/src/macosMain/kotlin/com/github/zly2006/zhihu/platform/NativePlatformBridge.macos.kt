@@ -112,8 +112,10 @@ actual fun rememberImageSharer(): ImageSharer {
     }
 }
 
+actual suspend fun nativeDeliverExportedFile(path: String): String = "已导出到 $path"
+
 @OptIn(ExperimentalForeignApi::class)
-actual fun nativeChooseBlocklistImportFilePath(): String? {
+actual suspend fun nativeChooseBlocklistImportFilePath(): String? {
     val panel = NSOpenPanel.openPanel()
     panel.title = "导入屏蔽规则"
     panel.canChooseFiles = true

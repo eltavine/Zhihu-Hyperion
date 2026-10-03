@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
@@ -98,6 +99,15 @@ internal fun ByteArray.toNSData(): NSData = if (isEmpty()) {
 } else {
     usePinned { pinned -> NSData.dataWithBytes(pinned.addressOf(0), size.toULong()) }
 }
+
+/**
+ * 盖在主窗口上的界面（iOS 的看图页）显示自己的提示条：主窗口的 [SnackbarUserMessageHost] 被挡在下面，
+ * 消息若仍进全局队列，用户在看图页里看不到“已保存”之类的结果。
+ */
+internal val LocalNativeUserMessageSink = staticCompositionLocalOf<UserMessageSink?> { null }
+
+@Composable
+actual fun rememberUserMessageSink(): UserMessageSink = LocalNativeUserMessageSink.current ?: SnackbarUserMessages
 
 @Composable
 actual fun rememberPlainTextClipboard(): PlainTextClipboard = remember {

@@ -93,6 +93,7 @@ import com.github.zly2006.zhihu.navigation.OnlineHistory
 import com.github.zly2006.zhihu.navigation.TopLevelDestination
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isAnswerSwipeSupported
+import com.github.zly2006.zhihu.platform.isInAppBrowserSupported
 import com.github.zly2006.zhihu.platform.isLegacyWebViewSupported
 import com.github.zly2006.zhihu.platform.isPageTurnSupported
 import com.github.zly2006.zhihu.platform.platformBottomBarItemLimit
@@ -104,6 +105,7 @@ import com.github.zly2006.zhihu.theme.PREF_FONT_SIZE
 import com.github.zly2006.zhihu.theme.PREF_LINE_HEIGHT
 import com.github.zly2006.zhihu.theme.ThemeManager
 import com.github.zly2006.zhihu.theme.ThemeMode
+import com.github.zly2006.zhihu.theme.isDynamicColorSupported
 import com.github.zly2006.zhihu.ui.allBottomBarItems
 import com.github.zly2006.zhihu.ui.article.ANSWER_DOUBLE_TAP_ACTION_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.article.ARTICLE_USE_WEBVIEW_PREFERENCE_KEY
@@ -429,25 +431,27 @@ fun AppearanceSettingsScreen(
                     },
                 )
 
-                SettingItemWithSwitch(
-                    title = { Text("使用 Material You 动态取色") },
-                    icon = { Icon(AppIcons.Wallpaper, contentDescription = null) },
-                    description = { Text("根据系统壁纸自动提取主题色（Android 12+ 可用）。\n关闭后可以自己设定主题颜色。") },
-                    checked = useDynamicColor,
-                    onCheckedChange = {
-                        ThemeManager.setUseDynamicColor(it)
-                        settings.putBoolean("useDynamicColor", it)
-                        userMessages.showShortMessage("已${if (it) "启用" else "禁用"}动态取色")
-                    },
-                    settingKey = "dynamicColor",
-                    highlightedKey = settingKey,
-                    bringIntoViewRequester = requesterFor("dynamicColor"),
-                )
+                if (isDynamicColorSupported) {
+                    SettingItemWithSwitch(
+                        title = { Text("使用 Material You 动态取色") },
+                        icon = { Icon(AppIcons.Wallpaper, contentDescription = null) },
+                        description = { Text("根据系统壁纸自动提取主题色（Android 12+ 可用）。\n关闭后可以自己设定主题颜色。") },
+                        checked = useDynamicColor,
+                        onCheckedChange = {
+                            ThemeManager.setUseDynamicColor(it)
+                            settings.putBoolean("useDynamicColor", it)
+                            userMessages.showShortMessage("已${if (it) "启用" else "禁用"}动态取色")
+                        },
+                        settingKey = "dynamicColor",
+                        highlightedKey = settingKey,
+                        bringIntoViewRequester = requesterFor("dynamicColor"),
+                    )
+                }
 
                 var showColorPicker by remember { mutableStateOf(false) }
                 val customColor = ThemeManager.getCustomColor()
 
-                AnimatedVisibility(visible = !useDynamicColor) {
+                AnimatedVisibility(visible = !isDynamicColorSupported || !useDynamicColor) {
                     SettingItem(
                         title = { Text("自定义主题色") },
                         icon = { Icon(AppIcons.Palette, contentDescription = null) },
@@ -478,46 +482,48 @@ fun AppearanceSettingsScreen(
                     )
                 }
 
-                var showLuotianYiColorPicker by remember { mutableStateOf(false) }
-                val luotianYiColor = remember {
-                    Color(settings.getInt("luotianyi_color", 0xff_66CCFF.toInt()))
-                }
+                if (isInAppBrowserSupported) {
+                    var showLuotianYiColorPicker by remember { mutableStateOf(false) }
+                    val luotianYiColor = remember {
+                        Color(settings.getInt("luotianyi_color", 0xff_66CCFF.toInt()))
+                    }
 
-                SettingItem(
-                    title = { Text("唤起浏览器主题色") },
-                    icon = { Icon(AppIcons.FormatColorFill, contentDescription = null) },
-                    description = { Text("应用内浏览器的工具栏颜色") },
-                    onClick = { showLuotianYiColorPicker = true },
-                    endAction = {
-                        Box(
-                            modifier = Modifier
-                                .size(32.dp)
-                                .clip(CircleShape)
-                                .background(luotianYiColor)
-                                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape),
-                        )
-                    },
-                )
-
-                if (showLuotianYiColorPicker) {
-                    ColorPickerDialog(
-                        title = "选择浏览器主题色",
-                        initialColor = luotianYiColor,
-                        presetColors = listOf(
-                            Color(0xFF66CCFF),
-                            Color(0xFF2196F3),
-                            Color(0xFF4CAF50),
-                            Color(0xFFF44336),
-                            Color(0xFFFF9800),
-                            Color(0xFF9C27B0),
-                        ),
-                        onDismiss = { showLuotianYiColorPicker = false },
-                        onColorSelected = { color ->
-                            settings.putInt("luotianyi_color", color.toArgb())
-                            userMessages.showShortMessage("浏览器主题色已保存")
-                            showLuotianYiColorPicker = false
+                    SettingItem(
+                        title = { Text("唤起浏览器主题色") },
+                        icon = { Icon(AppIcons.FormatColorFill, contentDescription = null) },
+                        description = { Text("应用内浏览器的工具栏颜色") },
+                        onClick = { showLuotianYiColorPicker = true },
+                        endAction = {
+                            Box(
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .clip(CircleShape)
+                                    .background(luotianYiColor)
+                                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape),
+                            )
                         },
                     )
+
+                    if (showLuotianYiColorPicker) {
+                        ColorPickerDialog(
+                            title = "选择浏览器主题色",
+                            initialColor = luotianYiColor,
+                            presetColors = listOf(
+                                Color(0xFF66CCFF),
+                                Color(0xFF2196F3),
+                                Color(0xFF4CAF50),
+                                Color(0xFFF44336),
+                                Color(0xFFFF9800),
+                                Color(0xFF9C27B0),
+                            ),
+                            onDismiss = { showLuotianYiColorPicker = false },
+                            onColorSelected = { color ->
+                                settings.putInt("luotianyi_color", color.toArgb())
+                                userMessages.showShortMessage("浏览器主题色已保存")
+                                showLuotianYiColorPicker = false
+                            },
+                        )
+                    }
                 }
 
                 val currentIsDarkTheme = ThemeManager.isDarkTheme()

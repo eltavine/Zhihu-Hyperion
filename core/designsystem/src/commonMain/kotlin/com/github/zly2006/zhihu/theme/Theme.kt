@@ -62,6 +62,9 @@ fun ZhihuTheme(
 @Composable
 expect fun currentSystemInDarkTheme(): Boolean
 
+/** 系统按壁纸提供 Material You 配色：Android 12 起支持，其他平台只用自定义主题色。 */
+expect val isDynamicColorSupported: Boolean
+
 @Composable
 expect fun platformDynamicColorScheme(darkTheme: Boolean): ColorScheme?
 

@@ -25,6 +25,18 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+// 评论表情和 iOS/macOS 应用包里复制的是同一份 misc/ 文件；桌面版放进 classpath，安装包从任意工作目录启动都能读到。
+val desktopEmojiResources =
+    tasks.register<Sync>("syncDesktopEmojiResources") {
+        into(layout.buildDirectory.dir("generated/desktopEmojiResources"))
+        into("misc") {
+            from(rootProject.layout.projectDirectory.file("misc/emoji_mapping.json"))
+            into("emojis") {
+                from(rootProject.layout.projectDirectory.dir("misc/emojis")) { include("*.png") }
+            }
+        }
+    }
+
 kotlin {
     android {
         namespace = "com.github.zly2006.zhihu.shared"
@@ -99,6 +111,7 @@ kotlin {
         jvmMain {
             // Desktop export reuses the Android WebView/export assets; they ship on the JVM classpath.
             resources.srcDir("src/androidMain/assets")
+            resources.srcDir(desktopEmojiResources)
             dependencies {
                 implementation(libs.compose.ui.backhandler)
                 implementation(libs.androidx.navigationevent)
@@ -121,6 +134,7 @@ kotlin {
         }
         jvmTest.dependencies {
             implementation(libs.jsoup)
+            implementation(libs.compose.ui.test)
         }
     }
 }

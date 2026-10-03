@@ -36,6 +36,9 @@ expect val isFeedQualityFilterSupported: Boolean
 /** 旧版 WebView 正文渲染；只有 Android 提供，其他平台始终使用 Compose Markdown。 */
 expect val isLegacyWebViewSupported: Boolean
 
+/** 外部链接在可设定工具栏颜色的应用内浏览器（Android Custom Tabs）打开；其他平台交给系统浏览器。 */
+expect val isInAppBrowserSupported: Boolean
+
 expect val isLiteVariant: Boolean
 
 expect val isBlocklistNlpSupported: Boolean
