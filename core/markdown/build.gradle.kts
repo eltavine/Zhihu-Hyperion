@@ -67,6 +67,9 @@ kotlin {
         }
         jvmMain {
             dependsOn(tiqianMarkdownMain)
+            dependencies {
+                implementation(libs.tiqian.jvm.skia)
+            }
         }
         jvmTest.dependencies {
             implementation(libs.jsoup)

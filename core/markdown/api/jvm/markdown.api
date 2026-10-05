@@ -73,6 +73,9 @@ public final class com/github/zly2006/zhihu/markdown/SegmentHighlightKt {
 
 public final class com/github/zly2006/zhihu/markdown/TiqianMarkdownRendererKt {
 	public static final fun TiqianBrandTitle (Ljava/lang/String;Ljava/lang/String;Landroidx/compose/runtime/Composer;I)V
+}
+
+public final class com/github/zly2006/zhihu/markdown/TiqianMarkdownRenderer_jvmKt {
 	public static final fun isTiqianMarkdownRendererAvailable ()Z
 }
 

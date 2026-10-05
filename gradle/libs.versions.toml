@@ -197,6 +197,7 @@ kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 ksoup = { module = "com.fleeksoft.ksoup:ksoup", version.ref = "ksoup" }
 material-kolor = { module = "com.materialkolor:material-kolor", version.ref = "material-kolor" }
 onnxruntime-android = { module = "com.microsoft.onnxruntime:onnxruntime-android", version.ref = "onnxruntime" }
+tiqian-jvm-skia = { module = "org.tiqian:tiqian-jvm-skia", version.ref = "tiqian" }
 tiqian-markdown-compose = { module = "org.tiqian:markdown-compose", version.ref = "tiqian" }
 tiqian-math-font-stix = { module = "org.tiqian:math-font-stix", version.ref = "tiqian" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxing-android-embedded" }
