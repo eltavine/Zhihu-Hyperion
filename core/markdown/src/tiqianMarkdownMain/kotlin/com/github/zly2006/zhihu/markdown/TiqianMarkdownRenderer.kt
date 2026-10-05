@@ -74,8 +74,6 @@ import org.tiqian.markdown.compose.rememberMarkdownStyle
 import org.tiqian.markdown.compose.withBlockSpacingScale
 import org.tiqian.markdown.compose.withMarkdownReadingScale
 
-actual val isTiqianMarkdownRendererAvailable: Boolean = true
-
 private data class ZhihuMarkdownDocument(
     val document: MarkdownRenderDocument,
     val nativeBlocks: Map<MarkdownNodeKey, @Composable () -> Unit>,
