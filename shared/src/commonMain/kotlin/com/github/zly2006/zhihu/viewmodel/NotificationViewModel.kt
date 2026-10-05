@@ -113,10 +113,15 @@ class NotificationViewModel(
             val rawData = json["data"]?.jsonArray ?: JsonArray(emptyList())
 
             if (lastPaging == null) {
+                // 桌面和 iOS 借用的 Web client 拿到的结构与 Android 头不同：分类标题是“赞同与喜欢”“关注”而不是
+                // “赞同喜欢”“关注订阅”，只有 entry_{entryName} 形式的 id 一致；没有 column_head，邀请回答是 head 里的 entry_invite。
                 invitation = page.columnHead.firstOrNull()
+                    ?: page.head
+                        .firstOrNull { it.id == "entry_invite" }
+                        ?.let { MobileNotificationColumnHead(unreadCount = it.unreadCount) }
                 MobileNotificationCategory.entries.forEach { category ->
                     categoryUnreadCounts[category] = page.head
-                        .firstOrNull { it.detailTitle == category.detailTitle }
+                        .firstOrNull { it.id == "entry_${category.entryName}" }
                         ?.unreadCount ?: 0
                 }
                 unreadCount = categoryUnreadCounts.values.sum()
