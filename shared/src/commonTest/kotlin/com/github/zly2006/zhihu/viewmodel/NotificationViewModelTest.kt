@@ -18,6 +18,7 @@
 
 package com.github.zly2006.zhihu.viewmodel
 
+import com.github.zly2006.zhihu.data.installZhihuCommonClientConfig
 import com.github.zly2006.zhihu.util.ZhihuMessageBodyEncryptor
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -28,12 +29,19 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.OutgoingContent
 import io.ktor.http.headersOf
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class NotificationViewModelTest {
     @Test
     fun marksOnlyTheRequestedMobileNotificationCategoryAsRead() = runTest {
@@ -64,6 +72,79 @@ class NotificationViewModelTest {
             },
             requests,
         )
+    }
+
+    /**
+     * 桌面版和 iOS 借用 Web client 请求消息首页：分类标题是“赞同与喜欢”“关注”，邀请回答不在 column_head 里，而是
+     * head 里的 entry_invite。按 Android 的结构解析时这些未读数被丢掉：首页角标点进来看不到是哪一类，“全部已读”
+     * 也不出现，角标一直清不掉。
+     */
+    @Test
+    fun webClientMessageHomeKeepsUnreadCountsAndCanBeMarkedRead() = runTest {
+        val dispatcher = UnconfinedTestDispatcher(testScheduler)
+        Dispatchers.setMain(dispatcher)
+        val readAllRequests = mutableListOf<String>()
+        val client = HttpClient(MockEngine) {
+            engine {
+                this.dispatcher = dispatcher
+                addHandler { request ->
+                    if (request.method == HttpMethod.Post) {
+                        readAllRequests += request.url.toString()
+                        respond("", HttpStatusCode.NoContent)
+                    } else {
+                        respond(
+                            content =
+                                """
+                                {
+                                  "head": [
+                                    {"id": "entry_invite", "type": "entry", "detail_title": "邀请回答", "unread_count": 4},
+                                    {"id": "entry_like", "type": "entry", "detail_title": "赞同与喜欢", "unread_count": 2},
+                                    {"id": "entry_follow", "type": "entry", "detail_title": "关注", "unread_count": 1},
+                                    {"id": "entry_comment", "type": "entry", "detail_title": "评论转发@", "unread_count": 0}
+                                  ],
+                                  "column_head": [],
+                                  "data": [],
+                                  "unread": {"message": {"count": 7, "show_count": true}}
+                                }
+                                """.trimIndent(),
+                            status = HttpStatusCode.OK,
+                            headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
+                        )
+                    }
+                }
+            }
+            installZhihuCommonClientConfig(mutableMapOf(), "test")
+        }
+        val mobileClient = object : MobileClientProvider {
+            override suspend fun <T> withClient(block: suspend (HttpClient) -> T): T = block(client)
+        }
+        val environment = object : ZhihuApiEnvironment {
+            override fun httpClient() = client
+
+            override fun authenticatedCookies() = emptyMap<String, String>()
+
+            override suspend fun handleFetchFailure(tag: String?, error: Exception) = Unit
+        }
+        try {
+            val viewModel = NotificationViewModel(mobileClient)
+            viewModel.refresh(environment)
+            advanceUntilIdle()
+
+            assertEquals(2, viewModel.categoryUnreadCounts[MobileNotificationCategory.Like])
+            assertEquals(1, viewModel.categoryUnreadCounts[MobileNotificationCategory.Follow])
+            assertEquals(3, viewModel.unreadCount)
+            assertEquals(4, viewModel.invitation?.unreadCount)
+
+            assertTrue(viewModel.markAllAsRead())
+            assertEquals(
+                listOf(MobileNotificationCategory.Like.readAllUrl, MobileNotificationCategory.Follow.readAllUrl),
+                readAllRequests,
+            )
+            assertEquals(0, viewModel.unreadCount)
+        } finally {
+            Dispatchers.resetMain()
+            client.close()
+        }
     }
 
     @Test

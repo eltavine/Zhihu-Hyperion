@@ -1,6 +1,7 @@
 /*
  * Zhihu-Hyperion - Free & Ad-Free Zhihu client for all platforms.
  * Copyright (C) 2024-2026, zly2006 <i@zly2006.me>
+ * Co-author: eltavine <me@eltavine.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -148,11 +149,13 @@ class ZhihuNotificationClientTest {
                 {
                   "head": [
                     {
+                      "id": "entry_comment",
                       "type": "entry",
                       "detail_title": "评论转发@",
                       "unread_count": 1
                     },
                     {
+                      "id": "entry_like",
                       "type": "entry",
                       "detail_title": "赞同喜欢",
                       "unread_count": 2
@@ -163,9 +166,9 @@ class ZhihuNotificationClientTest {
             ),
         )
 
-        assertEquals("评论转发@", overview.head[0].detailTitle)
+        assertEquals("entry_comment", overview.head[0].id)
         assertEquals(1, overview.head[0].unreadCount)
-        assertEquals("赞同喜欢", overview.head[1].detailTitle)
+        assertEquals("entry_like", overview.head[1].id)
         assertEquals(2, overview.head[1].unreadCount)
     }
 

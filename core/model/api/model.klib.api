@@ -2304,8 +2304,8 @@ final class com.github.zly2006.zhihu.data/MobileNotificationHead { // com.github
 final class com.github.zly2006.zhihu.data/MobileNotificationHeadEntry { // com.github.zly2006.zhihu.data/MobileNotificationHeadEntry|null[0]
     constructor <init>(kotlin/String = ..., kotlin/Int = ...) // com.github.zly2006.zhihu.data/MobileNotificationHeadEntry.<init>|<init>(kotlin.String;kotlin.Int){}[0]
 
-    final val detailTitle // com.github.zly2006.zhihu.data/MobileNotificationHeadEntry.detailTitle|{}detailTitle[0]
-        final fun <get-detailTitle>(): kotlin/String // com.github.zly2006.zhihu.data/MobileNotificationHeadEntry.detailTitle.<get-detailTitle>|<get-detailTitle>(){}[0]
+    final val id // com.github.zly2006.zhihu.data/MobileNotificationHeadEntry.id|{}id[0]
+        final fun <get-id>(): kotlin/String // com.github.zly2006.zhihu.data/MobileNotificationHeadEntry.id.<get-id>|<get-id>(){}[0]
     final val unreadCount // com.github.zly2006.zhihu.data/MobileNotificationHeadEntry.unreadCount|{}unreadCount[0]
         final fun <get-unreadCount>(): kotlin/Int // com.github.zly2006.zhihu.data/MobileNotificationHeadEntry.unreadCount.<get-unreadCount>|<get-unreadCount>(){}[0]
 

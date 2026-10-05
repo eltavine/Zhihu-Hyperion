@@ -37,6 +37,7 @@
 
 ## 兼容边界
 
+- `head` 的分类标题随请求头变化：Android 头返回“评论转发@、赞同喜欢、收藏了我、关注订阅”，桌面和 iOS 借用的 Web client 返回“邀请回答、赞同与喜欢、关注、评论转发@”，且没有 `column_head`。分类只按 `entry_{entryName}` 形式的 `id` 匹配，不能按标题匹配；没有 `column_head` 时，邀请回答入口取 `head` 里 `entry_invite` 的未读数。
 - `column_head.avatar_urls` 是包含 `url` 与 `night_url` 的对象数组，不是字符串数组；模型按原始响应解码。
 - 首页消息摘要是纯文本，不经过 HTML parser。
 - 邀请卡片的奖励说明确认为 HTML 字段，只在这个已验证字段上提取可见文字。
