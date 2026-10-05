@@ -53,7 +53,7 @@ class NotificationViewModelTest {
             },
         )
         val mobileClient = object : MobileClientProvider {
-            override suspend fun <T> withClient(block: suspend (HttpClient) -> T): T = block(client)
+            override suspend fun <T> withClient(allowGuestAccess: Boolean, block: suspend (HttpClient) -> T): T = block(client)
         }
         val viewModel = NotificationViewModel(mobileClient)
         MobileNotificationCategory.entries.forEach { category ->
@@ -116,7 +116,7 @@ class NotificationViewModelTest {
             installZhihuCommonClientConfig(mutableMapOf(), "test")
         }
         val mobileClient = object : MobileClientProvider {
-            override suspend fun <T> withClient(block: suspend (HttpClient) -> T): T = block(client)
+            override suspend fun <T> withClient(allowGuestAccess: Boolean, block: suspend (HttpClient) -> T): T = block(client)
         }
         val environment = object : ZhihuApiEnvironment {
             override fun httpClient() = client
@@ -181,7 +181,7 @@ class NotificationViewModelTest {
             },
         )
         val mobileClient = object : MobileClientProvider {
-            override suspend fun <T> withClient(block: suspend (HttpClient) -> T): T = block(client)
+            override suspend fun <T> withClient(allowGuestAccess: Boolean, block: suspend (HttpClient) -> T): T = block(client)
         }
         val viewModel = PrivateMessageViewModel("peer-id", mobileClient)
 
@@ -217,7 +217,7 @@ class NotificationViewModelTest {
             },
         )
         val mobileClient = object : MobileClientProvider {
-            override suspend fun <T> withClient(block: suspend (HttpClient) -> T): T = block(client)
+            override suspend fun <T> withClient(allowGuestAccess: Boolean, block: suspend (HttpClient) -> T): T = block(client)
         }
         val viewModel = PrivateMessageViewModel("peer-id", mobileClient)
 

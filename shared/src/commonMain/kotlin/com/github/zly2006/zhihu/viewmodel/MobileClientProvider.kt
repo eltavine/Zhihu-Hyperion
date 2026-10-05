@@ -27,11 +27,16 @@ import io.ktor.client.HttpClient
  * 没有移动端伪装的平台借用当前账户的 Web client。
  */
 interface MobileClientProvider {
-    suspend fun <T> withClient(block: suspend (HttpClient) -> T): T
+    /**
+     * @param allowGuestAccess 调用方是否允许匿名请求：只有推荐流传 true，Android 端再按“推荐内容时登录”决定是否带登录凭证；
+     *   通知、私信等必须属于当前账号的请求保持 false。
+     */
+    suspend fun <T> withClient(allowGuestAccess: Boolean = false, block: suspend (HttpClient) -> T): T
 }
 
 class AccountWebClientProvider(
     private val accountStore: ZhihuAccountStore,
 ) : MobileClientProvider {
-    override suspend fun <T> withClient(block: suspend (HttpClient) -> T): T = block(accountStore.client.httpClient())
+    override suspend fun <T> withClient(allowGuestAccess: Boolean, block: suspend (HttpClient) -> T): T =
+        block(accountStore.client.httpClient())
 }

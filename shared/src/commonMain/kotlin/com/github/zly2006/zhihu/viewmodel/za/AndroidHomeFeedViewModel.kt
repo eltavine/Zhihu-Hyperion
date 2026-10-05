@@ -71,7 +71,7 @@ class AndroidHomeFeedViewModel(
 
     public override suspend fun fetchFeeds(environment: ZhihuApiEnvironment) {
         try {
-            val jojo = mobileClient.withClient { client ->
+            val jojo = mobileClient.withClient(allowGuestAccess = true) { client ->
                 client.get(lastPaging?.next ?: initialUrl).takeIf { it.status.isSuccess() }?.jsonObject()
             }
             if (jojo != null) {

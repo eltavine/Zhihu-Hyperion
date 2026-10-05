@@ -43,7 +43,7 @@ class AndroidMobileClientProvider(
     private val settings: SettingsStore,
     private val accountStore: ZhihuAccountStore,
 ) : MobileClientProvider {
-    override suspend fun <T> withClient(block: suspend (HttpClient) -> T): T = HttpClient(engine) {
+    override suspend fun <T> withClient(allowGuestAccess: Boolean, block: suspend (HttpClient) -> T): T = HttpClient(engine) {
         install(ContentNegotiation) {
             json(ZhihuJson.json)
         }
@@ -51,7 +51,7 @@ class AndroidMobileClientProvider(
             agent = AccountData.ANDROID_USER_AGENT
         }
         install(ZHIHU_PP_ANDROID_HEADERS)
-        if (settings.getBoolean("loginForRecommendation", true)) {
+        if (!allowGuestAccess || settings.getBoolean("loginForRecommendation", true)) {
             // Mobile responses only update this borrowed copy; the web session stays the single persisted cookie jar.
             install(HttpCookies) {
                 storage = ZhihuCookieStorage(accountStore.session.cookies.toMutableMap())
