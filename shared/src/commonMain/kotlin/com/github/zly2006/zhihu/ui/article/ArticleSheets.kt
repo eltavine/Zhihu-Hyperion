@@ -41,11 +41,24 @@ import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.ai.CustomAiConfig
+import com.github.zly2006.zhihu.ui.components.ChoiceButtonGroup
+import com.github.zly2006.zhihu.ui.components.ChoiceOption
 import com.github.zly2006.zhihu.ui.components.MyModalBottomSheet
 import com.github.zly2006.zhihu.viewmodel.ArticleViewModel
 
+const val ARTICLE_SUMMARY_ZHIDA_TAG = "articleSummary:zhida"
+const val ARTICLE_SUMMARY_CUSTOM_AI_TAG = "articleSummary:customAi"
+const val ARTICLE_SUMMARY_EDIT_CUSTOM_AI_TAG = "articleSummary:editCustomAi"
+
+/**
+ * 「总结本文」弹层。总结来源可以在知乎直答和用户自己配置的 OpenAI 兼容模型之间切换；
+ * 还没配置自定义 AI 时选它会先打开配置对话框（[onConfigureCustomAi]）。
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ArticleSummarySheet(
@@ -53,12 +66,16 @@ internal fun ArticleSummarySheet(
     summaryText: String,
     loading: Boolean,
     errorMessage: String?,
+    customAiConfig: CustomAiConfig,
+    onUseCustomAiChange: (Boolean) -> Unit,
+    onConfigureCustomAi: () -> Unit,
     onDismissRequest: () -> Unit,
     onRetryRequest: () -> Unit,
 ) {
     if (!showDialog) return
     val scrollState = rememberScrollState()
     val sheetState = rememberBottomSheetState(initialValue = SheetValue.Hidden, enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded))
+    val usesCustomAi = customAiConfig.useForSummary && customAiConfig.isComplete
     MyModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
@@ -70,6 +87,35 @@ internal fun ArticleSummarySheet(
                 .verticalScroll(scrollState),
         ) {
             Text("总结本文", style = MaterialTheme.typography.titleLarge)
+            Spacer(modifier = Modifier.height(12.dp))
+            ChoiceButtonGroup(
+                options = listOf(
+                    ChoiceOption(false, "知乎直答", testTag = ARTICLE_SUMMARY_ZHIDA_TAG),
+                    ChoiceOption(true, "自定义 AI", testTag = ARTICLE_SUMMARY_CUSTOM_AI_TAG),
+                ),
+                selected = usesCustomAi,
+                onSelect = { useCustomAi ->
+                    if (useCustomAi && !customAiConfig.isComplete) onConfigureCustomAi() else onUseCustomAiChange(useCustomAi)
+                },
+            )
+            if (usesCustomAi) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        "模型：${customAiConfig.model}",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f),
+                    )
+                    TextButton(
+                        onClick = onConfigureCustomAi,
+                        modifier = Modifier.testTag(ARTICLE_SUMMARY_EDIT_CUSTOM_AI_TAG),
+                    ) {
+                        Text("修改")
+                    }
+                }
+            }
             Spacer(modifier = Modifier.height(12.dp))
             Column(modifier = Modifier.fillMaxWidth()) {
                 if (loading && summaryText.isBlank()) {

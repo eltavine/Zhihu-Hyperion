@@ -78,6 +78,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.glass.LIQUID_GLASS_PREFERENCE_KEY
+import com.github.zly2006.zhihu.glass.isLiquidGlassEnabledByDefault
+import com.github.zly2006.zhihu.glass.isLiquidGlassSupported
 import com.github.zly2006.zhihu.icons.AppIcons
 import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.markdown.TiqianBrandTitle
@@ -116,11 +119,13 @@ import com.github.zly2006.zhihu.ui.components.ChoiceOption
 import com.github.zly2006.zhihu.ui.components.ColorPickerDialog
 import com.github.zly2006.zhihu.ui.components.DEFAULT_ANSWER_SWITCH_SENSITIVITY
 import com.github.zly2006.zhihu.ui.components.DEFAULT_FAB_OPACITY
+import com.github.zly2006.zhihu.ui.components.DEFAULT_FEED_CARD_STYLE
 import com.github.zly2006.zhihu.ui.components.DEFAULT_PAGE_TURN_PERCENT
 import com.github.zly2006.zhihu.ui.components.DEFAULT_PAGE_TURN_SWITCH_ANSWER
 import com.github.zly2006.zhihu.ui.components.DEFAULT_SHOW_CONTENT_END_MARKER
 import com.github.zly2006.zhihu.ui.components.DEFAULT_SHOW_PAGE_TURN_GUIDE
 import com.github.zly2006.zhihu.ui.components.DISABLE_BOTTOM_SHEET_ROUNDED_CORNERS_PREFERENCE_KEY
+import com.github.zly2006.zhihu.ui.components.FEED_CARD_STYLE_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.components.MAX_ANSWER_SWITCH_SENSITIVITY
 import com.github.zly2006.zhihu.ui.components.MIN_ANSWER_SWITCH_SENSITIVITY
 import com.github.zly2006.zhihu.ui.components.PREF_FAB_OPACITY
@@ -156,6 +161,7 @@ const val APPEARANCE_SETTINGS_BOTTOM_BAR_SECTION_KEY = "appearanceSettings.botto
 const val APPEARANCE_SETTINGS_COLLECTION_DIRECT_BROWSE_TAG = "appearanceSettings.collectionDirectBrowse"
 const val APPEARANCE_SETTINGS_DISABLE_BOTTOM_SHEET_ROUNDED_CORNERS_TAG = "appearanceSettings.disableBottomSheetRoundedCorners"
 const val APPEARANCE_SETTINGS_LANDSCAPE_LIST_DETAIL_TAG = "appearanceSettings.landscapeListDetail"
+const val APPEARANCE_SETTINGS_LIQUID_GLASS_TAG = "appearanceSettings.liquidGlass"
 
 const val START_DESTINATION_PREFERENCE_KEY = "startDestination"
 const val BOTTOM_BAR_ITEMS_PREFERENCE_KEY = "bottom_bar_items"
@@ -586,6 +592,26 @@ fun AppearanceSettingsScreen(
                     bringIntoViewRequester = requesterFor(DISABLE_BOTTOM_SHEET_ROUNDED_CORNERS_PREFERENCE_KEY),
                 )
 
+                if (isLiquidGlassSupported) {
+                    var liquidGlass by remember {
+                        mutableStateOf(settings.getBoolean(LIQUID_GLASS_PREFERENCE_KEY, isLiquidGlassEnabledByDefault))
+                    }
+                    SettingItemWithSwitch(
+                        modifier = Modifier.testTag(APPEARANCE_SETTINGS_LIQUID_GLASS_TAG),
+                        title = { Text("液态玻璃") },
+                        icon = { Icon(AppIcons.BlurOn, contentDescription = null) },
+                        description = { Text("底部导航栏和回答页底部操作栏改为悬浮的液态玻璃，透出并折射下方内容。") },
+                        checked = liquidGlass,
+                        onCheckedChange = {
+                            liquidGlass = it
+                            settings.putBoolean(LIQUID_GLASS_PREFERENCE_KEY, it)
+                        },
+                        settingKey = LIQUID_GLASS_PREFERENCE_KEY,
+                        highlightedKey = settingKey,
+                        bringIntoViewRequester = requesterFor(LIQUID_GLASS_PREFERENCE_KEY),
+                    )
+                }
+
                 var fabOpacity by remember {
                     mutableIntStateOf(settings.getInt(PREF_FAB_OPACITY, DEFAULT_FAB_OPACITY))
                 }
@@ -742,15 +768,15 @@ fun AppearanceSettingsScreen(
                 )
 
                 val feedCardStyle = remember {
-                    mutableStateOf(settings.getString("feedCardStyle", "divider"))
+                    mutableStateOf(settings.getString(FEED_CARD_STYLE_PREFERENCE_KEY, DEFAULT_FEED_CARD_STYLE))
                 }
                 SettingItem(
                     title = { Text("信息流样式") },
                     icon = { Icon(AppIcons.ViewAgenda, contentDescription = null) },
                     description = { Text("卡片样式使用圆角卡片展示，分割线样式使用细线分隔条目。") },
-                    settingKey = "feedCardStyle",
+                    settingKey = FEED_CARD_STYLE_PREFERENCE_KEY,
                     highlightedKey = settingKey,
-                    bringIntoViewRequester = requesterFor("feedCardStyle"),
+                    bringIntoViewRequester = requesterFor(FEED_CARD_STYLE_PREFERENCE_KEY),
                     bottomAction = {
                         val feedCardStyleOptions = listOf(
                             ChoiceOption("card", "卡片样式", AppIcons.ViewDay),
@@ -761,7 +787,7 @@ fun AppearanceSettingsScreen(
                             selected = feedCardStyle.value,
                             onSelect = { mode ->
                                 feedCardStyle.value = mode
-                                settings.putString("feedCardStyle", mode)
+                                settings.putString(FEED_CARD_STYLE_PREFERENCE_KEY, mode)
                                 userMessages.showShortMessage("已设置为：${feedCardStyleOptions.first { it.value == mode }.label}")
                             },
                             modifier = Modifier.padding(top = 8.dp),

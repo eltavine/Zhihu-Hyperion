@@ -18,6 +18,7 @@
 package com.github.zly2006.zhihu
 
 import com.github.zly2006.zhihu.account.accountModule
+import com.github.zly2006.zhihu.ai.CustomAiConfigFile
 import com.github.zly2006.zhihu.data.dataModule
 import com.github.zly2006.zhihu.data.databaseModule
 import com.github.zly2006.zhihu.notification.nativeNotificationSettingsStore
@@ -57,6 +58,7 @@ fun nativeZhihuModules(): List<Module> = listOf(
             )
         }
         single { WebDavConfigFile(AtomicTextFile(Path("${nativeAppPrivateDirectoryPath()}/webdav.json"))) }
+        single { CustomAiConfigFile(AtomicTextFile(Path("${nativeAppPrivateDirectoryPath()}/custom_ai.json"))) }
         single { nativeNotificationSettingsStore() }
         single { HomeFeedFilter(get(), get(), get()) }
         single<MobileClientProvider> { AccountWebClientProvider(get()) }

@@ -34,6 +34,7 @@ kotlin {
             api(projects.core.data)
             api(projects.core.database)
             api(projects.core.designsystem)
+            api(projects.core.glass)
             api(projects.core.icons)
             api(projects.core.model)
             api(projects.core.navigation)

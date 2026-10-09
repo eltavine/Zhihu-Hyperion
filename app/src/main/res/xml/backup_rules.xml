@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
    Android 11 and lower backup rules (ignored on API 31+, see data_extraction_rules.xml).
-   These rules cannot tell cloud backup from device transfer, so login cookies in files/account.json
-   and the WebDAV password in files/webdav.json are excluded from both; users on these versions sign in
-   and enter the WebDAV password again after migrating.
+   These rules cannot tell cloud backup from device transfer, so login cookies in files/account.json,
+   the WebDAV password in files/webdav.json and the custom AI key in files/custom_ai.json are excluded
+   from both; users on these versions sign in and enter these credentials again after migrating.
    See https://developer.android.com/guide/topics/data/autobackup
 -->
 <full-backup-content>
     <exclude domain="file" path="account.json"/>
     <exclude domain="file" path="webdav.json"/>
+    <exclude domain="file" path="custom_ai.json"/>
 </full-backup-content>

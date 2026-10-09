@@ -18,6 +18,7 @@
 package com.github.zly2006.zhihu
 
 import com.github.zly2006.zhihu.account.accountModule
+import com.github.zly2006.zhihu.ai.CustomAiConfigFile
 import com.github.zly2006.zhihu.data.dataModule
 import com.github.zly2006.zhihu.data.databaseModule
 import com.github.zly2006.zhihu.desktop.desktopZhihuDataFile
@@ -63,6 +64,7 @@ fun desktopZhihuModules(): List<Module> = listOf(
             )
         }
         single { WebDavConfigFile(AtomicTextFile(Path(desktopZhihuDataFile("webdav.json").path))) }
+        single { CustomAiConfigFile(AtomicTextFile(Path(desktopZhihuDataFile("custom_ai.json").path))) }
         single { desktopNotificationSettingsStore() }
         single { HomeFeedFilter(get(), get(), get()) }
         single<MobileClientProvider> { AccountWebClientProvider(get()) }

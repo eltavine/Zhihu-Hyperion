@@ -95,12 +95,19 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.roundToInt
 
+/**
+ * 两行的可折叠顶栏：展开时第二行显示完整标题，收起后只剩第一行的单行标题。
+ *
+ * 传入 [expandedTopRowContent] 时，展开态的副标题不再单独占用第二行，而是放进返回按钮所在的第一行，
+ * 随折叠淡出并换成单行标题与 `subtitle(false)`；第二行只放标题，长标题不会再被一整行副标题继续撑高。
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ZhihuTwoRowsTopAppBar(
     title: @Composable (expanded: Boolean) -> Unit,
     modifier: Modifier = Modifier,
     subtitle: (@Composable (expanded: Boolean) -> Unit)? = null,
+    expandedTopRowContent: (@Composable () -> Unit)? = null,
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     titleHorizontalAlignment: Alignment.Horizontal = Alignment.Start,
@@ -113,6 +120,11 @@ fun ZhihuTwoRowsTopAppBar(
     val snapToCollapsedThresholdPx = with(LocalDensity.current) {
         PreferCollapsedSnapDistance.roundToPx().toFloat()
     }
+    val expandedSubtitle: (@Composable () -> Unit)? = if (subtitle != null && expandedTopRowContent == null) {
+        { subtitle(true) }
+    } else {
+        null
+    }
     TwoRowsTopAppBar(
         title = { title(true) },
         titleTextStyle = MaterialTheme.typography.headlineMedium,
@@ -120,10 +132,11 @@ fun ZhihuTwoRowsTopAppBar(
         smallTitle = { title(false) },
         smallTitleTextStyle = MaterialTheme.typography.titleLarge,
         modifier = modifier,
-        subtitle = { subtitle?.invoke(true) },
+        subtitle = expandedSubtitle,
         subtitleTextStyle = MaterialTheme.typography.labelLarge,
         smallSubtitle = { subtitle?.invoke(false) },
         smallSubtitleTextStyle = MaterialTheme.typography.labelMedium,
+        expandedTopRowContent = expandedTopRowContent,
         titleHorizontalAlignment = titleHorizontalAlignment,
         navigationIcon = navigationIcon,
         actions = actions,
@@ -135,7 +148,7 @@ fun ZhihuTwoRowsTopAppBar(
             },
         expandedHeight =
             if (expandedHeight == Dp.Unspecified || expandedHeight == Dp.Infinity) {
-                if (subtitle != null) {
+                if (expandedSubtitle != null) {
                     TopAppBarDefaults.MediumFlexibleAppBarWithSubtitleExpandedHeight
                 } else {
                     TopAppBarDefaults.MediumFlexibleAppBarWithoutSubtitleExpandedHeight
@@ -193,6 +206,7 @@ private fun TwoRowsTopAppBar(
     subtitleTextStyle: TextStyle,
     smallSubtitle: (@Composable () -> Unit)?,
     smallSubtitleTextStyle: TextStyle,
+    expandedTopRowContent: (@Composable () -> Unit)?,
     titleHorizontalAlignment: Alignment.Horizontal,
     navigationIcon: @Composable () -> Unit,
     actions: @Composable RowScope.() -> Unit,
@@ -287,6 +301,9 @@ private fun TwoRowsTopAppBar(
                 titleHorizontalAlignment = titleHorizontalAlignment,
                 titleBottomPadding = 0,
                 hideTitleSemantics = hideTopRowSemantics,
+                overlay = expandedTopRowContent,
+                overlayAlpha = bottomTitleAlpha,
+                hideOverlaySemantics = hideBottomRowSemantics,
                 navigationIcon = navigationIcon,
                 actions = actionsRow,
                 height = collapsedHeight,
@@ -419,6 +436,9 @@ private fun TopAppBarLayout(
     actions: @Composable () -> Unit,
     height: Dp,
     contentPadding: PaddingValues,
+    overlay: (@Composable () -> Unit)? = null,
+    overlayAlpha: () -> Float = { 0f },
+    hideOverlaySemantics: Boolean = true,
 ) {
     Layout(
         {
@@ -428,44 +448,34 @@ private fun TopAppBarLayout(
                     content = navigationIcon,
                 )
             }
-            if (subtitle != null) {
+            // [overlay] 与标题叠在同一个位置，透明度和语义由调用方按折叠进度与标题互斥切换；
+            // 两者高度不同，都垂直居中才能和导航按钮对齐。
+            Box(
+                modifier = Modifier.layoutId("title").padding(horizontal = TopAppBarHorizontalPadding),
+                contentAlignment = Alignment.CenterStart,
+            ) {
                 Column(
-                    modifier =
-                        Modifier
-                            .layoutId("title")
-                            .padding(horizontal = TopAppBarHorizontalPadding)
-                            .then(
-                                if (hideTitleSemantics) {
-                                    Modifier.clearAndSetSemantics {}
-                                } else {
-                                    Modifier
-                                },
-                            ).graphicsLayer { alpha = titleAlpha() },
+                    modifier = Modifier
+                        .then(if (hideTitleSemantics) Modifier.clearAndSetSemantics {} else Modifier)
+                        .graphicsLayer { alpha = titleAlpha() },
                     horizontalAlignment = titleHorizontalAlignment,
                 ) {
                     CompositionLocalProvider(LocalContentColor provides titleContentColor) {
                         ProvideTextStyle(titleTextStyle, title)
                     }
-                    CompositionLocalProvider(LocalContentColor provides subtitleContentColor) {
-                        ProvideTextStyle(subtitleTextStyle, subtitle)
+                    if (subtitle != null) {
+                        CompositionLocalProvider(LocalContentColor provides subtitleContentColor) {
+                            ProvideTextStyle(subtitleTextStyle, subtitle)
+                        }
                     }
                 }
-            } else {
-                Box(
-                    modifier =
+                if (overlay != null) {
+                    Box(
                         Modifier
-                            .layoutId("title")
-                            .padding(horizontal = TopAppBarHorizontalPadding)
-                            .then(
-                                if (hideTitleSemantics) {
-                                    Modifier.clearAndSetSemantics {}
-                                } else {
-                                    Modifier
-                                },
-                            ).graphicsLayer { alpha = titleAlpha() },
-                ) {
-                    CompositionLocalProvider(LocalContentColor provides titleContentColor) {
-                        ProvideTextStyle(titleTextStyle, title)
+                            .then(if (hideOverlaySemantics) Modifier.clearAndSetSemantics {} else Modifier)
+                            .graphicsLayer { alpha = overlayAlpha() },
+                    ) {
+                        CompositionLocalProvider(LocalContentColor provides titleContentColor, content = overlay)
                     }
                 }
             }

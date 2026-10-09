@@ -1,0 +1,35 @@
+public final class com/github/zly2006/zhihu/glass/GlassBackdrop {
+	public static final field $stable I
+}
+
+public final class com/github/zly2006/zhihu/glass/LiquidGlassDefaults {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/github/zly2006/zhihu/glass/LiquidGlassDefaults;
+	public final fun getSurfaceColor (Landroidx/compose/runtime/Composer;I)J
+}
+
+public final class com/github/zly2006/zhihu/glass/LiquidGlassKt {
+	public static final field LIQUID_GLASS_PREFERENCE_KEY Ljava/lang/String;
+	public static final fun glassBackdropSource (Landroidx/compose/ui/Modifier;Lcom/github/zly2006/zhihu/glass/GlassBackdrop;)Landroidx/compose/ui/Modifier;
+	public static final fun isLiquidGlassSupported ()Z
+	public static final fun liquidGlass-mxwnekA (Landroidx/compose/ui/Modifier;Lcom/github/zly2006/zhihu/glass/GlassBackdrop;J)Landroidx/compose/ui/Modifier;
+	public static final fun rememberGlassBackdrop-ek8zF_U (JLandroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/glass/GlassBackdrop;
+}
+
+public final class com/github/zly2006/zhihu/glass/LiquidGlassTab {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function0;)V
+	public final fun getIcon ()Lkotlin/jvm/functions/Function3;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getOnClick ()Lkotlin/jvm/functions/Function0;
+	public final fun getTestTag ()Ljava/lang/String;
+}
+
+public final class com/github/zly2006/zhihu/glass/LiquidGlassTabBarKt {
+	public static final fun LiquidGlassTabBar (Ljava/util/List;ILcom/github/zly2006/zhihu/glass/GlassBackdrop;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/github/zly2006/zhihu/glass/LiquidGlass_jvmKt {
+	public static final fun isLiquidGlassEnabledByDefault ()Z
+}
+
