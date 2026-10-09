@@ -43,6 +43,8 @@ final object com.github.zly2006.zhihu.icons/AppIcons { // com.github.zly2006.zhi
         final fun <get-BarChart>(): com.github.zly2006.zhihu.icons/AppIcon // com.github.zly2006.zhihu.icons/AppIcons.BarChart.<get-BarChart>|<get-BarChart>(){}[0]
     final val Block // com.github.zly2006.zhihu.icons/AppIcons.Block|{}Block[0]
         final fun <get-Block>(): com.github.zly2006.zhihu.icons/AppIcon // com.github.zly2006.zhihu.icons/AppIcons.Block.<get-Block>|<get-Block>(){}[0]
+    final val BlurOn // com.github.zly2006.zhihu.icons/AppIcons.BlurOn|{}BlurOn[0]
+        final fun <get-BlurOn>(): com.github.zly2006.zhihu.icons/AppIcon // com.github.zly2006.zhihu.icons/AppIcons.BlurOn.<get-BlurOn>|<get-BlurOn>(){}[0]
     final val Bolt // com.github.zly2006.zhihu.icons/AppIcons.Bolt|{}Bolt[0]
         final fun <get-Bolt>(): com.github.zly2006.zhihu.icons/AppIcon // com.github.zly2006.zhihu.icons/AppIcons.Bolt.<get-Bolt>|<get-Bolt>(){}[0]
     final val Bookmark // com.github.zly2006.zhihu.icons/AppIcons.Bookmark|{}Bookmark[0]

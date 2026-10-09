@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.pm.PackageInfoCompat
 import com.github.zly2006.zhihu.account.accountModule
+import com.github.zly2006.zhihu.ai.CustomAiConfigFile
 import com.github.zly2006.zhihu.data.dataModule
 import com.github.zly2006.zhihu.data.databaseModule
 import com.github.zly2006.zhihu.navigation.AndroidArticleNavigationHandoff
@@ -64,6 +65,7 @@ fun androidZhihuModules(context: Context): List<Module> = listOf(
         }
         single { androidSettingsStore(context) }
         single { WebDavConfigFile(AtomicTextFile(Path(File(context.filesDir, "webdav.json").path))) }
+        single { CustomAiConfigFile(AtomicTextFile(Path(File(context.filesDir, "custom_ai.json").path))) }
         single<NotificationSettingsStore> { AndroidNotificationSettingsStore(context.applicationContext) }
         single<MobileClientProvider> { AndroidMobileClientProvider(get(), get(), get()) }
         single {

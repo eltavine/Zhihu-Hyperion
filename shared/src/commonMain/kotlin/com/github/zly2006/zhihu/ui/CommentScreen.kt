@@ -51,6 +51,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -351,6 +352,7 @@ fun SwipeToReplyContainer(
 private fun ClickableImageWithMenu(
     imageUrl: String,
     modifier: Modifier = Modifier,
+    imageModifier: Modifier = Modifier,
     contentDescription: String = "图片",
     onAction: ((CommentImageMenuAction, String) -> Unit)? = null,
 ) {
@@ -377,16 +379,29 @@ private fun ClickableImageWithMenu(
         }
     }
 
+    // 图片按自身比例撑开；加载完成前和失败时留一块占位，保证仍能看到并长按打开菜单。
+    var loaded by remember(imageUrl) { mutableStateOf(false) }
     Box(
-        modifier = modifier.combinedClickable(
-            onClick = { handleAction(CommentImageMenuAction.Open) },
-            onLongClick = { showContextMenu = true },
-        ),
+        modifier = modifier
+            .then(
+                if (loaded) {
+                    Modifier
+                } else {
+                    Modifier
+                        .sizeIn(minWidth = 96.dp, minHeight = 96.dp)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                },
+            ).combinedClickable(
+                onClick = { handleAction(CommentImageMenuAction.Open) },
+                onLongClick = { showContextMenu = true },
+            ),
     ) {
         AsyncImage(
             model = imageUrl,
             contentDescription = contentDescription,
-            modifier = Modifier.fillMaxSize(),
+            modifier = imageModifier,
+            contentScale = ContentScale.Fit,
+            onSuccess = { loaded = true },
         )
 
         DropdownMenu(
@@ -1324,10 +1339,11 @@ private fun CommentItem(
                 }
 
                 val document = Ksoup.parseBodyFragment(commentData.content)
-                val commentImg =
-                    document.selectFirst("a.comment_img")?.attr("href")
-                        ?: document.selectFirst("a.comment_gif")?.attr("href")
-                        ?: document.selectFirst("a.comment_sticker")?.attr("href")
+                val commentImageLink = document.selectFirst("a.comment_img")
+                    ?: document.selectFirst("a.comment_gif")
+                    ?: document.selectFirst("a.comment_sticker")
+                val commentImg = commentImageLink?.attr("href")
+                val isSticker = commentImageLink?.hasClass("comment_sticker") == true
                 // 收集所有使用的emoji
                 val emojisUsed = remember { mutableSetOf<String>() }
                 val openExternalUrl = rememberExternalUrlOpener()
@@ -1370,8 +1386,19 @@ private fun CommentItem(
                             modifier = Modifier
                                 .testTag("comment_image_${commentData.id}")
                                 .padding(top = 8.dp)
-                                .sizeIn(maxHeight = 100.dp, maxWidth = 240.dp)
-                                .clip(RoundedCornerShape(12.dp)),
+                                .then(
+                                    if (isSticker) {
+                                        Modifier.size(100.dp)
+                                    } else {
+                                        // 与正文左对齐，最宽占评论正文的一半，高度随图片比例变化。
+                                        Modifier
+                                            .fillMaxWidth(0.5f)
+                                            .wrapContentWidth(Alignment.Start)
+                                            .heightIn(max = 320.dp)
+                                    },
+                                ).clip(RoundedCornerShape(12.dp)),
+                            // 表情图按原来的 100dp 显示，不像照片那样停在原图像素尺寸。
+                            imageModifier = if (isSticker) Modifier.fillMaxSize() else Modifier,
                             contentDescription = "评论图片",
                             onAction = onImageMenuAction,
                         )

@@ -102,6 +102,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.github.zly2006.zhihu.account.LoginScreen
 import com.github.zly2006.zhihu.filter.ContentOpenFrom
+import com.github.zly2006.zhihu.glass.LIQUID_GLASS_PREFERENCE_KEY
+import com.github.zly2006.zhihu.glass.LiquidGlassTab
+import com.github.zly2006.zhihu.glass.LiquidGlassTabBar
+import com.github.zly2006.zhihu.glass.glassBackdropSource
+import com.github.zly2006.zhihu.glass.isLiquidGlassEnabledByDefault
+import com.github.zly2006.zhihu.glass.isLiquidGlassSupported
+import com.github.zly2006.zhihu.glass.rememberGlassBackdrop
 import com.github.zly2006.zhihu.icons.AppIcon
 import com.github.zly2006.zhihu.icons.AppIcons
 import com.github.zly2006.zhihu.icons.Icon
@@ -149,6 +156,7 @@ import com.github.zly2006.zhihu.reading.saveReadingPlaybackSpeed
 import com.github.zly2006.zhihu.ui.components.AppDialogHost
 import com.github.zly2006.zhihu.ui.components.LocalSelectedContentDestination
 import com.github.zly2006.zhihu.ui.components.NoOpPagerNestedScrollConnection
+import com.github.zly2006.zhihu.ui.components.rememberObservedSetting
 import com.github.zly2006.zhihu.ui.subscreens.AppearanceSettingsScreen
 import com.github.zly2006.zhihu.ui.subscreens.BlockedFeedHistoryScreen
 import com.github.zly2006.zhihu.ui.subscreens.ColorSchemeScreen
@@ -273,6 +281,14 @@ fun ZhihuMain(
     val readingPlayer = rememberReadingPlayerController()
     val readingPlayerState by readingPlayer.state
     val settings = koinInject<SettingsStore>()
+    val liquidGlassEnabled by rememberObservedSetting(settings, LIQUID_GLASS_PREFERENCE_KEY) {
+        getBoolean(LIQUID_GLASS_PREFERENCE_KEY, isLiquidGlassEnabledByDefault)
+    }
+    val glassBackdrop = if (liquidGlassEnabled && isLiquidGlassSupported) {
+        rememberGlassBackdrop(MaterialTheme.colorScheme.background)
+    } else {
+        null
+    }
     UpdateOnLaunch()
     AppDialogHost()
 
@@ -285,6 +301,7 @@ fun ZhihuMain(
     var showReadingQueue by remember { mutableStateOf(false) }
     var isReadingPlayerExpandedByUser by remember { mutableStateOf(false) }
     var readingPlayerHeightPx by remember { mutableIntStateOf(0) }
+    var bottomBarHeightPx by remember { mutableIntStateOf(0) }
     val readingPlayerOverlayOffsetState = remember { ReadingPlayerOverlayOffsetState() }
     val density = LocalDensity.current
     val currentOnMainTabDestinationChange by rememberUpdatedState(onCurrentMainTabDestinationChange)
@@ -646,33 +663,54 @@ fun ZhihuMain(
                                 LaunchedEffect(navEntry) { isBottomBarVisible = true }
                                 AnimatedVisibility(
                                     visible = showMainNavigation && (!autoHideBottomBar || isBottomBarVisible),
+                                    modifier = Modifier.onSizeChanged { bottomBarHeightPx = it.height },
                                     enter = slideInVertically(tween(200)) { it },
                                     exit = slideOutVertically(tween(200)) { it },
                                 ) {
-                                    ShortNavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh) {
-                                        val itemColors = if (!isDarkTheme) {
-                                            ShortNavigationBarItemDefaults.colors(
-                                                selectedIndicatorColor =
-                                                    MaterialTheme.colorScheme.secondaryContainer
-                                                        .copy(alpha = 0.92f)
-                                                        .compositeOver(MaterialTheme.colorScheme.secondary),
-                                            )
-                                        } else {
-                                            ShortNavigationBarItemDefaults.colors()
+                                    if (glassBackdrop != null) {
+                                        val selectedIndex = bottomBarItems.indexOfFirst { item ->
+                                            currentBottomDestination?.let { it::class == item.destination::class } == true
                                         }
-                                        bottomBarItems.forEach { item ->
-                                            val destination = item.destination
-                                            val selected = currentBottomDestination?.let { it::class == destination::class } == true
-                                            ShortNavigationBarItem(
-                                                selected = selected,
-                                                onClick = { onTopLevelItemClick(destination, selected) },
-                                                icon = {
-                                                    Icon(if (selected) item.selectedIcon else item.icon, contentDescription = item.label)
-                                                },
-                                                label = { Text(item.label) },
-                                                colors = itemColors,
-                                                modifier = Modifier.testTag("nav_tab_${destination.name.lowercase()}"),
-                                            )
+                                        LiquidGlassTabBar(
+                                            tabs = bottomBarItems.mapIndexed { index, item ->
+                                                LiquidGlassTab(
+                                                    label = item.label,
+                                                    testTag = "nav_tab_${item.destination.name.lowercase()}",
+                                                    icon = { selected ->
+                                                        Icon(if (selected) item.selectedIcon else item.icon, contentDescription = null)
+                                                    },
+                                                    onClick = { onTopLevelItemClick(item.destination, index == selectedIndex) },
+                                                )
+                                            },
+                                            selectedIndex = selectedIndex,
+                                            backdrop = glassBackdrop,
+                                        )
+                                    } else {
+                                        ShortNavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh) {
+                                            val itemColors = if (!isDarkTheme) {
+                                                ShortNavigationBarItemDefaults.colors(
+                                                    selectedIndicatorColor =
+                                                        MaterialTheme.colorScheme.secondaryContainer
+                                                            .copy(alpha = 0.92f)
+                                                            .compositeOver(MaterialTheme.colorScheme.secondary),
+                                                )
+                                            } else {
+                                                ShortNavigationBarItemDefaults.colors()
+                                            }
+                                            bottomBarItems.forEach { item ->
+                                                val destination = item.destination
+                                                val selected = currentBottomDestination?.let { it::class == destination::class } == true
+                                                ShortNavigationBarItem(
+                                                    selected = selected,
+                                                    onClick = { onTopLevelItemClick(destination, selected) },
+                                                    icon = {
+                                                        Icon(if (selected) item.selectedIcon else item.icon, contentDescription = item.label)
+                                                    },
+                                                    label = { Text(item.label) },
+                                                    colors = itemColors,
+                                                    modifier = Modifier.testTag("nav_tab_${destination.name.lowercase()}"),
+                                                )
+                                            }
                                         }
                                     }
                                 }
@@ -706,7 +744,7 @@ fun ZhihuMain(
                         ) {
                             NavHost(
                                 navController,
-                                modifier = Modifier.pointerInput(Unit) {
+                                modifier = Modifier.glassBackdropSource(glassBackdrop).pointerInput(Unit) {
                                     while (true) {
                                         awaitPointerEventScope {
                                             awaitFirstDown(
@@ -920,12 +958,13 @@ fun ZhihuMain(
                     .align(Alignment.BottomCenter)
                     .padding(
                         start = if (showListDetail && showDetailPane) listPaneWidth + LIST_DETAIL_DIVIDER_WIDTH else 0.dp,
-                        bottom = bottomPadding + 16.dp + if (
+                        bottom = 16.dp + if (
                             !showDetailPane && showMainNavigation && showMainNavigationBar && !useNavigationRail && (!autoHideBottomBar || isBottomBarVisible)
                         ) {
-                            64.dp
+                            // 底栏的样式（Material 底栏或悬浮的液态玻璃底栏）决定了它的高度，按实测结果避让。
+                            maxOf(bottomPadding, with(density) { bottomBarHeightPx.toDp() })
                         } else {
-                            0.dp
+                            bottomPadding
                         },
                     ).fillMaxWidth(),
                 visible = isReadingPlayerExpanded,

@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingToolbarDefaults
@@ -41,15 +42,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.github.zly2006.zhihu.glass.GlassBackdrop
+import com.github.zly2006.zhihu.glass.LiquidGlassDefaults
+import com.github.zly2006.zhihu.glass.liquidGlass
 
 /**
  * 页面底部居中的浮动操作栏（Material 3 Expressive floating toolbar），避开导航栏，并与屏幕底边留出规范间距。
  *
- * 只放当前页面内容的动作，不超过五六个；滚动时隐藏由调用方控制。
+ * 只放当前页面内容的动作，不超过五六个；滚动时隐藏由调用方控制。传入 [glassBackdrop] 时操作栏改为液态玻璃，
+ * 采样调用方录制的页面内容。
  */
 @Composable
 fun BottomFloatingToolbar(
     modifier: Modifier = Modifier,
+    glassBackdrop: GlassBackdrop? = null,
     content: @Composable RowScope.() -> Unit,
 ) {
     Box(
@@ -59,7 +66,18 @@ fun BottomFloatingToolbar(
             .padding(bottom = FloatingToolbarDefaults.ScreenOffset),
         contentAlignment = Alignment.Center,
     ) {
-        HorizontalFloatingToolbar(expanded = true, content = content)
+        if (glassBackdrop == null) {
+            HorizontalFloatingToolbar(expanded = true, content = content)
+        } else {
+            HorizontalFloatingToolbar(
+                expanded = true,
+                modifier = Modifier.liquidGlass(glassBackdrop, LiquidGlassDefaults.surfaceColor),
+                colors = FloatingToolbarDefaults.standardFloatingToolbarColors(toolbarContainerColor = Color.Transparent),
+                shape = CircleShape,
+                expandedShadowElevation = 0.dp,
+                content = content,
+            )
+        }
     }
 }
 

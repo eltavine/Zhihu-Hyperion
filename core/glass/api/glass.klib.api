@@ -1,0 +1,46 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, macosArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <Zhihu-Hyperion.core:glass>
+final class com.github.zly2006.zhihu.glass/GlassBackdrop // com.github.zly2006.zhihu.glass/GlassBackdrop|null[0]
+
+final class com.github.zly2006.zhihu.glass/LiquidGlassTab { // com.github.zly2006.zhihu.glass/LiquidGlassTab|null[0]
+    constructor <init>(kotlin/String, kotlin/String, kotlin/Function3<kotlin/Boolean, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, kotlin/Function0<kotlin/Unit>) // com.github.zly2006.zhihu.glass/LiquidGlassTab.<init>|<init>(kotlin.String;kotlin.String;kotlin.Function3<kotlin.Boolean,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;kotlin.Function0<kotlin.Unit>){}[0]
+
+    final val icon // com.github.zly2006.zhihu.glass/LiquidGlassTab.icon|{}icon[0]
+        final fun <get-icon>(): kotlin/Function3<kotlin/Boolean, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit> // com.github.zly2006.zhihu.glass/LiquidGlassTab.icon.<get-icon>|<get-icon>(){}[0]
+    final val label // com.github.zly2006.zhihu.glass/LiquidGlassTab.label|{}label[0]
+        final fun <get-label>(): kotlin/String // com.github.zly2006.zhihu.glass/LiquidGlassTab.label.<get-label>|<get-label>(){}[0]
+    final val onClick // com.github.zly2006.zhihu.glass/LiquidGlassTab.onClick|{}onClick[0]
+        final fun <get-onClick>(): kotlin/Function0<kotlin/Unit> // com.github.zly2006.zhihu.glass/LiquidGlassTab.onClick.<get-onClick>|<get-onClick>(){}[0]
+    final val testTag // com.github.zly2006.zhihu.glass/LiquidGlassTab.testTag|{}testTag[0]
+        final fun <get-testTag>(): kotlin/String // com.github.zly2006.zhihu.glass/LiquidGlassTab.testTag.<get-testTag>|<get-testTag>(){}[0]
+}
+
+final object com.github.zly2006.zhihu.glass/LiquidGlassDefaults { // com.github.zly2006.zhihu.glass/LiquidGlassDefaults|null[0]
+    final val surfaceColor // com.github.zly2006.zhihu.glass/LiquidGlassDefaults.surfaceColor|{}surfaceColor[0]
+        final fun <get-surfaceColor>(androidx.compose.runtime/Composer?, kotlin/Int): androidx.compose.ui.graphics/Color // com.github.zly2006.zhihu.glass/LiquidGlassDefaults.surfaceColor.<get-surfaceColor>|<get-surfaceColor>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+}
+
+final const val com.github.zly2006.zhihu.glass/LIQUID_GLASS_PREFERENCE_KEY // com.github.zly2006.zhihu.glass/LIQUID_GLASS_PREFERENCE_KEY|{}LIQUID_GLASS_PREFERENCE_KEY[0]
+    final fun <get-LIQUID_GLASS_PREFERENCE_KEY>(): kotlin/String // com.github.zly2006.zhihu.glass/LIQUID_GLASS_PREFERENCE_KEY.<get-LIQUID_GLASS_PREFERENCE_KEY>|<get-LIQUID_GLASS_PREFERENCE_KEY>(){}[0]
+
+final val com.github.zly2006.zhihu.glass/com_github_zly2006_zhihu_glass_GlassBackdrop$stableprop // com.github.zly2006.zhihu.glass/com_github_zly2006_zhihu_glass_GlassBackdrop$stableprop|#static{}com_github_zly2006_zhihu_glass_GlassBackdrop$stableprop[0]
+final val com.github.zly2006.zhihu.glass/com_github_zly2006_zhihu_glass_LiquidGlassDefaults$stableprop // com.github.zly2006.zhihu.glass/com_github_zly2006_zhihu_glass_LiquidGlassDefaults$stableprop|#static{}com_github_zly2006_zhihu_glass_LiquidGlassDefaults$stableprop[0]
+final val com.github.zly2006.zhihu.glass/com_github_zly2006_zhihu_glass_LiquidGlassTab$stableprop // com.github.zly2006.zhihu.glass/com_github_zly2006_zhihu_glass_LiquidGlassTab$stableprop|#static{}com_github_zly2006_zhihu_glass_LiquidGlassTab$stableprop[0]
+final val com.github.zly2006.zhihu.glass/isLiquidGlassEnabledByDefault // com.github.zly2006.zhihu.glass/isLiquidGlassEnabledByDefault|{}isLiquidGlassEnabledByDefault[0]
+    final fun <get-isLiquidGlassEnabledByDefault>(): kotlin/Boolean // com.github.zly2006.zhihu.glass/isLiquidGlassEnabledByDefault.<get-isLiquidGlassEnabledByDefault>|<get-isLiquidGlassEnabledByDefault>(){}[0]
+final val com.github.zly2006.zhihu.glass/isLiquidGlassSupported // com.github.zly2006.zhihu.glass/isLiquidGlassSupported|{}isLiquidGlassSupported[0]
+    final fun <get-isLiquidGlassSupported>(): kotlin/Boolean // com.github.zly2006.zhihu.glass/isLiquidGlassSupported.<get-isLiquidGlassSupported>|<get-isLiquidGlassSupported>(){}[0]
+
+final fun (androidx.compose.ui/Modifier).com.github.zly2006.zhihu.glass/glassBackdropSource(com.github.zly2006.zhihu.glass/GlassBackdrop?): androidx.compose.ui/Modifier // com.github.zly2006.zhihu.glass/glassBackdropSource|glassBackdropSource@androidx.compose.ui.Modifier(com.github.zly2006.zhihu.glass.GlassBackdrop?){}[0]
+final fun (androidx.compose.ui/Modifier).com.github.zly2006.zhihu.glass/liquidGlass(com.github.zly2006.zhihu.glass/GlassBackdrop, androidx.compose.ui.graphics/Color): androidx.compose.ui/Modifier // com.github.zly2006.zhihu.glass/liquidGlass|liquidGlass@androidx.compose.ui.Modifier(com.github.zly2006.zhihu.glass.GlassBackdrop;androidx.compose.ui.graphics.Color){}[0]
+final fun com.github.zly2006.zhihu.glass/LiquidGlassTabBar(kotlin.collections/List<com.github.zly2006.zhihu.glass/LiquidGlassTab>, kotlin/Int, com.github.zly2006.zhihu.glass/GlassBackdrop, androidx.compose.ui/Modifier?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.github.zly2006.zhihu.glass/LiquidGlassTabBar|LiquidGlassTabBar(kotlin.collections.List<com.github.zly2006.zhihu.glass.LiquidGlassTab>;kotlin.Int;com.github.zly2006.zhihu.glass.GlassBackdrop;androidx.compose.ui.Modifier?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.github.zly2006.zhihu.glass/com_github_zly2006_zhihu_glass_GlassBackdrop$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.glass/com_github_zly2006_zhihu_glass_GlassBackdrop$stableprop_getter|com_github_zly2006_zhihu_glass_GlassBackdrop$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.glass/com_github_zly2006_zhihu_glass_LiquidGlassDefaults$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.glass/com_github_zly2006_zhihu_glass_LiquidGlassDefaults$stableprop_getter|com_github_zly2006_zhihu_glass_LiquidGlassDefaults$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.glass/com_github_zly2006_zhihu_glass_LiquidGlassTab$stableprop_getter(): kotlin/Int // com.github.zly2006.zhihu.glass/com_github_zly2006_zhihu_glass_LiquidGlassTab$stableprop_getter|com_github_zly2006_zhihu_glass_LiquidGlassTab$stableprop_getter(){}[0]
+final fun com.github.zly2006.zhihu.glass/rememberGlassBackdrop(androidx.compose.ui.graphics/Color, androidx.compose.runtime/Composer?, kotlin/Int): com.github.zly2006.zhihu.glass/GlassBackdrop // com.github.zly2006.zhihu.glass/rememberGlassBackdrop|rememberGlassBackdrop(androidx.compose.ui.graphics.Color;androidx.compose.runtime.Composer?;kotlin.Int){}[0]

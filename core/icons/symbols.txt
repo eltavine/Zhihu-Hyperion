@@ -21,6 +21,7 @@ auto_stories
 autorenew
 bar_chart
 block
+blur_on
 bolt
 bookmark
 bookmark filled

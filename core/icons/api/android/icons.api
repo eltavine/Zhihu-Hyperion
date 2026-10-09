@@ -26,6 +26,7 @@ public final class com/github/zly2006/zhihu/icons/AppIcons {
 	public final fun getAutorenew ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getBarChart ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getBlock ()Lcom/github/zly2006/zhihu/icons/AppIcon;
+	public final fun getBlurOn ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getBolt ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getBookmark ()Lcom/github/zly2006/zhihu/icons/AppIcon;
 	public final fun getBookmarkFilled ()Lcom/github/zly2006/zhihu/icons/AppIcon;

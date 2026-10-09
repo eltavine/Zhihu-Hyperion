@@ -27,6 +27,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.zly2006.zhihu.ai.ChatMessage
+import com.github.zly2006.zhihu.ai.CustomAiConfig
+import com.github.zly2006.zhihu.ai.streamChatCompletion
 import com.github.zly2006.zhihu.data.AigcVoteFlagRequest
 import com.github.zly2006.zhihu.data.AigcVoteFlagResponse
 import com.github.zly2006.zhihu.data.AigcVoteFlagStatusResponse
@@ -73,6 +76,7 @@ import com.github.zly2006.zhihu.util.serializeZhidaSummaryRequest
 import com.github.zly2006.zhihu.util.twoDigitString
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.request.accept
 import io.ktor.client.request.get
 import io.ktor.client.request.header
@@ -103,6 +107,11 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 import kotlin.time.Clock
+
+private const val CUSTOM_AI_SUMMARY_PROMPT =
+    "你是知乎内容的阅读助手。请用简体中文总结用户发来的知乎内容：先用一两句话概括核心观点，" +
+        "再分条列出主要论据、事实或建议，最后指出值得注意的前提或争议。只依据原文，不要编造；" +
+        "用纯文本回答，不要使用 Markdown 标记。"
 
 class ArticleViewModel(
     private val article: Article,
@@ -435,8 +444,13 @@ class ArticleViewModel(
         }
     }
 
-    fun requestAiSummary(environment: ZhihuApiEnvironment) {
-        if (httpClient == null) {
+    /** [customAi] 不为 null 时用用户配置的 OpenAI 兼容接口总结，否则使用知乎直答。 */
+    fun requestAiSummary(
+        environment: ZhihuApiEnvironment,
+        engine: HttpClientEngine,
+        customAi: CustomAiConfig?,
+    ) {
+        if (customAi == null && httpClient == null) {
             aiSummaryError = "未初始化网络客户端"
             return
         }
@@ -446,6 +460,15 @@ class ArticleViewModel(
             aiSummaryError = null
             aiSummaryText = ""
             try {
+                if (customAi != null) {
+                    val messages = listOf(
+                        ChatMessage("system", CUSTOM_AI_SUMMARY_PROMPT),
+                        ChatMessage("user", convertToMarkdown()),
+                    )
+                    streamChatCompletion(engine, customAi, messages).collect { aiSummaryText += it }
+                    if (aiSummaryText.isBlank()) aiSummaryError = "未返回可显示的总结内容"
+                    return@launch
+                }
                 val contentType = when (article.type) {
                     ArticleType.Answer -> "answer"
                     ArticleType.Article -> "article"
