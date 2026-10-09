@@ -138,7 +138,9 @@ import com.github.zly2006.zhihu.viewmodel.postSigned
 import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.int
+import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.koin.compose.koinInject
 import kotlin.math.roundToInt
@@ -285,6 +287,18 @@ class PeopleColumnContributionsViewModel(
 
     override val include: String
         get() = "data[*].articles_count,followers,author"
+
+    override fun decodePage(
+        environment: ZhihuApiEnvironment,
+        rawData: JsonArray,
+    ): List<DataHolder.Column> = rawData.mapNotNull { item ->
+        try {
+            ZhihuJson.decodeJson<DataHolder.Column>(item.jsonObject.getValue("column"))
+        } catch (e: Exception) {
+            environment.logDecodeFailure(this::class.simpleName, item, e)
+            null
+        }
+    }
 }
 
 class PeopleFollowingCollectionsViewModel(
