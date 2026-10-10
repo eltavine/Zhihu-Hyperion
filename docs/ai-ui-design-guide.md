@@ -122,6 +122,7 @@ URL 解析集中在 `resolveContent()`。支持知乎问题、回答、文章、
 | `showSearchHistory` | 搜索历史 | 是否记录和展示新搜索 | 关闭后不再记录新的搜索 |
 | `use_custom_nav_host` | 自定义导航 | 持久化的技术性导航开关 | 当前主要在设置页读写；实现效果前先 `rg` 运行时读取点 |
 | `enable_predictive_back` | 预测性返回 | 持久化的 Android 14+ 返回动画开关 | 当前主要在设置页读写；实现效果前先 `rg` 运行时读取点 |
+| `topLevelBackToLauncher` | 一级页面返回时回到桌面 | 底栏非第一个页面按返回时不再先切回第一个页面，交给系统回到桌面 | 默认关闭，保留 [#660](https://github.com/zly2006/zhihu-plus-plus/pull/660) 的“先回第一个页面”；只在 `isTopLevelBackToLauncherSupported`（Android）时显示并生效，`ZhihuMain` 通过 `rememberObservedSetting` 读取 |
 
 ### 推荐系统与内容过滤
 

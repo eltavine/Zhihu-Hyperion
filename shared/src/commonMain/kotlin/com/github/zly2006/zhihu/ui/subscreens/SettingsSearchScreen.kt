@@ -60,6 +60,7 @@ import com.github.zly2006.zhihu.platform.MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_K
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isAnswerSwipeSupported
 import com.github.zly2006.zhihu.platform.isPageTurnSupported
+import com.github.zly2006.zhihu.platform.isTopLevelBackToLauncherSupported
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.theme.isDynamicColorSupported
 import com.github.zly2006.zhihu.ui.article.ANSWER_DOUBLE_TAP_ACTION_PREFERENCE_KEY
@@ -233,6 +234,9 @@ private val settingsSearchEntries = buildList {
     add(appearanceEntry("appearance.showSearchHistory", "记录并显示搜索历史", "控制搜索历史记录和展示。", "showSearchHistory", listOf("搜索记录", "历史记录", "清除搜索历史")))
     add(appearanceEntry("appearance.customNavHost", "使用自定义导航", "切换实验性的导航实现。", "use_custom_nav_host"))
     add(appearanceEntry("appearance.predictiveBack", "启用预测性返回", "控制 Android 预测性返回动画。", "enable_predictive_back", listOf("返回手势")))
+    if (isTopLevelBackToLauncherSupported) {
+        add(appearanceEntry("appearance.topLevelBackToLauncher", "一级页面返回时回到桌面", "在底栏任意页面按返回都直接回到系统桌面。", TOP_LEVEL_BACK_TO_LAUNCHER_PREFERENCE_KEY, listOf("返回手势", "返回键", "退出", "后台", "主页")))
+    }
     add(appearanceEntry("appearance.duo3", "123Duo3 新 UI", "集中管理 Duo3 视觉和交互开关。", "123Duo3", listOf("新UI", "Duo3")))
 
     add(recommendEntry("recommend.recommendationMode", "推荐算法", "选择 Web、Android、本地或混合推荐。", "recommendationMode", listOf("推荐来源", "Web 推荐", "Android 推荐", "本地推荐", "混合推荐")))

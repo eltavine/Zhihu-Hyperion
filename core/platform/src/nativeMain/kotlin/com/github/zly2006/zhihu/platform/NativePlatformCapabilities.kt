@@ -152,3 +152,5 @@ actual val isArticleImageExportSupported: Boolean = false
 actual val isPageTurnSupported: Boolean = false
 
 actual val isAnswerSwipeSupported: Boolean = !nativeIsDesktop
+
+actual val isTopLevelBackToLauncherSupported: Boolean = false

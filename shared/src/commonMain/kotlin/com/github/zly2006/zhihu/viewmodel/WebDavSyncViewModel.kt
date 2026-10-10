@@ -52,6 +52,7 @@ import com.github.zly2006.zhihu.ui.subscreens.COLLECTION_DIRECT_BROWSE_PREFERENC
 import com.github.zly2006.zhihu.ui.subscreens.CONTINUOUS_USAGE_REMINDER_INTERVAL_MINUTES_KEY
 import com.github.zly2006.zhihu.ui.subscreens.DUO3_CARD_LARGE_TITLE_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.subscreens.LANDSCAPE_LIST_DETAIL_PREFERENCE_KEY
+import com.github.zly2006.zhihu.ui.subscreens.TOP_LEVEL_BACK_TO_LAUNCHER_PREFERENCE_KEY
 import com.github.zly2006.zhihu.update.CHECK_NIGHTLY_UPDATES_PREFERENCE_KEY
 import com.github.zly2006.zhihu.util.TextDocumentStore
 import com.github.zly2006.zhihu.viewmodel.feed.AUTO_REFRESH_HOME_ON_STARTUP_PREFERENCE_KEY
@@ -139,6 +140,7 @@ private val syncedSettings: Map<String, SyncedSettingType> = buildMap {
         PREF_SHOW_PAGE_TURN_FAB,
         PREF_SHOW_PAGE_TURN_GUIDE,
         PREF_VOLUME_KEY_PAGE_TURN,
+        TOP_LEVEL_BACK_TO_LAUNCHER_PREFERENCE_KEY,
         "autoHideArticleBottomBar",
         "autoHideBottomBar",
         "autoHideSkipAnswerButton",

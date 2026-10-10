@@ -99,6 +99,7 @@ import com.github.zly2006.zhihu.platform.isAnswerSwipeSupported
 import com.github.zly2006.zhihu.platform.isInAppBrowserSupported
 import com.github.zly2006.zhihu.platform.isLegacyWebViewSupported
 import com.github.zly2006.zhihu.platform.isPageTurnSupported
+import com.github.zly2006.zhihu.platform.isTopLevelBackToLauncherSupported
 import com.github.zly2006.zhihu.platform.platformBottomBarItemLimit
 import com.github.zly2006.zhihu.platform.rememberUserMessageSink
 import com.github.zly2006.zhihu.theme.DUO3_TIQIAN_MARKDOWN_PREFERENCE_KEY
@@ -168,6 +169,7 @@ const val BOTTOM_BAR_ITEMS_PREFERENCE_KEY = "bottom_bar_items"
 const val BOTTOM_BAR_ITEM_ORDER_PREFERENCE_KEY = "bottom_bar_item_order"
 const val COLLECTION_DIRECT_BROWSE_PREFERENCE_KEY = "collectionDirectBrowse"
 const val LANDSCAPE_LIST_DETAIL_PREFERENCE_KEY = "landscapeListDetail"
+const val TOP_LEVEL_BACK_TO_LAUNCHER_PREFERENCE_KEY = "topLevelBackToLauncher"
 private const val BOTTOM_BAR_ITEM_ORDER_SEPARATOR = ","
 internal val contentFontSizeLevels = (50..120 step 5).toList() + (130..200 step 10).toList()
 private val bottomBarSettingItemHeight = 64.dp
@@ -1629,6 +1631,25 @@ fun AppearanceSettingsScreen(
                     highlightedKey = settingKey,
                     bringIntoViewRequester = requesterFor("enable_predictive_back"),
                 )
+
+                if (isTopLevelBackToLauncherSupported) {
+                    val topLevelBackToLauncher = remember {
+                        mutableStateOf(settings.getBoolean(TOP_LEVEL_BACK_TO_LAUNCHER_PREFERENCE_KEY, false))
+                    }
+                    SettingItemWithSwitch(
+                        title = { Text("一级页面返回时回到桌面") },
+                        icon = { Icon(AppIcons.ArrowBack, contentDescription = null) },
+                        description = { Text("在底栏任意页面按返回都直接回到系统桌面，不再先切回第一个页面。") },
+                        checked = topLevelBackToLauncher.value,
+                        onCheckedChange = {
+                            topLevelBackToLauncher.value = it
+                            settings.putBoolean(TOP_LEVEL_BACK_TO_LAUNCHER_PREFERENCE_KEY, it)
+                        },
+                        settingKey = TOP_LEVEL_BACK_TO_LAUNCHER_PREFERENCE_KEY,
+                        highlightedKey = settingKey,
+                        bringIntoViewRequester = requesterFor(TOP_LEVEL_BACK_TO_LAUNCHER_PREFERENCE_KEY),
+                    )
+                }
             }
             // ── 123duo3 UI 改进 ─────────────────────────────────────────────────
 

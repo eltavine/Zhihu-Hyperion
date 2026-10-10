@@ -95,6 +95,8 @@ final val com.github.zly2006.zhihu.platform/isPageTurnSupported // com.github.zl
     final fun <get-isPageTurnSupported>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isPageTurnSupported.<get-isPageTurnSupported>|<get-isPageTurnSupported>(){}[0]
 final val com.github.zly2006.zhihu.platform/isSentenceSimilaritySupported // com.github.zly2006.zhihu.platform/isSentenceSimilaritySupported|{}isSentenceSimilaritySupported[0]
     final fun <get-isSentenceSimilaritySupported>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isSentenceSimilaritySupported.<get-isSentenceSimilaritySupported>|<get-isSentenceSimilaritySupported>(){}[0]
+final val com.github.zly2006.zhihu.platform/isTopLevelBackToLauncherSupported // com.github.zly2006.zhihu.platform/isTopLevelBackToLauncherSupported|{}isTopLevelBackToLauncherSupported[0]
+    final fun <get-isTopLevelBackToLauncherSupported>(): kotlin/Boolean // com.github.zly2006.zhihu.platform/isTopLevelBackToLauncherSupported.<get-isTopLevelBackToLauncherSupported>|<get-isTopLevelBackToLauncherSupported>(){}[0]
 final val com.github.zly2006.zhihu.platform/nativeAppVersionName // com.github.zly2006.zhihu.platform/nativeAppVersionName|{}nativeAppVersionName[0]
     final fun <get-nativeAppVersionName>(): kotlin/String // com.github.zly2006.zhihu.platform/nativeAppVersionName.<get-nativeAppVersionName>|<get-nativeAppVersionName>(){}[0]
 final val com.github.zly2006.zhihu.platform/nativeIsDesktop // com.github.zly2006.zhihu.platform/nativeIsDesktop|{}nativeIsDesktop[0]

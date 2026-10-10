@@ -147,6 +147,7 @@ import com.github.zly2006.zhihu.navigation.WritePin
 import com.github.zly2006.zhihu.navigation.loginNavigationRequestFlow
 import com.github.zly2006.zhihu.platform.PlatformBackHandler
 import com.github.zly2006.zhihu.platform.SettingsStore
+import com.github.zly2006.zhihu.platform.isTopLevelBackToLauncherSupported
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.reading.CompactReadingPlayerButton
 import com.github.zly2006.zhihu.reading.ReadingPlayerBar
@@ -167,6 +168,7 @@ import com.github.zly2006.zhihu.ui.subscreens.OpenSourceLicensesScreen
 import com.github.zly2006.zhihu.ui.subscreens.ReadingSettingsScreen
 import com.github.zly2006.zhihu.ui.subscreens.SettingsSearchScreen
 import com.github.zly2006.zhihu.ui.subscreens.SystemAndUpdateSettingsScreen
+import com.github.zly2006.zhihu.ui.subscreens.TOP_LEVEL_BACK_TO_LAUNCHER_PREFERENCE_KEY
 import com.github.zly2006.zhihu.ui.subscreens.WebDavSyncScreen
 import com.github.zly2006.zhihu.update.UpdateOnLaunch
 import com.github.zly2006.zhihu.video.VideoScreen
@@ -500,10 +502,14 @@ fun ZhihuMain(
         }
     }
 
+    val topLevelBackToLauncher by rememberObservedSetting(settings, TOP_LEVEL_BACK_TO_LAUNCHER_PREFERENCE_KEY) {
+        isTopLevelBackToLauncherSupported && getBoolean(TOP_LEVEL_BACK_TO_LAUNCHER_PREFERENCE_KEY, false)
+    }
     PlatformBackHandler(
         showMainNavigation &&
             mainPagerState.currentPage != 0 &&
-            !showDetailPane,
+            !showDetailPane &&
+            !topLevelBackToLauncher,
     ) {
         coroutineScope.launch {
             mainPagerState.animateScrollToPage(0)

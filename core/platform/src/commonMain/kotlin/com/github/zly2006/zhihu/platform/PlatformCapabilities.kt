@@ -53,6 +53,9 @@ expect val isPageTurnSupported: Boolean
 
 expect val isAnswerSwipeSupported: Boolean
 
+/** 一级页面返回时回到桌面：只有 Android 的系统返回在应用不处理时会回到桌面，桌面端 ESC 和 iOS 没有这层语义。 */
+expect val isTopLevelBackToLauncherSupported: Boolean
+
 enum class UserMessageDuration {
     Short,
     Long,
