@@ -67,6 +67,7 @@ kotlinx-io = "0.9.1"
 kotlinx-serialization = "1.11.0"
 
 # ---- Third-party libraries ----
+backdrop = "2.0.1"
 coil = "3.6.3"
 hanlp = "portable-1.8.6"
 # Desktop runtime is linked from JDK 17; JavaFX 22+ requires a newer JDK, so stay on the 21 LTS line.
@@ -163,7 +164,8 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 ktor-http = { module = "io.ktor:ktor-http", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
-# ---- Images ----
+# ---- Images and visual effects ----
+backdrop = { module = "io.github.kyant0:backdrop", version.ref = "backdrop" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-gif = { module = "io.coil-kt.coil3:coil-gif", version.ref = "coil" }
 coil-network-core = { module = "io.coil-kt.coil3:coil-network-core", version.ref = "coil" }

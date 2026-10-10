@@ -189,3 +189,5 @@ actual val isArticleImageExportSupported: Boolean = true
 actual val isPageTurnSupported: Boolean = false
 
 actual val isAnswerSwipeSupported: Boolean = false
+
+actual val isTopLevelBackToLauncherSupported: Boolean = false

@@ -37,6 +37,7 @@ import zhihu.core.icons.generated.resources.auto_stories
 import zhihu.core.icons.generated.resources.autorenew
 import zhihu.core.icons.generated.resources.bar_chart
 import zhihu.core.icons.generated.resources.block
+import zhihu.core.icons.generated.resources.blur_on
 import zhihu.core.icons.generated.resources.bolt
 import zhihu.core.icons.generated.resources.bookmark
 import zhihu.core.icons.generated.resources.bookmark_filled
@@ -250,6 +251,7 @@ object AppIcons {
     val Autorenew = AppIcon(Res.drawable.autorenew)
     val BarChart = AppIcon(Res.drawable.bar_chart)
     val Block = AppIcon(Res.drawable.block)
+    val BlurOn = AppIcon(Res.drawable.blur_on)
     val Bolt = AppIcon(Res.drawable.bolt)
     val Bookmark = AppIcon(Res.drawable.bookmark)
     val BookmarkFilled = AppIcon(Res.drawable.bookmark_filled)

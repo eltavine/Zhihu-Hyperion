@@ -25,6 +25,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -59,6 +61,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
@@ -77,6 +81,7 @@ import com.github.zly2006.zhihu.data.navDestination
 import com.github.zly2006.zhihu.data.officialBadge
 import com.github.zly2006.zhihu.data.sourceLabel
 import com.github.zly2006.zhihu.data.target
+import com.github.zly2006.zhihu.icons.AppIcon
 import com.github.zly2006.zhihu.icons.AppIcons
 import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.Account
@@ -92,6 +97,10 @@ import com.github.zly2006.zhihu.theme.PREF_FONT_SIZE
 import com.github.zly2006.zhihu.theme.PREF_LINE_HEIGHT
 import com.github.zly2006.zhihu.util.parseEmphasizedHtmlTextWithTheme
 import org.koin.compose.koinInject
+
+/** 外观设置里的「信息流样式」：`card` 用圆角卡片分隔条目，`divider` 用细分割线。 */
+const val FEED_CARD_STYLE_PREFERENCE_KEY = "feedCardStyle"
+const val DEFAULT_FEED_CARD_STYLE = "card"
 
 /**
  * 信息流卡片的 Material 3 实现。
@@ -128,7 +137,7 @@ fun FeedCard(
         settings.getBoolean("showFeedThumbnail", true)
     }
     val feedCardStyle = remember {
-        settings.getString("feedCardStyle", "divider")
+        settings.getString(FEED_CARD_STYLE_PREFERENCE_KEY, DEFAULT_FEED_CARD_STYLE)
     }
     val duo3CardAppearance = remember { settings.getBoolean("duo3_card_appearance", false) }
     val duo3CardLayout = remember { settings.getBoolean("duo3_card_layout", false) }
@@ -193,55 +202,37 @@ fun FeedCard(
             HorizontalDivider(thickness = 0.3.dp)
         }
     } else {
-        Box(
+        // 相邻两张卡片各留 4dp，合起来是 Material 3 规定的 8dp 卡片间距。
+        Card(
+            onClick = { performClick(item) },
             modifier = modifier
                 .fillMaxWidth()
                 .semantics { selected = isSelected }
                 .then(if (showPinImages || duo3CardLayout) Modifier else Modifier.heightIn(max = maxHeight))
-                .padding(horizontal = horizontalPadding, vertical = 8.dp),
+                .padding(horizontal = horizontalPadding, vertical = 4.dp),
+            shape = if (duo3CardAppearance) RoundedCornerShape(24.dp) else MaterialTheme.shapes.large,
+            colors = CardDefaults.cardColors(
+                containerColor = when {
+                    isSelected -> selectedContainerColor
+                    duo3CardAppearance -> MaterialTheme.colorScheme.surfaceBright
+                    else -> MaterialTheme.colorScheme.surfaceContainer
+                },
+            ),
         ) {
-            Card(
-                colors = if (isSelected) {
-                    CardDefaults.cardColors(containerColor = selectedContainerColor)
-                } else if (duo3CardAppearance) {
-                    CardDefaults.cardColors().copy(
-                        containerColor = MaterialTheme.colorScheme.surfaceBright,
-                    )
-                } else {
-                    CardDefaults.cardColors()
-                },
-                shape = if (duo3CardAppearance) RoundedCornerShape(24.dp) else CardDefaults.shape,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .let { if (duo3CardAppearance) it.clip(RoundedCornerShape(24.dp)) else it }
-                    .clickable { performClick(item) },
-                elevation = if (duo3CardAppearance) {
-                    CardDefaults.cardElevation()
-                } else {
-                    CardDefaults.cardElevation(defaultElevation = 2.dp)
-                },
-            ) {
-                Column(
-                    modifier = if (duo3CardAppearance) {
-                        Modifier.padding(16.dp, 12.dp, 16.dp, 16.dp)
-                    } else {
-                        Modifier.padding(8.dp)
-                    },
-                ) {
-                    FeedCardContent(
-                        item = item,
-                        showFeedThumbnail = showFeedThumbnail,
-                        thumbnailUrl = thumbnailUrl,
-                        pinImages = pinImages,
-                        showMenu = showMenu,
-                        onShowMenuChange = { showMenu = it },
-                        menuItems = menuItems,
-                        duo3CardLayout = duo3CardLayout,
-                        duo3CardLargeTitle = duo3CardLargeTitle,
-                        showSourceLabel = showSourceLabel,
-                        onLinkClick = onPreviewLinkClick,
-                    )
-                }
+            Column(modifier = Modifier.padding(16.dp, 12.dp, 16.dp, if (duo3CardAppearance) 16.dp else 12.dp)) {
+                FeedCardContent(
+                    item = item,
+                    showFeedThumbnail = showFeedThumbnail,
+                    thumbnailUrl = thumbnailUrl,
+                    pinImages = pinImages,
+                    showMenu = showMenu,
+                    onShowMenuChange = { showMenu = it },
+                    menuItems = menuItems,
+                    duo3CardLayout = duo3CardLayout,
+                    duo3CardLargeTitle = duo3CardLargeTitle,
+                    showSourceLabel = showSourceLabel,
+                    onLinkClick = onPreviewLinkClick,
+                )
             }
         }
     }
@@ -442,14 +433,7 @@ private fun FeedCardContent(
                             Spacer(Modifier.width(6.dp))
                         }
                         if (item.details.isNotEmpty()) {
-                            Text(
-                                text = item.details,
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.weight(1f),
-                            )
+                            FeedCardDetails(item.details, Modifier.weight(1f))
                         }
                     }
                     if (item.details.isNotEmpty()) {
@@ -521,16 +505,12 @@ private fun FeedCardContent(
                 )
                 if (item.details.isNotEmpty()) {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 6.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text(
-                            text = item.details,
-                            fontSize = 12.sp,
-                            lineHeight = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.weight(1f),
-                        )
+                        FeedCardDetails(item.details, Modifier.weight(1f))
                         FeedCardMenuBox(item, showMenu, onShowMenuChange, menuItems, navigator)
                     }
                 }
@@ -690,6 +670,103 @@ private fun FeedCardSourceLabel(sourceLabel: String?) {
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.padding(bottom = 6.dp),
     )
+}
+
+/** 详情行里单独成块的片段：计数类按 [units] 里的量词识别，只显示数字，量词由图标表达。 */
+internal enum class FeedDetailKind(
+    val icon: AppIcon,
+    vararg val units: String,
+) {
+    VoteUp(AppIcons.ThumbUp, "赞同", "赞"),
+    Comment(AppIcons.Comment, "评论"),
+    Collect(AppIcons.Bookmark, "收藏"),
+    View(AppIcons.Visibility, "浏览"),
+    Recommendation(AppIcons.Explore),
+}
+
+/** [kind] 为 null 时按原文显示 [text]；[description] 是带量词的完整原文，留给读屏。 */
+internal data class FeedDetailPart(
+    val kind: FeedDetailKind?,
+    val text: String,
+    val description: String = text,
+)
+
+private val FeedDetailCount = Regex("""(\d+(?:\.\d+)?\s*[万亿]?)\s*(\S+)""")
+
+/**
+ * 把卡片详情行（各数据源都用「 · 」拼接）拆成片段：赞同、评论、收藏、浏览计数和「…推荐」来源各自成块，
+ * 相邻的其余片段（内容类型、动态说明、时间等）合并成一段原文。
+ *
+ * 手机版推荐卡片的这一行是服务端拼好的原文：2026-10 用游客请求实测 102 张卡片，只出现过「N 赞同」「N 评论」
+ * 「N 收藏」「N 浏览」和「X小时前」，数字可能带「万」。认不出的写法照原文显示，服务端改格式也只会退回纯文本。
+ */
+internal fun feedDetailParts(details: String): List<FeedDetailPart> = details
+    .split(" · ")
+    .map(String::trim)
+    .filter(String::isNotEmpty)
+    .fold(mutableListOf()) { parts, segment ->
+        val count = FeedDetailCount.matchEntire(segment)
+        val kind = if (count == null) {
+            FeedDetailKind.Recommendation.takeIf { segment.endsWith("推荐") }
+        } else {
+            FeedDetailKind.entries.firstOrNull { count.groupValues[2] in it.units }
+        }
+        val previous = parts.lastOrNull()
+        when {
+            kind != null -> parts += FeedDetailPart(kind, count?.groupValues?.get(1)?.trim() ?: segment, segment)
+            previous != null && previous.kind == null -> parts[parts.lastIndex] = FeedDetailPart(null, "${previous.text} · $segment")
+            else -> parts += FeedDetailPart(null, segment)
+        }
+        parts
+    }
+
+/**
+ * 卡片左下角的详情行：赞同用主色、评论用次色、推荐来源用第三色的色块单独强调，收藏、浏览用中性色块；
+ * 空间不够时换行，不截掉计数。
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun FeedCardDetails(details: String, modifier: Modifier = Modifier) {
+    val parts = remember(details) { feedDetailParts(details) }
+    val colors = MaterialTheme.colorScheme
+    FlowRow(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        itemVerticalAlignment = Alignment.CenterVertically,
+    ) {
+        parts.forEach { part ->
+            val kind = part.kind
+            if (kind == null) {
+                Text(
+                    text = part.text,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = colors.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                return@forEach
+            }
+            val (containerColor, contentColor) = when (kind) {
+                FeedDetailKind.VoteUp -> colors.primaryContainer to colors.onPrimaryContainer
+                FeedDetailKind.Comment -> colors.secondaryContainer to colors.onSecondaryContainer
+                FeedDetailKind.Recommendation -> colors.tertiaryContainer to colors.onTertiaryContainer
+                FeedDetailKind.Collect, FeedDetailKind.View -> colors.surfaceContainerHighest to colors.onSurfaceVariant
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(containerColor)
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                    .clearAndSetSemantics { contentDescription = part.description },
+            ) {
+                Icon(kind.icon, contentDescription = null, tint = contentColor, modifier = Modifier.size(14.dp))
+                Spacer(Modifier.width(4.dp))
+                Text(part.text, style = MaterialTheme.typography.labelMedium, color = contentColor, maxLines = 1)
+            }
+        }
+    }
 }
 
 val LocalSelectedContentDestination = compositionLocalOf<NavDestination?> { null }

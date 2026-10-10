@@ -47,6 +47,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.github.zly2006.zhihu.data.AIGC_MARKING_ENABLED_PREFERENCE_KEY
 import com.github.zly2006.zhihu.data.QUALITY_FILTER_MODE_PREFERENCE_KEY
+import com.github.zly2006.zhihu.glass.LIQUID_GLASS_PREFERENCE_KEY
+import com.github.zly2006.zhihu.glass.isLiquidGlassSupported
 import com.github.zly2006.zhihu.icons.AppIcons
 import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.navigation.Account
@@ -58,6 +60,7 @@ import com.github.zly2006.zhihu.platform.MACOS_QUIT_ON_WINDOW_CLOSE_PREFERENCE_K
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.isAnswerSwipeSupported
 import com.github.zly2006.zhihu.platform.isPageTurnSupported
+import com.github.zly2006.zhihu.platform.isTopLevelBackToLauncherSupported
 import com.github.zly2006.zhihu.platform.platformName
 import com.github.zly2006.zhihu.theme.isDynamicColorSupported
 import com.github.zly2006.zhihu.ui.article.ANSWER_DOUBLE_TAP_ACTION_PREFERENCE_KEY
@@ -177,6 +180,9 @@ private val settingsSearchEntries = buildList {
     }
     add(appearanceEntry("appearance.landscapeListDetail", "横屏双栏布局", "控制平板和电脑横屏时是否同时显示列表与详情。", LANDSCAPE_LIST_DETAIL_PREFERENCE_KEY, listOf("双栏", "分栏", "平板", "横屏")))
     add(appearanceEntry("appearance.bottomSheetCorners", "禁用 popup 圆角", "评论等 popup 顶部改为直角。", DISABLE_BOTTOM_SHEET_ROUNDED_CORNERS_PREFERENCE_KEY, listOf("评论圆角", "popup", "直角")))
+    if (isLiquidGlassSupported) {
+        add(appearanceEntry("appearance.liquidGlass", "液态玻璃", "底部导航栏和回答页操作栏使用液态玻璃。", LIQUID_GLASS_PREFERENCE_KEY, listOf("毛玻璃", "玻璃", "模糊", "iOS", "Liquid Glass")))
+    }
     add(appearanceEntry("appearance.fontScale", "字号与行高", "调整正文阅读字号和行距。", "fontScale", listOf("字体大小", "内容字体", "正文字号", "行距")))
     add(appearanceEntry("appearance.showFeedThumbnail", "显示 Feed 卡片缩略图", "控制信息流卡片图片显示。", "showFeedThumbnail", listOf("图片", "封面")))
     add(appearanceEntry("appearance.showRefreshFab", "显示刷新 FAB 按钮", "控制首页和列表的浮动刷新按钮。", "showRefreshFab", listOf("刷新按钮", "浮动按钮")))
@@ -228,6 +234,9 @@ private val settingsSearchEntries = buildList {
     add(appearanceEntry("appearance.showSearchHistory", "记录并显示搜索历史", "控制搜索历史记录和展示。", "showSearchHistory", listOf("搜索记录", "历史记录", "清除搜索历史")))
     add(appearanceEntry("appearance.customNavHost", "使用自定义导航", "切换实验性的导航实现。", "use_custom_nav_host"))
     add(appearanceEntry("appearance.predictiveBack", "启用预测性返回", "控制 Android 预测性返回动画。", "enable_predictive_back", listOf("返回手势")))
+    if (isTopLevelBackToLauncherSupported) {
+        add(appearanceEntry("appearance.topLevelBackToLauncher", "一级页面返回时回到桌面", "在底栏任意页面按返回都直接回到系统桌面。", TOP_LEVEL_BACK_TO_LAUNCHER_PREFERENCE_KEY, listOf("返回手势", "返回键", "退出", "后台", "主页")))
+    }
     add(appearanceEntry("appearance.duo3", "123Duo3 新 UI", "集中管理 Duo3 视觉和交互开关。", "123Duo3", listOf("新UI", "Duo3")))
 
     add(recommendEntry("recommend.recommendationMode", "推荐算法", "选择 Web、Android、本地或混合推荐。", "recommendationMode", listOf("推荐来源", "Web 推荐", "Android 推荐", "本地推荐", "混合推荐")))

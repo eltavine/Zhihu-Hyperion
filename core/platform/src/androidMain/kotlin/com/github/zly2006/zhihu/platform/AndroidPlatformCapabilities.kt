@@ -95,6 +95,8 @@ actual val isPageTurnSupported: Boolean = true
 
 actual val isAnswerSwipeSupported: Boolean = true
 
+actual val isTopLevelBackToLauncherSupported: Boolean = true
+
 @Composable
 actual fun rememberSystemUrlOpener(): SystemUrlOpener {
     val context = LocalContext.current

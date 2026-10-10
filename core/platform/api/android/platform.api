@@ -14,6 +14,7 @@ public final class com/github/zly2006/zhihu/platform/AndroidPlatformCapabilities
 	public static final fun isLegacyWebViewSupported ()Z
 	public static final fun isNative ()Z
 	public static final fun isPageTurnSupported ()Z
+	public static final fun isTopLevelBackToLauncherSupported ()Z
 	public static final fun rememberAppPrivateDirectory (Landroidx/compose/runtime/Composer;I)Lkotlinx/io/files/Path;
 	public static final fun rememberExternalUrlOpener (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/ExternalUrlOpener;
 	public static final fun rememberImageGalleryOpener (Landroidx/compose/runtime/Composer;I)Lcom/github/zly2006/zhihu/platform/ImageGalleryOpener;

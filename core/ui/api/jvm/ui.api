@@ -140,7 +140,7 @@ public final class com/github/zly2006/zhihu/ui/components/BlockedFeedAuthor {
 
 public final class com/github/zly2006/zhihu/ui/components/BottomFloatingToolbarKt {
 	public static final fun ActionToggleButton-SxpAMN0 (ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/Modifier;Ljava/lang/String;ZJJLandroidx/compose/runtime/Composer;II)V
-	public static final fun BottomFloatingToolbar (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BottomFloatingToolbar (Landroidx/compose/ui/Modifier;Lcom/github/zly2006/zhihu/glass/GlassBackdrop;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/github/zly2006/zhihu/ui/components/ChoiceButtonGroupKt {
@@ -257,10 +257,10 @@ public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$P
 public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$TwoRowsTopAppBarKt {
 	public static final field INSTANCE Lcom/github/zly2006/zhihu/ui/components/ComposableSingletons$TwoRowsTopAppBarKt;
 	public fun <init> ()V
-	public final fun getLambda$-1375908716$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-83839307$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$1330404089$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$2133420759$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1102188774$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1748915434$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-186672267$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1085432824$Zhihu_Hyperion_core_ui ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/github/zly2006/zhihu/ui/components/ComposableSingletons$VotersSheetKt {
@@ -363,6 +363,8 @@ public final class com/github/zly2006/zhihu/ui/components/FeedAuthorBlockType : 
 }
 
 public final class com/github/zly2006/zhihu/ui/components/FeedCardKt {
+	public static final field DEFAULT_FEED_CARD_STYLE Ljava/lang/String;
+	public static final field FEED_CARD_STYLE_PREFERENCE_KEY Ljava/lang/String;
 	public static final fun FeedCard-E4Q9ldg (Lcom/github/zly2006/zhihu/data/FeedDisplayItem;Landroidx/compose/ui/Modifier;Ljava/lang/String;FLjava/lang/String;FLkotlin/jvm/functions/Function4;ZLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
 	public static final fun getLocalSelectedContentDestination ()Landroidx/compose/runtime/ProvidableCompositionLocal;
 }
@@ -532,7 +534,7 @@ public final class com/github/zly2006/zhihu/ui/components/ShareDialogComponentKt
 }
 
 public final class com/github/zly2006/zhihu/ui/components/TwoRowsTopAppBarKt {
-	public static final fun ZhihuTwoRowsTopAppBar-eXZ4JBQ (Lkotlin/jvm/functions/Function3;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Landroidx/compose/ui/Alignment$Horizontal;FFLandroidx/compose/foundation/layout/WindowInsets;Landroidx/compose/material3/TopAppBarColors;Landroidx/compose/material3/TopAppBarScrollBehavior;Landroidx/compose/runtime/Composer;III)V
+	public static final fun ZhihuTwoRowsTopAppBar-ii5sN6A (Lkotlin/jvm/functions/Function3;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Landroidx/compose/ui/Alignment$Horizontal;FFLandroidx/compose/foundation/layout/WindowInsets;Landroidx/compose/material3/TopAppBarColors;Landroidx/compose/material3/TopAppBarScrollBehavior;Landroidx/compose/runtime/Composer;III)V
 	public static final fun rememberPreferCollapsedExitUntilCollapsedScrollBehavior (Landroidx/compose/material3/TopAppBarState;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)Landroidx/compose/material3/TopAppBarScrollBehavior;
 }
 

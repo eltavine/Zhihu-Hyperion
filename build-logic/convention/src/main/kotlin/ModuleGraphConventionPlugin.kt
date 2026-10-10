@@ -42,7 +42,7 @@ class ModuleGraphConventionPlugin : Plugin<Project> {
                     ":feature:.* -X> :feature:.*",
                     ":shared -X> :($APPLICATIONS)",
                     // Foundation layers of :core, bottom first.
-                    ":core:(common|settings|nlp|icons) -X> :.*",
+                    ":core:(common|settings|nlp|icons|glass) -X> :.*",
                     ":core:model -X> :(?!core:common$).*",
                     ":core:(navigation|network) -X> :(?!core:(common|model)$).*",
                     ":core:account -X> :(?!core:(common|model|network)$).*",
@@ -51,7 +51,7 @@ class ModuleGraphConventionPlugin : Plugin<Project> {
                     ":core:platform -X> :(?!core:(common|model|network|account|settings|icons)$).*",
                     ":core:notification -X> :(?!core:(common|model|network|settings|platform)$).*",
                     ":core:data -X> :(?!core:(common|model|navigation|network|account|database|settings|nlp)$).*",
-                    ":core:ui -X> :(?!core:(common|model|navigation|network|account|database|settings|designsystem|icons|platform|nlp|data)$).*",
+                    ":core:ui -X> :(?!core:(common|model|navigation|network|account|database|settings|designsystem|icons|platform|nlp|data|glass)$).*",
                     ":core:markdown -X> :(?!(core:(common|model|navigation|network|account|database|settings|designsystem|icons|platform|nlp|data|ui)|(markdown|latex|codehighlight)-.*)$).*",
                 )
             }

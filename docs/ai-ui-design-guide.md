@@ -65,6 +65,7 @@ URL 解析集中在 `resolveContent()`。支持知乎问题、回答、文章、
 - 空状态：整页空列表和列表底部的加载失败用 `EmptyState`（Expressive 异形容器里的图标、标题、可选说明和“重试”等按钮）。标题只写状态（如“加载失败”），原因、错误详情和这里会出现什么放进说明；只有一行的轻提示（如“已经到底啦”）保持文字。被其他设置禁用的设置项，要在说明或分组脚注里写明前置条件。分页列表把这两种状态交给 `PaginatedList`：`loadFailed` 加 `onRetry`（`PaginationViewModel.retry` 从失败的那一页接着加载）显示“加载失败”和“重试”，`emptyContent` 在加载完却没有条目时代替“已经到底啦”；同时要传 `isEnd`，否则列表底部的加载指示一直不消失。
 - 主视觉与页面级按钮：引导页、登录页这类需要视觉重心的位置用 `ShapedIcon`（`MaterialShapes` 异形容器，形状只从 `IconShape` 里选，主视觉用 `primaryContainer`）。整页只有一两个主要操作、按钮横跨内容宽度时用 `MediumActionButton`（56dp，按下形变，`loading` 时原位显示加载指示）：主操作 `Filled`，离开流程的外链 `Outlined` 并配 `OpenInNew`；列表里、工具栏里的普通按钮仍用默认尺寸。
 - 引导与登录：内容宽度不超过 560dp 并水平居中，平板和桌面窗口不把按钮拉满；页面根节点消费 `safeDrawing`，iOS 状态栏区域的触摸归系统，控件压在下面会点不到。声明页的确认按钮写明动作（“我已了解”“同意并继续”），不用笼统的“确认”；多步流程里返回键先回到上一步。表单的输入框配前置图标，手机号用 `prefix` 显示区号，验证码这类输入标注 `ContentType`（iOS 另经 `PlatformImeOptions` 标成一次性验证码），错误放进 `errorContainer` 卡片。二维码始终放在白底卡片里，深色主题下也要能被扫。
+- 液态玻璃：效果只来自 `:core:glass`（封装 Kyant backdrop，调用方看不到库的类型），只用在主壳底栏和回答页操作栏这两个代表位置，不要扩散到列表项或对话框。内容宿主用 `rememberGlassBackdrop` + `Modifier.glassBackdropSource` 录制背景，玻璃表面必须是它的兄弟节点；关闭开关或平台不支持时传 null，回到 Material 外观。
 - 阅读页操作栏：主视觉用 `BottomFloatingToolbar`（Expressive 浮动工具栏，居中悬浮在正文上方，滚动隐藏沿用 `ArticleBottomBarState`），只放赞同、反对、评论、收藏和更多。开关类动作用 `ActionToggleButton`：赞同、反对选中时用知乎蓝 `voteUpNeutralContent()`，收藏用 `tertiaryContainer`；其余按钮用 `onSurface` 色，不用默认的主色文字。duo3 操作栏是单独的视觉选项，保持药丸样式。
 - 评论：输入框是至少 48dp 高的胶囊（`surfaceContainerHighest`，`bodyLarge`），表情和发送按钮都是 48dp，发送用 `FilledIconButton`；列表项的回复、点赞、更多操作用标准按钮尺寸，点赞用 `ActionToggleButton`，作者标签是 `secondaryContainer` 小药丸；时间与 IP 属地合成一行 `labelMedium`。正文文字一律用主题字体样式，只保留用户设置的评论字号与行高倍数，不写死 `fontSize`。
 - 内容分组列表：按日期等维度分组、整行可点的内容条目（如日报）用 `GroupedListItem`（Expressive 分段列表项，组内留分段间隙、首末项大圆角），页面底色用 `surfaceContainer`，与设置页一致；分组标题用 `stickyHeader` 吸顶。少量头条大图用 `HorizontalMultiBrowseCarousel`，项被裁窄时隐去文字。信息流卡片仍用 `FeedCard`。
@@ -72,6 +73,8 @@ URL 解析集中在 `resolveContent()`。支持知乎问题、回答、文章、
 主题状态集中在 `ThemeManager` 和平台 `ThemeSettingsRuntime`。`themeMode` 控制明暗，`useDynamicColor` 控制 Material You 动态取色，`customThemeColor` 在动态取色关闭后生效，`backgroundColorLight` / `backgroundColorDark` 控制背景色，`luotianyi_color` 控制应用内浏览器工具栏色。
 
 信息流卡片由 `FeedCard` 读取 `showFeedThumbnail`、`feedCardStyle`、`duo3_card_appearance`、`duo3_card_layout`、`duo3_card_large_title`。改这些 key 的语义时要同时查主页、关注、热榜、历史和搜索结果等复用卡片的页面。
+
+卡片左下角的详情行由 `feedDetailParts` 按「 · 」拆段：赞同、评论、收藏、浏览计数和「…推荐」来源各自显示为带图标的色块（赞同主色、评论次色、推荐第三色，收藏与浏览中性色），其余片段保持原文。数据源新增计数时沿用「数字 量词」的写法并在 `FeedDetailKind` 登记量词，不要另拼带图标的文字。
 
 文章、问题详情和想法正文会根据 `ARTICLE_USE_WEBVIEW_PREFERENCE_KEY` 在 WebView 与 Compose Markdown 之间切换；该常量当前值是 `webviewRender`。WebView 正文渲染只作为废弃路径保留，不再接受新功能；阅读体验新能力只接入 Compose Markdown 路径。Compose Markdown 路径依赖 `RenderMarkdown` 和 `SegmentedText` 的字号、行高和段间距设置。
 
@@ -87,9 +90,10 @@ URL 解析集中在 `resolveContent()`。支持知乎问题、回答、文章、
 | `backgroundColorLight`, `backgroundColorDark` | 自定义背景颜色 | 明暗模式背景 | 按当前明暗模式写入不同 key |
 | `disableBottomSheetRoundedCorners` | 禁用 popup 圆角 | `MyModalBottomSheet` 顶部改为直角 | 默认关闭，统一影响评论等复用 popup |
 | `contentFontSize`, `contentLineHeight`, `contentBlockSpacing` | 字号、行高、段间距 | 正文字号/行高、分段文本样式和 Markdown 正文块间距 | 查 `SegmentedText` 和 Markdown 渲染路径 |
+| `liquidGlass` | 液态玻璃 | 主壳底栏换成悬浮的 `LiquidGlassTabBar`，回答页 `BottomFloatingToolbar` 换成玻璃底板 | 常量与默认值在 `:core:glass`：只有 iOS 默认开启；只在 `isLiquidGlassSupported`（Android 13+、iOS、macOS、桌面）时显示开关；随平台调整默认值，不进 WebDAV 同步 |
 | `showFeedThumbnail` | Feed 卡片缩略图 | 信息流卡片是否显示图 | 由复用 `FeedCard` 的页面读取 |
 | `showRefreshFab` | 刷新 FAB | 首页/列表可拖动刷新按钮显示 | 123Duo3 总开关会关闭它 |
-| `feedCardStyle` | 信息流样式 | `card` 或 `divider` | 影响 FeedCard 外层布局 |
+| `feedCardStyle` | 信息流样式 | `card`（默认，色调圆角卡片，卡片间 8dp）或 `divider` | 常量 `FEED_CARD_STYLE_PREFERENCE_KEY` / `DEFAULT_FEED_CARD_STYLE`，影响所有复用 FeedCard 的列表 |
 | `webviewRender` | 使用 WebView 显示文章 | 文章、问题详情、想法正文渲染路径 | 常量名是 `ARTICLE_USE_WEBVIEW_PREFERENCE_KEY` |
 | `webviewCustomFontName` | WebView 自定义字体 | WebView 注入字体 | 仅 WebView 路径 |
 | `webviewHardwareAcceleration` | WebView 硬件加速 | Android WebView layer type | 兼容性/性能相关 |
@@ -118,6 +122,7 @@ URL 解析集中在 `resolveContent()`。支持知乎问题、回答、文章、
 | `showSearchHistory` | 搜索历史 | 是否记录和展示新搜索 | 关闭后不再记录新的搜索 |
 | `use_custom_nav_host` | 自定义导航 | 持久化的技术性导航开关 | 当前主要在设置页读写；实现效果前先 `rg` 运行时读取点 |
 | `enable_predictive_back` | 预测性返回 | 持久化的 Android 14+ 返回动画开关 | 当前主要在设置页读写；实现效果前先 `rg` 运行时读取点 |
+| `topLevelBackToLauncher` | 一级页面返回时回到桌面 | 底栏非第一个页面按返回时不再先切回第一个页面，交给系统回到桌面 | 默认关闭，保留 [#660](https://github.com/zly2006/zhihu-plus-plus/pull/660) 的“先回第一个页面”；只在 `isTopLevelBackToLauncherSupported`（Android）时显示并生效，`ZhihuMain` 通过 `rememberObservedSetting` 读取 |
 
 ### 推荐系统与内容过滤
 
@@ -146,6 +151,7 @@ URL 解析集中在 `resolveContent()`。支持知乎问题、回答、文章、
 | `checkNightlyUpdates` | Nightly 更新 | 读取 nightly 还是正式版的 update.json | 键与读取逻辑都在 `:feature:update` 的 `UpdateController` |
 | `continuousUsageReminderIntervalMinutes` | 防沉迷提醒 | 连续使用提醒间隔 | 0 表示关闭 |
 | `webdav.json`（`WebDavConfigFile`） | WebDAV 同步 | 手动上传/恢复屏蔽列表和已登记的设置 | 凭据不在 `SettingsStore`，也不进 Android 云备份；新增用户设置要登记到 `WebDavSyncViewModel.kt` 的 `syncedSettings` 才会同步 |
+| `custom_ai.json`（`:feature:ai` 的 `CustomAiConfigFile`） | 「总结本文」弹层的「自定义 AI」 | OpenAI 兼容接口的地址、API Key、模型，以及总结是否改用它 | 与 WebDAV 凭据同样不在 `SettingsStore`、不进云备份和 WebDAV 同步；没配置完整时总结仍走知乎直答 |
 | `developer` | 开发者模式 | 账号页显示开发者选项 | 账号页点击版本 5 次开启 |
 | `enableScrollEndHaptic` | 开发者选项: 滚动到底震动 | 滚动边界反馈行为开关 | 改前查具体 overScroll 使用点 |
 | `showDebugOverlay` | 开发者选项: 调试悬浮窗 | 调试 Feed 详情显示 | 如果 `rg` 只命中设置页，先补运行时读取点 |

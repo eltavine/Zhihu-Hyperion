@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -117,14 +118,17 @@ fun RenderImage(
             model = rememberMarkdownImageModel(data.url),
             contentDescription = data.altText,
             modifier = modifier
-                .fillMaxWidth(0.8f)
+                // 与正文同宽；原图比正文还窄时按 1px≈1dp 封顶，不把小图放大成一整屏的模糊图。
+                .then(if (imageWidth != null && imageWidth > 0) Modifier.widthIn(max = imageWidth.dp) else Modifier)
+                .fillMaxWidth()
                 .then(
                     if (imageAspectRatio != null) {
                         Modifier.aspectRatio(imageAspectRatio)
                     } else {
                         Modifier
                     },
-                ).pointerInput(Unit) {
+                ).clip(MaterialTheme.shapes.medium)
+                .pointerInput(Unit) {
                     detectTapGestures(
                         onTap = {
                             openGallery()

@@ -98,10 +98,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil3.compose.AsyncImage
+import com.github.zly2006.zhihu.ai.CustomAiConfig
+import com.github.zly2006.zhihu.ai.CustomAiConfigDialog
+import com.github.zly2006.zhihu.ai.CustomAiConfigFile
 import com.github.zly2006.zhihu.data.DataHolder
 import com.github.zly2006.zhihu.data.HistoryStorage
 import com.github.zly2006.zhihu.data.VoteUpState
 import com.github.zly2006.zhihu.filter.ContentOpenTracker
+import com.github.zly2006.zhihu.glass.LIQUID_GLASS_PREFERENCE_KEY
+import com.github.zly2006.zhihu.glass.glassBackdropSource
+import com.github.zly2006.zhihu.glass.isLiquidGlassEnabledByDefault
+import com.github.zly2006.zhihu.glass.isLiquidGlassSupported
+import com.github.zly2006.zhihu.glass.rememberGlassBackdrop
 import com.github.zly2006.zhihu.icons.AppIcons
 import com.github.zly2006.zhihu.icons.Icon
 import com.github.zly2006.zhihu.markdown.RenderMarkdown
@@ -174,6 +182,7 @@ import com.github.zly2006.zhihu.viewmodel.formatArticleDateTime
 import com.github.zly2006.zhihu.viewmodel.rememberContentExporter
 import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import com.materialkolor.ktx.harmonize
+import io.ktor.client.engine.HttpClientEngine
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.painterResource
@@ -235,6 +244,9 @@ fun ArticleScreen(
     val useDuo3ArticleActions by rememberObservedSetting(settings, "duo3_article_actions") {
         getBoolean("duo3_article_actions", false)
     }
+    val liquidGlassEnabled by rememberObservedSetting(settings, LIQUID_GLASS_PREFERENCE_KEY) {
+        getBoolean(LIQUID_GLASS_PREFERENCE_KEY, isLiquidGlassEnabledByDefault)
+    }
     val buttonSkipAnswer by rememberObservedSetting(settings, "buttonSkipAnswer") { getBoolean("buttonSkipAnswer", true) }
     val autoHideSkipAnswerButton by rememberObservedSetting(settings, "autoHideSkipAnswerButton") {
         getBoolean("autoHideSkipAnswerButton", true)
@@ -275,6 +287,16 @@ fun ArticleScreen(
     var showCollectionDialog by remember { mutableStateOf(false) }
     var showActionsMenu by remember { mutableStateOf(false) }
     var showSummaryDialog by remember { mutableStateOf(false) }
+    val customAiConfigFile = koinInject<CustomAiConfigFile>()
+    val httpEngine = koinInject<HttpClientEngine>()
+    var customAiConfig by remember { mutableStateOf(CustomAiConfig()) }
+    var showCustomAiDialog by remember { mutableStateOf(false) }
+
+    fun requestSummary() = viewModel.requestAiSummary(
+        environment = environment,
+        engine = httpEngine,
+        customAi = customAiConfig.takeIf { it.useForSummary && it.isComplete },
+    )
     var showAigcFlagSheet by remember { mutableStateOf(false) }
     var showExportDialog by remember { mutableStateOf(false) }
     var showDoubleTapActionDialog by remember { mutableStateOf(false) }
@@ -451,10 +473,87 @@ fun ArticleScreen(
         }
     }
 
+    /** 顶栏里的作者信息：[expanded] 时放在返回按钮所在行并带一行简介，收起后缩成标题下的小字。 */
+    @Composable
+    fun ArticleAuthorRow(expanded: Boolean) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(if (expanded) PaddingValues() else PaddingValues(top = 2.dp, bottom = 8.dp))
+                .padding(end = 16.dp)
+                .fillMaxWidth()
+                .clickable {
+                    navigator.onNavigate(
+                        com.github.zly2006.zhihu.navigation.Person(
+                            id = viewModel.authorId,
+                            urlToken = viewModel.authorUrlToken,
+                            name = viewModel.authorName,
+                        ),
+                    )
+                },
+        ) {
+            val avatarSize = if (expanded) 36.dp else 20.dp
+            if (viewModel.authorAvatarSrc.isNotEmpty()) {
+                AsyncImage(
+                    model = viewModel.authorAvatarSrc,
+                    contentDescription = "作者头像",
+                    modifier = Modifier
+                        .size(avatarSize)
+                        .clip(CircleShape),
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .size(avatarSize)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                )
+            }
+
+            Spacer(modifier = Modifier.width(if (expanded) 8.dp else 4.dp))
+
+            Column(
+                modifier = Modifier.weight(1f),
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = viewModel.authorName,
+                        style = if (expanded) MaterialTheme.typography.titleSmall else MaterialTheme.typography.labelMedium,
+                        color = if (expanded) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false),
+                    )
+                    if (viewModel.authorBadge != null) {
+                        Spacer(modifier = Modifier.width(4.dp))
+                        AuthorBadge(
+                            badge = viewModel.authorBadge,
+                            compact = !expanded,
+                        )
+                    }
+                }
+                if (viewModel.authorBio.isNotEmpty() && expanded) {
+                    Text(
+                        text = viewModel.authorBio,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+            }
+        }
+    }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun MainContent() {
         val scrollBehavior = rememberPreferCollapsedExitUntilCollapsedScrollBehavior()
+        val glassBackdrop = if (liquidGlassEnabled && isLiquidGlassSupported && !useDuo3ArticleActions) {
+            rememberGlassBackdrop(MaterialTheme.colorScheme.background)
+        } else {
+            null
+        }
         // 记录历史最大滚动范围，避免顶栏展开/收起时 maxValue 短暂变化导致 scrollBehavior 抖动。
         var scrollStateMaxValue by remember { mutableIntStateOf(0) }
         LaunchedEffect(scrollState) {
@@ -515,7 +614,7 @@ fun ArticleScreen(
                                 Text(
                                     text = viewModel.title,
                                     modifier = Modifier
-                                        .padding(if (expanded) PaddingValues(end = 16.dp) else PaddingValues())
+                                        .padding(if (expanded) PaddingValues(end = 16.dp, bottom = 8.dp) else PaddingValues())
                                         .let {
                                             if (article.type == ArticleType.Answer) {
                                                 it.clickable {
@@ -529,73 +628,8 @@ fun ArticleScreen(
                                     overflow = TextOverflow.Ellipsis,
                                 )
                             },
-                            subtitle = { expanded ->
-                                if (viewModel.loadFailure != null) return@ZhihuTwoRowsTopAppBar
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier
-                                        .padding(if (expanded) PaddingValues(vertical = 16.dp) else PaddingValues(top = 2.dp, bottom = 8.dp))
-                                        .padding(end = 16.dp)
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            navigator.onNavigate(
-                                                com.github.zly2006.zhihu.navigation.Person(
-                                                    id = viewModel.authorId,
-                                                    urlToken = viewModel.authorUrlToken,
-                                                    name = viewModel.authorName,
-                                                ),
-                                            )
-                                        },
-                                ) {
-                                    if (viewModel.authorAvatarSrc.isNotEmpty()) {
-                                        AsyncImage(
-                                            model = viewModel.authorAvatarSrc,
-                                            contentDescription = "作者头像",
-                                            modifier = Modifier
-                                                .size(if (expanded) 40.dp else 20.dp)
-                                                .clip(CircleShape),
-                                        )
-                                    } else {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(if (expanded) 40.dp else 20.dp)
-                                                .clip(CircleShape)
-                                                .background(MaterialTheme.colorScheme.surfaceVariant),
-                                        )
-                                    }
-
-                                    Spacer(modifier = Modifier.width(if (expanded) 8.dp else 4.dp))
-
-                                    Column(
-                                        modifier = Modifier.weight(1f),
-                                    ) {
-                                        Row(verticalAlignment = Alignment.CenterVertically) {
-                                            Text(
-                                                text = viewModel.authorName,
-                                                style = if (expanded) MaterialTheme.typography.titleSmall else MaterialTheme.typography.labelMedium,
-                                                color = if (expanded) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis,
-                                                modifier = Modifier.weight(1f, fill = false),
-                                            )
-                                            if (viewModel.authorBadge != null) {
-                                                Spacer(modifier = Modifier.width(4.dp))
-                                                AuthorBadge(
-                                                    badge = viewModel.authorBadge,
-                                                    compact = !expanded,
-                                                )
-                                            }
-                                        }
-                                        if (viewModel.authorBio.isNotEmpty() && expanded) {
-                                            Text(
-                                                text = viewModel.authorBio,
-                                                style = MaterialTheme.typography.bodyMedium,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            )
-                                        }
-                                    }
-                                }
-                            },
+                            subtitle = if (viewModel.loadFailure == null) ({ expanded -> ArticleAuthorRow(expanded) }) else null,
+                            expandedTopRowContent = if (viewModel.loadFailure == null) ({ ArticleAuthorRow(expanded = true) }) else null,
                             scrollBehavior = if (scrollStateMaxValue > 0) scrollBehavior else null,
                             colors = TopAppBarDefaults.topAppBarColors().copy(
                                 scrolledContainerColor = if (MaterialTheme.colorScheme.surfaceContainer != MaterialTheme.colorScheme.background) {
@@ -618,7 +652,7 @@ fun ArticleScreen(
                     fun ActionBarContent() {
                         if (!useDuo3ArticleActions) {
                             // ── 主视觉：Expressive 浮动操作栏 ─────────────────────
-                            BottomFloatingToolbar {
+                            BottomFloatingToolbar(glassBackdrop = glassBackdrop) {
                                 val voteColor = voteUpNeutralContent()
                                 ActionToggleButton(
                                     checked = viewModel.voteUpState == VoteUpState.Up,
@@ -864,7 +898,7 @@ fun ArticleScreen(
                 return@Scaffold
             }
             CompositionLocalProvider(LocalBringIntoViewSpec provides articleBringIntoViewSpec) {
-                Box {
+                Box(Modifier.glassBackdropSource(glassBackdrop)) {
                     Column(
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
@@ -1212,8 +1246,10 @@ fun ArticleScreen(
         showMenu = showActionsMenu,
         onDismissRequest = { showActionsMenu = false },
         onSummaryRequest = {
+            // 每次打开都读文件：配置可能刚在返回栈里另一个回答页中改过。
+            customAiConfig = customAiConfigFile.load()
             showSummaryDialog = true
-            viewModel.requestAiSummary(environment)
+            requestSummary()
         },
         onAigcFlagRequest = {
             showAigcFlagSheet = true
@@ -1233,14 +1269,31 @@ fun ArticleScreen(
         summaryText = viewModel.aiSummaryText,
         loading = viewModel.aiSummaryLoading,
         errorMessage = viewModel.aiSummaryError,
+        customAiConfig = customAiConfig,
+        onUseCustomAiChange = { useCustomAi ->
+            customAiConfig = customAiConfig.copy(useForSummary = useCustomAi)
+            customAiConfigFile.save(customAiConfig)
+            requestSummary()
+        },
+        onConfigureCustomAi = { showCustomAiDialog = true },
         onDismissRequest = {
             showSummaryDialog = false
             viewModel.cancelAiSummary()
         },
-        onRetryRequest = {
-            viewModel.requestAiSummary(environment)
-        },
+        onRetryRequest = ::requestSummary,
     )
+    if (showCustomAiDialog) {
+        CustomAiConfigDialog(
+            initialConfig = customAiConfig,
+            onDismissRequest = { showCustomAiDialog = false },
+            onSave = { config ->
+                showCustomAiDialog = false
+                customAiConfig = config.copy(useForSummary = config.isComplete)
+                customAiConfigFile.save(customAiConfig)
+                if (showSummaryDialog) requestSummary()
+            },
+        )
+    }
 
     // 沉浸式模式下，返回键优先退出沉浸式
     PlatformBackHandler(enabled = isImmersiveMode) {
