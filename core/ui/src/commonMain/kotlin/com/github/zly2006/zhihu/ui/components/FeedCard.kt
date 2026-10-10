@@ -61,6 +61,8 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -81,6 +83,7 @@ import com.github.zly2006.zhihu.navigation.Account
 import com.github.zly2006.zhihu.navigation.LocalNavigator
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.navigation.Navigator
+import com.github.zly2006.zhihu.navigation.resolveContent
 import com.github.zly2006.zhihu.navigation.withReadingQueueSource
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.platform.UserMessageDuration
@@ -152,6 +155,13 @@ fun FeedCard(
             }
         }
     }
+    val onPreviewLinkClick: (String) -> Unit = { url ->
+        if (url.startsWith("https://", ignoreCase = true) || url.startsWith("http://", ignoreCase = true)) {
+            resolveContent(url)?.let(navigator.onNavigate) ?: uriHandler.openUri(url)
+        } else {
+            performClick(item)
+        }
+    }
     if (feedCardStyle == "divider") {
         Column(
             modifier = modifier
@@ -177,6 +187,7 @@ fun FeedCard(
                     duo3CardLayout = duo3CardLayout,
                     duo3CardLargeTitle = duo3CardLargeTitle,
                     showSourceLabel = showSourceLabel,
+                    onLinkClick = onPreviewLinkClick,
                 )
             }
             HorizontalDivider(thickness = 0.3.dp)
@@ -228,6 +239,7 @@ fun FeedCard(
                         duo3CardLayout = duo3CardLayout,
                         duo3CardLargeTitle = duo3CardLargeTitle,
                         showSourceLabel = showSourceLabel,
+                        onLinkClick = onPreviewLinkClick,
                     )
                 }
             }
@@ -305,6 +317,7 @@ private fun FeedCardContent(
     duo3CardLayout: Boolean,
     duo3CardLargeTitle: Boolean,
     showSourceLabel: Boolean,
+    onLinkClick: (String) -> Unit,
 ) {
     val settings = koinInject<SettingsStore>()
     val fontSizePercent = remember { settings.getInt(PREF_FONT_SIZE, 100) }
@@ -312,6 +325,22 @@ private fun FeedCardContent(
     val navigator = LocalNavigator.current
     val visiblePinImages = pinImages.takeIf { showFeedThumbnail && !item.isFiltered }.orEmpty()
     val sourceLabel = item.feed?.sourceLabel.takeUnless { item.isFiltered }
+    val parsedSummary = parseEmphasizedHtmlTextWithTheme(item.summary.orEmpty())
+    val summary = remember(parsedSummary, onLinkClick) {
+        parsedSummary.mapAnnotations { range ->
+            val link = range.item as? LinkAnnotation.Url
+            if (link == null) {
+                range
+            } else {
+                AnnotatedString.Range(
+                    item = link.copy(linkInteractionListener = { onLinkClick(link.url) }),
+                    start = range.start,
+                    end = range.end,
+                    tag = range.tag,
+                )
+            }
+        }
+    }
     if (duo3CardLayout) {
         // ── 新排版（duo3）────────────────────────────────────────────────────
         if (showSourceLabel) {
@@ -341,7 +370,7 @@ private fun FeedCardContent(
         Column {
             Row {
                 Text(
-                    text = parseEmphasizedHtmlTextWithTheme(item.summary ?: ""),
+                    text = summary,
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 14.sp * fontSizePercent / 100,
                         lineHeight = 14.sp * fontSizePercent / 100 * lineHeightPercent / 100,
@@ -479,7 +508,7 @@ private fun FeedCardContent(
         Row {
             Column(modifier = Modifier.weight(2f)) {
                 Text(
-                    text = parseEmphasizedHtmlTextWithTheme(item.summary ?: ""),
+                    text = summary,
                     fontSize = 14.sp * fontSizePercent / 100,
                     lineHeight = 14.sp * fontSizePercent / 100 * lineHeightPercent / 100,
                     maxLines = 3,

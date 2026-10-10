@@ -767,6 +767,12 @@ fun ZhihuMain(
                                 composable<Topic> { navEntry ->
                                     TopicScreen(navEntry.toRoute())
                                 }
+                                composable<com.github.zly2006.zhihu.navigation.Column> { navEntry ->
+                                    ColumnScreen(navEntry.toRoute())
+                                }
+                                composable<com.github.zly2006.zhihu.navigation.FollowUserUpdates> { navEntry ->
+                                    FollowUserUpdatesScreen(navEntry.toRoute())
+                                }
                                 composable<WriteAnswer> { navEntry ->
                                     val args: WriteAnswer = navEntry.toRoute()
                                     WriteAnswerScreen(args)
