@@ -40,8 +40,9 @@ import kotlinx.coroutines.Dispatchers
         BlockedFeedRecord::class,
         ContentOpenEvent::class,
         BrowsingHistoryEntry::class,
+        NotInterestedContent::class,
     ],
-    version = 8,
+    version = 9,
     exportSchema = true,
 )
 @ConstructedBy(ContentFilterDatabaseConstructor::class)
@@ -63,6 +64,8 @@ abstract class ContentFilterDatabase : RoomDatabase() {
     abstract fun blockedFeedRecordDao(): BlockedFeedRecordDao
 
     abstract fun browsingHistoryDao(): BrowsingHistoryDao
+
+    abstract fun notInterestedContentDao(): NotInterestedContentDao
 }
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")
@@ -200,10 +203,18 @@ private val migration7To8 = object : Migration(7, 8) {
     }
 }
 
+private val migration8To9 = object : Migration(8, 9) {
+    override fun migrate(connection: SQLiteConnection) {
+        connection.execSQL(
+            "CREATE TABLE IF NOT EXISTS `not_interested_contents` (`contentKey` TEXT NOT NULL, PRIMARY KEY(`contentKey`))",
+        )
+    }
+}
+
 fun buildContentFilterDatabase(
     builder: Builder<ContentFilterDatabase>,
 ): ContentFilterDatabase = builder
-    .addMigrations(migration2To3, migration3To4, migration4To5, migration5To6, migration6To7, migration7To8)
+    .addMigrations(migration2To3, migration3To4, migration4To5, migration5To6, migration6To7, migration7To8, migration8To9)
     .fallbackToDestructiveMigration(true)
     .applyPlatformDriver()
     .setQueryCoroutineContext(Dispatchers.Default)

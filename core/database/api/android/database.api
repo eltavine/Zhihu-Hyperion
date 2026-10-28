@@ -422,6 +422,7 @@ public abstract class com/github/zly2006/zhihu/viewmodel/filter/ContentFilterDat
 	public abstract fun browsingHistoryDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/BrowsingHistoryDao;
 	public abstract fun contentFilterDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/ContentFilterDao;
 	public abstract fun contentOpenEventDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/ContentOpenEventDao;
+	public abstract fun notInterestedContentDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/NotInterestedContentDao;
 }
 
 public final class com/github/zly2006/zhihu/viewmodel/filter/ContentFilterDatabaseConstructor : androidx/room/RoomDatabaseConstructor {
@@ -449,6 +450,7 @@ public final class com/github/zly2006/zhihu/viewmodel/filter/ContentFilterDataba
 	public fun createAutoMigrations (Ljava/util/Map;)Ljava/util/List;
 	public synthetic fun createOpenDelegate ()Landroidx/room/RoomOpenDelegateMarker;
 	public fun getRequiredAutoMigrationSpecClasses ()Ljava/util/Set;
+	public fun notInterestedContentDao ()Lcom/github/zly2006/zhihu/viewmodel/filter/NotInterestedContentDao;
 }
 
 public final class com/github/zly2006/zhihu/viewmodel/filter/ContentOpenEvent {
@@ -573,6 +575,35 @@ public final synthetic class com/github/zly2006/zhihu/viewmodel/filter/MatchedKe
 
 public final class com/github/zly2006/zhihu/viewmodel/filter/MatchedKeywordInfo$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/NotInterestedContent {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/github/zly2006/zhihu/viewmodel/filter/NotInterestedContent;
+	public static synthetic fun copy$default (Lcom/github/zly2006/zhihu/viewmodel/filter/NotInterestedContent;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/zly2006/zhihu/viewmodel/filter/NotInterestedContent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContentKey ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/github/zly2006/zhihu/viewmodel/filter/NotInterestedContentDao {
+	public abstract fun delete (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun insert (Lcom/github/zly2006/zhihu/viewmodel/filter/NotInterestedContent;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun observeContentKeys ()Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/NotInterestedContentDao_Impl : com/github/zly2006/zhihu/viewmodel/filter/NotInterestedContentDao {
+	public static final field Companion Lcom/github/zly2006/zhihu/viewmodel/filter/NotInterestedContentDao_Impl$Companion;
+	public fun <init> (Landroidx/room/RoomDatabase;)V
+	public fun delete (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun insert (Lcom/github/zly2006/zhihu/viewmodel/filter/NotInterestedContent;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun observeContentKeys ()Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/github/zly2006/zhihu/viewmodel/filter/NotInterestedContentDao_Impl$Companion {
+	public final fun getRequiredConverters ()Ljava/util/List;
 }
 
 public final class com/github/zly2006/zhihu/viewmodel/local/ContentLikeCount {

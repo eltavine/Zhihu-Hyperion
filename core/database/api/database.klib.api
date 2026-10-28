@@ -132,6 +132,12 @@ abstract interface com.github.zly2006.zhihu.viewmodel.filter/ContentOpenEventDao
     open suspend fun getRemotelySyncedContentKeysByKeys(kotlin.collections/List<kotlin/String>): kotlin.collections/List<kotlin/String> // com.github.zly2006.zhihu.viewmodel.filter/ContentOpenEventDao.getRemotelySyncedContentKeysByKeys|getRemotelySyncedContentKeysByKeys(kotlin.collections.List<kotlin.String>){}[0]
 }
 
+abstract interface com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContentDao { // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContentDao|null[0]
+    abstract fun observeContentKeys(): kotlinx.coroutines.flow/Flow<kotlin.collections/List<kotlin/String>> // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContentDao.observeContentKeys|observeContentKeys(){}[0]
+    abstract suspend fun delete(kotlin/String) // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContentDao.delete|delete(kotlin.String){}[0]
+    abstract suspend fun insert(com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContent) // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContentDao.insert|insert(com.github.zly2006.zhihu.viewmodel.filter.NotInterestedContent){}[0]
+}
+
 abstract interface com.github.zly2006.zhihu.viewmodel.local/LocalContentDao { // com.github.zly2006.zhihu.viewmodel.local/LocalContentDao|null[0]
     abstract suspend fun cleanupOldBehaviors(kotlin/Long) // com.github.zly2006.zhihu.viewmodel.local/LocalContentDao.cleanupOldBehaviors|cleanupOldBehaviors(kotlin.Long){}[0]
     abstract suspend fun cleanupOldFeeds(kotlin/Long) // com.github.zly2006.zhihu.viewmodel.local/LocalContentDao.cleanupOldFeeds|cleanupOldFeeds(kotlin.Long){}[0]
@@ -166,6 +172,7 @@ abstract class com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase :
     abstract fun browsingHistoryDao(): com.github.zly2006.zhihu.viewmodel.filter/BrowsingHistoryDao // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase.browsingHistoryDao|browsingHistoryDao(){}[0]
     abstract fun contentFilterDao(): com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDao // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase.contentFilterDao|contentFilterDao(){}[0]
     abstract fun contentOpenEventDao(): com.github.zly2006.zhihu.viewmodel.filter/ContentOpenEventDao // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase.contentOpenEventDao|contentOpenEventDao(){}[0]
+    abstract fun notInterestedContentDao(): com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContentDao // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase.notInterestedContentDao|notInterestedContentDao(){}[0]
 }
 
 abstract class com.github.zly2006.zhihu.viewmodel.local/LocalContentDatabase : androidx.room/RoomDatabase { // com.github.zly2006.zhihu.viewmodel.local/LocalContentDatabase|null[0]
@@ -546,6 +553,7 @@ final class com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase_Impl
     final fun contentOpenEventDao(): com.github.zly2006.zhihu.viewmodel.filter/ContentOpenEventDao // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase_Impl.contentOpenEventDao|contentOpenEventDao(){}[0]
     final fun createAutoMigrations(kotlin.collections/Map<kotlin.reflect/KClass<out androidx.room.migration/AutoMigrationSpec>, androidx.room.migration/AutoMigrationSpec>): kotlin.collections/List<androidx.room.migration/Migration> // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase_Impl.createAutoMigrations|createAutoMigrations(kotlin.collections.Map<kotlin.reflect.KClass<out|androidx.room.migration.AutoMigrationSpec>,androidx.room.migration.AutoMigrationSpec>){}[0]
     final fun getRequiredAutoMigrationSpecClasses(): kotlin.collections/Set<kotlin.reflect/KClass<out androidx.room.migration/AutoMigrationSpec>> // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase_Impl.getRequiredAutoMigrationSpecClasses|getRequiredAutoMigrationSpecClasses(){}[0]
+    final fun notInterestedContentDao(): com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContentDao // com.github.zly2006.zhihu.viewmodel.filter/ContentFilterDatabase_Impl.notInterestedContentDao|notInterestedContentDao(){}[0]
 }
 
 final class com.github.zly2006.zhihu.viewmodel.filter/ContentOpenEvent { // com.github.zly2006.zhihu.viewmodel.filter/ContentOpenEvent|null[0]
@@ -662,6 +670,31 @@ final class com.github.zly2006.zhihu.viewmodel.filter/MatchedKeywordInfo { // co
 
     final object Companion { // com.github.zly2006.zhihu.viewmodel.filter/MatchedKeywordInfo.Companion|null[0]
         final fun serializer(): kotlinx.serialization/KSerializer<com.github.zly2006.zhihu.viewmodel.filter/MatchedKeywordInfo> // com.github.zly2006.zhihu.viewmodel.filter/MatchedKeywordInfo.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContent { // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContent|null[0]
+    constructor <init>(kotlin/String) // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContent.<init>|<init>(kotlin.String){}[0]
+
+    final val contentKey // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContent.contentKey|{}contentKey[0]
+        final fun <get-contentKey>(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContent.contentKey.<get-contentKey>|<get-contentKey>(){}[0]
+
+    final fun component1(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContent.component1|component1(){}[0]
+    final fun copy(kotlin/String = ...): com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContent // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContent.copy|copy(kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContent.toString|toString(){}[0]
+}
+
+final class com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContentDao_Impl : com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContentDao { // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContentDao_Impl|null[0]
+    constructor <init>(androidx.room/RoomDatabase) // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContentDao_Impl.<init>|<init>(androidx.room.RoomDatabase){}[0]
+
+    final fun observeContentKeys(): kotlinx.coroutines.flow/Flow<kotlin.collections/List<kotlin/String>> // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContentDao_Impl.observeContentKeys|observeContentKeys(){}[0]
+    final suspend fun delete(kotlin/String) // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContentDao_Impl.delete|delete(kotlin.String){}[0]
+    final suspend fun insert(com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContent) // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContentDao_Impl.insert|insert(com.github.zly2006.zhihu.viewmodel.filter.NotInterestedContent){}[0]
+
+    final object Companion { // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContentDao_Impl.Companion|null[0]
+        final fun getRequiredConverters(): kotlin.collections/List<kotlin.reflect/KClass<*>> // com.github.zly2006.zhihu.viewmodel.filter/NotInterestedContentDao_Impl.Companion.getRequiredConverters|getRequiredConverters(){}[0]
     }
 }
 

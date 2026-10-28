@@ -228,6 +228,7 @@ public abstract interface class com/github/zly2006/zhihu/viewmodel/filter/Conten
 public final class com/github/zly2006/zhihu/viewmodel/filter/ContentFilterExtensionsKt {
 	public static final fun extractTopicIds (Lcom/github/zly2006/zhihu/data/DataHolder$Content;)Ljava/util/List;
 	public static final fun getFeedAdBlockReason (Lcom/github/zly2006/zhihu/viewmodel/filter/FilterableContent;Lcom/github/zly2006/zhihu/viewmodel/filter/FeedAdBlockSettings;)Ljava/lang/String;
+	public static final fun notInterestedContentKey (Lcom/github/zly2006/zhihu/data/FeedDisplayItem;)Ljava/lang/String;
 	public static final fun resolveContentIdentity (Lcom/github/zly2006/zhihu/data/FeedDisplayItem;)Lcom/github/zly2006/zhihu/viewmodel/filter/FeedContentIdentity;
 	public static final fun saveBlockedFeedRecords (Lcom/github/zly2006/zhihu/viewmodel/filter/BlockedFeedRecordDao;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun toFeedFilterSettings (Lcom/github/zly2006/zhihu/platform/SettingsStore;)Lcom/github/zly2006/zhihu/viewmodel/filter/FeedFilterSettings;

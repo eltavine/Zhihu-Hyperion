@@ -36,6 +36,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -51,16 +52,21 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -68,6 +74,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
@@ -133,7 +141,10 @@ import com.github.zly2006.zhihu.viewmodel.feed.AUTO_REFRESH_HOME_ON_STARTUP_PREF
 import com.github.zly2006.zhihu.viewmodel.feed.BaseFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedInteractionViewModel
 import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedViewModel
+import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
+import com.github.zly2006.zhihu.viewmodel.filter.NotInterestedContent
+import com.github.zly2006.zhihu.viewmodel.filter.notInterestedContentKey
 import com.github.zly2006.zhihu.viewmodel.local.LocalHomeFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
 import com.github.zly2006.zhihu.viewmodel.za.AndroidHomeFeedViewModel
@@ -143,6 +154,8 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
@@ -166,6 +179,8 @@ const val HOME_NOTIFICATION_BADGE_TAG = "home_notification_badge"
 const val HOME_ACCOUNT_BUTTON_TAG = "home_account_button"
 const val HOME_FEED_LIST_TAG = "home_feed_list"
 const val HOME_REFRESH_BUTTON_TAG = "home_refresh_button"
+const val HOME_NOT_INTERESTED_MENU_TAG = "home_feed_not_interested"
+const val HOME_FEEDBACK_SNACKBAR_TAG = "home_feedback_snackbar"
 
 // Pager can dispose this page while its feed ViewModels survive. Keep the header rows alive too,
 // so restoring a saved list index does not shift the visible card.
@@ -196,6 +211,21 @@ fun HomeScreen(
     val homeState: HomeScreenState = viewModel { HomeScreenState() }
     val remoteHistory = koinInject<RemoteHistorySync>()
     val homeFeedFilter = koinInject<HomeFeedFilter>()
+    val database = koinInject<ContentFilterDatabase>()
+    val notInterestedDao = remember(database) { database.notInterestedContentDao() }
+    val notInterestedKeys by remember(notInterestedDao) {
+        notInterestedDao.observeContentKeys().map { it.toSet() }
+    }.collectAsState(initial = null)
+    val coroutineScope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val density = LocalDensity.current
+    var snackbarHeight by remember { mutableStateOf(0.dp) }
+    // Scaffold 中的提示条会避让系统导航栏，外层悬浮按钮也要计入同一占位。
+    val snackbarAvoidance = if (snackbarHeight > 0.dp) {
+        snackbarHeight + WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    } else {
+        0.dp
+    }
     val mobileClient = koinInject<MobileClientProvider>()
     val clipboard = rememberPlainTextClipboard()
     val appPrivateDirectory = rememberAppPrivateDirectory()
@@ -264,9 +294,16 @@ fun HomeScreen(
         )
     }
     val readingQueueSourceId = "home:${currentRecommendationMode.name}"
+    // 在最终展示层过滤，覆盖缓存、本地推荐及仍在后台完成的请求，避免条目被异步结果重新插回。
+    val displayItems by remember(viewModel, notInterestedKeys) {
+        derivedStateOf {
+            val excluded = notInterestedKeys
+            if (excluded == null) emptyList() else viewModel.displayItems.filterNot { it.notInterestedContentKey() in excluded }
+        }
+    }
     RegisterReadingQueueSource(
         sourceId = readingQueueSourceId,
-        items = viewModel.displayItems,
+        items = displayItems,
     )
 
     var dismissedUpdateVersionCode by homeState.dismissedUpdateVersionCode
@@ -434,6 +471,15 @@ fun HomeScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
+            snackbarHost = {
+                SnackbarHost(
+                    hostState = snackbarHostState,
+                    modifier = Modifier
+                        .padding(bottom = innerPadding.calculateBottomPadding() + readingPlayerOverlayPadding)
+                        .onSizeChanged { snackbarHeight = with(density) { it.height.toDp() } }
+                        .testTag(HOME_FEEDBACK_SNACKBAR_TAG),
+                )
+            },
             modifier = if (duo3HomeAccount) {
                 Modifier
                     .fillMaxSize()
@@ -612,7 +658,7 @@ fun HomeScreen(
 
             FeedPullToRefresh(viewModel, PaddingValues(top = scaffoldPadding.calculateTopPadding())) {
                 PaginatedList(
-                    items = viewModel.displayItems,
+                    items = displayItems,
                     listState = listState,
                     modifier = Modifier
                         .pageTurnViewportWithGuide(pageTurnTarget)
@@ -624,13 +670,21 @@ fun HomeScreen(
                     onLoadMore = { viewModel.loadMore(paginationEnvironment) },
                     footer = { listState ->
                         val errorMessage = viewModel.errorMessage
-                        if (errorMessage != null && !viewModel.isLoading && viewModel.displayItems.isEmpty()) {
+                        if (errorMessage != null && !viewModel.isLoading && displayItems.isEmpty()) {
                             EmptyState(
                                 icon = AppIcons.Error,
                                 title = "加载失败",
                                 description = errorMessage,
                                 modifier = Modifier.fillMaxWidth(),
                                 action = EmptyStateAction("重试", AppIcons.Refresh) { viewModel.refresh(paginationEnvironment) },
+                            )
+                        } else if (notInterestedKeys != null && !viewModel.isLoading && displayItems.isEmpty() && viewModel.displayItems.isNotEmpty()) {
+                            EmptyState(
+                                icon = AppIcons.Refresh,
+                                title = "暂无推荐内容",
+                                description = "当前内容已被过滤，刷新试试。",
+                                modifier = Modifier.fillMaxWidth(),
+                                action = EmptyStateAction("刷新", AppIcons.Refresh) { viewModel.refresh(paginationEnvironment) },
                             )
                         } else {
                             ProgressIndicatorFooter(listState)
@@ -666,6 +720,33 @@ fun HomeScreen(
                             else -> null
                         },
                         menuItems = { dismissMenu ->
+                            val contentKey = item.notInterestedContentKey()
+                            if (contentKey != null) {
+                                DropdownMenuItem(
+                                    text = { Text("不感兴趣") },
+                                    leadingIcon = { Icon(AppIcons.VisibilityOff, contentDescription = null) },
+                                    modifier = Modifier.testTag(HOME_NOT_INTERESTED_MENU_TAG),
+                                    onClick = {
+                                        dismissMenu()
+                                        coroutineScope.launch {
+                                            try {
+                                                notInterestedDao.insert(NotInterestedContent(contentKey))
+                                                snackbarHostState.currentSnackbarData?.dismiss()
+                                                val result = snackbarHostState.showSnackbar(
+                                                    message = "将不再推荐这条内容",
+                                                    actionLabel = "撤销",
+                                                    withDismissAction = true,
+                                                )
+                                                if (result == SnackbarResult.ActionPerformed) notInterestedDao.delete(contentKey)
+                                            } catch (e: CancellationException) {
+                                                throw e
+                                            } catch (e: Exception) {
+                                                userMessages.showShortMessage("更新不感兴趣记录失败，请重试")
+                                            }
+                                        }
+                                    },
+                                )
+                            }
                             if (feedKeywordExtractionAvailable) {
                                 DropdownMenuItem(
                                     text = { Text("按关键词屏蔽") },
@@ -748,7 +829,7 @@ fun HomeScreen(
 
                 // 创作菜单展开时隐藏可拖动按钮；收起时让出 48dp 创作按钮和间距。
                 if (showRefreshFab && !showCreateMenu) {
-                    val fabAvoidance = readingPlayerOverlayPadding + if (creationEntryPosition == CreationEntryPosition.Floating) 64.dp else 0.dp
+                    val fabAvoidance = readingPlayerOverlayPadding + snackbarAvoidance + if (creationEntryPosition == CreationEntryPosition.Floating) 64.dp else 0.dp
                     if (isDebuggable) {
                         DraggableRefreshButton(
                             onClick = {
@@ -805,7 +886,7 @@ fun HomeScreen(
                 actions = creationMenuActions(navigator.onNavigate),
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(bottom = innerPadding.calculateBottomPadding() + readingPlayerOverlayPadding)
+                    .padding(bottom = innerPadding.calculateBottomPadding() + readingPlayerOverlayPadding + snackbarAvoidance)
                     .testTag(HOME_CREATE_MENU_TAG),
                 buttonModifier = Modifier.testTag(HOME_CREATE_FAB_TAG),
                 buttonAlpha = remember(settings) {

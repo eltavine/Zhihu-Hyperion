@@ -29,6 +29,7 @@ import com.github.zly2006.zhihu.filter.ContentOpenEventSupport
 import com.github.zly2006.zhihu.navigation.Article
 import com.github.zly2006.zhihu.navigation.NavDestination
 import com.github.zly2006.zhihu.navigation.Pin
+import com.github.zly2006.zhihu.navigation.Video
 import com.github.zly2006.zhihu.platform.SettingsStore
 import com.github.zly2006.zhihu.util.Log
 import kotlinx.coroutines.async
@@ -397,6 +398,14 @@ data class FeedContentIdentity(
     val type: String,
     val id: String,
 )
+
+/** 推荐源、标题和作者展示信息变化时，仍指向同一条被主动排除的内容。占位卡片没有可排除的内容身份。 */
+fun FeedDisplayItem.notInterestedContentKey(): String? {
+    val destination = navDestination ?: return null
+    if (destination is Video) return "video:${destination.id}"
+    val identity = ContentOpenEventSupport.toTrackedContentIdentity(destination) ?: return null
+    return "${identity.type}:${identity.id}"
+}
 
 fun FeedDisplayItem.resolveContentIdentity(): FeedContentIdentity {
     val identity = navDestination?.let(ContentOpenEventSupport::toTrackedContentIdentity)
