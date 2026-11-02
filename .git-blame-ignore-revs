@@ -10,3 +10,5 @@
 d942d34a47a362712750e3a0fb5f0314b01d036c
 # refactor: 按 git 历史为源文件署名 eltavine (#15)：批量改写许可头
 397e2d9999ab488fc21c67cd3741fcb7bf434b55
+# style: 修正首页状态构造参数格式
+d72bacbe6656599c992cf273a54fea60207b747a
