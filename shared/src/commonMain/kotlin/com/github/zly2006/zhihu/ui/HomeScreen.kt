@@ -184,7 +184,9 @@ const val HOME_FEEDBACK_SNACKBAR_TAG = "home_feedback_snackbar"
 
 // Pager can dispose this page while its feed ViewModels survive. Keep the header rows alive too,
 // so restoring a saved list index does not shift the visible card.
-internal class HomeScreenState(notInterestedDao: NotInterestedContentDao) : ViewModel() {
+internal class HomeScreenState(
+    notInterestedDao: NotInterestedContentDao,
+) : ViewModel() {
     val dismissedUpdateVersionCode = mutableStateOf<Int?>(null)
 
     // Keep the last loaded filter set while the NavHost or pager disposes the Home composable.
