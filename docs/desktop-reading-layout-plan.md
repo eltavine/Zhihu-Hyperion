@@ -35,14 +35,14 @@ Column(
 )
 ```
 
-按 1920dp 窗口计算：左栏 1/3 ≈ 620dp + 分隔条 16dp + 右栏 ≈ 1284dp，正文可用宽度约 1250dp。16sp 中文单字约占 16dp，即一行 75 字以上。
+按双栏内容区宽度为 1920dp、列表栏默认占可分配宽度 1/3 计算：扣除 16dp 分隔条后，可分配宽度为 1904dp；左栏约 635dp、右栏约 1269dp，正文扣除两侧各 16dp 内边距后可用宽度约 1237dp。若以 16sp 中文字形粗略估算，一行可能超过 70 字；实际字数随字体、字号与显示缩放而变化。
 
 中文正文的舒适行宽是 30–40 字，对应 640–760dp。项目里已有同类先例：[LoginScreen.kt:101](../shared/src/commonMain/kotlin/com/github/zly2006/zhihu/account/LoginScreen.kt) 用 `LoginContentMaxWidth = 560.dp` 配合 `widthIn(max = ...)` 限制引导/登录页宽度。本次沿用同一思路。
 
 ## 3. 目标
 
-- 1360×860 窗口：正文行宽 688dp（720dp 上限减去两侧 16dp 内边距），约 38–42 个汉字一行。
-- 1920×1080 窗口：正文保持 720dp 并水平居中，两侧留白，行宽不随窗口变宽。
+- 1360×860 窗口：正文容器最大宽度 720dp，扣除两侧各 16dp 内边距后文本可用宽度最大 688dp；每行字数随实际字体、字号和显示缩放变化。
+- 1920×1080 窗口：阅读列最大宽度保持 720dp 并水平居中，两侧留白，不随窗口宽度继续增长。
 - 可用宽度不足 720dp 时（手机、平板竖屏、窄窗口）布局与改动前完全一致。
 - 两栏有明确层级；分隔条可被发现、可拖动。
 - 窗口大小/位置/最大化状态跨启动保留。
@@ -102,7 +102,7 @@ Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
 **风险**
 
 - 宽图、表格、代码块会被一并限制到 720dp。这是期望行为（与网页阅读列一致）；如需例外，单独给该区块加横向滚动，不要放宽整列。
-- `pageTurnViewportWithGuide`、`AnswerVerticalOverscroll` 等手势/预览逻辑依赖容器尺寸，改完必须实机验证翻页与上下滑切换回答。
+- `pageTurnViewportWithGuide`、`AnswerVerticalOverscroll` 等手势/预览逻辑依赖容器尺寸，改完必须实机验证翻页与上下滑切换回答。阅读列居中限宽后，原本覆盖整栏的手势命中区域可能收缩到 720dp 内；如需保留全栏手势，应将相应手势处理置于全宽外层，并检查与正文滚动/点击的冲突。
 - 不要用 `fillMaxWidth(0.6f)` 之类的比例限宽：窗口变宽后行宽会重新变长。
 
 ### P0-2 两栏层级
@@ -114,11 +114,11 @@ Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
 
 **做法**
 
-给详情栏加一层 `surface` 底色（或 1dp 投影），使列表栏的 `background`、详情栏的 `surface` 与分隔线形成三级层次。`EmptyDetailPane` 同步使用同一底色，避免空态和内容态跳色。
+先在浅色和深色主题下确认列表栏、空详情栏、实际详情页面分别绘制了什么背景；根据截图决定采用分栏边界/阴影、列表栏背景或详情页局部背景调整。注意：`EmptyDetailPane` **目前已经使用** `MaterialTheme.colorScheme.surface`，而文章/想法等详情页的 `Scaffold` 可能绘制不透明背景；仅给 `DetailPane` 外层增加 `surface` 未必产生可见效果。须验证空态和内容态颜色一致、层次确实可见。
 
 **约束**
 
-这一项属于观感调优。**不要**为了做出层次去批量修改各页 `Scaffold` 的 `containerColor`——那会改变所有页面的既有底色契约。先只改详情栏容器，用截图对比决定是否继续。若层级仍不明显，再评估把列表栏容器改为 `surfaceContainerLow`。
+这一项属于观感调优。**不要**为了做出层次去批量修改各页 `Scaffold` 的 `containerColor`——那会改变所有页面的既有底色契约。优先尝试分隔条边界或列表栏 `surfaceContainerLow` 等局部调整，并通过实际截图验证；若必须改详情页背景，先明确跨页面的颜色契约及影响范围，避免仅修改外层背景却被内层覆盖。
 
 ### P1 分隔条桌面反馈
 
@@ -127,10 +127,10 @@ Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
 **做法**
 
 - 加 `pointerHoverIcon(PointerIcon.Hand)`，让鼠标经过时变成可拖手势。
-- 用 `MutableInteractionSource` + `collectIsHoveredAsState()` 记录 hover，hover 时中间线由 1dp 变 2dp、颜色由 `outlineVariant` 变 `primary`。
+- 使用 `remember { MutableInteractionSource() }` 创建交互源，并在分隔条的热区 `Modifier` 上添加 `hoverable(interactionSource = interactionSource)` 以实际产生 `HoverInteraction`；再通过 `interactionSource.collectIsHoveredAsState()` 读取状态。**仅添加 `pointerHoverIcon()` 不会让该交互源更新 hover 状态。** hover 时中间线由 1dp 变 2dp、颜色由 `outlineVariant` 变 `primary`。
 - 16dp 热区和现有 `draggable`、无障碍 `customActions` 保持不变。
 
-**为什么只需 common API**：`pointerHoverIcon` 与 `PointerIcon.Hand` 都在 common 里，不需要为桌面新增 `expect/actual`。
+**为什么只需 common API**：`hoverable`、`pointerHoverIcon` 与 `PointerIcon.Hand` 都有 Compose Multiplatform 的 common API；按照项目已使用的 Compose 版本确认 import 和编译结果，不需要为了此功能预设新增 `expect/actual`。
 
 ### P1 窗口状态记忆
 
@@ -140,7 +140,7 @@ Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
 
 **做法**
 
-- `rememberWindowState(size = DpSize(1360.dp, 860.dp), position = WindowPosition(Alignment.Center))` 作为首次启动默认值。1360dp 窗口下右栏约 838dp，正文 720dp + 两侧各约 59dp 留白，比例正好。
+- `rememberWindowState(size = DpSize(1360.dp, 860.dp), position = WindowPosition(Alignment.Center))` 作为首次启动默认值。**假设实际可分配给双栏的内容宽度为 1360dp**，扣除 16dp 分隔条后剩余 1344dp：按默认 1/3 比例，左栏 448dp、右栏 896dp；720dp 阅读列水平居中后，两侧各约 88dp 留白。实际结果须以内容区测量值为准，不能直接将窗口外框宽度视作内容宽度。
 - 关闭时把宽、高、x、y、是否最大化写入 `SettingsStore`，启动时读回并 `coerceIn` 对齐到当前显示器可用区域（防止换显示器后窗口跑到屏幕外）。
 - 键名常量放在桌面模块内（遵循 `CLAUDE.md`「偏好键常量应放在实际功能所属的设置模块」），不要塞进跨平台能力契约。
 
@@ -160,9 +160,9 @@ Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
 - [ ] `./gradlew assembleLiteDebug` 通过
 - [ ] `./gradlew ktlintFormat`，无额外格式改动
 - [ ] Windows 实机：1360×860 与 1920×1080 各截一张双栏截图，确认行宽一致、正文居中
-- [ ] 深色主题各截一张，确认层级在深色下同样成立
+- [ ] 深色主题各截一张；同时分别验证空详情态和实际文章/想法页面的背景层级，确保调整确实可见且无跳色
 - [ ] 回归：窗口窄于 720dp 时截图与改动前一致（手机/平板竖屏不受影响）
-- [ ] 把分隔条拖到两端极限（列表 320dp / 详情 480dp），正文不破版、不出现横向滚动条
+- [ ] 验证分隔条 hover 进入/退出时指针和线条反馈正常，拖动仍有效；拖到两端极限（列表 320dp / 详情 480dp），正文不破版、不出现横向滚动条
 - [ ] 双栏下验证：垂直翻页、上下滑切换回答、横向滑切换回答、底部操作栏位置
 - [ ] 重启应用，确认窗口尺寸/位置被保留
 
