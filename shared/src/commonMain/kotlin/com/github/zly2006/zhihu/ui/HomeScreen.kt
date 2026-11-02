@@ -144,6 +144,7 @@ import com.github.zly2006.zhihu.viewmodel.feed.HomeFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.filter.ContentFilterDatabase
 import com.github.zly2006.zhihu.viewmodel.filter.HomeFeedFilter
 import com.github.zly2006.zhihu.viewmodel.filter.NotInterestedContent
+import com.github.zly2006.zhihu.viewmodel.filter.NotInterestedContentDao
 import com.github.zly2006.zhihu.viewmodel.filter.notInterestedContentKey
 import com.github.zly2006.zhihu.viewmodel.local.LocalHomeFeedViewModel
 import com.github.zly2006.zhihu.viewmodel.rememberZhihuApiEnvironment
@@ -154,7 +155,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.io.buffered
@@ -184,8 +184,21 @@ const val HOME_FEEDBACK_SNACKBAR_TAG = "home_feedback_snackbar"
 
 // Pager can dispose this page while its feed ViewModels survive. Keep the header rows alive too,
 // so restoring a saved list index does not shift the visible card.
-private class HomeScreenState : ViewModel() {
+internal class HomeScreenState(notInterestedDao: NotInterestedContentDao) : ViewModel() {
     val dismissedUpdateVersionCode = mutableStateOf<Int?>(null)
+
+    // Keep the last loaded filter set while the NavHost or pager disposes the Home composable.
+    // A transient null would produce an empty feed and clamp a restored LazyListState to index 0.
+    var notInterestedKeys by mutableStateOf<Set<String>?>(null)
+        private set
+
+    init {
+        viewModelScope.launch {
+            notInterestedDao.observeContentKeys().collectLatest { keys ->
+                notInterestedKeys = keys.toSet()
+            }
+        }
+    }
 }
 
 /**
@@ -208,14 +221,12 @@ fun HomeScreen(
     val navigator = LocalNavigator.current
     val paginationEnvironment = rememberZhihuApiEnvironment(allowGuestAccess = true)
     val settings = koinInject<SettingsStore>()
-    val homeState: HomeScreenState = viewModel { HomeScreenState() }
     val remoteHistory = koinInject<RemoteHistorySync>()
     val homeFeedFilter = koinInject<HomeFeedFilter>()
     val database = koinInject<ContentFilterDatabase>()
     val notInterestedDao = remember(database) { database.notInterestedContentDao() }
-    val notInterestedKeys by remember(notInterestedDao) {
-        notInterestedDao.observeContentKeys().map { it.toSet() }
-    }.collectAsState(initial = null)
+    val homeState: HomeScreenState = viewModel { HomeScreenState(notInterestedDao) }
+    val notInterestedKeys = homeState.notInterestedKeys
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val density = LocalDensity.current
