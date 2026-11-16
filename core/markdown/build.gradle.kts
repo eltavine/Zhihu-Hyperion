@@ -15,6 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
+
 plugins {
     id("zhihu.kmp.library")
     id("zhihu.kmp.compose")
@@ -31,6 +33,12 @@ configurations.configureEach {
 
 kotlin {
     applyDefaultHierarchyTemplate()
+
+    @OptIn(ExperimentalAbiValidation::class)
+    abiValidation {
+        // Tiqian 快照变更渲染函数签名时，Compose 会重算这个文件内的 lambda 生成名称。
+        filters.exclude.byNames.add("com.github.zly2006.zhihu.markdown.ComposableSingletons.TiqianMarkdownRendererKt")
+    }
 
     sourceSets {
         commonMain.dependencies {
