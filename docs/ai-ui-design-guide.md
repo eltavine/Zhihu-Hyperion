@@ -56,7 +56,7 @@ URL 解析集中在 `resolveContent()`。支持知乎问题、回答、文章、
 - 组件：优先用 material3 已提供的 Expressive 组件（分段列表、按钮组、切换按钮、FAB 菜单、浮动工具栏、加载指示器等），不要手写外观相似的替代品；只有承载应用语义时才封装（如设置项）。
 - 图标：界面只用 `:core:icons` 的 `AppIcons.<名称>`，用 `Icon(icon = ...)` 渲染，不依赖任何图标库或直接引用图标资源。图标是 Material Symbols Rounded 的未填充版本；`*Filled` 只用于选中、已赞、已收藏等状态，底栏选中项也用填充版本。新增图标先在 `core/icons/symbols.txt` 登记一行，再运行 `python3 core/icons/symbols.py`，CI 用 `--check` 校验清单、资源和 `AppIcons.kt` 一致。品牌标志（GitHub、Telegram）这类 Material Symbols 没有的图形才保留独立资源。同一个概念全局只用一个图标（如“收藏夹”一律用 `Bookmarks`，赞数与赞同用 `ThumbUp`、反对用 `ThumbDown`，粉丝数和关注数用 `Group`），一个图标也只表示一种含义；选图标前先搜一遍 `AppIcons.<名称>` 的现有用法。
 - 实验 API 的边界：Expressive 组件大多仍标注 `@ExperimentalMaterial3ExpressiveApi`，只在 `:core:ui` 的封装里使用（`SettingItem` 系列、`ChoiceButtonGroup`、`AppLoadingIndicator`、`AppPullToRefreshBox`、`FabMenu`、`EmptyState`、`ShapedIcon`、`MediumActionButton`、`BottomFloatingToolbar`、`ActionToggleButton`、`GroupedListItem`），公开参数只用稳定类型；页面直接调用这些封装，不在页面里 opt-in 实验 API。`ShortNavigationBar` 等已稳定的组件可以直接用。
-- 自适应导航：窗口宽度达到 600dp（横屏手机、平板、桌面窗口）且没有进入列表-详情双栏时，主壳用左侧导航轨 `WideNavigationRail` 代替底栏，标题和图标同样只取 `allBottomBarItems`；双栏时列表栏本身是窄屏宽度，仍在列表栏底部用底栏。悬浮在内容上的控件要按所在容器而不是整个窗口计算位置，因为导航轨会占去左侧宽度。
+- 自适应导航：iPad 的单栏主页面使用底部导航栏，让列表占满可用宽度。支持导航轨的宿主在窗口宽度达到 600dp 且未进入列表-详情双栏时使用左侧 `WideNavigationRail`，标题和图标同样取自 `allBottomBarItems`。双栏时底栏位于列表栏底部。悬浮控件按所在容器计算位置，以避让导航轨占用的宽度。
 - 设置项：每一行都配一个表意的图标，`SettingItem` 把它放进无独立底色的 40dp 图标区域，用间距区分各行。有整行动作的行由 Expressive 分段列表项绘制，按下时圆角形变；开关行带 `Role.Switch` 语义。行尾只放开关、数值和跳转箭头；选择控件（按钮组、下拉框）、滑杆和输入框放进 `bottomAction`，横跨整行宽度，不和标题抢宽度。
 - 单选：两到三个短标签的互斥选项用 `ChoiceButtonGroup`（连接式按钮组）；标签加图标在 360dp 宽度下放不下时只放标签。选项多、标签长或随数据变化时用下拉菜单。
 - 菜单和对话框：`DropdownMenuItem` 配 `leadingIcon`，倍速、时长这类纯数值列表除外；下拉选择的菜单里，当前值在尾部打勾；`AlertDialog` 配 `icon` 说明用途（删除用 `Delete`，清空用 `DeleteSweep`，屏蔽用户用 `PersonOff` 等），同一动作在各处用同一个图标。对话框一律用 `AlertDialog`，不用 `Dialog` 加 `Surface` 手写外框；对话框里有一组可选的操作时用 `GroupedListItem` 排成分段列表，只列当前平台支持的操作，不放灰掉的“暂不支持”项。不属于某个页面的对话框（登录过期、请求出错、连续浏览提醒、崩溃报告等）交给 Koin 里的 `AppDialogQueue`，由应用根部的 `AppDialogHost` 一次显示一个，同一个 key 不会叠加；不要用 `android.app.AlertDialog` 这类系统对话框。
@@ -97,7 +97,7 @@ URL 解析集中在 `resolveContent()`。支持知乎问题、回答、文章、
 | `liquidGlass` | 液态玻璃 | 主壳底栏换成悬浮的 `LiquidGlassTabBar`，回答页 `BottomFloatingToolbar` 换成玻璃底板 | 常量与默认值在 `:core:glass`：只有 iOS 默认开启；只在 `isLiquidGlassSupported`（Android 13+、iOS、macOS、桌面）时显示开关；随平台调整默认值，不进 WebDAV 同步 |
 | `showFeedThumbnail` | Feed 卡片缩略图 | 信息流卡片是否显示图 | 由复用 `FeedCard` 的页面读取 |
 | `showRefreshFab` | 刷新 FAB | 首页/列表可拖动刷新按钮显示 | 123Duo3 总开关会关闭它 |
-| `creationEntryPosition` | 外观与阅读体验 → 信息流 → 发布入口位置 | `floating`（默认）、`top`、`bottom`，实时切换发布入口 | 常量和枚举在 `AppearanceSettingsScreen`；`ZhihuMain` 观察设置并传给首页，悬浮发布按钮为 48dp；顶部模式按通知、发布排列，两者之间不额外留白；底部模式为导航栏中央的动作，宽屏并入导航轨；没有共享导航栏的平台使用首页顶部入口。发布动作不加入 pager，不改变主 tab 选择或排序 |
+| `creationEntryPosition` | 外观与阅读体验 → 信息流 → 发布入口位置 | `floating`（默认）、`top`、`bottom`，实时切换发布入口 | 常量和枚举在 `AppearanceSettingsScreen`；`ZhihuMain` 观察设置并传给首页，悬浮发布按钮为 48dp；顶部模式按通知、发布排列，两者之间不额外留白；底部模式为导航栏中央的动作，显示导航轨时并入导航轨；没有共享导航栏的平台使用首页顶部入口。发布动作不加入 pager，不改变主 tab 选择或排序 |
 | `feedCardStyle` | 信息流样式 | `card`（默认，色调圆角卡片，卡片间 8dp）或 `divider` | 常量 `FEED_CARD_STYLE_PREFERENCE_KEY` / `DEFAULT_FEED_CARD_STYLE`，影响所有复用 FeedCard 的列表 |
 | `webviewRender` | 使用 WebView 显示文章 | 文章、问题详情、想法正文渲染路径 | 常量名是 `ARTICLE_USE_WEBVIEW_PREFERENCE_KEY` |
 | `webviewCustomFontName` | WebView 自定义字体 | WebView 注入字体 | 仅 WebView 路径 |

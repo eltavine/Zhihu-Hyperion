@@ -99,7 +99,10 @@ typealias NativeMainChromeHost =
  * 传入 [chrome] 时由原生外框承担一级导航和搜索、通知入口，主壳不再显示底栏和首页顶部按钮。
  */
 @Composable
-fun NativeZhihuMain(chrome: NativeMainChromeHost? = null) {
+fun NativeZhihuMain(
+    allowNavigationRail: Boolean = true,
+    chrome: NativeMainChromeHost? = null,
+) {
     /** 主返回栈控制器，承载 MainTabs 主壳和单栏页面。 */
     val navController = rememberNavController()
     val accountStore = koinInject<ZhihuAccountStore>()
@@ -192,6 +195,7 @@ fun NativeZhihuMain(chrome: NativeMainChromeHost? = null) {
             },
             preferenceState = preferenceState,
             showMainNavigationBar = chrome == null,
+            allowNavigationRail = allowNavigationRail,
             showHomeTopActions = chrome == null,
             onCurrentMainTabDestinationChange = { currentMainTabDestination = it },
             articleEnterTransition = {

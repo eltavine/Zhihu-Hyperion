@@ -23,6 +23,8 @@ import com.github.zly2006.zhihu.platform.SnackbarUserMessageHost
 import com.github.zly2006.zhihu.theme.ZhihuTheme
 import com.github.zly2006.zhihu.ui.NativeZhihuMain
 import org.koin.core.context.startKoin
+import platform.UIKit.UIDevice
+import platform.UIKit.UIUserInterfaceIdiomPad
 import platform.UIKit.UIViewController
 import kotlin.experimental.ExperimentalNativeApi
 import kotlin.native.setUnhandledExceptionHook
@@ -40,10 +42,13 @@ fun startZhihuApp() {
 }
 
 /** SwiftUI 场景承载的共享 Compose 界面。 */
-fun mainViewController(): UIViewController = ComposeUIViewController {
-    ZhihuTheme {
-        SnackbarUserMessageHost {
-            NativeZhihuMain()
+fun mainViewController(): UIViewController {
+    val allowNavigationRail = UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPad
+    return ComposeUIViewController {
+        ZhihuTheme {
+            SnackbarUserMessageHost {
+                NativeZhihuMain(allowNavigationRail = allowNavigationRail)
+            }
         }
     }
 }
